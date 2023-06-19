@@ -370,10 +370,10 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.1.1.tgz#076d78ce99822258cf813ecc1e7fa460fa74d052"
   integrity sha512-NQ17ii0rK1b34VZonlmT2QMJFI70m0TRwbknO/ihlbatXyaktDhN/98vBiUU6kNBPljqGqyIrl2T4nY2RpFANg==
 
-"@helsingborg-stad/gdi-api-node@^1.0.3":
-  version "1.0.3"
-  resolved "https://npm.pkg.github.com/download/@helsingborg-stad/gdi-api-node/1.0.3/9297bfb954801d9cd211cd1d8d90b920cfca8182#9297bfb954801d9cd211cd1d8d90b920cfca8182"
-  integrity sha512-CDhvuf85eVfoDErWFELYycxxpaNOmxk7h95ta9Z3OIoI+CoXoz/RVVo5OUa1lQBaCuPzdWqFwQN6Ty794aK0lA==
+"@helsingborg-stad/gdi-api-node@^1.0.9":
+  version "1.0.9"
+  resolved "https://npm.pkg.github.com/download/@helsingborg-stad/gdi-api-node/1.0.9/a593e45ff09d7c20ebea84068a7f9f55d7bd74b3#a593e45ff09d7c20ebea84068a7f9f55d7bd74b3"
+  integrity sha512-EUCmlzu5uCjMZwHZ/bbAWwCmQ7IcEDdh+v0RGMjv0vrm7YklUwbGmr8KQX4J6IkGhr0YsIdklxyH2qZLEtgXOw==
   dependencies:
     "@graphql-tools/schema" "^9.0.4"
     "@koa/cors" "^3.4.1"
