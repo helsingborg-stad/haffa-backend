@@ -4,8 +4,8 @@ import { jwtUserModule } from '@helsingborg-stad/gdi-api-node'
 import { swaggerModule } from '@helsingborg-stad/gdi-api-node'
 import { webFrameworkModule } from '@helsingborg-stad/gdi-api-node'
 import { Application } from '@helsingborg-stad/gdi-api-node'
-import helloWorldModule from './hello-world'
 import { Services } from './types'
+import { advertsModule } from './adverts/adverts-module'
 
 /** Create fully packaged web application, given dependencies */
 export const createApp = ({ services, validateResponse }: {services: Services, validateResponse?: boolean}): Application =>
@@ -17,6 +17,5 @@ export const createApp = ({ services, validateResponse }: {services: Services, v
 		.use(swaggerModule())
 		.use(jwtUserModule(services.authorization))
 		.use(healthCheckModule())
-		.use(helloWorldModule())
-		// TODO: add application module here
+		.use(advertsModule(services.adverts))
 

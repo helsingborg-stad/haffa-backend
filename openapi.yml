@@ -4,10 +4,10 @@ info:
   description: Haffa
   version: 1.0.0
 paths:
-  /api/v1/hello-world/graphql:
+  /api/v1/graphql:
     post:
-      operationId: helloWorldGQL
-      summary: "GraphQL endpoint for hello world example"
+      operationId: advertsGQL
+      summary: "GraphQL endpoint for Haffa"
       tags:
         - Fix me
       requestBody:
