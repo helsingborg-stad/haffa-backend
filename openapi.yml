@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: GDI Template
+  description: GDI Template
+  version: 1.0.0
+paths:
+  /api/v1/hello-world/graphql:
+    post:
+      operationId: helloWorldGQL
+      summary: "GraphQL endpoint for hello world example"
+      tags:
+        - Fix me
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GraphQLQuery"
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphQLResponse"
+  /api/v1/{namespace}/healthcheck:
+    get:
+      operationId: healthCheck
+      summary: "Healthcheck of service"
+      tags:
+        - Status of Operations
+      parameters:
+        - name: namespace
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "Service is healthy"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type:
+                      string
+components:
+  schemas:
+    GraphQLQuery:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+        parameters:
+          type: object
+    GraphQLResponse:
+      type: object
+      properties:
+        data:
+          type: object

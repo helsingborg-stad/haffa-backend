@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "es2015",
+      "outDir": "./dist",
+      "moduleResolution": "NodeNext",
+      "esModuleInterop": true
+    },
+    "include": [
+      "src/**/*"
+    ],
+    "exclude": ["node_modules"]
+  }
