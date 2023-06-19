@@ -4,26 +4,27 @@ on:
   release:
     types: [prereleased]
 
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-      - uses: helsingborg-stad/gdi-deploy/v1@main
-        with:
-          update-openapi-version: true
-          update-package-version: true
-          openapi-spec-file: openapi.yml
-          release-tag-name: ${{github.event.release.tag_name}}
+    - uses: helsingborg-stad/gdi-deploy/v1@main
+      with:
+        update-openapi-version: true
+        update-package-version: true
+        openapi-spec-file: openapi.yml
+        release-tag-name: ${{github.event.release.tag_name}}
 
-          gdi-gitops-config-repo: ${{ secrets.GDI_GITOPS_CONFIG_REPO }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        gdi-gitops-config-repo: ${{ secrets.GDI_GITOPS_CONFIG_REPO }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+       
+        gdi-gitops-token: ${{ secrets.GDI_GITOPS_TOKEN }}
+        gdi-gitops-app: ${{ secrets.GDI_GITOPS_APP }}
+        gdi-gitops-env: dev
 
-          gdi-gitops-token: ${{ secrets.GDI_GITOPS_TOKEN }}
-          gdi-gitops-app: ${{ secrets.GDI_GITOPS_APP }}
-          gdi-gitops-env: dev
-
-          docker-username: ${{ github.repository_owner }}
-          docker-password: ${{ secrets.GITHUB_TOKEN }}
+        docker-username: ${{ github.repository_owner }}
+        docker-password:  ${{ secrets.GITHUB_TOKEN }}

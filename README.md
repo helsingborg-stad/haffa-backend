@@ -8,6 +8,8 @@
 *** Thanks again! Now go create something AMAZING! :D
 -->
 
+
+
 <!-- PROJECT SHIELDS -->
 <!--
 *** I'm using markdown "reference style" links for readability.
@@ -32,7 +34,9 @@
   <a href="https://github.com/helsingborg-stad/haffa-backend/issues">Request Feature</a>
 </p>
 
-#
+
+
+# 
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -54,18 +58,20 @@
   </ol>
 </details>
 
+
+
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
 This is a project template for GDI server applications.
 As such, it includes
-
 - a microframework based on [koa](https://koajs.com/), [openapi-backend](https://github.com/anttiviljami/openapi-backend), [koa2-swagger-ui](https://github.com/scttcper/koa2-swagger-ui) and more
 - best practices such as OpenAPI/Swagger
 - GraphQL support
 - Great testability
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -105,9 +111,11 @@ DEBUG=* yarn start
 - [ ] Feature 1
 - [ ] Feature 2
 - [ ] Feature 3
-  - [ ] Nested Feature
+    - [ ] Nested Feature
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -125,6 +133,8 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+
+
 <!-- LICENSE -->
 ## License
 
@@ -132,12 +142,16 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+
+
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-- [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
+* [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

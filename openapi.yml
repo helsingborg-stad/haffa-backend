@@ -44,7 +44,8 @@ paths:
                 type: object
                 properties:
                   status:
-                    type: string
+                    type:
+                      string
 components:
   schemas:
     GraphQLQuery:
