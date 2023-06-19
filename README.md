@@ -21,17 +21,17 @@
 [![MIT License][license-shield]][license-url]
 
 <p>
-  <a href="https://github.com/helsingborg-stad/gdi-template">
+  <a href="https://github.com/helsingborg-stad/haffa-backend">
     <img src="docs/images/hbg-github-logo-combo.png" alt="Logo" width="300">
   </a>
 </p>
-<h1>GDI Template</h1>
+<h1>Haffa backend</h1>
 <p>
-  Template repository for GDI services.
+  Haffa backend broker för authentication and data
   <br />
-  <a href="https://github.com/helsingborg-stad/gdi-template/issues">Report Bug</a>
+  <a href="https://github.com/helsingborg-stad/haffa-backend/issues">Report Bug</a>
   ·
-  <a href="https://github.com/helsingborg-stad/gdi-template/issues">Request Feature</a>
+  <a href="https://github.com/helsingborg-stad/haffa-backend/issues">Request Feature</a>
 </p>
 
 
@@ -155,5 +155,5 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[license-shield]: https://img.shields.io/github/license/helsingborg-stad/gdi-template.svg?style=for-the-badge
-[license-url]: https://github.com/helsingborg-stad/gdi-template/blob/master/LICENSE.txt
+[license-shield]: https://img.shields.io/github/license/helsingborg-stad/haffa-backend.svg?style=for-the-badge
+[license-url]: https://github.com/helsingborg-stad/haffa-backend/blob/master/LICENSE.txt

@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: GDI Template
-  description: GDI Template
+  title: Haffa
+  description: Haffa
   version: 1.0.0
 paths:
   /api/v1/hello-world/graphql:
