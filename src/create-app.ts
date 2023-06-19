@@ -8,7 +8,7 @@ import { Services } from './types'
 import { advertsModule } from './adverts/adverts-module'
 
 /** Create fully packaged web application, given dependencies */
-export const createApp = ({ services, validateResponse }: {services: Services, validateResponse?: boolean}): Application =>
+export const createApp = ({ services, validateResponse }: { services: Services, validateResponse?: boolean }): Application =>
 	createApplication({
 		openApiDefinitionPath: './openapi.yml',
 		validateResponse,

@@ -1,9 +1,9 @@
 {
-	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": true,
-	},
-	"editor.insertSpaces": false,
-	"editor.tabSize": 4,
-	"eslint.packageManager": "npm",
-	"eslint.validate": ["typescript"]
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.insertSpaces": false,
+  "editor.tabSize": 2,
+  "eslint.packageManager": "npm",
+  "eslint.validate": ["typescript"]
 }
