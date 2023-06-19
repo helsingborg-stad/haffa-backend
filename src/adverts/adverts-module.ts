@@ -6,11 +6,10 @@ const createAdvertsModule = (adverts: AdvertsRepository): GraphQLModule => ({
 		type Advert {
 			title: String
 		}
-
-        type Query {
-            adverts: [Advert]
-        }
-        `,
+		type Query {
+				adverts: [Advert]
+		}
+		`,
 	resolvers: {
 		Query: {
 			// https://www.graphql-tools.com/docs/resolvers
