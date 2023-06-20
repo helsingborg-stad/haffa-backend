@@ -93,8 +93,8 @@ yarn coverage
 # start web server
 yarn start
 
-# start server on port 400 instead of default 3000
-PORT=4000 yarn start
+# start server on port 8080 instead of default 4000
+PORT=8080 yarn start
 
 # start with debugging output
 DEBUG=* yarn start
@@ -103,8 +103,8 @@ DEBUG=* yarn start
 
 ### Testing endpoints
 
-- [OpenAPI endpoint](http://localhost:3000)
-- [GraphQL endpoint](https://cloud.hasura.io/public/graphiql?endpoint=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fv1%2Fhaffa%2Fgraphql)
+- [OpenAPI endpoint](http://localhost:4000)
+- [GraphQL endpoint](https://cloud.hasura.io/public/graphiql?endpoint=http%3A%2F%2Flocalhost%3A4000%2Fapi%2Fv1%2Fhaffa%2Fgraphql)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
