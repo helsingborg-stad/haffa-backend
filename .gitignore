@@ -1,6 +1,9 @@
 # mac...
 .DS_Store
 
+# Local stuff
+.local
+
 # Logs
 logs
 *.log
