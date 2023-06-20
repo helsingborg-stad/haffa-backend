@@ -76,6 +76,10 @@ As such, it includes
 <!-- GETTING STARTED -->
 ## Getting Started
 
+### Configuration
+Make sure you have the file `.env` in your project root. For its contents, refer to samples in [.env.example](./.env.example)
+
+### Build and run
 ```sh
 # install dependencies
 yarn
@@ -96,6 +100,11 @@ PORT=4000 yarn start
 DEBUG=* yarn start
 
 ```
+
+### Testing endpoints
+
+- [OpenAPI endpoint](http://localhost:3000)
+- [GraphQL endpoint](https://cloud.hasura.io/public/graphiql?endpoint=http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fv1%2Fhaffa%2Fgraphql)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

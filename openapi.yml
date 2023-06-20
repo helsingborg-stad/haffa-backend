@@ -4,9 +4,9 @@ info:
   description: Haffa
   version: 1.0.0
 paths:
-  /api/v1/graphql:
+  /api/v1/haffa/graphql:
     post:
-      operationId: advertsGQL
+      operationId: haffaGQL
       summary: "GraphQL endpoint for Haffa"
       tags:
         - Fix me
