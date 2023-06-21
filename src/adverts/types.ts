@@ -8,6 +8,7 @@ export interface Advert {
 	description: string
 }
 export interface AdvertsRepository {
+	getAdvert: (id: string) => Promise<Advert | null>
 	list: () => Promise<Advert[]>
 	create: (advert: CreateAdvertInput) => Promise<Advert>
 }

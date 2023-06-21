@@ -8,6 +8,7 @@ const createAdvertsModule = (adverts: AdvertsRepository): GraphQLModule => ({
 		Query: {
 			// https://www.graphql-tools.com/docs/resolvers
 			adverts: ({ ctx: { user } }) => adverts.list(),
+			getAdvert: ({ args: { id } }) => adverts.getAdvert(id),
 		},
 		Mutation: {
 			createAdvert: ({ args: { input } }) => adverts.create(input),

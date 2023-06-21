@@ -12,6 +12,12 @@ const emptyAdvert: Advert = {
 
 export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository => {
 	return {
+		getAdvert: (id) => readFile(join(dataFolder, `${id}.json`), { encoding: 'utf8' })
+			.then(text => ({
+				...emptyAdvert,
+				...JSON.parse(text),	
+			}))
+			.catch(e => null),
 		list: () => readdir(dataFolder)
 			.then(names => names.filter(name => /.*\.json$/.test(name)))
 			.then(names => names.map(name => join(dataFolder, name)))

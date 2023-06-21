@@ -13,6 +13,7 @@ type Advert {
 
 type Query {
 	adverts: [Advert]
+	getAdvert(id: ID!): Advert
 }
 
 type Mutation {

@@ -4,6 +4,7 @@ import { Advert, AdvertsRepository } from '../types'
 export const createInMemoryAdvertsRepository = (): AdvertsRepository => {
 	const adverts: Advert[] = []
 	return ({
+		getAdvert: async id => adverts.find(advert => advert.id === id) || null,
 		list: async () => adverts,
 		create: async (advert) => {
 			const a = { ...advert, id: uuid.v4() }
