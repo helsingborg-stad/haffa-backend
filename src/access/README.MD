@@ -8,7 +8,18 @@ Modify your .env to include the following variable:
 FS_ACCESS_FILE=<The full path of the access file>
 ```
 
-Usage:
+## File format:
+
+```JSON
+[
+  {
+    "pattern": ".*@helsingborg.se",
+    "roles": ["Administratör", "Kommun"]
+  }
+]
+```
+
+## Usage:
 
 ```javascript
 const access = createAccessServiceFromEnv();
