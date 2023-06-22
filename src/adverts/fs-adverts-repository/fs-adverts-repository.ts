@@ -28,6 +28,13 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 				...emptyAdvert,
 				...JSON.parse(text),
 			})))
+			.catch(e => {
+				console.log(e)
+				if (e?.code === 'ENOENT') {
+					return []
+				}
+				throw e
+			})
 		,
 		create: async (advert) =>  {
 			const a = { ...advert, id: uuid.v4().replace(/-/, '') }
