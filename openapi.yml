@@ -4,6 +4,95 @@ info:
   description: Haffa
   version: 1.0.0
 paths:
+  /api/v1/haffa/auth/verify-token:
+    post:
+      operationId: verifyToken
+      summary: Verify authentication token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+              properties:
+                token:
+                  type: string
+      responses:
+        "200":
+          description: Successful processing of request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - token
+                properties:
+                  verified:
+                    type: string
+
+  /api/v1/haffa/auth/request-pincode:
+    post:
+      operationId: requestPincode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+      responses:
+        "200":
+          description: Successful processing of request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - accepted
+                      - denied
+                      - invalid
+
+  /api/v1/haffa/auth/authenticate:
+    post:
+      operationId: authenticate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - pincode
+              properties:
+                email:
+                  type: string
+                pincode:
+                  type: string
+      responses:
+        "200":
+          description: Successful processing of request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - token
+                properties:
+                  token:
+                    type: string
+
   /api/v1/haffa/graphql:
     post:
       operationId: haffaGQL

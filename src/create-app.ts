@@ -6,6 +6,7 @@ import { webFrameworkModule } from '@helsingborg-stad/gdi-api-node'
 import { Application } from '@helsingborg-stad/gdi-api-node'
 import { Services } from './types'
 import { advertsModule } from './adverts/adverts-module'
+import { authenticationModule } from './authentication/authentication-module'
 
 /** Create fully packaged web application, given dependencies */
 export const createApp = ({ services, validateResponse }: {services: Services, validateResponse?: boolean}): Application =>
@@ -18,4 +19,5 @@ export const createApp = ({ services, validateResponse }: {services: Services, v
 		.use(jwtUserModule(services.authorization))
 		.use(healthCheckModule())
 		.use(advertsModule(services.adverts))
+		.use(authenticationModule())
 
