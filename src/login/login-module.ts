@@ -3,8 +3,9 @@ import { ApplicationContext, ApplicationModule, getEnv } from '@helsingborg-stad
 import jwt from 'jsonwebtoken'
 import HttpStatusCodes from 'http-status-codes'
 import EmailValidator from 'email-validator'
+import { LoginResult, LoginService } from './types'
 
-export const authenticationModule = (): ApplicationModule => ({ registerKoaApi }: ApplicationContext) => {
+export const loginModule =(loginService: LoginService): ApplicationModule => ({ registerKoaApi }: ApplicationContext) => {
 	const secret = getEnv('JWT_SHARED_SECRET')
 	const jwtOptions = {
 		audience: 'urn://haffa',
@@ -28,44 +29,40 @@ export const authenticationModule = (): ApplicationModule => ({ registerKoaApi }
 		}
 	}
 
-	const requestPincode: Koa.Middleware = (ctx) => {
+	const requestPincode: Koa.Middleware = async (ctx) => {
 		const email = (ctx?.request?.body?.email || '').toString()
 		const isValid = EmailValidator.validate(email)
-		if (isValid) {
-			ctx.body = {
-				status: 'accepted',
-			}
-			console.log(`
-# PIN CODE REQUEST
-email: ${email}
-pincode: type whatever you want
-			`)
-		} else {
-			ctx.body = { status: 'invalid' }
-		}
+		const status = isValid ? await loginService.requestPincode(email) : 'invalid'
+		ctx.body = { status }
 	}
 
-	const authenticate: Koa.Middleware = (ctx) => {
+	const login: Koa.Middleware = async (ctx) => {
 		const email = (ctx?.request?.body?.email || '').toString()
+		const pincode = (ctx?.request?.body?.pincode || '').toString()
 
 		if (!EmailValidator.validate(email)) {
 			ctx.throw(HttpStatusCodes.BAD_REQUEST)
 		}
-		ctx.body = {
-			token: jwt.sign({
+
+		const createToken = (user: LoginResult) => jwt.sign(
+			{
 				id: email,
+				roles: user.roles,
 			},
 			secret,
 			{
 				...jwtOptions,
 				expiresIn: '30d',
-			}),
+			})
+		const user = await loginService.tryLogin(email, pincode)
+		ctx.body = {
+			token: user ? createToken(user) : '',
 		}
 	}
 	
 	registerKoaApi({
 		verifyToken,
 		requestPincode,
-		authenticate,
+		login,
 	})
 }

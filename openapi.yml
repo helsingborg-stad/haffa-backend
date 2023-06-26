@@ -63,9 +63,9 @@ paths:
                       - denied
                       - invalid
 
-  /api/v1/haffa/auth/authenticate:
+  /api/v1/haffa/auth/login:
     post:
-      operationId: authenticate
+      operationId: login
       requestBody:
         required: true
         content:
