@@ -42,5 +42,4 @@ describe('mapCreateAdvertInputToAdvert', () => {
 
 		expect(advert.id.length).toBeGreaterThan(32)
 	})
-
 })
