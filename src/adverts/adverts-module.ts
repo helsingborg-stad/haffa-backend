@@ -20,7 +20,7 @@ const createAdvertsModule = (adverts: AdvertsRepository): GraphQLModule => ({
 	resolvers: {
 		Query: {
 			// https://www.graphql-tools.com/docs/resolvers
-			adverts: ({ ctx: { user } }) => adverts.list(),
+			adverts: ({ ctx: { user }, args: { filter } }) => adverts.list(filter),
 			getAdvert: ({ args: { id } }) => adverts.getAdvert(id),
 		},
 		Mutation: {

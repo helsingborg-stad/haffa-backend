@@ -2,6 +2,7 @@ import { Advert, AdvertsRepository } from '../types'
 import { join } from 'path'
 import { mkdirp } from 'mkdirp'
 import { readdir, readFile, stat, writeFile } from 'fs/promises'
+import { createFilterPredicate } from '../filters/create-filter-predicate'
 
 const emptyAdvert: Advert = {
 	id: '',
@@ -20,7 +21,7 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 				...JSON.parse(text),	
 			}))
 			.catch(e => null),
-		list: () => readdir(dataFolder)
+		list: (filter) => readdir(dataFolder)
 			.then(names => names.filter(name => /.*\.json$/.test(name)))
 			.then(names => names.map(name => join(dataFolder, name)))
 			.then(paths => Promise.all(paths.map(path => stat(path).then(stat => ({ stat, path })))))
@@ -30,6 +31,7 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 				...emptyAdvert,
 				...JSON.parse(text),
 			})))
+			.then(adverts => adverts.filter(createFilterPredicate(filter)))
 			.catch(e => {
 				console.log(e)
 				if (e?.code === 'ENOENT') {

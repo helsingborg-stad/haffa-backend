@@ -1,5 +1,28 @@
 export const haffaGqlSchema = `
 
+input IdFilterInput {
+	ne: String
+	eq: String
+}
+input StringFilterInput {
+	ne: String
+	eq: String
+	gt: String
+	gte: String
+	lt: String
+	lte: String
+	contains: String
+} 
+input FilterAdvertsInput {
+	id: IdFilterInput
+	title: StringFilterInput
+	description: StringFilterInput
+
+	and: [FilterAdvertsInput]
+	or: [FilterAdvertsInput]
+	not: FilterAdvertsInput
+}
+
 input CreateAdvertInput {
 	title: String
 	description: String
@@ -12,7 +35,7 @@ type Advert {
 }
 
 type Query {
-	adverts: [Advert]
+	adverts(filter: FilterAdvertsInput): [Advert]
 	getAdvert(id: ID!): Advert
 }
 

@@ -14,8 +14,28 @@ export interface Advert {
 	createdAt: string
 	modifiedAt: string
 }
+
+export interface IdFilterInput {
+	ne?: string
+	eq?: string
+}
+export interface StringFilterInput {
+	ne?: string
+	eq?: string
+	gt?: string
+	gte?: string
+	lt?: string
+	lte?: string
+	contains?: string
+} 
+export interface FilterAdvertsInput {
+	id?: IdFilterInput
+	title?: StringFilterInput
+	description?: StringFilterInput
+}
+
 export interface AdvertsRepository {
 	getAdvert: (id: string) => Promise<Advert | null>
-	list: () => Promise<Advert[]>
+	list: (filter?: FilterAdvertsInput) => Promise<Advert[]>
 	create: (advert: Advert) => Promise<Advert>
 }
