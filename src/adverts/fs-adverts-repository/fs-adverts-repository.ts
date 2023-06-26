@@ -1,4 +1,3 @@
-import * as uuid from 'uuid'
 import { Advert, AdvertsRepository } from '../types'
 import { join } from 'path'
 import { mkdirp } from 'mkdirp'
@@ -6,6 +5,9 @@ import { readdir, readFile, stat, writeFile } from 'fs/promises'
 
 const emptyAdvert: Advert = {
 	id: '',
+	createdBy: '',
+	createdAt: new Date(0).toISOString(),
+	modifiedAt: new Date(0).toISOString(),
 	title: '',
 	description: '',
 }
@@ -37,12 +39,10 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 			})
 		,
 		create: async (advert) =>  {
-			const a = { ...advert, id: uuid.v4().replace(/-/, '') }
-			const path = join(dataFolder, `${a.id}.json`)
+			const path = join(dataFolder, `${advert.id}.json`)
 			await mkdirp(dataFolder)
-			await writeFile(path, JSON.stringify(a), { encoding: 'utf8' })
-			return a
+			await writeFile(path, JSON.stringify(advert), { encoding: 'utf8' })
+			return advert
 		},
-
 	}
 }

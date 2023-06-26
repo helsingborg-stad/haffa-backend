@@ -7,10 +7,9 @@ export const createInMemoryAdvertsRepository = (): AdvertsRepository => {
 		getAdvert: async id => adverts.find(advert => advert.id === id) || null,
 		list: async () => adverts,
 		create: async (advert) => {
-			const a = { ...advert, id: uuid.v4() }
-			adverts.push(a)
+			adverts.push(advert)
 			console.log({ adverts })
-			return a
+			return advert
 		},
 	})
 }
