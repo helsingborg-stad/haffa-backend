@@ -14,9 +14,8 @@ jobs:
 
     - uses: helsingborg-stad/gdi-deploy/v1@main
       with:
-        update-openapi-version: true
+        update-openapi-version: false
         update-package-version: true
-        openapi-spec-file: openapi.yml
         release-tag-name: ${{github.event.release.tag_name}}
 
         gdi-gitops-config-repo: ${{ secrets.GDI_GITOPS_CONFIG_REPO }}
