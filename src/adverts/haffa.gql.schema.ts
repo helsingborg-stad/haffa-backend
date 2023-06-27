@@ -28,11 +28,20 @@ input CreateAdvertInput {
 	description: String
 }
 
+type AdvertPermissions {
+	edit: Boolean!
+	delete: Boolean!
+	book: Boolean!
+	claim: Boolean!
+}
+
 type Advert {
+	permissions: AdvertPermissions
 	id: ID!
 	title: String
 	description: String
 }
+
 
 type Query {
 	adverts(filter: FilterAdvertsInput): [Advert]

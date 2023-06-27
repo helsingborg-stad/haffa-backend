@@ -2,6 +2,7 @@ import { ApplicationContext, ApplicationModule, GraphQLModule, makeGqlEndpoint, 
 import { AdvertsRepository, AdvertsUser } from './types'
 import { haffaGqlSchema } from './haffa.gql.schema'
 import { mapCreateAdvertInputToAdvert } from './mappers'
+import { getAdvertPermissions } from './permissions'
 
 const validate = (test: boolean, errorMessage: string): boolean => {
 	if (!test) {
@@ -20,7 +21,14 @@ const createAdvertsModule = (adverts: AdvertsRepository): GraphQLModule => ({
 	resolvers: {
 		Query: {
 			// https://www.graphql-tools.com/docs/resolvers
-			adverts: ({ ctx: { user }, args: { filter } }) => adverts.list(filter),
+			adverts: async ({ ctx: { user }, args: { filter } }) => {
+				const u = mapContextUserToUser(user)
+				return (await adverts.list(filter))
+					.map(advert => ({
+						...advert,
+						permissions: getAdvertPermissions(advert, u),
+					}))
+			},
 			getAdvert: ({ args: { id } }) => adverts.getAdvert(id),
 		},
 		Mutation: {

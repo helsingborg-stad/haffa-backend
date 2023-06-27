@@ -2,6 +2,14 @@ export interface AdvertsUser {
 	id: string
 	roles: string[]
 }
+
+export interface AdvertPermissions {
+	edit: boolean
+	delete: boolean
+	book: boolean
+	claim: boolean
+}
+
 export interface CreateAdvertInput {
 	title: string
 	description: string
