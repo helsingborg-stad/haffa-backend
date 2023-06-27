@@ -21,6 +21,7 @@ export const createApp = ({ services, validateResponse }: {services: Services, v
 		.use(swaggerModule())
 		.use(jwtUserModule(services.authorization))
 		.use(healthCheckModule())
-		.use(advertsModule(services.adverts))
+		.use(advertsModule(services.adverts, services.files))
 		.use(loginModule(services.login))
+		.use(services.files.tryCreateApplicationModule() || (() => void 0))
 

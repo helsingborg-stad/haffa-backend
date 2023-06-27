@@ -1,7 +1,8 @@
 import { ApplicationContext, ApplicationModule, GraphQLModule, makeGqlEndpoint, makeGqlMiddleware, requireJwtUser } from '@helsingborg-stad/gdi-api-node'
-import { Advert, AdvertsRepository, AdvertsUser } from './types'
+import { Advert, AdvertInput, AdvertsRepository, AdvertsUser } from './types'
 import { haffaGqlSchema } from './haffa.gql.schema'
 import { getAdvertPermissions } from './permissions'
+import { FilesService } from '../files/types'
 
 const validate = (test: boolean, errorMessage: string): boolean => {
 	if (!test) {
@@ -24,7 +25,21 @@ const createAdvertMapper = (user: any) => {
 		} : null)
 }
 
-const createAdvertsModule = (adverts: AdvertsRepository): GraphQLModule => ({
+const convertInput = async (input: AdvertInput, files: FilesService): Promise<AdvertInput> => {
+	return {
+		...input,
+		images: await Promise.all(input
+			.images
+			.filter(v => v)
+			.filter(({ url }) => url)
+			.map(image => files.tryConvertDataUrlToUrl(image.url).then(url => ({
+				...image,
+				url: url || image.url,
+			})))),
+	}
+}
+
+const createAdvertsModule = (adverts: AdvertsRepository, files: FilesService): GraphQLModule => ({
 	schema: haffaGqlSchema,
 	resolvers: {
 		Query: {
@@ -47,12 +62,14 @@ const createAdvertsModule = (adverts: AdvertsRepository): GraphQLModule => ({
 		},
 		Mutation: {
 			createAdvert: async ({ ctx: { user }, args: { input } }) => {
-				const advert = await adverts.create(mapContextUserToUser(user), input)
+				const fixedInput = await convertInput(input, files)
+				const advert = await adverts.create(mapContextUserToUser(user), fixedInput)
 				return createAdvertMapper(user)(advert)
 			},
 			updateAdvert: async ({ ctx: { user }, args: { id, input } }) => {
+				const fixedInput = await convertInput(input, files)
 				const u = mapContextUserToUser(user)
-				const advert = await adverts.update(id, u, input)
+				const advert = await adverts.update(id, u, fixedInput)
 				return createAdvertMapper(user)(advert)
 			},
 		},
@@ -60,6 +77,6 @@ const createAdvertsModule = (adverts: AdvertsRepository): GraphQLModule => ({
 })
 
 
-export const advertsModule = (adverts: AdvertsRepository): ApplicationModule => ({ registerKoaApi }: ApplicationContext) => registerKoaApi({
-	haffaGQL: requireJwtUser(makeGqlMiddleware(makeGqlEndpoint(createAdvertsModule(adverts)))),
+export const advertsModule = (adverts: AdvertsRepository, files: FilesService): ApplicationModule => ({ registerKoaApi }: ApplicationContext) => registerKoaApi({
+	haffaGQL: requireJwtUser(makeGqlMiddleware(makeGqlEndpoint(createAdvertsModule(adverts, files)))),
 })
