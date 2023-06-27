@@ -10,22 +10,29 @@ export interface AdvertPermissions {
 	claim: boolean
 }
 
-export interface CreateAdvertInput {
+export interface AdvertInput {
 	title: string
 	description: string
+	images: AdvertImage[]
 	unit: string
 	material: string
 	condition: string
 	usage: string
 }
 
+export interface AdvertImage {
+	url: string
+}
+
 export interface Advert {
 	id: string
-	title: string
-	description: string
 	createdBy: string
 	createdAt: string
 	modifiedAt: string
+
+	title: string
+	description: string
+	images: AdvertImage[]
 	unit: string
 	material: string
 	condition: string
@@ -54,5 +61,6 @@ export interface FilterAdvertsInput {
 export interface AdvertsRepository {
 	getAdvert: (id: string) => Promise<Advert | null>
 	list: (filter?: FilterAdvertsInput) => Promise<Advert[]>
-	create: (advert: Advert) => Promise<Advert>
+	create: (user: AdvertsUser, advert: AdvertInput) => Promise<Advert>
+	update: (id: string, user: AdvertsUser, advert: AdvertInput) => Promise<Advert|null>
 }

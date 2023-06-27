@@ -23,9 +23,10 @@ input FilterAdvertsInput {
 	not: FilterAdvertsInput
 }
 
-input CreateAdvertInput {
+input AdvertInput {
 	title: String
 	description: String
+	images: [ImageInput]
 	unit: String
 	material: String
 	condition: String
@@ -39,11 +40,18 @@ type AdvertPermissions {
 	claim: Boolean!
 }
 
+input ImageInput {
+	url: String
+}
+type Image {
+	url: String
+}
 type Advert {
 	permissions: AdvertPermissions
 	id: ID!
 	title: String
 	description: String
+	images: [Image]
 	unit: String
 	material: String
 	condition: String
@@ -57,7 +65,6 @@ type Terms {
 	usage: [String]
 }
 
-
 type Query {
 	terms: Terms!
 	adverts(filter: FilterAdvertsInput): [Advert]
@@ -65,7 +72,8 @@ type Query {
 }
 
 type Mutation {
-	createAdvert(input: CreateAdvertInput!): Advert
+	createAdvert(input: AdvertInput!): Advert
+	updateAdvert(id: ID!, input: AdvertInput!): Advert
 }
 
 `

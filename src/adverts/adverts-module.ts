@@ -1,7 +1,6 @@
 import { ApplicationContext, ApplicationModule, GraphQLModule, makeGqlEndpoint, makeGqlMiddleware, requireJwtUser } from '@helsingborg-stad/gdi-api-node'
-import { AdvertsRepository, AdvertsUser } from './types'
+import { Advert, AdvertsRepository, AdvertsUser } from './types'
 import { haffaGqlSchema } from './haffa.gql.schema'
-import { mapCreateAdvertInputToAdvert } from './mappers'
 import { getAdvertPermissions } from './permissions'
 
 const validate = (test: boolean, errorMessage: string): boolean => {
@@ -16,20 +15,28 @@ const mapContextUserToUser = (user: any): AdvertsUser => ({
 	roles: validate(user && Array.isArray(user.roles) && user.roles.every(role => typeof role === 'string'), 'Expected user.roles from JWT to be string[]') && user.roles,
 })
 
+const createAdvertMapper = (user: any) => {
+	const u = mapContextUserToUser(user)
+	return (advert: Advert|null) => (
+		advert ? {
+			...advert,
+			permissions: getAdvertPermissions(advert, u),
+		} : null)
+}
+
 const createAdvertsModule = (adverts: AdvertsRepository): GraphQLModule => ({
 	schema: haffaGqlSchema,
 	resolvers: {
 		Query: {
 			// https://www.graphql-tools.com/docs/resolvers
 			adverts: async ({ ctx: { user }, args: { filter } }) => {
-				const u = mapContextUserToUser(user)
-				return (await adverts.list(filter))
-					.map(advert => ({
-						...advert,
-						permissions: getAdvertPermissions(advert, u),
-					}))
+				const l = await adverts.list(filter)
+				return l.map(createAdvertMapper(user))
 			},
-			getAdvert: ({ args: { id } }) => adverts.getAdvert(id),
+			getAdvert: async ({ ctx: { user }, args: { id } }) => {
+				const advert = await adverts.getAdvert(id)
+				return createAdvertMapper(user)(advert)
+			},
 			terms: () => ({
 				unit: [ 'st', 'm', 'dm', 'cm', 'mm', 'm²', 'dm²', 'cm²', 'mm²', 'm³', 'dm³', 'cm³', 'mm³', 'l', 'kg', 'hg', 'g', 'mg' ],
 				material: [ 'Trä', 'Plast', 'Metall', 'Textil', 'Annat' ],
@@ -39,7 +46,15 @@ const createAdvertsModule = (adverts: AdvertsRepository): GraphQLModule => ({
 			}),
 		},
 		Mutation: {
-			createAdvert: ({ ctx: { user }, args: { input } }) => adverts.create(mapCreateAdvertInputToAdvert(input,mapContextUserToUser(user))),
+			createAdvert: async ({ ctx: { user }, args: { input } }) => {
+				const advert = await adverts.create(mapContextUserToUser(user), input)
+				return createAdvertMapper(user)(advert)
+			},
+			updateAdvert: async ({ ctx: { user }, args: { id, input } }) => {
+				const u = mapContextUserToUser(user)
+				const advert = await adverts.update(id, u, input)
+				return createAdvertMapper(user)(advert)
+			},
 		},
 	},
 })

@@ -33,6 +33,7 @@ describe('mapCreateAdvertInputToAdvert', () => {
 			material: 'm',
 			condition: 'c',
 			usage: 'us',
+			images: [],
 		}, {
 			id: 'the@user',
 			roles: [],
