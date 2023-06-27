@@ -26,6 +26,10 @@ input FilterAdvertsInput {
 input CreateAdvertInput {
 	title: String
 	description: String
+	unit: String
+	material: String
+	condition: String
+	usage: String
 }
 
 type AdvertPermissions {
@@ -40,10 +44,22 @@ type Advert {
 	id: ID!
 	title: String
 	description: String
+	unit: String
+	material: String
+	condition: String
+	usage: String
+}
+
+type Terms {
+	unit: [String]
+	material: [String]
+	condition: [String]
+	usage: [String]
 }
 
 
 type Query {
+	terms: Terms!
 	adverts(filter: FilterAdvertsInput): [Advert]
 	getAdvert(id: ID!): Advert
 }

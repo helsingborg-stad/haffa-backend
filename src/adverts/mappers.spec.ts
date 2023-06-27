@@ -29,6 +29,10 @@ describe('mapCreateAdvertInputToAdvert', () => {
 		const advert = mapCreateAdvertInputToAdvert({
 			title: 'the title',
 			description: 'the description',
+			unit: 'u',
+			material: 'm',
+			condition: 'c',
+			usage: 'us',
 		}, {
 			id: 'the@user',
 			roles: [],
@@ -38,6 +42,10 @@ describe('mapCreateAdvertInputToAdvert', () => {
 			description: 'the description',
 			createdBy: 'the@user',
 			createdAt: '2023-06-26',
+			unit: 'u',
+			material: 'm',
+			condition: 'c',
+			usage: 'us',
 		})
 
 		expect(advert.id.length).toBeGreaterThan(32)

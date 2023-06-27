@@ -11,6 +11,11 @@ const emptyAdvert: Advert = {
 	modifiedAt: new Date(0).toISOString(),
 	title: '',
 	description: '',
+	
+	unit: '',
+	material: '',
+	condition: '',
+	usage: '',
 }
 
 export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository => {

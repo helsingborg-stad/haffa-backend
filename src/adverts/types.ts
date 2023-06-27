@@ -13,7 +13,12 @@ export interface AdvertPermissions {
 export interface CreateAdvertInput {
 	title: string
 	description: string
+	unit: string
+	material: string
+	condition: string
+	usage: string
 }
+
 export interface Advert {
 	id: string
 	title: string
@@ -21,6 +26,10 @@ export interface Advert {
 	createdBy: string
 	createdAt: string
 	modifiedAt: string
+	unit: string
+	material: string
+	condition: string
+	usage: string
 }
 
 export interface IdFilterInput {
