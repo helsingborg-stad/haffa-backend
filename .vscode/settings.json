@@ -1,9 +1,15 @@
 {
-	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": true,
-	},
-	"editor.insertSpaces": false,
-	"editor.tabSize": 4,
-	"eslint.packageManager": "npm",
-	"eslint.validate": ["typescript"]
+  "workbench.colorCustomizations": {
+    "titleBar.activeForeground": "#fff",
+    "titleBar.inactiveForeground": "#ffffffcc",
+    "titleBar.activeBackground": "#2c6bff",
+    "titleBar.inactiveBackground": "#1d11fbda"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.insertSpaces": false,
+  "editor.tabSize": 4,
+  "eslint.packageManager": "npm",
+  "eslint.validate": ["typescript"]
 }
