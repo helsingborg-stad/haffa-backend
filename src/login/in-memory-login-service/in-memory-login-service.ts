@@ -23,7 +23,7 @@ export const createInMemoryLoginService = (maxAge: number = ms('10m')): LoginSer
 				// clear entry on successful login
 				repo[email] = null
 				return {
-					email,
+					id: email,
 					roles: [],
 				}
 			}

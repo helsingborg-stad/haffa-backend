@@ -1,27 +1,16 @@
-import { ApplicationContext, ApplicationModule, GraphQLModule, makeGqlEndpoint, makeGqlMiddleware, requireJwtUser } from '@helsingborg-stad/gdi-api-node'
-import { Advert, AdvertInput, AdvertsRepository, AdvertsUser } from './types'
+import { ApplicationContext, ApplicationModule, GraphQLModule, makeGqlEndpoint, makeGqlMiddleware } from '@helsingborg-stad/gdi-api-node'
+import { Advert, AdvertInput, AdvertsRepository } from './types'
 import { haffaGqlSchema } from './haffa.gql.schema'
 import { getAdvertPermissions } from './permissions'
 import { FilesService } from '../files/types'
+import { HaffaUser } from '../login/types'
+import { requireHaffaUser } from '../login/require-haffa-user'
 
-const validate = (test: boolean, errorMessage: string): boolean => {
-	if (!test) {
-		throw new Error(errorMessage)
-	}
-	return true
-}
-
-const mapContextUserToUser = (user: any): AdvertsUser => ({
-	id: validate(user && typeof user.id === 'string', 'Expected user.id from JWT to be string') && user.id,
-	roles: validate(user && Array.isArray(user.roles) && user.roles.every(role => typeof role === 'string'), 'Expected user.roles from JWT to be string[]') && user.roles,
-})
-
-const createAdvertMapper = (user: any) => {
-	const u = mapContextUserToUser(user)
+const createAdvertMapper = (user: HaffaUser) => {
 	return (advert: Advert|null) => (
 		advert ? {
 			...advert,
-			permissions: getAdvertPermissions(advert, u),
+			permissions: getAdvertPermissions(advert, user),
 		} : null)
 }
 
@@ -61,22 +50,20 @@ const createAdvertsModule = (adverts: AdvertsRepository, files: FilesService): G
 			}),
 		},
 		Mutation: {
-			createAdvert: async ({ ctx: { user }, args: { input } }) => {
+			createAdvert: async ({ ctx: { haffaUser: user }, args: { input } }) => {
 				const fixedInput = await convertInput(input, files)
-				const advert = await adverts.create(mapContextUserToUser(user), fixedInput)
+				const advert = await adverts.create(user, fixedInput)
 				return createAdvertMapper(user)(advert)
 			},
-			updateAdvert: async ({ ctx: { user }, args: { id, input } }) => {
+			updateAdvert: async ({ ctx: { haffaUser: user }, args: { id, input } }) => {
 				const fixedInput = await convertInput(input, files)
-				const u = mapContextUserToUser(user)
-				const advert = await adverts.update(id, u, fixedInput)
+				const advert = await adverts.update(id, user, fixedInput)
 				return createAdvertMapper(user)(advert)
 			},
 		},
 	},
 })
 
-
 export const advertsModule = (adverts: AdvertsRepository, files: FilesService): ApplicationModule => ({ registerKoaApi }: ApplicationContext) => registerKoaApi({
-	haffaGQL: requireJwtUser(makeGqlMiddleware(makeGqlEndpoint(createAdvertsModule(adverts, files)))),
+	haffaGQL: requireHaffaUser(makeGqlMiddleware(makeGqlEndpoint(createAdvertsModule(adverts, files)))),
 })

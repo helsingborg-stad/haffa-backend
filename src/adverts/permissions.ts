@@ -1,7 +1,7 @@
-import { Advert, AdvertPermissions, AdvertsUser } from './types'
+import { HaffaUser } from '../login/types'
+import { Advert, AdvertPermissions } from './types'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getAdvertPermissions = (advert: Advert, user: AdvertsUser): AdvertPermissions => ({
+export const getAdvertPermissions = (advert: Advert, user: HaffaUser): AdvertPermissions => ({
 	edit: advert.createdBy === user.id,
 	delete: advert.createdBy === user.id,
 	book: true,

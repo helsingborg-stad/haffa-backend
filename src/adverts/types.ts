@@ -1,3 +1,5 @@
+import { HaffaUser } from '../login/types'
+
 export interface AdvertsUser {
 	id: string
 	roles: string[]
@@ -61,6 +63,6 @@ export interface FilterAdvertsInput {
 export interface AdvertsRepository {
 	getAdvert: (id: string) => Promise<Advert | null>
 	list: (filter?: FilterAdvertsInput) => Promise<Advert[]>
-	create: (user: AdvertsUser, advert: AdvertInput) => Promise<Advert>
-	update: (id: string, user: AdvertsUser, advert: AdvertInput) => Promise<Advert|null>
+	create: (user: HaffaUser, advert: AdvertInput) => Promise<Advert>
+	update: (id: string, user: HaffaUser, advert: AdvertInput) => Promise<Advert|null>
 }

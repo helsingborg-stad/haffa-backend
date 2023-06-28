@@ -3,7 +3,7 @@ import { ApplicationContext, ApplicationModule, getEnv } from '@helsingborg-stad
 import jwt from 'jsonwebtoken'
 import HttpStatusCodes from 'http-status-codes'
 import EmailValidator from 'email-validator'
-import { LoginResult, LoginService } from './types'
+import { HaffaUser, LoginService } from './types'
 
 export const loginModule =(loginService: LoginService): ApplicationModule => ({ registerKoaApi }: ApplicationContext) => {
 	const secret = getEnv('JWT_SHARED_SECRET')
@@ -25,7 +25,6 @@ export const loginModule =(loginService: LoginService): ApplicationModule => ({ 
 			ctx.body = {
 				token: '',
 			}
-
 		}
 	}
 
@@ -44,7 +43,7 @@ export const loginModule =(loginService: LoginService): ApplicationModule => ({ 
 			ctx.throw(HttpStatusCodes.BAD_REQUEST)
 		}
 
-		const createToken = (user: LoginResult) => jwt.sign(
+		const createToken = (user: HaffaUser) => jwt.sign(
 			{
 				id: email,
 				roles: user.roles,
