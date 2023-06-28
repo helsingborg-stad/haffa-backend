@@ -22,6 +22,6 @@ export const createApp = ({ services, validateResponse }: {services: Services, v
 		.use(jwtUserModule(services.authorization))
 		.use(healthCheckModule())
 		.use(advertsModule(services.adverts, services.files))
-		.use(loginModule(services.login))
+		.use(loginModule(services.login, services.tokens))
 		.use(services.files.tryCreateApplicationModule() || (() => void 0))
 

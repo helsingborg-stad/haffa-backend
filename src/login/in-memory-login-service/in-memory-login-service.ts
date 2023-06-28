@@ -1,27 +1,38 @@
 import { LoginService, RequestPincodeResult } from '../types'
 import ms from 'ms'
 
-export const createInMemoryLoginService = (maxAge: number = ms('10m')): LoginService => {
+interface RequestEntry {
+	pincode: string
+	expires: number
+}
 
-	interface RequestEntry {
-		pincode: string
-		expires: number
+interface Options {
+	maxAge: number
+	db: InMemoryLoginDatabase
+}
+
+export type InMemoryLoginDatabase = Record<string, RequestEntry>
+
+export const createInMemoryLoginService = (options?: Partial<Options>): LoginService => {
+	const { maxAge, db }: Options = {
+		db: {},
+		maxAge: ms('10m'),
+		...options,
 	}
-	const repo: Record<string, RequestEntry> = {}
 
 	return {
 		requestPincode: async (email) =>  {
-			repo[email] = {
+			db[email] = {
 				pincode: '123456',
 				expires: Date.now() + maxAge,
 			}
 			return RequestPincodeResult.accepted
 		},
 		tryLogin: async (email, pincode) => {
-			const entry = repo[email]
+			const entry = db[email]
 			if (entry && (entry.pincode === pincode) && (entry.expires >= Date.now())) {
 				// clear entry on successful login
-				repo[email] = null
+				db[email] = null
 				return {
 					id: email,
 					roles: [],

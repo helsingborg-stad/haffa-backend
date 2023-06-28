@@ -1,30 +1,15 @@
 import Koa from 'koa'
 import { ApplicationContext, ApplicationModule, getEnv } from '@helsingborg-stad/gdi-api-node'
-import jwt from 'jsonwebtoken'
 import HttpStatusCodes from 'http-status-codes'
 import EmailValidator from 'email-validator'
-import { HaffaUser, LoginService } from './types'
+import { LoginService } from './types'
+import { TokenService } from '../tokens/types'
 
-export const loginModule =(loginService: LoginService): ApplicationModule => ({ registerKoaApi }: ApplicationContext) => {
-	const secret = getEnv('JWT_SHARED_SECRET')
-	const jwtOptions = {
-		audience: 'urn://haffa',
-		subject: 'haffa-web-client',
-	} 
+export const loginModule =(loginService: LoginService, tokenService: TokenService): ApplicationModule => ({ registerKoaApi }: ApplicationContext) => {
 	const verifyToken: Koa.Middleware = (ctx) => {
 		const { request: { body: { token } } } = ctx
-		try {
-			jwt.verify((token || '').toString(), secret, {
-				...jwtOptions,
-				maxAge: '30d',
-			})
-			ctx.body = {
-				token,
-			}
-		} catch (e) {
-			ctx.body = {
-				token: '',
-			}
+		ctx.body = {
+			token: tokenService.verify(token as string) ? token : '',
 		}
 	}
 
@@ -43,19 +28,9 @@ export const loginModule =(loginService: LoginService): ApplicationModule => ({ 
 			ctx.throw(HttpStatusCodes.BAD_REQUEST)
 		}
 
-		const createToken = (user: HaffaUser) => jwt.sign(
-			{
-				id: email,
-				roles: user.roles,
-			},
-			secret,
-			{
-				...jwtOptions,
-				expiresIn: '30d',
-			})
 		const user = await loginService.tryLogin(email, pincode)
 		ctx.body = {
-			token: user ? createToken(user) : '',
+			token: user ? tokenService.sign(user) : '',
 		}
 	}
 	
