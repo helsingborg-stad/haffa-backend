@@ -1,5 +1,5 @@
 import * as uuid from 'uuid'
-import { join } from 'path'
+import { join, relative } from 'path'
 import { mkdirp } from 'mkdirp'
 import { extension } from 'mime-types'
 import { FilesService } from '../types'
@@ -32,7 +32,7 @@ export const createFsFilesService = (folder: string, baseUrl = '/api/v1/fs/image
 				const { params: { fileId } } = ctx
 				const path = join(folder, fileId) 
 				try {
-					await send(ctx, path, { hidden: true })
+					await send(ctx, relative(process.cwd(), path), { hidden: true })
 				} catch {
 					// unfortunately, send() exposes to much info on errors
 					// so we clear it out 

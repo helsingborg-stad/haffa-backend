@@ -1,18 +1,17 @@
 import { readFile, writeFile } from 'fs/promises'
 import { createEmptyProfile } from './mappers'
-import { Profile, ProfileInput, ProfileRepository } from './types'
+import { Profile, ProfileRepository } from './types'
 import { join } from 'path'
 import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import { mkdirp } from 'mkdirp'
-import { HaffaUser } from '../login/types'
 
 export const tryCreateFsProfileRepositoryFromEnv = (): ProfileRepository|null => {
-	const dataFolder = getEnv('FS_ADVERTS_PATH', { fallback: '' })
-	return dataFolder ? createFsProfileRepository(dataFolder) : null
+	const dataFolder = getEnv('FS_DATA_PATH', { fallback: '' })
+	return dataFolder ? createFsProfileRepository(join(process.cwd(), dataFolder, 'profiles')) : null
 }
 
 export const createFsProfileRepository = (dataFolder: string): ProfileRepository => {
-	const getProfilePath = (id: string) => join(dataFolder, Buffer.from(id).toString('base64'))
+	const getProfilePath = (id: string) => join(dataFolder, Buffer.from(id.toLowerCase()).toString('base64'))
 
 	const readProfile = (id: string): Promise<Profile> => 
 		readFile(getProfilePath(id), 'utf-8')

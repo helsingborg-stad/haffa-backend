@@ -25,7 +25,6 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 		})))
 		.then(adverts => adverts.filter(createFilterPredicate(filter)))
 		.catch(e => {
-			console.log(e)
 			if (e?.code === 'ENOENT') {
 				return []
 			}
