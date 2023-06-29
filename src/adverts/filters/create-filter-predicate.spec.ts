@@ -64,7 +64,7 @@ describe('createFilterPredicate', () => {
 			...data.slice(50, 60) ])
 	})
 
-	it.only('not', () => {
+	it('not', () => {
 		testData({
 			not: {
 				id: { lte: 50 },
@@ -78,7 +78,7 @@ describe('createFilterPredicate', () => {
 		},data)
 	})
 
-	it.only('and', () => {
+	it('and', () => {
 		testData({
 			and: [
 				{ id: { gt: 50 } },
@@ -94,7 +94,7 @@ describe('createFilterPredicate', () => {
 		}, [])
 	})
 
-	it.only('or', () => {
+	it('or', () => {
 		testData({
 			or: [
 				{ id: { eq: 10 } },
@@ -119,8 +119,7 @@ describe('createFilterPredicate', () => {
 				{ not: { id: { gt: 41 } } },
 				{
 					or: [
-						{ id: { gt: 40 } },
-						{ title: { contains: 'title' } },
+						{ id: { gte: 40 } },
 					],
 				},
 			],

@@ -1,8 +1,19 @@
 import { HaffaUser } from '../login/types'
 
-export interface AdvertsUser {
-	id: string
-	roles: string[]
+export enum AdvertType {
+	recycle = 'recycle',
+	borrow = 'borrow',
+}
+
+// User editable fields in an advert
+export interface AdvertUserFields {
+	title: string
+	description: string
+	images: AdvertImage[]
+	unit: string
+	material: string
+	condition: string
+	usage: string
 }
 
 export interface AdvertPermissions {
@@ -12,52 +23,34 @@ export interface AdvertPermissions {
 	claim: boolean
 }
 
-export interface AdvertInput {
-	title: string
-	description: string
-	images: AdvertImage[]
-	unit: string
-	material: string
-	condition: string
-	usage: string
-}
+export type AdvertInput = AdvertUserFields
 
 export interface AdvertImage {
 	url: string
 }
 
-export interface Advert {
+export interface Advert extends AdvertUserFields {
 	id: string
+	type: AdvertType
 	createdBy: string
 	createdAt: string
 	modifiedAt: string
-
-	title: string
-	description: string
-	images: AdvertImage[]
-	unit: string
-	material: string
-	condition: string
-	usage: string
 }
 
-export interface IdFilterInput {
-	ne?: string
-	eq?: string
+export type FilterInput<T> = {
+	ne?: T
+	eq?: T
+	gt?: T
+	gte?: T
+	lt?: T
+	lte?: T
+} & (T extends string ? {contains?: string} : {})
+
+export type FilterAdvertsInput = {
+	id?: FilterInput<string>
 }
-export interface StringFilterInput {
-	ne?: string
-	eq?: string
-	gt?: string
-	gte?: string
-	lt?: string
-	lte?: string
-	contains?: string
-} 
-export interface FilterAdvertsInput {
-	id?: IdFilterInput
-	title?: StringFilterInput
-	description?: StringFilterInput
+& {
+	[Property in keyof Omit<AdvertUserFields, 'images'>]: FilterInput<AdvertUserFields[Property]>
 }
 
 export interface AdvertsRepository {

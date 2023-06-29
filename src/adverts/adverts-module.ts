@@ -50,12 +50,12 @@ const createAdvertsModule = (adverts: AdvertsRepository, files: FilesService): G
 			}),
 		},
 		Mutation: {
-			createAdvert: async ({ ctx: { haffaUser: user }, args: { input } }) => {
+			createAdvert: async ({ ctx: { user }, args: { input } }) => {
 				const fixedInput = await convertInput(input, files)
 				const advert = await adverts.create(user, fixedInput)
 				return createAdvertMapper(user)(advert)
 			},
-			updateAdvert: async ({ ctx: { haffaUser: user }, args: { id, input } }) => {
+			updateAdvert: async ({ ctx: { user }, args: { id, input } }) => {
 				const fixedInput = await convertInput(input, files)
 				const advert = await adverts.update(id, user, fixedInput)
 				return createAdvertMapper(user)(advert)

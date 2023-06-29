@@ -4,4 +4,6 @@ import { TokenService } from './types'
 
 export { createTokenService }
 
-export const createTokenServiceFromEnv = (): TokenService => createTokenService(getEnv('JWT_SHARED_SECRET'))
+const tryParseJson = (json?: string): any | null => json ? JSON.parse(json) : null
+
+export const createTokenServiceFromEnv = (): TokenService => createTokenService(getEnv('JWT_SHARED_SECRET'), tryParseJson(getEnv('JWT_DEFAULT_USER',{ fallback: '' })))

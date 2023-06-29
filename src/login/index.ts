@@ -8,4 +8,4 @@ export {
 	validateHaffaUser,
 }
 
-export const createLoginServicerFromEnv = (): LoginService => createInMemoryLoginService()
+export const createLoginServiceFromEnv = (): LoginService => createInMemoryLoginService()

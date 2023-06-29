@@ -2,22 +2,20 @@ import { Advert, AdvertsRepository } from '../types'
 import { createFilterPredicate } from '../filters/create-filter-predicate'
 import { mapCreateAdvertInputToAdvert, patchAdvertWithAdvertInput } from '../mappers'
 
-export const createInMemoryAdvertsRepository = (): AdvertsRepository => {
-	const adverts: Advert[] = []
+export const createInMemoryAdvertsRepository = (db: Record<string, Advert> = {}): AdvertsRepository => {
 	return ({
-		getAdvert: async id => adverts.find(advert => advert.id === id) || null,
-		list: async (filter) => adverts.filter(createFilterPredicate(filter)),
+		getAdvert: async id => db[id] || null,
+		list: async (filter) => Object.values(db).filter(createFilterPredicate(filter)),
 		create: async (user, input) => {
 			const advert = mapCreateAdvertInputToAdvert(input, user)
-			adverts.push(advert)
+			db[advert.id] = advert
 			return advert
 		},
 		update: async (id, user, input) => {
-			const index = adverts.findIndex(existing => existing.id === id)
-			if (index >= 0) {
-				const updated = patchAdvertWithAdvertInput(adverts[index], input)
-				adverts[index] = updated
-				return updated
+			const existing = db[id]
+			if (existing) {
+				db[id] = patchAdvertWithAdvertInput(existing, input)
+				return db[id]
 			}
 			return null
 		},

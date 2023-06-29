@@ -1,9 +1,5 @@
 export const haffaGqlSchema = `
 
-input IdFilterInput {
-	ne: String
-	eq: String
-}
 input StringFilterInput {
 	ne: String
 	eq: String
@@ -14,9 +10,13 @@ input StringFilterInput {
 	contains: String
 } 
 input FilterAdvertsInput {
-	id: IdFilterInput
+	id: StringFilterInput
 	title: StringFilterInput
 	description: StringFilterInput
+	unit: StringFilterInput
+	material: StringFilterInput
+	condition: StringFilterInput
+	usage: StringFilterInput
 
 	and: [FilterAdvertsInput]
 	or: [FilterAdvertsInput]

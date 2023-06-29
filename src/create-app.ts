@@ -19,7 +19,7 @@ export const createApp = ({ services, validateResponse }: {services: Services, v
 		.use(({ app }) => app.use(cors()))
 		.use(({ app }) => app.use(bodyparser({ jsonLimit: '50mb'  })))
 		.use(swaggerModule())
-		.use(jwtUserModule(services.authorization))
+		.use(jwtUserModule(services.tokens))
 		.use(healthCheckModule())
 		.use(advertsModule(services.adverts, services.files))
 		.use(loginModule(services.login, services.tokens))

@@ -2,17 +2,15 @@ import { validateHaffaUser } from '..'
 import { LoginService, RequestPincodeResult } from '../types'
 import ms from 'ms'
 
-interface RequestEntry {
+interface Options {
+	maxAge: number
+	db: Record<string, LoginRequestEntry>
+}
+
+export interface LoginRequestEntry {
 	pincode: string
 	expires: number
 }
-
-interface Options {
-	maxAge: number
-	db: InMemoryLoginDatabase
-}
-
-export type InMemoryLoginDatabase = Record<string, RequestEntry>
 
 export const createInMemoryLoginService = (options?: Partial<Options>): LoginService => {
 	const { maxAge, db }: Options = {
@@ -20,7 +18,6 @@ export const createInMemoryLoginService = (options?: Partial<Options>): LoginSer
 		maxAge: ms('10m'),
 		...options,
 	}
-
 	return {
 		requestPincode: async (email) =>  {
 			db[email] = {

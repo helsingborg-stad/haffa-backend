@@ -1,30 +1,14 @@
-import * as uuid from 'uuid'
-import { Advert, AdvertsRepository } from '../types'
+import { AdvertsRepository } from '../types'
 import { join } from 'path'
 import { mkdirp } from 'mkdirp'
 import { readdir, readFile, stat, writeFile } from 'fs/promises'
 import { createFilterPredicate } from '../filters/create-filter-predicate'
-import { mapCreateAdvertInputToAdvert, patchAdvertWithAdvertInput } from '../mappers'
-
-const emptyAdvert: Advert = {
-	id: '',
-	createdBy: '',
-	createdAt: new Date(0).toISOString(),
-	modifiedAt: new Date(0).toISOString(),
-	title: '',
-	description: '',
-	images: [],
-
-	unit: '',
-	material: '',
-	condition: '',
-	usage: '',
-}
+import { createEmptyAdvert, mapCreateAdvertInputToAdvert, patchAdvertWithAdvertInput } from '../mappers'
 
 export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository => {
 	const getAdvert: AdvertsRepository['getAdvert'] = async (id: string) => readFile(join(dataFolder, `${id}.json`), { encoding: 'utf8' })
 		.then(text => ({
-			...emptyAdvert,
+			...createEmptyAdvert(),
 			...JSON.parse(text),	
 		}))
 		.catch(e => null)
@@ -36,7 +20,7 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 		.then(stats => Promise.all(stats
 			.filter(({ stat }) => stat.isFile()).map(({ path }) => readFile(path, { encoding: 'utf8' }) )))
 		.then(texts => texts.map(text => ({
-			...emptyAdvert,
+			...createEmptyAdvert(),
 			...JSON.parse(text),
 		})))
 		.then(adverts => adverts.filter(createFilterPredicate(filter)))

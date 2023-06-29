@@ -8,14 +8,12 @@ const jwtOptions = {
 	subject: 'haffa-web-client',
 } 
 
-export const createTokenService = (secret: string): TokenService => {
-	
+export const createTokenService = (secret: string, defaultUser?: any): TokenService => {
 	const sign: TokenService['sign'] = user => jwt.sign(
 		user,
 		secret,
 		{
 			...jwtOptions,
-			algorithm: 'HS512',
 			expiresIn: '30d',
 		})
 
@@ -23,18 +21,20 @@ export const createTokenService = (secret: string): TokenService => {
 		try {
 			const user = jwt.verify((token || '').toString(), secret, {
 				...jwtOptions,
-				algorithms: ['HS512'],
 				maxAge: '30d',
 			}) as HaffaUser
 			return validateHaffaUser(user)
-		} catch {
+		} catch (e) {
 			return null
 		}
 	}
 
 	const verify: TokenService['verify'] = token => !!decode(token)
 
+	const tryGetUserFromJwt: TokenService['tryGetUserFromJwt'] = token => decode(token) || validateHaffaUser(defaultUser)
+
 	return {
+		tryGetUserFromJwt,
 		sign,
 		decode,
 		verify,
