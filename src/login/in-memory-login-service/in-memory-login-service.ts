@@ -1,3 +1,4 @@
+import { validateHaffaUser } from '..'
 import { LoginService, RequestPincodeResult } from '../types'
 import ms from 'ms'
 
@@ -33,10 +34,10 @@ export const createInMemoryLoginService = (options?: Partial<Options>): LoginSer
 			if (entry && (entry.pincode === pincode) && (entry.expires >= Date.now())) {
 				// clear entry on successful login
 				db[email] = null
-				return {
+				return validateHaffaUser({
 					id: email,
 					roles: [],
-				}
+				})
 			}
 			return null
 		},

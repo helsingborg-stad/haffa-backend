@@ -1,4 +1,3 @@
-import * as uuid from 'uuid'
 import { Advert, AdvertsRepository } from '../types'
 import { createFilterPredicate } from '../filters/create-filter-predicate'
 import { mapCreateAdvertInputToAdvert, patchAdvertWithAdvertInput } from '../mappers'
