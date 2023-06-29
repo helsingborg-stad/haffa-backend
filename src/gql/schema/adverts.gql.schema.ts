@@ -41,7 +41,6 @@ input AdvertInput {
 	material: String
 	condition: String
 	usage: String
-
 }
 
 type AdvertPermissions {
