@@ -8,6 +8,7 @@ import { createNullFileService } from '../files/null-file-service'
 import { HaffaUser } from '../login/types'
 import { createApp } from '../create-app'
 import { createTokenService } from '../tokens'
+import { createInMemoryProfileRepository } from '../profile'
 
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
@@ -20,6 +21,7 @@ export const createTestServices = (services: Partial<Services>): Services => ({
 	login: createInMemoryLoginService(),
 	tokens: createTokenService(TEST_SHARED_SECRET),
 	adverts: createInMemoryAdvertsRepository(),
+	profiles: createInMemoryProfileRepository(),
 	access: createAccessService(),
 	files: createNullFileService(),
 	...services,

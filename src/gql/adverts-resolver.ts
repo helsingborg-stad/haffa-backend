@@ -1,8 +1,8 @@
 import { EntityResolverMap } from '@helsingborg-stad/gdi-api-node/graphql'
-import { HaffaUser } from '../../../login/types'
-import { Advert, AdvertInput, AdvertsRepository } from '../../types'
-import { getAdvertPermissions } from '../../permissions'
-import { FilesService } from '../../../files/types'
+import { HaffaUser } from '../login/types'
+import { Advert, AdvertInput, AdvertsRepository } from '../adverts/types'
+import { getAdvertPermissions } from '../adverts/permissions'
+import { FilesService } from '../files/types'
 
 const createAdvertMapper = (user: HaffaUser) => {
 	return (advert: Advert|null) => (

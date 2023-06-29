@@ -1,19 +1,22 @@
 import { ApplicationContext, ApplicationModule, GraphQLModule, makeGqlEndpoint, makeGqlMiddleware } from '@helsingborg-stad/gdi-api-node'
-import { AdvertsRepository } from './types'
-import { haffaGqlSchema } from './gql/schema/haffa.gql.schema'
+import { AdvertsRepository } from '../adverts/types'
+import { haffaGqlSchema } from './schema/haffa.gql.schema'
 import { FilesService } from '../files/types'
 import { requireHaffaUser } from '../login/require-haffa-user'
-import { advertsResolver } from './gql/schema/adverts-resolver'
-import { termsResolver } from './gql/terms-resolver'
+import { advertsResolver } from './adverts-resolver'
+import { termsResolver } from './terms-resolver'
 import { EntityResolverMap } from '@helsingborg-stad/gdi-api-node/graphql'
+import { profileResolver } from './profile-resolver'
+import { Services } from '../types'
 
-export const advertsModule = (adverts: AdvertsRepository, files: FilesService): ApplicationModule => ({ registerKoaApi }: ApplicationContext) => registerKoaApi({
-	haffaGQL: requireHaffaUser(makeGqlMiddleware(makeGqlEndpoint(createAdvertsModule(adverts, files)))),
-})
+export const graphQLModule = (services: Pick<Services, 'adverts'|'files'|'profiles'>) => 
+	({ registerKoaApi }: ApplicationContext) => registerKoaApi({
+		haffaGQL: requireHaffaUser(makeGqlMiddleware(makeGqlEndpoint(createAdvertsModule(services)))),
+	})
 
-const createAdvertsModule = (adverts: AdvertsRepository, files: FilesService): GraphQLModule => ({
+const createAdvertsModule = ({ adverts, files, profiles }: Pick<Services, 'adverts'|'files'|'profiles'>): GraphQLModule => ({
 	schema: haffaGqlSchema,
-	resolvers: mergeResolvers(advertsResolver(adverts, files), termsResolver()),
+	resolvers: mergeResolvers(advertsResolver(adverts, files), profileResolver(profiles), termsResolver()),
 })
 
 const mergeResolvers = (...resolvers: EntityResolverMap[]): EntityResolverMap => {

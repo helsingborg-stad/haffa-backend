@@ -6,7 +6,7 @@ import { jwtUserModule } from '@helsingborg-stad/gdi-api-node'
 import { swaggerModule } from '@helsingborg-stad/gdi-api-node'
 import { Application } from '@helsingborg-stad/gdi-api-node'
 import { Services } from './types'
-import { advertsModule } from './adverts/adverts-module'
+import { graphQLModule } from './gql/adverts-module'
 import { loginModule } from './login/login-module'
 
 /** Create fully packaged web application, given dependencies */
@@ -21,7 +21,7 @@ export const createApp = ({ services, validateResponse }: {services: Services, v
 		.use(swaggerModule())
 		.use(jwtUserModule(services.tokens))
 		.use(healthCheckModule())
-		.use(advertsModule(services.adverts, services.files))
+		.use(graphQLModule(services))
 		.use(loginModule(services.login, services.tokens))
 		.use(services.files.tryCreateApplicationModule() || (() => void 0))
 

@@ -1,8 +1,8 @@
-import { advertsModule } from './adverts-module'
+import { graphQLModule } from '../gql/adverts-module'
 import { tryCreateFsAdvertsRepositoryFromEnv } from './fs-adverts-repository'
 import { createInMemoryAdvertsRepository } from './in-memory-adverts-repository'
 import { AdvertsRepository } from './types'
 
-export { advertsModule }
+export { graphQLModule as advertsModule }
 
 export const createAdvertsRepositoryFromEnv = (): AdvertsRepository => tryCreateFsAdvertsRepositoryFromEnv() || createInMemoryAdvertsRepository()
