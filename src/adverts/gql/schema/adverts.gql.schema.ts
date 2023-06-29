@@ -1,4 +1,14 @@
-export const haffaGqlSchema = `
+export const advertsGqlSchema = /* GraphQL */`
+
+type Query {
+	adverts(filter: FilterAdvertsInput): [Advert]
+	getAdvert(id: ID!): Advert
+}
+
+type Mutation {
+	createAdvert(input: AdvertInput!): Advert
+	updateAdvert(id: ID!, input: AdvertInput!): Advert
+}
 
 input StringFilterInput {
 	ne: String
@@ -31,6 +41,7 @@ input AdvertInput {
 	material: String
 	condition: String
 	usage: String
+
 }
 
 type AdvertPermissions {
@@ -57,23 +68,4 @@ type Advert {
 	condition: String
 	usage: String
 }
-
-type Terms {
-	unit: [String]
-	material: [String]
-	condition: [String]
-	usage: [String]
-}
-
-type Query {
-	terms: Terms!
-	adverts(filter: FilterAdvertsInput): [Advert]
-	getAdvert(id: ID!): Advert
-}
-
-type Mutation {
-	createAdvert(input: AdvertInput!): Advert
-	updateAdvert(id: ID!, input: AdvertInput!): Advert
-}
-
 `
