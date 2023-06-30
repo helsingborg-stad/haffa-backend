@@ -11,6 +11,7 @@ const advertProps = `
 	images {
 		url
 	}
+	quantity
 	unit
 	material
 	condition
