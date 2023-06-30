@@ -4,6 +4,7 @@ import { Advert, AdvertInput, AdvertsRepository } from './types'
 import { getAdvertPermissions } from './permissions'
 import { FilesService } from '../files/types'
 import { advertsGqlSchema } from './adverts.gql.schema'
+import { createEmptyAdvert } from './mappers'
 
 /**
  * 
@@ -13,6 +14,7 @@ import { advertsGqlSchema } from './adverts.gql.schema'
 const createAdvertMapper = (user: HaffaUser) => {
 	return (advert: Advert|null) => (
 		advert ? {
+			...createEmptyAdvert(),
 			...advert,
 			permissions: getAdvertPermissions(advert, user),
 		} : null)

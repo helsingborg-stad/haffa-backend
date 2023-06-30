@@ -37,6 +37,7 @@ input AdvertInput {
 	title: String
 	description: String
 	images: [ImageInput]
+	quantity: Int
 	unit: String
 	material: String
 	condition: String
@@ -61,6 +62,7 @@ type Advert {
 	id: ID!
 	title: String
 	description: String
+	quantity: Int
 	images: [Image]
 	unit: String
 	material: String

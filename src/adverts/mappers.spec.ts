@@ -1,8 +1,9 @@
-import { mapCreateAdvertInputToAdvert } from './mappers'
+import { createEmptyAdvert, mapCreateAdvertInputToAdvert } from './mappers'
 
 describe('mapCreateAdvertInputToAdvert', () => {
 	it('should set input field, user and timestamps', () => {
 		const advert = mapCreateAdvertInputToAdvert({
+			...createEmptyAdvert(),
 			title: 'the title',
 			description: 'the description',
 			unit: 'u',

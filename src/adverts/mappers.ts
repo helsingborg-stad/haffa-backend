@@ -10,6 +10,7 @@ export const createEmptyAdvert = (): Advert => ({
 	modifiedAt: new Date(0).toISOString(),
 	title: '',
 	description: '',
+	quantity: 1,
 	images: [],
 	
 	unit: '',

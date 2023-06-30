@@ -9,6 +9,7 @@ export enum AdvertType {
 export interface AdvertUserFields {
 	title: string
 	description: string
+	quantity: number
 	images: AdvertImage[]
 	unit: string
 	material: string
