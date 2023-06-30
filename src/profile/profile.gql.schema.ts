@@ -1,4 +1,4 @@
-export const profileSchema = /* GraphQL */ `
+export const profileGqlSchema = /* GraphQL */ `
 
 type Query {
 	profile: Profile!

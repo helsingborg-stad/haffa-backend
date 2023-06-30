@@ -1,4 +1,4 @@
-import { graphQLModule } from '../gql/adverts-module'
+import { graphQLModule } from '../haffa/haffa-module'
 import { tryCreateFsAdvertsRepositoryFromEnv } from './fs-adverts-repository'
 import { createInMemoryAdvertsRepository } from './in-memory-adverts-repository'
 import { AdvertsRepository } from './types'

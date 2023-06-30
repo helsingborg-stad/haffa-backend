@@ -6,7 +6,7 @@ import { jwtUserModule } from '@helsingborg-stad/gdi-api-node'
 import { swaggerModule } from '@helsingborg-stad/gdi-api-node'
 import { Application } from '@helsingborg-stad/gdi-api-node'
 import { Services } from './types'
-import { graphQLModule } from './gql/adverts-module'
+import { graphQLModule } from './haffa/haffa-module'
 import { loginModule } from './login/login-module'
 
 /** Create fully packaged web application, given dependencies */
