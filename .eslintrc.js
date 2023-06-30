@@ -20,9 +20,10 @@ module.exports = {
   rules: {
     'import/prefer-default-export': 0,
     'no-void': ['error', { allowAsStatement: true }],
+    'no-use-before-define': 'off',
     '@typescript-eslint/consistent-type-imports': 'warn',
     '@typescript-eslint/no-floating-promises': 'error',
-
+    '@typescript-eslint/no-use-before-define': 'off',
     // OBSOLETED (joakims)
     // 'react/jsx-props-no-spreading': 0,
     // 'no-promise-executor-return': 0,
