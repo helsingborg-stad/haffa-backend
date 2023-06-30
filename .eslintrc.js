@@ -4,11 +4,10 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
     'airbnb',
     'airbnb-typescript',
-    'airbnb/hooks',
+    'plugin:jest/recommended',
+    'plugin:jest/style',
     'prettier',
   ],
   overrides: [],
@@ -20,7 +19,11 @@ module.exports = {
   plugins: ['react'],
   rules: {
     'import/prefer-default-export': 0,
-    // Joakim
+    'no-void': ['error', { allowAsStatement: true }],
+    '@typescript-eslint/consistent-type-imports': 'warn',
+    '@typescript-eslint/no-floating-promises': 'error',
+
+    // OBSOLETED (joakims)
     // 'react/jsx-props-no-spreading': 0,
     // 'no-promise-executor-return': 0,
     // 'react-hooks/exhaustive-deps': 0,
