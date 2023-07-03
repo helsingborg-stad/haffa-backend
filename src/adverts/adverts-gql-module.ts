@@ -1,24 +1,8 @@
 import { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
-import { AdvertInput } from './types'
-import { FilesService } from '../files/types'
 import { advertsGqlSchema } from './adverts.gql.schema'
 import { mapAdvertMutationResultToAdvertWithMetaMutationResult, mapAdvertToAdvertWithMeta, mapAdvertsToAdvertsWithMeta } from './mappers'
 import { createAdvertMutations } from './advert-mutations'
 import { Services } from '../types'
-
-const convertInput = async (input: AdvertInput, files: FilesService): Promise<AdvertInput> => {
-	return {
-		...input,
-		images: await Promise.all(input
-			.images
-			.filter(v => v)
-			.filter(({ url }) => url)
-			.map(image => files.tryConvertDataUrlToUrl(image.url).then(url => ({
-				...image,
-				url: url || image.url,
-			})))),
-	}
-}
 
 export const createAdvertsGqlModule = (services: Pick<Services, 'adverts'|'files'>): GraphQLModule => ({
 	schema: advertsGqlSchema,
@@ -43,6 +27,9 @@ export const createAdvertsGqlModule = (services: Pick<Services, 'adverts'|'files
 				.then(result => mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)),
 			reserveAdvert: async ({ ctx:{ user }, args: { id, quantity } }) =>  createAdvertMutations(services)
 				.reserveAdvert(user, id, quantity)
+				.then(result => mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)),
+			cancelAdvertReservation: async ({ ctx: { user }, args: { id } }) => createAdvertMutations(services)
+				.cancelAdvertReservation(user, id)
 				.then(result => mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)),
 		},
 	},

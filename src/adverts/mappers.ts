@@ -53,7 +53,9 @@ export const patchAdvertWithAdvertInput = (advert: Advert, input: AdvertInput): 
 export const mapAdvertToAdvertWithMeta = (user: HaffaUser, advert: Advert|null): AdvertWithMeta|null => advert ? {
 	...createEmptyAdvert(),
 	...advert,
-	meta: getAdvertMeta(advert, user),
+	...{
+		get meta () { return getAdvertMeta(advert, user) },
+	},
 } : null
 
 export const mapAdvertsToAdvertsWithMeta = (user: HaffaUser, adverts: (Advert|null)[]): (AdvertWithMeta|null)[] => 

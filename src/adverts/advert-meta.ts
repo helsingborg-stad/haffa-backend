@@ -8,4 +8,5 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => ({
 	canReserve: advert.type == AdvertType.recycle && (
 		advert.quantity > advert.reservations.map(({ quantity }) => quantity).reduce((s, v) => s + v, 0)
 	),
+	canCancelReservation: advert.reservations.some(({ reservedBy }) => reservedBy === user.id),
 })

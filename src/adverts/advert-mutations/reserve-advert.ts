@@ -7,7 +7,6 @@ import { verifyReservationLimits, verifyTypeIsReservation } from './verifiers'
 export const createReserveAdvert = ({ adverts }: Pick<Services, 'adverts'>): AdvertMutations['reserveAdvert'] => 
 	(user, id, quantity) => transact<Advert>({
 		load: () => adverts.getAdvert(id),
-		saveVersion: (versionId, advert) => adverts.saveAdvertVersion(versionId, advert),
 		patch: async (advert, actions) => {
 			if (quantity > 0) {
 			// TODO: notify
@@ -29,5 +28,7 @@ export const createReserveAdvert = ({ adverts }: Pick<Services, 'adverts'>): Adv
 				verifyReservationLimits,
 			].map(v => v(ctx))
 			return ctx.update
-		} })
+		},
+		saveVersion: (versionId, advert) => adverts.saveAdvertVersion(versionId, advert),
+	})
 		.then(mapTxResultToAdvertMutationResult)

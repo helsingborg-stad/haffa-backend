@@ -20,7 +20,6 @@ describe('createAdvert', () => {
 		const { status, body } = await gqlRequest(createAdvertMutation, { input })
 		T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))
 
-
 		const result = body?.data?.createAdvert as AdvertWithMetaMutationResult
 
 		T('gql result should match input', () =>  expect(result?.advert).toMatchObject(input))
