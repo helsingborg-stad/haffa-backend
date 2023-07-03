@@ -1,6 +1,6 @@
+import ms from 'ms'
 import { validateHaffaUser } from '..'
 import { LoginService, RequestPincodeResult } from '../types'
-import ms from 'ms'
 
 interface Options {
 	maxAge: number

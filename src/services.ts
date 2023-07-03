@@ -1,4 +1,4 @@
-import { Services } from './types'
+import type { Services } from './types'
 import { createAdvertsRepositoryFromEnv } from './adverts'
 import { createAccessServiceFromEnv } from './access/index'
 import { createLoginServiceFromEnv } from './login'
@@ -7,12 +7,12 @@ import { createTokenServiceFromEnv } from './tokens'
 import { createProfileRepositoryFromEnv } from './profile'
 
 const createServicesFromEnv = (): Services => ({
-	login: createLoginServiceFromEnv(),
-	tokens: createTokenServiceFromEnv(),
-	adverts: createAdvertsRepositoryFromEnv(),
-	profiles: createProfileRepositoryFromEnv(),
-	access: createAccessServiceFromEnv(),
-	files: createFilesServiceFromEnv(),
+  login: createLoginServiceFromEnv(),
+  tokens: createTokenServiceFromEnv(),
+  adverts: createAdvertsRepositoryFromEnv(),
+  profiles: createProfileRepositoryFromEnv(),
+  access: createAccessServiceFromEnv(),
+  files: createFilesServiceFromEnv(),
 })
 
 export { createServicesFromEnv }
