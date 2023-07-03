@@ -67,13 +67,14 @@ describe('transact', () => {
 
 	it('will retry n times', async () => {
 		const db = versionedDatase<TestData>()
+
 		let retries = 5
 		const action = jest.fn(() => Promise.resolve())
 		const newEntry: any = createTestData({})
 		const { data, error,attempts } = await transact({
 			maxRetries: retries,
 			load: async () => newEntry,
-			saveVersion: (versionId, d) =>  --retries === 0 ? db.saveVersion(d.id, versionId, d) : null,
+			saveVersion: async (versionId, d) =>  --retries === 0 ? db.saveVersion(d.id, versionId, d) : null,
 			patch: async (d, actions) => {
 				actions(action)
 				return {
