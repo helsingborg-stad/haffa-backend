@@ -78,6 +78,16 @@ mutation Mutation(
 }
 `
 
+export const cancelAdvertReservationMutation = /* GraphQL */`
+mutation Mutation(
+	$id: ID!
+) {
+	cancelAdvertReservation(id: $id) {
+		${mutationProps}
+	}
+}
+`
+
 export const getTermsQuery = /* GraphQL */`
 query Query {
 	terms {
