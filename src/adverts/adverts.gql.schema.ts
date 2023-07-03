@@ -12,8 +12,9 @@ type Mutation {
 }
 
 type AdvertMutationStatus {
-	code: String
-	message: String
+	code: String!
+	message: String!
+	field: String
 }
 
 type AdvertMutationResult {
