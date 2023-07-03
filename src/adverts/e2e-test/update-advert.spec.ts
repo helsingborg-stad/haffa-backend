@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes"
-import { end2endTest } from "../../test-utils"
+import { T, end2endTest } from "../../test-utils"
 import { createEmptyAdvert, createEmptyAdvertInput } from "../mappers"
 import { AdvertInput, AdvertWithMetaMutationResult } from "../types"
 import { updateAdvertMutation } from "./queries"
@@ -22,14 +22,14 @@ describe('updateAdvert', () => {
 			usage: 'u',
 		}
 		const { status, body } = await gqlRequest(updateAdvertMutation, { id: 'advert-123', input })
-		expect(status).toBe(StatusCodes.OK)
+		T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))
 
 		const result = body?.data?.updateAdvert as AdvertWithMetaMutationResult
 
-		expect(result?.advert).toMatchObject(input)
+		T('returned advert should match input', () => expect(result?.advert).toMatchObject(input))
 		// expect(adverts['advert-123']).toMatchObject(input)
 
-		expect(adverts[result?.advert?.id as string]).toMatchObject(input)
-		expect(adverts['advert-123']).toMatchObject(input)
+		T('database should be updated with input', () => expect(adverts[result?.advert?.id as string]).toMatchObject(input))
+		T('database should be updated with input', () => expect(adverts['advert-123']).toMatchObject(input))
 	}))
 })
