@@ -1,5 +1,7 @@
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+
 <a name="readme-top"></a>
+
 <!--
 *** Thanks for checking out the Best-README-Template. If you have a suggestion
 *** that would make this better, please fork the repo and create a pull request
@@ -7,8 +9,6 @@
 *** Don't forget to give the project a star!
 *** Thanks again! Now go create something AMAZING! :D
 -->
-
-
 
 <!-- PROJECT SHIELDS -->
 <!--
@@ -18,6 +18,7 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
+
 [![MIT License][license-shield]][license-url]
 
 <p>
@@ -34,9 +35,7 @@
   <a href="https://github.com/helsingborg-stad/haffa-backend/issues">Request Feature</a>
 </p>
 
-
-
-# 
+#
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -58,13 +57,13 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 This is a project template for GDI server applications.
 As such, it includes
+
 - a microframework based on [koa](https://koajs.com/), [openapi-backend](https://github.com/anttiviljami/openapi-backend), [koa2-swagger-ui](https://github.com/scttcper/koa2-swagger-ui) and more
 - best practices such as OpenAPI/Swagger
 - GraphQL support
@@ -72,14 +71,16 @@ As such, it includes
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 ### Configuration
+
 Make sure you have the file `.env` in your project root. For its contents, refer to samples in [.env.example](./.env.example)
 
 ### Build and run
+
 ```sh
 # install dependencies
 yarn
@@ -101,6 +102,16 @@ DEBUG=* yarn start
 
 ```
 
+## Run with Docker:
+
+```sh
+# Replace access_token_from_github with your developer token)
+export GITHUB_ACCESS_TOKEN=<access_token_from_github>
+
+# Run Docker
+docker-compose up
+```
+
 ### Testing endpoints
 
 - [OpenAPI endpoint](http://localhost:4000)
@@ -120,13 +131,12 @@ DEBUG=* yarn start
 - [ ] Feature 1
 - [ ] Feature 2
 - [ ] Feature 3
-    - [ ] Nested Feature
+  - [ ] Nested Feature
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -142,27 +152,24 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- ACKNOWLEDGMENTS -->
+
 ## Acknowledgments
 
-* [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
+- [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [license-shield]: https://img.shields.io/github/license/helsingborg-stad/haffa-backend.svg?style=for-the-badge
 [license-url]: https://github.com/helsingborg-stad/haffa-backend/blob/master/LICENSE.txt
