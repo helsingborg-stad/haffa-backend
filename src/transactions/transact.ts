@@ -8,12 +8,17 @@ export interface TxCommitActions {
 	(action: TxCommitAction): void
 }
 
+export interface TxVerifyContext<T> {
+	update: T,
+	original: T,
+	throwIf: (condition: boolean, error: TxError) => void
+}
 export interface TxCtx<T> {
 	maxRetries?: number, retryDelay?: number,
 	load: () => Promise<T|null>,
 	saveVersion: (versionId: string, data: T) =>  Promise<T|null>,
 	patch: (data: T, actions: TxCommitActions) => Promise<T|null>,
-	verify: (ctx: {update: T, original: T, thrw: (error: TxError) => void}) => Promise<T|null>
+	verify: (ctx: TxVerifyContext<T>) => Promise<T|null>
 }
 
 export interface TxError {
@@ -36,8 +41,10 @@ class TransactionError extends Error {
 	}
 }
 
-const thrw = (error: TxError): never => {
-	throw new TransactionError(error)
+const throwIf = (condition: boolean, error: TxError): void => {
+	if (condition) { 
+		throw new TransactionError(error)
+	}
 }
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
@@ -60,7 +67,7 @@ const runTransaction = async <T extends {versionId: string}>(
 		const verified = await verify({
 			update,
 			original,
-			thrw,
+			throwIf,
 		})
 
 		if (!verified) {

@@ -1,12 +1,12 @@
-const advertProps = /* GraphQL */ `
+const advertProps = `
 	id
 	title
 	description
-	permissions {
-		edit
-		delete
-		book
-		claim
+	meta {
+		canEdit
+		canDelete
+		canBook
+		canReserve
 	}
 	images {
 		url
@@ -17,44 +17,72 @@ const advertProps = /* GraphQL */ `
 	condition
 	usage
 `
-export const getAdvertQuery = /* GraphQL */ `
-	query Query($id: ID!) {
-		getAdvert(id: $id) {
-			${advertProps}
-		}
-  }
-`
-export const listAdvertsQuery = /* GraphQL */ `
-	query Query($filter: FilterAdvertsInput) {
-		adverts(filter: $filter) {
-			${advertProps}
-		}
-  }
-`
-export const createAdvertMutation = /* GraphQL */ `
-	mutation Mutation($input: AdvertInput!) {
-		createAdvert(input: $input) {
-			${advertProps}
-		}
+
+const mutationProps = `
+	advert {
+		${advertProps}
+	}
+	status {
+		code
+		message
 	}
 `
-export const updateAdvertMutation = /* GraphQL */ `
-	mutation Mutation(
-		$id: ID!
-		$input: AdvertInput!
-	) {
-		updateAdvert(id: $id, input: $input) {
-			${advertProps}
-		}
+
+
+export const getAdvertQuery = /* GraphQL */`
+query Query($id: ID!) {
+	getAdvert(id: $id) {
+		${advertProps}
 	}
-`
-export const getTermsQuery = /* GraphQL */ `
-  query Query {
-    terms {
-      unit
-      material
-      condition
-      usage
-    }
+  }
+ `
+
+export const listAdvertsQuery = /* GraphQL */`
+query Query($filter: FilterAdvertsInput) {
+	adverts(filter: $filter) {
+		${mutationProps}
+	}
   }
 `
+
+export const createAdvertMutation = /* GraphQL */`
+mutation Mutation(
+	$input: AdvertInput!
+) {
+	createAdvert(input: $input) {
+		${mutationProps}
+	}
+}
+`
+
+export const updateAdvertMutation = /* GraphQL */`
+mutation Mutation(
+	$id: ID!
+	$input: AdvertInput!
+) {
+	updateAdvert(id: $id, input: $input) {
+		${mutationProps}
+	}
+}
+`
+
+export const reserveAdvertMutation = /* GraphQL */`
+mutation Mutation(
+	$id: ID!
+	$quantity: Int
+) {
+	reserveAdvert(id: $id, quantity: $quantity) {
+		${mutationProps}
+	}
+}
+`
+
+export const getTermsQuery = /* GraphQL */`
+query Query {
+	terms {
+		unit
+		material
+		condition
+		usage
+	}
+}`
