@@ -6,8 +6,19 @@ type Query {
 }
 
 type Mutation {
-	createAdvert(input: AdvertInput!): Advert
-	updateAdvert(id: ID!, input: AdvertInput!): Advert
+	createAdvert(input: AdvertInput!): AdvertMutationResult
+	updateAdvert(id: ID!, input: AdvertInput!): AdvertMutationResult
+	reserveAdvert(id: ID!, quantity: Int): AdvertMutationResult
+}
+
+type AdvertMutationStatus {
+	code: String
+	message: String
+}
+
+type AdvertMutationResult {
+	status: AdvertMutationStatus
+	advert: Advert
 }
 
 input StringFilterInput {
@@ -44,22 +55,24 @@ input AdvertInput {
 	usage: String
 }
 
-type AdvertPermissions {
-	edit: Boolean!
-	delete: Boolean!
-	book: Boolean!
-	claim: Boolean!
+type AdvertMeta {
+	canEdit: Boolean!
+	canDelete: Boolean!
+	canBook: Boolean!
+	canReserve: Boolean!
 }
 
 input ImageInput {
 	url: String
 }
+
 type Image {
 	url: String
 }
+
 type Advert {
-	permissions: AdvertPermissions
 	id: ID!
+	meta: AdvertMeta
 	title: String
 	description: String
 	quantity: Int

@@ -46,13 +46,26 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 		const updated = patchAdvertWithAdvertInput(existing, input)
 		const path = join(dataFolder, `${id}.json`)
 		await mkdirp(dataFolder)
-		await writeFile(path, JSON.stringify(updated), { encoding: 'utf8' })
+		await writeFile(path, JSON.stringify(updated, null, 2), { encoding: 'utf8' })
 		return updated
+	}
+
+	const saveAdvertVersion: AdvertsRepository['saveAdvertVersion'] = async (versionid, advert) => {
+		const { id } = advert
+		const existing = await getAdvert(id)
+		if (existing && (existing.versionId === versionid)) {
+			const path = join(dataFolder, `${id}.json`)
+			await mkdirp(dataFolder)
+			await writeFile(path, JSON.stringify(advert, null, 2), { encoding: 'utf8' })
+			return advert
+		}
+		return null
 	}
 
 
 	return {
 		getAdvert,
+		saveAdvertVersion,
 		list,
 		create,
 		update,

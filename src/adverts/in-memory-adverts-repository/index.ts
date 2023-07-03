@@ -19,6 +19,14 @@ export const createInMemoryAdvertsRepository = (db: Record<string, Advert> = {})
 			}
 			return null
 		},
+		saveAdvertVersion: async (versionId, advert) => {
+			const { id } = advert
+			if (db[id]?.versionId === versionId) {
+				db[id] = advert
+				return db[id]
+			}
+			return null
+		},
 
 	})
 }

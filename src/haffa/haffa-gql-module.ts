@@ -7,7 +7,7 @@ import { EntityResolverMap } from '@helsingborg-stad/gdi-api-node/graphql'
 
 export const createHaffaGqlModule = ({ adverts, files, profiles }: Pick<Services, 'adverts'|'files'|'profiles'>): GraphQLModule => 
 	mergeModules(
-		createAdvertsGqlModule(adverts, files),
+		createAdvertsGqlModule({ adverts, files }),
 		createProfileGqlModule(profiles),
 		createTermsGqlModule()
 	)
