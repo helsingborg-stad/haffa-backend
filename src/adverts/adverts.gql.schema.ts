@@ -9,6 +9,7 @@ type Mutation {
 	createAdvert(input: AdvertInput!): AdvertMutationResult
 	updateAdvert(id: ID!, input: AdvertInput!): AdvertMutationResult
 	reserveAdvert(id: ID!, quantity: Int): AdvertMutationResult
+	cancelAdvertReservation(id: ID!): AdvertMutationResult
 }
 
 type AdvertMutationStatus {
@@ -19,7 +20,7 @@ type AdvertMutationStatus {
 
 type AdvertMutationResult {
 	status: AdvertMutationStatus
-	advert: Advert
+	advert: Advert!
 }
 
 input StringFilterInput {
@@ -61,6 +62,7 @@ type AdvertMeta {
 	canDelete: Boolean!
 	canBook: Boolean!
 	canReserve: Boolean!
+	canCancelReservation: Boolean!
 }
 
 input ImageInput {
