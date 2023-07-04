@@ -1,8 +1,8 @@
-import { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
+import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import { advertsGqlSchema } from './adverts.gql.schema'
 import { mapAdvertMutationResultToAdvertWithMetaMutationResult, mapAdvertToAdvertWithMeta, mapAdvertsToAdvertsWithMeta } from './mappers'
 import { createAdvertMutations } from './advert-mutations'
-import { Services } from '../types'
+import type { Services } from '../types'
 
 export const createAdvertsGqlModule = (services: Pick<Services, 'adverts'|'files'|'notifications'>): GraphQLModule => ({
 	schema: advertsGqlSchema,

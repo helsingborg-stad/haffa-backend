@@ -4,5 +4,5 @@ import type { HaffaUser } from '../login/types'
 export interface TokenService extends AuthorizationService {
   verify: (token: string) => boolean
   sign: (user: HaffaUser) => string
-  decode: (token: string) => HaffaUser
+  decode: (token: string) => HaffaUser|null
 }

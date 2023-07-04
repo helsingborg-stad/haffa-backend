@@ -1,11 +1,10 @@
 // Images uploaded ad dataurls are converted to images in configured storage and 
 
-import { FilesService } from '../../files/types'
-import { AdvertInput } from '../types'
+import type { FilesService } from '../../files/types'
+import type { AdvertInput } from '../types'
 
 // a new url is returned
-export const processAdvertInput = async (input: AdvertInput, files: FilesService): Promise<AdvertInput> => {
-	return {
+export const processAdvertInput = async (input: AdvertInput, files: FilesService): Promise<AdvertInput> => ({
 		...input,
 		images: await Promise.all(input
 			.images
@@ -15,5 +14,4 @@ export const processAdvertInput = async (input: AdvertInput, files: FilesService
 				...image,
 				url: url || image.url,
 			})))),
-	}
-}
+	})

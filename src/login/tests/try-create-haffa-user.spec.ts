@@ -28,7 +28,7 @@ describe('tryCreateHaffaUser', ( )=> {
 		expect(Object.keys(tryCreateHaffaUser({
 			id: 'test@user.com',
 			roles: [ 'x', 'y', 'z' ],
-		}))).toMatchObject([ 'id', 'roles' ])
+		}) as any)).toMatchObject([ 'id', 'roles' ])
 	})
 
 	it('tryCreateHaffaUser() trims roles', () => {

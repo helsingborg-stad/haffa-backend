@@ -1,5 +1,6 @@
-import { TxVerifyContext } from '../../transactions'
-import { Advert, AdvertType } from '../types'
+import type { TxVerifyContext } from '../../transactions'
+import type { Advert} from '../types';
+import { AdvertType } from '../types'
 
 export const verifyTypeIsReservation = ({ update, throwIf }: TxVerifyContext<Advert>): void => throwIf(update.type !== AdvertType.recycle, {
 	code: 'EADVERT_',

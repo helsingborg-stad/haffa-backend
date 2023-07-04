@@ -35,6 +35,7 @@ export interface TxResult<T> {
 
 class TransactionError extends Error {
 	error: TxError
+
 	constructor(error: TxError) {
 		super(error.message)
 		this.error = error
@@ -111,25 +112,22 @@ const runTransaction = async <T extends {versionId: string}>(
 }
 
 export const transact = async <T extends {versionId: string}>(ctx: TxCtx<T>): Promise<TxResult<T>|null> => {
-	let retriesLeft = Math.max(1, Number(ctx.maxRetries || 1) || 1)
+	const retriesLeft = Math.max(1, Number(ctx.maxRetries || 1) || 1)
 	const wait = Math.min(1, Number(ctx.retryDelay || 100) || 100)
-
-	let attempts = 0
-	while (true) {
-		attempts = attempts + 1
-		retriesLeft = retriesLeft - 1 
+	
+	async function nextAttempt(attempts: number, attemptsLeft: number): Promise<TxResult<T>|null> {
 		const result = await runTransaction(ctx)
 		if (result === null) {
 			return null
 		}
-		const { shouldRetry: shouldRetry, data, original, error, commitActions } = result
+		const { shouldRetry, data, original, error, commitActions } = result
 
 		if (shouldRetry) {
-			if (retriesLeft <= 0) {
+			if (attemptsLeft <= 1) {
 				return { data, error, attempts }
 			}
 			await delay(wait)
-			continue
+			return nextAttempt(attempts + 1, attemptsLeft - 1)
 		}
 
 		if (error) {
@@ -139,5 +137,6 @@ export const transact = async <T extends {versionId: string}>(ctx: TxCtx<T>): Pr
 		await Promise.all((commitActions || []).filter(action => action).map(action=> action(data, original)))
 		return { data, error: null, attempts }
 	}
-	return null
+
+	return nextAttempt(1, retriesLeft)
 }

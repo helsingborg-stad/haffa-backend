@@ -1,9 +1,9 @@
 import { createConsoleNotificationService } from './console-notifications'
-import { NotificationService } from './types'
+import type { NotificationService } from './types'
 
 export const createNotificationServiceFromEnv = (): NotificationService => createConsoleNotificationService()
 
 export const createNullNotificationService = (): NotificationService => ({
-	advertWasReserved: async () => void 0,
-	advertReservationWasCancelled: async () => void 0,
+	advertWasReserved: async () => undefined,
+	advertReservationWasCancelled: async () => undefined,
 })

@@ -1,7 +1,7 @@
 import * as uuid from 'uuid'
 import { transact } from '.'
 
-const versionedDatase = <T extends {versionId}>(db: Record<string, T> = {}) => ({
+const versionedDatase = <T extends {versionId: string}>(db: Record<string, T> = {}) => ({
 	peek: () => db,
 	load: async (id: string) => db[id] || null,
 	saveVersion: async (id: string, versionId: string, data: T) => {
@@ -15,8 +15,7 @@ const versionedDatase = <T extends {versionId}>(db: Record<string, T> = {}) => (
 })
 
 interface TestData {
-	id: string,
-	versionId: string,
+	id: string, versionId: string,
 	value: any
 }
 
@@ -61,7 +60,6 @@ describe('transact', () => {
 		expect(error).toBeNull()
 		expect(data).toMatchObject({ value: 'new value' })
 		expect(data).toBe(db.peek()[data.id])
-
 		expect(action).toHaveBeenCalled()
 	})
 

@@ -1,7 +1,7 @@
-import { HaffaUser } from '../../login/types'
+import type { HaffaUser } from '../../login/types'
 import { transact } from '../../transactions'
-import { Services } from '../../types'
-import { Advert, AdvertMutations, AdvertReservation } from '../types'
+import type { Services } from '../../types'
+import type { Advert, AdvertMutations, AdvertReservation } from '../types'
 import { mapTxResultToAdvertMutationResult } from './mappers'
 
 const countReservationsByUser = (user: HaffaUser, reservations: AdvertReservation[]): number => 

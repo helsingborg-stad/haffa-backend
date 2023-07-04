@@ -1,7 +1,7 @@
-import { AdvertsRepository } from '../types'
 import { join } from 'path'
 import { mkdirp } from 'mkdirp'
 import { readdir, readFile, stat, writeFile } from 'fs/promises'
+import type { AdvertsRepository } from '../types'
 import { createFilterPredicate } from '../filters/create-filter-predicate'
 import { createEmptyAdvert, mapCreateAdvertInputToAdvert, patchAdvertWithAdvertInput } from '../mappers'
 

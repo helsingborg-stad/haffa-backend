@@ -1,9 +1,9 @@
-import { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
-import { Services } from '../types'
+import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
+import type { EntityResolverMap } from '@helsingborg-stad/gdi-api-node/graphql'
+import type { Services } from '../types'
 import { createAdvertsGqlModule } from '../adverts/adverts-gql-module'
 import { createProfileGqlModule } from '../profile/profile-gql-module'
 import { createTermsGqlModule } from '../terms/terms-gql-module'
-import { EntityResolverMap } from '@helsingborg-stad/gdi-api-node/graphql'
 
 export const createHaffaGqlModule = ({ adverts, files, profiles, notifications }: Pick<Services, 'adverts'|'files'|'profiles'|'notifications'>): GraphQLModule => 
 	mergeModules(

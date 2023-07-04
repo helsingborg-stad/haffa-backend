@@ -1,12 +1,12 @@
-import Koa from 'koa'
-import {
+import type Koa from 'koa'
+import type {
   ApplicationContext,
   ApplicationModule,
 } from '@helsingborg-stad/gdi-api-node'
 import HttpStatusCodes from 'http-status-codes'
 import EmailValidator from 'email-validator'
-import { LoginService } from './types'
-import { TokenService } from '../tokens/types'
+import type { LoginService } from './types'
+import type { TokenService } from '../tokens/types'
 
 export const loginModule =
   (loginService: LoginService, tokenService: TokenService): ApplicationModule =>

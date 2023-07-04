@@ -1,5 +1,5 @@
 import { requireJwtUser } from '@helsingborg-stad/gdi-api-node'
-import Koa from 'koa'
+import type Koa from 'koa'
 import { StatusCodes } from 'http-status-codes'
 import { tryCreateHaffaUser } from './try-create-haffa-user'
 

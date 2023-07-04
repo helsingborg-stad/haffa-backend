@@ -1,6 +1,7 @@
 import * as uuid from 'uuid'
-import { Advert, AdvertInput, AdvertMutationResult, AdvertType, AdvertWithMeta, AdvertWithMetaMutationResult } from './types'
-import { HaffaUser } from '../login/types'
+import type { Advert, AdvertInput, AdvertMutationResult, AdvertWithMeta, AdvertWithMetaMutationResult } from './types';
+import { AdvertType } from './types'
+import type { HaffaUser } from '../login/types'
 import { getAdvertMeta } from './advert-meta'
 
 export const createEmptyAdvert = (): Advert => ({

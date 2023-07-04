@@ -6,10 +6,13 @@ export const createInMemoryProfileRepository = (
 ): ProfileRepository => ({
   getProfile: async ({ id }) =>
     db[id] || { ...createEmptyProfile(), email: id },
-  updateProfile: async ({ id }, input) =>
-    (db[id] = {
+  updateProfile: async ({ id }, input) => {
+    // eslint-disable-next-line no-param-reassign
+    db[id] = {
       ...createEmptyProfile(),
       ...input,
       email: id,
-    }),
+    }
+    return db[id]
+  },
 })

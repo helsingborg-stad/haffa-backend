@@ -1,6 +1,6 @@
 import { transact } from '../../transactions'
-import { Services } from '../../types'
-import { Advert, AdvertMutations } from '../types'
+import type { Services } from '../../types'
+import type { Advert, AdvertMutations } from '../types'
 import { mapTxResultToAdvertMutationResult } from './mappers'
 import { verifyReservationLimits, verifyTypeIsReservation } from './verifiers'
 
