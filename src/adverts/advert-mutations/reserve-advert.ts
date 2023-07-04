@@ -4,13 +4,12 @@ import { Advert, AdvertMutations } from '../types'
 import { mapTxResultToAdvertMutationResult } from './mappers'
 import { verifyReservationLimits, verifyTypeIsReservation } from './verifiers'
 
-export const createReserveAdvert = ({ adverts }: Pick<Services, 'adverts'>): AdvertMutations['reserveAdvert'] => 
+export const createReserveAdvert = ({ adverts, notifications }: Pick<Services, 'adverts'|'notifications'>): AdvertMutations['reserveAdvert'] => 
 	(user, id, quantity) => transact<Advert>({
 		load: () => adverts.getAdvert(id),
 		patch: async (advert, actions) => {
 			if (quantity > 0) {
-			// TODO: notify
-			// actions.push(reservationNotification())
+				actions(() => notifications.advertWasReserved(user, quantity, advert))
 				return ({
 					...advert,
 					reservations: [ ...advert.reservations, {

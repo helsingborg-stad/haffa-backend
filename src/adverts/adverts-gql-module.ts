@@ -4,7 +4,7 @@ import { mapAdvertMutationResultToAdvertWithMetaMutationResult, mapAdvertToAdver
 import { createAdvertMutations } from './advert-mutations'
 import { Services } from '../types'
 
-export const createAdvertsGqlModule = (services: Pick<Services, 'adverts'|'files'>): GraphQLModule => ({
+export const createAdvertsGqlModule = (services: Pick<Services, 'adverts'|'files'|'notifications'>): GraphQLModule => ({
 	schema: advertsGqlSchema,
 	resolvers:{
 		Query: {

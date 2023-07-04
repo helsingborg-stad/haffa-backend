@@ -9,12 +9,13 @@ export const createUpdateAdvert = ({ adverts, files }: Pick<Services, 'adverts'|
 		processAdvertInput(input, files)
 			.then(convertedInput => transact<Advert>({
 				load: () => adverts.getAdvert(id),
-				saveVersion: (versionId, advert) => adverts.saveAdvertVersion(versionId, advert),
 				patch: async (advert) => ({
 					...advert,
 					...convertedInput,
 				}),
 				verify: async (ctx) => {
 					return ctx.update
-				} }))
+				},
+				saveVersion: (versionId, advert) => adverts.saveAdvertVersion(versionId, advert),
+			}))
 			.then(mapTxResultToAdvertMutationResult)
