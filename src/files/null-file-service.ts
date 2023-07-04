@@ -1,6 +1,6 @@
-import { FilesService } from './types'
+import type { FilesService } from './types'
 
 export const createNullFileService = (): FilesService => ({
-	tryConvertDataUrlToUrl: async () => null,
-	tryCreateApplicationModule: () => null,
+  tryConvertDataUrlToUrl: async () => null,
+  tryCreateApplicationModule: () => null,
 })

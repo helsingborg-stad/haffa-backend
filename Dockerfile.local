@@ -13,10 +13,6 @@ COPY deploy.npmrc .npmrc
 RUN yarn install --production --ignore-optional
 
 FROM gcr.io/distroless/nodejs:18
-EXPOSE 3000
-ENV NODE_ENV=production
-ENV PORT=3000
-
 WORKDIR /usr/src/app
 COPY --from=optimizer /work/node_modules ./node_modules
 COPY --from=optimizer /work/package.json ./

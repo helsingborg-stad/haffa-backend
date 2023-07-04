@@ -20,7 +20,7 @@ paths:
                 token:
                   type: string
       responses:
-        "200":
+        '200':
           description: Successful processing of request
           content:
             application/json:
@@ -47,7 +47,7 @@ paths:
                 email:
                   type: string
       responses:
-        "200":
+        '200':
           description: Successful processing of request
           content:
             application/json:
@@ -81,7 +81,7 @@ paths:
                 pincode:
                   type: string
       responses:
-        "200":
+        '200':
           description: Successful processing of request
           content:
             application/json:
@@ -96,7 +96,7 @@ paths:
   /api/v1/haffa/graphql:
     post:
       operationId: haffaGQL
-      summary: "GraphQL endpoint for Haffa"
+      summary: 'GraphQL endpoint for Haffa'
       tags:
         - Fix me
       requestBody:
@@ -104,18 +104,18 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/GraphQLQuery"
+              $ref: '#/components/schemas/GraphQLQuery'
       responses:
-        "200":
-          description: "successful operation"
+        '200':
+          description: 'successful operation'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GraphQLResponse"
+                $ref: '#/components/schemas/GraphQLResponse'
   /api/v1/{namespace}/healthcheck:
     get:
       operationId: healthCheck
-      summary: "Healthcheck of service"
+      summary: 'Healthcheck of service'
       tags:
         - Status of Operations
       parameters:
@@ -126,15 +126,14 @@ paths:
             type: string
       responses:
         200:
-          description: "Service is healthy"
+          description: 'Service is healthy'
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   status:
-                    type:
-                      string
+                    type: string
 components:
   schemas:
     GraphQLQuery:

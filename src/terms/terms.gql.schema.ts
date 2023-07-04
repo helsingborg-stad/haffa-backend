@@ -1,14 +1,12 @@
-export const termsGqlSchema = /* GraphQL */`
+export const termsGqlSchema = /* GraphQL */ `
+  type Query {
+    terms: Terms!
+  }
 
-type Query {
-	terms: Terms!
-}
-
-type Terms {
-	unit: [String]
-	material: [String]
-	condition: [String]
-	usage: [String]
-}
-
+  type Terms {
+    unit: [String]
+    material: [String]
+    condition: [String]
+    usage: [String]
+  }
 `

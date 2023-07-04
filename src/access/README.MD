@@ -8,7 +8,7 @@ Modify your .env to include the following variable:
 FS_ACCESS_FILE=<The full path of the access file>
 ```
 
-## File format:
+## File format
 
 ```JSON
 [
@@ -19,15 +19,15 @@ FS_ACCESS_FILE=<The full path of the access file>
 ]
 ```
 
-## Usage:
+## Usage
 
 ```javascript
-const access = createAccessServiceFromEnv();
+const access = createAccessServiceFromEnv()
 
-if (access.isAuthorized("email@email.se")) {
+if (access.isAuthorized('email@email.se')) {
   // User may access the application
 }
-if (access.hasRole("email@email.se", "Administratör")) {
+if (access.hasRole('email@email.se', 'Administratör')) {
   // User may access administrative functions
 }
 ```
