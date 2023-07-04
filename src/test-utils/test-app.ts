@@ -9,13 +9,22 @@ import { HaffaUser } from '../login/types'
 import { createApp } from '../create-app'
 import { createTokenService } from '../tokens'
 import { createInMemoryProfileRepository } from '../profile'
-import { createNotificationServiceFromEnv, createNullNotificationService } from '../notifications'
+import { createNullNotificationService } from '../notifications'
+import { NotificationService } from '../notifications/types'
 
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
 
 export const createAuthorizationHeadersFor = (user: HaffaUser, secret: string = TEST_SHARED_SECRET): {authorization: string} => ({
 	authorization: `Bearer ${jwt.sign(user, secret)}`,
+})
+
+const unexpectedInvocation = (message: string) => () => { throw new Error(message) }
+
+export const createTestNotificationServices = (notifications: Partial<NotificationService>): NotificationService => ({
+	advertWasReserved: unexpectedInvocation('NotificationService::advertWasReserved'),
+	advertReservationWasCancelled: unexpectedInvocation('NotificationService::advertReservationWasCancelled'),
+	...notifications,
 })
 
 export const createTestServices = (services: Partial<Services>): Services => ({

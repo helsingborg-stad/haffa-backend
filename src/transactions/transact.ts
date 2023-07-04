@@ -1,11 +1,11 @@
 import * as uuid from 'uuid'
 
-export interface TxCommitAction {
-	(): Promise<void>
+export interface TxCommitAction<T> {
+	(value: T, originalValue: T): Promise<void>
 }
 
-export interface TxCommitActions {
-	(action: TxCommitAction): void
+export interface TxCommitActions<T> {
+	(action: TxCommitAction<T>): void
 }
 
 export interface TxVerifyContext<T> {
@@ -17,7 +17,7 @@ export interface TxCtx<T> {
 	maxRetries?: number, retryDelay?: number,
 	load: () => Promise<T|null>,
 	saveVersion: (versionId: string, data: T) =>  Promise<T|null>,
-	patch: (data: T, actions: TxCommitActions) => Promise<T|null>,
+	patch: (data: T, actions: TxCommitActions<T>) => Promise<T|null>,
 	verify: (ctx: TxVerifyContext<T>) => Promise<T|null>
 }
 
@@ -51,8 +51,12 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 const runTransaction = async <T extends {versionId: string}>(
 	{ load, saveVersion, patch, verify }: TxCtx<T>
-): Promise<Omit<TxResult<T>,'attempts'> & {shouldRetry?: boolean, commitActions?: TxCommitAction[]}| null> => {
-	const commitActions: TxCommitAction[] = []
+): Promise<Omit<TxResult<T>,'attempts'> & {
+	shouldRetry?: boolean, 
+	commitActions?: TxCommitAction<T>[],
+	original: T,
+	}| null> => {
+	const commitActions: TxCommitAction<T>[] = []
 	const original = await load()
 	if (!original) {
 		return null
@@ -81,6 +85,7 @@ const runTransaction = async <T extends {versionId: string}>(
 			return {
 				shouldRetry: true,
 				data: original,
+				original,
 				error: {
 					code: 'HAFFA_ERROR_CONFLICT',
 					message: 'Uppdateringen kunde inte genomföras utan konflikt',
@@ -89,6 +94,7 @@ const runTransaction = async <T extends {versionId: string}>(
 		}
 		return {
 			error: null,
+			original,
 			data: saved,
 			commitActions,
 		}
@@ -96,6 +102,7 @@ const runTransaction = async <T extends {versionId: string}>(
 		if (e instanceof TransactionError) {
 			return {
 				error: e.error,
+				original,
 				data: original,
 			}
 		}
@@ -115,7 +122,7 @@ export const transact = async <T extends {versionId: string}>(ctx: TxCtx<T>): Pr
 		if (result === null) {
 			return null
 		}
-		const { shouldRetry: shouldRetry, data, error, commitActions } = result
+		const { shouldRetry: shouldRetry, data, original, error, commitActions } = result
 
 		if (shouldRetry) {
 			if (retriesLeft <= 0) {
@@ -129,7 +136,7 @@ export const transact = async <T extends {versionId: string}>(ctx: TxCtx<T>): Pr
 			return { data, error, attempts }
 		}
 
-		await Promise.all((commitActions || []).filter(action => action).map(action=> action()))
+		await Promise.all((commitActions || []).filter(action => action).map(action=> action(data, original)))
 		return { data, error: null, attempts }
 	}
 	return null

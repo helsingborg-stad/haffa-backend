@@ -5,4 +5,5 @@ export const createNotificationServiceFromEnv = (): NotificationService => creat
 
 export const createNullNotificationService = (): NotificationService => ({
 	advertWasReserved: async () => void 0,
+	advertReservationWasCancelled: async () => void 0,
 })

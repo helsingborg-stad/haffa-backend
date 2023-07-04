@@ -32,8 +32,14 @@ export interface End2EndTestContext {
 export interface End2EndTestHandler {
 	(context: End2EndTestContext): Promise<void>
 }
-export const end2endTest = (handler: End2EndTestHandler, testServices?: Partial<Services>): Promise<void> => {
-	const user: HaffaUser = { id: 'test@user.com', roles: [] }
+export const end2endTest = (
+	config: {
+		user?: HaffaUser,
+		services: Partial<Services>
+	} | null,
+	handler: End2EndTestHandler
+): Promise<void> => {
+	const user: HaffaUser = config?.user || { id: 'test@user.com', roles: [] }
 	const adverts: Record<string, Advert> = {}
 	const logins: Record<string, LoginRequestEntry> = {}
 	const profiles: Record<string, Profile> = {}
@@ -41,7 +47,7 @@ export const end2endTest = (handler: End2EndTestHandler, testServices?: Partial<
 		adverts: createInMemoryAdvertsRepository(adverts),
 		profiles: createInMemoryProfileRepository(profiles),
 		login: createInMemoryLoginService({ db: logins }),
-		...testServices,
+		...config?.services,
 	})
 
 	return createTestApp(services)

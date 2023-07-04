@@ -6,7 +6,7 @@ import { createEmptyAdvertInput } from '../mappers'
 
 
 describe('createAdvert', () => {
-	it('creates an advert in the database', () => end2endTest(async ({ gqlRequest, adverts }) => {
+	it('creates an advert in the database', () => end2endTest(null, async ({ gqlRequest, adverts }) => {
 		const input: AdvertInput = {
 			...createEmptyAdvertInput(),
 			title: 't',

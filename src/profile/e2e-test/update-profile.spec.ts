@@ -5,7 +5,7 @@ import { Profile, ProfileInput } from '../types'
 import { AdvertInput } from '../../adverts/types'
 
 describe('getProfile', () => {
-	it('returns repository content with email set to calling user', () => end2endTest(async ({ user, profiles, gqlRequest }) => {
+	it('returns repository content with email set to calling user', () => end2endTest(null, async ({ user, profiles, gqlRequest }) => {
 		const input: ProfileInput = {
 			phone: '123-45678',
 			adress: 'Drottninggatan 14',
