@@ -2,7 +2,7 @@ import { transact } from '../../transactions'
 import type { Services } from '../../types'
 import type { Advert, AdvertMutations } from '../types'
 import { mapTxResultToAdvertMutationResult } from './mappers'
-import { verifyReservationLimits, verifyTypeIsReservation } from './verifiers'
+import { verifyAll, verifyReservationLimits, verifyTypeIsReservation } from './verifiers'
 
 export const createReserveAdvert = ({ adverts, notifications }: Pick<Services, 'adverts'|'notifications'>): AdvertMutations['reserveAdvert'] => 
 	(user, id, quantity) => transact<Advert>({
@@ -21,13 +21,11 @@ export const createReserveAdvert = ({ adverts, notifications }: Pick<Services, '
 			}
 			return advert
 		},
-		verify: async (ctx) => {
-			[
+		verify: async (ctx) => verifyAll(
+			ctx,
 				verifyTypeIsReservation,
 				verifyReservationLimits,
-			].map(v => v(ctx))
-			return ctx.update
-		},
+			),
 		saveVersion: (versionId, advert) => adverts.saveAdvertVersion(versionId, advert),
 	})
 		.then(mapTxResultToAdvertMutationResult)

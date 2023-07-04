@@ -21,6 +21,7 @@ export const createAuthorizationHeadersFor = (user: HaffaUser, secret: string = 
 const unexpectedInvocation = (message: string) => () => { throw new Error(message) }
 
 export const createTestNotificationServices = (notifications: Partial<NotificationService>): NotificationService => ({
+	pincodeRequested: unexpectedInvocation('NotificationService::pincodeRequested'),
 	advertWasReserved: unexpectedInvocation('NotificationService::advertWasReserved'),
 	advertReservationWasCancelled: unexpectedInvocation('NotificationService::advertReservationWasCancelled'),
 	...notifications,

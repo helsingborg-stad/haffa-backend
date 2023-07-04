@@ -36,18 +36,6 @@ export const createEmptyAdvertInput = (): AdvertInput => ({
 	usage: '',
 })
 
-export const createEmptyAdvertInput = (): AdvertInput => ({
-	title: '',
-	description: '',
-	quantity: 1,
-	images: [],
-	
-	unit: '',
-	material: '',
-	condition: '',
-	usage: '',
-})
-
 export const mapCreateAdvertInputToAdvert = (input: AdvertInput, user: HaffaUser, when: string = new Date().toISOString()): Advert => ({
 	...createEmptyAdvert(),
 	id: uuid.v4().toString(), 
