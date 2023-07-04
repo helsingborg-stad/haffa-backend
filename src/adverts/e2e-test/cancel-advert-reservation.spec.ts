@@ -37,7 +37,7 @@ describe('cancelAdvertReservation', () => {
 		// expect(adverts['advert-123']).toMatchObject(result?.advert as Advert)
 
 	
-		T('reservations bt user should be removed from database', () => 
+		T('reservations by user should be removed from database', () => 
 			expect(adverts['advert-123'].reservations).toMatchObject([{
 				reservedBy: 'someone I used to know',
 				quantity: 2

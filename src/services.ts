@@ -5,6 +5,7 @@ import { createLoginServiceFromEnv } from './login'
 import { createFilesServiceFromEnv } from './files'
 import { createTokenServiceFromEnv } from './tokens'
 import { createProfileRepositoryFromEnv } from './profile'
+import { createNotificationServiceFromEnv } from './notifications'
 
 const createServicesFromEnv = (): Services => ({
 	login: createLoginServiceFromEnv(),
@@ -13,6 +14,7 @@ const createServicesFromEnv = (): Services => ({
 	profiles: createProfileRepositoryFromEnv(),
 	access: createAccessServiceFromEnv(),
 	files: createFilesServiceFromEnv(),
+	notifications: createNotificationServiceFromEnv(),
 })
 
 export { createServicesFromEnv }

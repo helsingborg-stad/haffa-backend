@@ -9,6 +9,7 @@ import { HaffaUser } from '../login/types'
 import { createApp } from '../create-app'
 import { createTokenService } from '../tokens'
 import { createInMemoryProfileRepository } from '../profile'
+import { createNotificationServiceFromEnv, createNullNotificationService } from '../notifications'
 
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
@@ -24,6 +25,7 @@ export const createTestServices = (services: Partial<Services>): Services => ({
 	profiles: createInMemoryProfileRepository(),
 	access: createAccessService(),
 	files: createNullFileService(),
+	notifications: createNullNotificationService(),
 	...services,
 })
 

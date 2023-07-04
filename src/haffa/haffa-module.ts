@@ -3,7 +3,7 @@ import { requireHaffaUser } from '../login/require-haffa-user'
 import { Services } from '../types'
 import { createHaffaGqlModule } from './haffa-gql-module'
 
-export const graphQLModule = (services: Pick<Services, 'adverts'|'files'|'profiles'>) => 
+export const graphQLModule = (services: Pick<Services, 'adverts'|'files'|'profiles'|'notifications'>) => 
 	({ registerKoaApi }: ApplicationContext): void => registerKoaApi({
 		haffaGQL: requireHaffaUser(
 			makeGqlMiddleware(

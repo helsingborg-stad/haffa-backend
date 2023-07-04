@@ -4,6 +4,7 @@ import { LoginService } from './login/types'
 import { FilesService } from './files/types'
 import { TokenService } from './tokens/types'
 import { ProfileRepository } from './profile/types'
+import { NotificationService } from './notifications/types'
 
 export interface Services {
     login: LoginService
@@ -12,4 +13,5 @@ export interface Services {
     profiles: ProfileRepository
     access: AccessService
     files: FilesService
+    notifications: NotificationService
 }
