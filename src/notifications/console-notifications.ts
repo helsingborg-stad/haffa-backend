@@ -6,4 +6,9 @@ export const createConsoleNotificationService = (): NotificationService => ({
 			by, quantity, advert,
 		},
 	}),
+	advertReservationWasCancelled: async (by, quantity, advert) => console.log({
+		advertReservationWasCancelled: {
+			by, quantity, advert,
+		},
+	}),
 })

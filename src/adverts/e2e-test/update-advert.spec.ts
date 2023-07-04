@@ -5,7 +5,7 @@ import { AdvertInput, AdvertWithMetaMutationResult } from "../types"
 import { updateAdvertMutation } from "./queries"
 
 describe('updateAdvert', () => {
-	it('updates an advert in the database', () => end2endTest(async ({ gqlRequest, adverts }) => {
+	it('updates an advert in the database', () => end2endTest(null, async ({ gqlRequest, adverts }) => {
 		adverts['advert-123'] = {
 			...createEmptyAdvert(),
 			id: 'advert-123'

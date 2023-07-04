@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes"
-import { T, end2endTest } from "../../test-utils"
+import { T, createTestNotificationServices, end2endTest } from "../../test-utils"
 import { createEmptyAdvert } from "../mappers"
 import { AdvertWithMetaMutationResult } from "../types"
 import { reserveAdvertMutation } from "./queries"
@@ -7,13 +7,12 @@ import { NotificationService } from "../../notifications/types"
 
 describe('reserveAdvert', () => {
 	it('updates an advert in the database', () => {
-
 		const advertWasReserved = jest.fn(async () => void 0)
-		const notifications: NotificationService = ({
-			advertWasReserved
+		const notifications = createTestNotificationServices({
+			advertWasReserved,	
 		})
 	
-		return end2endTest(async ({ gqlRequest, adverts, user }) => {
+		return end2endTest({services: {notifications}}, async ({ gqlRequest, adverts, user }) => {
 			adverts['advert-123'] = {
 				...createEmptyAdvert(),
 				id: 'advert-123',
@@ -35,18 +34,18 @@ describe('reserveAdvert', () => {
 
 
 			T('should have notified about the interesting event', () =>
-				expect(advertWasReserved).toHaveBeenCalledTimes(1)
+				expect(advertWasReserved).toBeCalledWith(user, 1, adverts['advert-123'])
 			)
-		}, {notifications})
+		})
 	})
 
 	it('denies overresevations', () => {
 		const advertWasReserved = jest.fn(async () => void 0)
-		const notifications: NotificationService = ({
-			advertWasReserved
+		const notifications = createTestNotificationServices({
+			advertWasReserved,	
 		})
 	
-		return end2endTest(async ({ gqlRequest, adverts, user }) => {
+		return end2endTest({services: {notifications}}, async ({ gqlRequest, adverts, user }) => {
 			adverts['advert-123'] = {
 				...createEmptyAdvert(),
 				id: 'advert-123',
@@ -67,8 +66,6 @@ describe('reserveAdvert', () => {
 			T('no notifications should be called', () =>
 				expect(advertWasReserved).not.toHaveBeenCalled()
 			)
-		}, {notifications})
+		})
 	})
-
-
 })

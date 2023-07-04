@@ -9,7 +9,7 @@ export const createReserveAdvert = ({ adverts, notifications }: Pick<Services, '
 		load: () => adverts.getAdvert(id),
 		patch: async (advert, actions) => {
 			if (quantity > 0) {
-				actions(() => notifications.advertWasReserved(user, quantity, advert))
+				actions((patched) => notifications.advertWasReserved(user, quantity, patched))
 				return ({
 					...advert,
 					reservations: [ ...advert.reservations, {
