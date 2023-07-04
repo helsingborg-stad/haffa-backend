@@ -48,7 +48,7 @@ const throwIf = (condition: boolean, error: TxError): void => {
 	}
 }
 
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+const delay = (ms: number) => new Promise(resolve => { setTimeout(resolve, ms) })
 
 const runTransaction = async <T extends {versionId: string}>(
 	{ load, saveVersion, patch, verify }: TxCtx<T>
