@@ -1,11 +1,18 @@
 import { createEmptyProfile } from './mappers'
-import { Profile, ProfileRepository } from './types'
+import type { Profile, ProfileRepository } from './types'
 
-export const createInMemoryProfileRepository = (db: Record<string, Profile> = {}): ProfileRepository => ({
-	getProfile: async ({ id }) => db[id] || { ...createEmptyProfile(), email: id },
-	updateProfile: async ({ id }, input) => db[id] = ({
-		...createEmptyProfile(),
-		...input,
-		email: id,
-	}),
+export const createInMemoryProfileRepository = (
+  db: Record<string, Profile> = {}
+): ProfileRepository => ({
+  getProfile: async ({ id }) =>
+    db[id] || { ...createEmptyProfile(), email: id },
+  updateProfile: async ({ id }, input) => {
+    // eslint-disable-next-line no-param-reassign
+    db[id] = {
+      ...createEmptyProfile(),
+      ...input,
+      email: id,
+    }
+    return db[id]
+  },
 })

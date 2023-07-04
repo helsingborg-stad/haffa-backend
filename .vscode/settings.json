@@ -8,8 +8,8 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.insertSpaces": false,
-  "editor.tabSize": 4,
-  "eslint.packageManager": "npm",
   "eslint.validate": ["typescript"]
 }
+

@@ -1,13 +1,14 @@
-import { end2endTest } from '../../test-utils'
+import { T, end2endTest } from '../../test-utils'
 import { StatusCodes } from 'http-status-codes'
 import { createAdvertMutation } from './queries'
-import { AdvertInput } from '../types'
-import { createEmptyAdvert } from '../mappers'
+import { Advert, AdvertInput, AdvertWithMetaMutationResult } from '../types'
+import { createEmptyAdvertInput } from '../mappers'
+
 
 describe('createAdvert', () => {
-	it('xxx', () => end2endTest(async ({ gqlRequest }) => {
+	it('creates an advert in the database', () => end2endTest(null, async ({ gqlRequest, adverts }) => {
 		const input: AdvertInput = {
-			...createEmptyAdvert(),
+			...createEmptyAdvertInput(),
 			title: 't',
 			description: 'd',
 			images: [],
@@ -17,8 +18,12 @@ describe('createAdvert', () => {
 			usage: 'u',
 		}
 		const { status, body } = await gqlRequest(createAdvertMutation, { input })
-		expect(status).toBe(StatusCodes.OK)
+		T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))
 
-		expect(body?.data?.createAdvert).toMatchObject(input)
+		const result = body?.data?.createAdvert as AdvertWithMetaMutationResult
+
+		T('gql result should match input', () =>  expect(result?.advert).toMatchObject(input))
+
+		T('database should be updated with input', () => expect(adverts[result?.advert?.id as string]).toMatchObject(input))
 	}))
 })

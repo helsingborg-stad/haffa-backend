@@ -5,7 +5,7 @@ import { RequestPincodeResult } from '../types'
 
 describe('request', () => {
 	it('POST /api/v1/haffa/auth/request-pincode should save an entry in the login database', () => 
-		end2endTest(async ({ server, logins }) => {
+		end2endTest(null, async ({ server, logins }) => {
 			const { status, body } = await request(server)
 				.post('/api/v1/haffa/auth/request-pincode')
 				.send({
@@ -19,7 +19,7 @@ describe('request', () => {
 		}))
 
 	it('POST /api/v1/haffa/auth/request-pincode email must be valid', () => 
-		end2endTest(async ({ server, logins }) => {
+		end2endTest(null, async ({ server, logins }) => {
 			const { status, body } = await request(server)
 				.post('/api/v1/haffa/auth/request-pincode')
 				.send({

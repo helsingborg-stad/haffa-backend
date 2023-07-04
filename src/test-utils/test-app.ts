@@ -1,14 +1,15 @@
 import jwt from 'jsonwebtoken'
-import { Application } from '@helsingborg-stad/gdi-api-node'
-import { Services } from '../types'
+import type { Application } from '@helsingborg-stad/gdi-api-node'
+import type { Services } from '../types'
 import { createInMemoryLoginService } from '../login/in-memory-login-service/in-memory-login-service'
 import { createInMemoryAdvertsRepository } from '../adverts/in-memory-adverts-repository'
-import { createAccessService } from '../access'
 import { createNullFileService } from '../files/null-file-service'
-import { HaffaUser } from '../login/types'
+import type { HaffaUser } from '../login/types'
 import { createApp } from '../create-app'
 import { createTokenService } from '../tokens'
 import { createInMemoryProfileRepository } from '../profile'
+import { createNullNotificationService } from '../notifications'
+import type { NotificationService } from '../notifications/types'
 
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
@@ -17,13 +18,21 @@ export const createAuthorizationHeadersFor = (user: HaffaUser, secret: string = 
 	authorization: `Bearer ${jwt.sign(user, secret)}`,
 })
 
+const unexpectedInvocation = (message: string) => () => { throw new Error(message) }
+
+export const createTestNotificationServices = (notifications: Partial<NotificationService>): NotificationService => ({
+	advertWasReserved: unexpectedInvocation('NotificationService::advertWasReserved'),
+	advertReservationWasCancelled: unexpectedInvocation('NotificationService::advertReservationWasCancelled'),
+	...notifications,
+})
+
 export const createTestServices = (services: Partial<Services>): Services => ({
 	login: createInMemoryLoginService(),
 	tokens: createTokenService(TEST_SHARED_SECRET),
 	adverts: createInMemoryAdvertsRepository(),
 	profiles: createInMemoryProfileRepository(),
-	access: createAccessService(),
 	files: createNullFileService(),
+	notifications: createNullNotificationService(),
 	...services,
 })
 

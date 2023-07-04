@@ -1,10 +1,11 @@
-import { validateHaffaUser } from '..'
-import { LoginService, RequestPincodeResult } from '../types'
 import ms from 'ms'
+import { validateHaffaUser } from '../validate-haffa-user'
+import type { LoginService} from '../types';
+import { RequestPincodeResult } from '../types'
 
 interface Options {
 	maxAge: number
-	db: Record<string, LoginRequestEntry>
+	db: Record<string, LoginRequestEntry|null>
 }
 
 export interface LoginRequestEntry {

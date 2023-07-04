@@ -1,64 +1,36 @@
-import { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
-import { HaffaUser } from '../login/types'
-import { Advert, AdvertInput, AdvertsRepository } from './types'
-import { getAdvertPermissions } from './permissions'
-import { FilesService } from '../files/types'
+import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import { advertsGqlSchema } from './adverts.gql.schema'
-import { createEmptyAdvert } from './mappers'
+import { mapAdvertMutationResultToAdvertWithMetaMutationResult, mapAdvertToAdvertWithMeta, mapAdvertsToAdvertsWithMeta } from './mappers'
+import { createAdvertMutations } from './advert-mutations'
+import type { Services } from '../types'
 
-/**
- * 
- * Patch advert from database to a ricker GraphQL variant with some computed fields
- * 
- */
-const createAdvertMapper = (user: HaffaUser) => {
-	return (advert: Advert|null) => (
-		advert ? {
-			...createEmptyAdvert(),
-			...advert,
-			permissions: getAdvertPermissions(advert, user),
-		} : null)
-}
-
-const convertInput = async (input: AdvertInput, files: FilesService): Promise<AdvertInput> => {
-	return {
-		...input,
-		images: await Promise.all(input
-			.images
-			.filter(v => v)
-			.filter(({ url }) => url)
-			.map(image => files.tryConvertDataUrlToUrl(image.url).then(url => ({
-				...image,
-				url: url || image.url,
-			})))),
-	}
-}
-
-export const createAdvertsGqlModule = (adverts: AdvertsRepository, files: FilesService): GraphQLModule => ({
+export const createAdvertsGqlModule = (services: Pick<Services, 'adverts'|'files'|'notifications'>): GraphQLModule => ({
 	schema: advertsGqlSchema,
 	resolvers:{
 		Query: {
 			// https://www.graphql-tools.com/docs/resolvers
 			adverts: async ({ ctx: { user }, args: { filter } }) => {
-				const l = await adverts.list(filter)
-				return l.map(createAdvertMapper(user))
+				const l = await services.adverts.list(filter)
+				return  mapAdvertsToAdvertsWithMeta(user, l)
 			},
 			getAdvert: async ({ ctx: { user }, args: { id } }) => {
-				const advert = await adverts.getAdvert(id)
-				return createAdvertMapper(user)(advert)
+				const advert = await services.adverts.getAdvert(id)
+				return mapAdvertToAdvertWithMeta(user, advert)
 			},
 		},
 		Mutation: {
-			createAdvert: async ({ ctx: { user }, args: { input } }) => {
-				const fixedInput = await convertInput(input, files)
-				const advert = await adverts.create(user, fixedInput)
-				return createAdvertMapper(user)(advert)
-			},
-			updateAdvert: async ({ ctx: { user }, args: { id, input } }) => {
-				const fixedInput = await convertInput(input, files)
-				const advert = await adverts.update(id, user, fixedInput)
-				return createAdvertMapper(user)(advert)
-			},
+			createAdvert: async ({ ctx: { user }, args: { input } }) => createAdvertMutations(services)
+				.createAdvert(user, input)
+				.then(result => mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)),
+			updateAdvert: async ({ ctx: { user }, args: { id, input } }) => createAdvertMutations(services)
+				.updateAdvert(user, id, input)
+				.then(result => mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)),
+			reserveAdvert: async ({ ctx:{ user }, args: { id, quantity } }) =>  createAdvertMutations(services)
+				.reserveAdvert(user, id, quantity)
+				.then(result => mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)),
+			cancelAdvertReservation: async ({ ctx: { user }, args: { id } }) => createAdvertMutations(services)
+				.cancelAdvertReservation(user, id)
+				.then(result => mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)),
 		},
 	},
 })
