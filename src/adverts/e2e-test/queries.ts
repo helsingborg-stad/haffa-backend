@@ -2,11 +2,11 @@ const advertProps = `
 	id
 	title
 	description
-	permissions {
-		edit
-		delete
-		book
-		claim
+	meta {
+		canEdit
+		canDelete
+		canBook
+		canReserve
 	}
 	images {
 		url
@@ -16,6 +16,17 @@ const advertProps = `
 	material
 	condition
 	usage
+`
+
+const mutationProps = `
+	advert {
+		${advertProps}
+	}
+	status {
+		code
+		message
+		field
+	}
 `
 
 
@@ -30,7 +41,7 @@ query Query($id: ID!) {
 export const listAdvertsQuery = /* GraphQL */`
 query Query($filter: FilterAdvertsInput) {
 	adverts(filter: $filter) {
-		${advertProps}
+		${mutationProps}
 	}
   }
 `
@@ -40,7 +51,7 @@ mutation Mutation(
 	$input: AdvertInput!
 ) {
 	createAdvert(input: $input) {
-		${advertProps}
+		${mutationProps}
 	}
 }
 `
@@ -51,7 +62,28 @@ mutation Mutation(
 	$input: AdvertInput!
 ) {
 	updateAdvert(id: $id, input: $input) {
-		${advertProps}
+		${mutationProps}
+	}
+}
+`
+
+export const reserveAdvertMutation = /* GraphQL */`
+mutation Mutation(
+	$id: ID!
+	$quantity: Int
+) {
+	reserveAdvert(id: $id, quantity: $quantity) {
+		${mutationProps}
+	}
+}
+`
+
+export const cancelAdvertReservationMutation = /* GraphQL */`
+mutation Mutation(
+	$id: ID!
+) {
+	cancelAdvertReservation(id: $id) {
+		${mutationProps}
 	}
 }
 `

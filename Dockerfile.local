@@ -1,0 +1,23 @@
+FROM node:18 as compiler
+ARG GITHUB_ACCESS_TOKEN
+WORKDIR /work
+COPY . ./
+COPY deploy.npmrc .npmrc
+RUN yarn install && yarn build
+
+FROM node:18-alpine	as optimizer
+ARG GITHUB_ACCESS_TOKEN
+WORKDIR /work
+COPY . ./
+COPY deploy.npmrc .npmrc
+RUN yarn install --production --ignore-optional
+
+FROM gcr.io/distroless/nodejs:18
+WORKDIR /usr/src/app
+COPY --from=optimizer /work/node_modules ./node_modules
+COPY --from=optimizer /work/package.json ./
+COPY --from=compiler /work/dist ./dist
+COPY --from=compiler /work/index.js ./
+COPY --from=compiler /work/openapi.yml ./
+
+CMD ["index.js"]

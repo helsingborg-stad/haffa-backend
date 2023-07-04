@@ -1,15 +1,15 @@
 export interface HaffaUser {
-	id: string
-	roles: string[]
+  id: string
+  roles: string[]
 }
 
 export enum RequestPincodeResult {
-	accepted = 'accepted',
-	denied = 'denied',
-	invalid = 'invalid'
+  accepted = 'accepted',
+  denied = 'denied',
+  invalid = 'invalid',
 }
 
 export interface LoginService {
-	requestPincode: (email: string) => Promise<RequestPincodeResult>
-	tryLogin: (email: string, pincode: string) => Promise<HaffaUser | null>
+  requestPincode: (email: string) => Promise<RequestPincodeResult>
+  tryLogin: (email: string, pincode: string) => Promise<HaffaUser | null>
 }
