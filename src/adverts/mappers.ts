@@ -1,8 +1,9 @@
 import * as uuid from 'uuid'
-import type { Advert, AdvertInput, AdvertMutationResult, AdvertWithMeta, AdvertWithMetaMutationResult } from './types';
+import type { Advert, AdvertContact, AdvertInput, AdvertLocation, AdvertMutationResult, AdvertWithMeta, AdvertWithMetaMutationResult } from './types';
 import { AdvertType } from './types'
 import type { HaffaUser } from '../login/types'
 import { getAdvertMeta } from './advert-meta'
+import { createEmptyProfile } from '../profile/mappers';
 
 export const createEmptyAdvert = (): Advert => ({
 	id: '',
@@ -22,6 +23,21 @@ export const createEmptyAdvert = (): Advert => ({
 	usage: '',
 
 	reservations: [],
+
+	location: createEmptyAdvertLocation(),
+	contact: createEmptyAdvertContact()
+})
+
+export const createEmptyAdvertLocation = (): AdvertLocation => ({
+	adress: '',
+  zipCode: '',
+  city: '',
+  country: ''
+})
+
+export const createEmptyAdvertContact = (): AdvertContact => ({
+	email: '',
+	phone: ''
 })
 
 export const createEmptyAdvertInput = (): AdvertInput => ({
@@ -34,6 +50,9 @@ export const createEmptyAdvertInput = (): AdvertInput => ({
 	material: '',
 	condition: '',
 	usage: '',
+
+	location: createEmptyAdvertLocation(),
+	contact: createEmptyAdvertContact()
 })
 
 export const mapCreateAdvertInputToAdvert = (input: AdvertInput, user: HaffaUser, when: string = new Date().toISOString()): Advert => ({

@@ -1,10 +1,22 @@
 import type { HaffaUser } from '../login/types'
+import type { Profile } from '../profile/types'
 
 export enum AdvertType {
 	recycle = 'recycle',
 	borrow = 'borrow',
 }
 
+export interface AdvertLocation {
+	adress: string
+  zipCode: string
+  city: string
+  country: string
+}
+
+export interface AdvertContact {
+	phone: string
+	email: string
+}
 // User editable fields in an advert
 export interface AdvertUserFields {
 	title: string
@@ -15,6 +27,9 @@ export interface AdvertUserFields {
 	material: string
 	condition: string
 	usage: string
+
+	location: AdvertLocation
+	contact: AdvertContact
 }
 
 export interface AdvertMeta {
@@ -61,6 +76,9 @@ export interface Advert extends AdvertUserFields {
 	createdAt: string
 	modifiedAt: string,
 	reservations: AdvertReservation[]
+
+	location: AdvertLocation,
+	contact: AdvertContact
 }
 
 export type AdvertWithMeta = Advert & {meta: AdvertMeta}

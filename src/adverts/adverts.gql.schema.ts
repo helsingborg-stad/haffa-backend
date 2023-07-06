@@ -32,6 +32,7 @@ input StringFilterInput {
 	lte: String
 	contains: String
 } 
+
 input FilterAdvertsInput {
 	id: StringFilterInput
 	title: StringFilterInput
@@ -46,6 +47,18 @@ input FilterAdvertsInput {
 	not: FilterAdvertsInput
 }
 
+input AdvertLocationInput {
+	adress: String
+  zipCode: String
+  city: String
+  country: String
+}
+
+input AdvertContactInput {
+	phone: String
+	email: String
+}
+
 input AdvertInput {
 	title: String
 	description: String
@@ -55,6 +68,9 @@ input AdvertInput {
 	material: String
 	condition: String
 	usage: String
+	
+	location: AdvertLocationInput
+	contact: AdvertContactInput
 }
 
 type AdvertMeta {
@@ -63,6 +79,18 @@ type AdvertMeta {
 	canBook: Boolean!
 	canReserve: Boolean!
 	canCancelReservation: Boolean!
+}
+
+type AdvertLocation {
+	adress: String
+  zipCode: String
+  city: String
+  country: String
+}
+
+type AdvertContact {
+	phone: String
+	email: String
 }
 
 input ImageInput {
@@ -84,5 +112,8 @@ type Advert {
 	material: String
 	condition: String
 	usage: String
+
+	location: AdvertLocation
+	contact: AdvertContact
 }
 `
