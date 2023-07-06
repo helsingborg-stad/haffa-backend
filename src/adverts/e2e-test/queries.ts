@@ -16,6 +16,16 @@ const advertProps = `
 	material
 	condition
 	usage
+	contact {
+		email
+		phone
+	}
+	location {
+		adress
+		zipCode
+		city
+		country
+	}
 `
 
 const mutationProps = `
