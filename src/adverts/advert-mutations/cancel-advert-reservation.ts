@@ -11,7 +11,7 @@ export const createCancelAdvertReservation = ({ adverts, notifications }: Pick<S
 	(user, id) => 
 		transact<Advert>({
 			load: () => adverts.getAdvert(id),
-			patch: async (advert, actions) => {
+			patch: async ({data: advert, actions}) => {
 				actions((patched, original) => notifications.advertReservationWasCancelled(
 					user, 
 					countReservationsByUser(user, original.reservations),

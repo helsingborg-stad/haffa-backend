@@ -31,8 +31,8 @@ describe('transact', () => {
 		const { data, error } = await transact({
 			load: async () => newEntry,
 			saveVersion: (versionId, d) => db.saveVersion(d.id, versionId, d),
-			patch: async (d) => ({
-				...d,
+			patch: async ({data}) => ({
+				...data,
 				value: 'new value',
 			}),
 			verify: async ({ update }) => update,
@@ -49,10 +49,10 @@ describe('transact', () => {
 		const { data, error } = await transact({
 			load: async () => newEntry,
 			saveVersion: (versionId, d) => db.saveVersion(d.id, versionId, d),
-			patch: async (d, actions) => {
+			patch: async ({data, actions}) => {
 				actions(action)
 				return {
-					...d,
+					...data,
 					value: 'new value',
 				}},
 			verify: async ({ update }) => update,
@@ -73,10 +73,10 @@ describe('transact', () => {
 			maxRetries: retries,
 			load: async () => newEntry,
 			saveVersion: async (versionId, d) =>  --retries === 0 ? db.saveVersion(d.id, versionId, d) : null,
-			patch: async (d, actions) => {
+			patch: async ({data, actions}) => {
 				actions(action)
 				return {
-					...d,
+					...data,
 					value: 'new value',
 				}},
 			verify: async ({ update }) => update,

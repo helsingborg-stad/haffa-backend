@@ -7,7 +7,7 @@ import { verifyAll, verifyReservationLimits, verifyTypeIsReservation } from './v
 export const createReserveAdvert = ({ adverts, notifications }: Pick<Services, 'adverts'|'notifications'>): AdvertMutations['reserveAdvert'] => 
 	(user, id, quantity) => transact<Advert>({
 		load: () => adverts.getAdvert(id),
-		patch: async (advert, actions) => {
+		patch: async ({data: advert, actions}) => {
 			if (quantity > 0) {
 				actions((patched) => notifications.advertWasReserved(user, quantity, patched))
 				return ({

@@ -13,11 +13,17 @@ export interface TxVerifyContext<T> {
 	original: T,
 	throwIf: (condition: boolean, error: TxError) => void
 }
+
+export interface TxPatchContext<T> {
+	data: T,
+	actions: TxCommitActions<T>,
+	throwIf: (condition: boolean, error: TxError) => void
+}
 export interface TxCtx<T> {
 	maxRetries?: number, retryDelay?: number,
 	load: () => Promise<T|null>,
 	saveVersion: (versionId: string, data: T) =>  Promise<T|null>,
-	patch: (data: T, actions: TxCommitActions<T>) => Promise<T|null>,
+	patch: (ctx: TxPatchContext<T>) => Promise<T|null>,
 	verify: (ctx: TxVerifyContext<T>) => Promise<T|null>
 }
 
@@ -63,7 +69,11 @@ const runTransaction = async <T extends {versionId: string}>(
 		return null
 	}
 
-	const update = await patch(original, action => commitActions.push(action))
+	const update = await patch({
+		data: original, 
+		actions: action => commitActions.push(action),
+		throwIf
+	})
 	if (!update) {
 		return null
 	}
@@ -139,4 +149,32 @@ export const transact = async <T extends {versionId: string}>(ctx: TxCtx<T>): Pr
 	}
 
 	return nextAttempt(1, retriesLeft)
+}
+
+export interface TxBuilder<T> {
+	load: (load: TxCtx<T>['load']) => Pick<TxBuilder<T>, 'patch'>,
+	patch: (patch: TxCtx<T>['patch']) => Pick<TxBuilder<T>, 'verify'>
+	verify: (verify: TxCtx<T>['verify']) => Pick<TxBuilder<T>, 'saveVersion'>
+	saveVersion: (saveVersion: TxCtx<T>['saveVersion']) => Pick<TxBuilder<T>,'run'>
+	run: (opts?: {
+		maxRetries?: number, retryDelay?: number,
+	}) => Promise<TxResult<T>|null>,
+}
+
+export const txBuilder = <T extends {versionId: string}>(): Pick<TxBuilder<T>, 'load'> => {
+	const builder = (ctx: TxCtx<T>): TxBuilder<T> => ({
+		load: (load) => builder({...ctx, load}),
+		patch: (patch) => builder({...ctx, patch}),
+		verify: (verify) => builder({...ctx, verify}),
+		saveVersion: (saveVersion) => builder({...ctx, saveVersion}),
+		run: ({maxRetries, retryDelay} = {}) => transact({...ctx, maxRetries, retryDelay})
+	})
+
+	const notset = (method: string) => (): never => { throw new Error(`${method}() must be set in transaction`)}
+	return builder({
+		load: notset('load'),
+		patch: notset('patch'),
+		verify: notset('verify'),
+		saveVersion: notset('saveVersion')
+	})
 }
