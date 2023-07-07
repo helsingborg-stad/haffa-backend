@@ -1,13 +1,14 @@
-import { transact } from '../../transactions'
+import { txBuilder } from '../../transactions'
 import type { Services } from '../../types'
 import type { Advert, AdvertMutations } from '../types'
 import { mapTxResultToAdvertMutationResult } from './mappers'
 import { verifyAll, verifyReservationLimits, verifyTypeIsReservation } from './verifiers'
 
 export const createReserveAdvert = ({ adverts, notifications }: Pick<Services, 'adverts'|'notifications'>): AdvertMutations['reserveAdvert'] => 
-	(user, id, quantity) => transact<Advert>({
-		load: () => adverts.getAdvert(id),
-		patch: async ({data: advert, actions}) => {
+	(user, id, quantity) => txBuilder<Advert>()
+		.load(() => adverts.getAdvert(id))
+		.validate(() => {})
+		.patch((advert, {actions}) => {
 			if (quantity > 0) {
 				actions((patched) => notifications.advertWasReserved(user, quantity, patched))
 				return ({
@@ -20,12 +21,12 @@ export const createReserveAdvert = ({ adverts, notifications }: Pick<Services, '
 				})
 			}
 			return advert
-		},
-		verify: async (ctx) => verifyAll(
+		})
+		.verify((_, ctx) => verifyAll(
 			ctx,
 				verifyTypeIsReservation,
 				verifyReservationLimits,
-			),
-		saveVersion: (versionId, advert) => adverts.saveAdvertVersion(versionId, advert),
-	})
+			))
+		.saveVersion( (versionId, advert) => adverts.saveAdvertVersion(versionId, advert))
+		.run()
 		.then(mapTxResultToAdvertMutationResult)

@@ -8,6 +8,7 @@ type Query {
 type Mutation {
 	createAdvert(input: AdvertInput!): AdvertMutationResult
 	updateAdvert(id: ID!, input: AdvertInput!): AdvertMutationResult
+	removeAdvert(id: ID!): AdvertMutationResult
 	reserveAdvert(id: ID!, quantity: Int): AdvertMutationResult
 	cancelAdvertReservation(id: ID!): AdvertMutationResult
 }
@@ -75,7 +76,7 @@ input AdvertInput {
 
 type AdvertMeta {
 	canEdit: Boolean!
-	canDelete: Boolean!
+	canRemove: Boolean!
 	canBook: Boolean!
 	canReserve: Boolean!
 	canCancelReservation: Boolean!

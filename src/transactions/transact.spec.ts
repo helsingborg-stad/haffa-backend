@@ -1,5 +1,5 @@
 import * as uuid from 'uuid'
-import { transact } from '.'
+import { transact, txBuilder } from '.'
 
 const versionedDatase = <T extends {versionId: string}>(db: Record<string, T> = {}) => ({
 	peek: () => db,
@@ -28,38 +28,43 @@ describe('transact', () => {
 		const db = versionedDatase<TestData>()
 
 		const newEntry: any = createTestData({})
-		const { data, error } = await transact({
-			load: async () => newEntry,
-			saveVersion: (versionId, d) => db.saveVersion(d.id, versionId, d),
-			patch: async ({data}) => ({
+		const { data, error } = await txBuilder<TestData>()
+			.load(() => newEntry)
+			.validate(() => {})
+			.patch((data) => ({
 				...data,
 				value: 'new value',
-			}),
-			verify: async ({ update }) => update,
-		}) || {}
+			}))
+			.verify(update => update)
+			.saveVersion((versionId, d) => db.saveVersion(d.id, versionId, d))
+			.run()
+		|| {}
+
 		expect(error).toBeNull()
 		expect(data).toMatchObject({ value: 'new value' })
-		expect(data).toBe(db.peek()[data.id])
+		expect(data).toBe(db.peek()[data!.id])
 	})
 
 	it('will run actions on success', async () => {
 		const db = versionedDatase<TestData>()
 		const action = jest.fn(() => Promise.resolve())
 		const newEntry: any = createTestData({})
-		const { data, error } = await transact({
-			load: async () => newEntry,
-			saveVersion: (versionId, d) => db.saveVersion(d.id, versionId, d),
-			patch: async ({data, actions}) => {
+		const { data, error } = await txBuilder<TestData>()
+			.load(() => newEntry)
+			.validate(() => {})
+			.patch((data, {actions}) => {
 				actions(action)
 				return {
 					...data,
 					value: 'new value',
-				}},
-			verify: async ({ update }) => update,
-		}) || {}
+				}})
+			.verify(update => update)
+			.saveVersion((versionId, d) => db.saveVersion(d.id, versionId, d))
+			.run() || {}
+
 		expect(error).toBeNull()
 		expect(data).toMatchObject({ value: 'new value' })
-		expect(data).toBe(db.peek()[data.id])
+		expect(data).toBe(db.peek()[data!.id])
 		expect(action).toHaveBeenCalled()
 	})
 
@@ -69,41 +74,41 @@ describe('transact', () => {
 		let retries = 5
 		const action = jest.fn(() => Promise.resolve())
 		const newEntry: any = createTestData({})
-		const { data, error,attempts } = await transact({
-			maxRetries: retries,
-			load: async () => newEntry,
-			saveVersion: async (versionId, d) =>  --retries === 0 ? db.saveVersion(d.id, versionId, d) : null,
-			patch: async ({data, actions}) => {
+		const { data, error, attempts } = await txBuilder<TestData>()
+			.load(() => newEntry)
+			.validate(() => {})
+			.patch((data, {actions}) => {
 				actions(action)
 				return {
 					...data,
 					value: 'new value',
-				}},
-			verify: async ({ update }) => update,
-		}) || {}
+				}})
+				.verify(update => update)
+			.saveVersion((versionId, d) =>  --retries === 0 ? db.saveVersion(d.id, versionId, d) : null)
+			.run({maxRetries: retries}) || {}
+
 		expect(error).toBeNull()
 		expect(attempts).toBe(5)
 		expect(data).toMatchObject({ value: 'new value' })
-		expect(data).toBe(db.peek()[data.id])
-
+		expect(data).toBe(db.peek()[data!.id])
 		expect(action).toHaveBeenCalledTimes(1)
 	})
 
 	it('will fail after n', async () => {
 		const retries = 5
 		const saveVersion = jest.fn(() => Promise.resolve(null))
-
 		const newEntry: any = createTestData({})
-		const { error,attempts } = await transact({
-			maxRetries: retries,
-			load: async () => newEntry,
-			saveVersion,
-			patch: async (d) => ({
-				...d,
-				value: 'new value',
-			}),
-			verify: async ({ update }) => update,
-		}) || {}
+		const { error,attempts } = await txBuilder<TestData>()
+			.load(() => newEntry)
+			.validate(() => {})
+			.patch((data) => ({
+					...data,
+					value: 'new value',
+				}))
+			.verify(update => update)
+			.saveVersion(saveVersion)
+			.run({maxRetries: retries}) || {}
+
 		expect(error).toMatchObject({ code: 'HAFFA_ERROR_CONFLICT' })
 		expect(attempts).toBe(retries)
 	})

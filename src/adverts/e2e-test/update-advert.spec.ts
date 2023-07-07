@@ -3,11 +3,31 @@ import { T, end2endTest } from "../../test-utils"
 import { createEmptyAdvert, createEmptyAdvertInput } from "../mappers"
 import { AdvertInput, AdvertWithMetaMutationResult } from "../types"
 import { updateAdvertMutation } from "./queries"
+import { TxErrors } from "../../transactions"
 
 describe('updateAdvert', () => {
-	it('updates an advert in the database', () => end2endTest(null, async ({ gqlRequest, adverts }) => {
+
+	it('denies unauthorized attempts', () => end2endTest(null, async ({ gqlRequest, adverts, user }) => {
 		adverts['advert-123'] = {
 			...createEmptyAdvert(),
+			createdBy: 'someone else',
+			id: 'advert-123'
+		}
+		
+		const input: AdvertInput = createEmptyAdvertInput()
+		const { status, body } = await gqlRequest(updateAdvertMutation, { id: 'advert-123', input })
+		T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))
+
+		const result = body?.data?.updateAdvert as AdvertWithMetaMutationResult
+
+		T('status should reflect denied access', () => expect(result.status).toMatchObject(TxErrors.Unauthorized))
+	}))
+
+
+	it('updates an advert in the database', () => end2endTest(null, async ({ gqlRequest, adverts, user }) => {
+		adverts['advert-123'] = {
+			...createEmptyAdvert(),
+			createdBy: user.id,
 			id: 'advert-123'
 		}
 		

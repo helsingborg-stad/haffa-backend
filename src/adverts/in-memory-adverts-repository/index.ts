@@ -20,6 +20,12 @@ export const createInMemoryAdvertsRepository = (db: Record<string, Advert> = {})
 			}
 			return null
 		},
+		remove: async (id) => {
+			const existing = db[id]
+			// eslint-disable-next-line no-param-reassign
+			delete db[id]
+			return existing
+		},
 		saveAdvertVersion: async (versionId, advert) => {
 			const { id } = advert
 			if (db[id]?.versionId === versionId) {

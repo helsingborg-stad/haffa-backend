@@ -3,7 +3,6 @@ import type { Advert, AdvertContact, AdvertInput, AdvertLocation, AdvertMutation
 import { AdvertType } from './types'
 import type { HaffaUser } from '../login/types'
 import { getAdvertMeta } from './advert-meta'
-import { createEmptyProfile } from '../profile/mappers';
 
 export const createEmptyAdvert = (): Advert => ({
 	id: '',

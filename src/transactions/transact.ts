@@ -19,12 +19,33 @@ export interface TxPatchContext<T> {
 	actions: TxCommitActions<T>,
 	throwIf: (condition: boolean, error: TxError) => void
 }
+
+export interface TxValidateContext<T> {
+	data: T,
+	throwIf: (condition: boolean, error: TxError) => void
+}
+
+export interface TxLoadContext<T> {
+	throwIf: (condition: boolean, error: TxError) => void
+}
 export interface TxCtx<T> {
 	maxRetries?: number, retryDelay?: number,
-	load: () => Promise<T|null>,
-	saveVersion: (versionId: string, data: T) =>  Promise<T|null>,
-	patch: (ctx: TxPatchContext<T>) => Promise<T|null>,
-	verify: (ctx: TxVerifyContext<T>) => Promise<T|null>
+	load: (ctx: TxLoadContext<T>) => Promise<T|null>|T|null,
+	validate: (data: T, ctx: TxValidateContext<T>) => Promise<void>|void
+	patch: (data: T, ctx: TxPatchContext<T>) => Promise<T|null>|T|null,
+	verify: (data: T, ctx: TxVerifyContext<T>) => Promise<T|null>|T|null
+	saveVersion: (versionId: string, data: T) =>  Promise<T|null>|T|null,
+}
+
+export const TxErrors: Record<string, TxError> = {
+	NotFound: {
+		code: 'EHAFFA_NOT_FOUND',
+		message: 'Resursen kunde inte hittas.'
+	},
+	Unauthorized: {
+		code: 'EHAFFA_UNAUTHORIZED',
+		message: 'Du saknar behörighet för åtgärden'
+	}
 }
 
 export interface TxError {
@@ -57,29 +78,35 @@ const throwIf = (condition: boolean, error: TxError): void => {
 const delay = (ms: number) => new Promise(resolve => { setTimeout(resolve, ms) })
 
 const runTransaction = async <T extends {versionId: string}>(
-	{ load, saveVersion, patch, verify }: TxCtx<T>
+	{ load, validate, patch, verify, saveVersion }: TxCtx<T>
 ): Promise<Omit<TxResult<T>,'attempts'> & {
 	shouldRetry?: boolean, 
 	commitActions?: TxCommitAction<T>[],
 	original: T,
 	}| null> => {
-	const commitActions: TxCommitAction<T>[] = []
-	const original = await load()
-	if (!original) {
-		return null
-	}
 
-	const update = await patch({
-		data: original, 
-		actions: action => commitActions.push(action),
-		throwIf
-	})
-	if (!update) {
-		return null
-	}
-
+	let errorResult: T|null = null
 	try {
-		const verified = await verify({
+		const commitActions: TxCommitAction<T>[] = []
+		const original = await load({throwIf})
+		if (!original) {
+			return null
+		}
+		errorResult = original
+
+		await validate(original, {data: original, throwIf})
+
+		const update = await patch(original, {
+			data: original, 
+			actions: action => commitActions.push(action),
+			throwIf
+		})
+		if (!update) {
+			return null
+		}
+
+	
+		const verified = await verify(update, {
 			update,
 			original,
 			throwIf,
@@ -113,8 +140,8 @@ const runTransaction = async <T extends {versionId: string}>(
 		if (e instanceof TransactionError) {
 			return {
 				error: e.error,
-				original,
-				data: original,
+				original: errorResult!,
+				data: errorResult!,
 			}
 		}
 		throw e
@@ -152,7 +179,8 @@ export const transact = async <T extends {versionId: string}>(ctx: TxCtx<T>): Pr
 }
 
 export interface TxBuilder<T> {
-	load: (load: TxCtx<T>['load']) => Pick<TxBuilder<T>, 'patch'>,
+	load: (load: TxCtx<T>['load']) => Pick<TxBuilder<T>, 'validate'>,
+	validate: (validate: TxCtx<T>['validate']) => Pick<TxBuilder<T>, 'patch'>,
 	patch: (patch: TxCtx<T>['patch']) => Pick<TxBuilder<T>, 'verify'>
 	verify: (verify: TxCtx<T>['verify']) => Pick<TxBuilder<T>, 'saveVersion'>
 	saveVersion: (saveVersion: TxCtx<T>['saveVersion']) => Pick<TxBuilder<T>,'run'>
@@ -164,6 +192,7 @@ export interface TxBuilder<T> {
 export const txBuilder = <T extends {versionId: string}>(): Pick<TxBuilder<T>, 'load'> => {
 	const builder = (ctx: TxCtx<T>): TxBuilder<T> => ({
 		load: (load) => builder({...ctx, load}),
+		validate: (validate) => builder({...ctx, validate}),
 		patch: (patch) => builder({...ctx, patch}),
 		verify: (verify) => builder({...ctx, verify}),
 		saveVersion: (saveVersion) => builder({...ctx, saveVersion}),
@@ -173,6 +202,7 @@ export const txBuilder = <T extends {versionId: string}>(): Pick<TxBuilder<T>, '
 	const notset = (method: string) => (): never => { throw new Error(`${method}() must be set in transaction`)}
 	return builder({
 		load: notset('load'),
+		validate: notset('validate'),
 		patch: notset('patch'),
 		verify: notset('verify'),
 		saveVersion: notset('saveVersion')

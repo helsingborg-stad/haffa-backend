@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { mkdirp } from 'mkdirp'
-import { readdir, readFile, stat, writeFile } from 'fs/promises'
+import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
 import type { AdvertsRepository } from '../types'
 import { createFilterPredicate } from '../filters/create-filter-predicate'
 import { createEmptyAdvert, mapCreateAdvertInputToAdvert, patchAdvertWithAdvertInput } from '../mappers'
@@ -38,6 +38,7 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 		await writeFile(path, JSON.stringify(advert, null, 2), { encoding: 'utf8' })
 		return advert
 	}
+	
 	const update: AdvertsRepository['update'] = async (id, user, input) => {
 		const existing = await getAdvert(id)
 		if (!existing) {
@@ -48,6 +49,15 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 		await mkdirp(dataFolder)
 		await writeFile(path, JSON.stringify(updated, null, 2), { encoding: 'utf8' })
 		return updated
+	}
+
+	const remove: AdvertsRepository['remove'] = async (id) => {
+		const existing = await getAdvert(id)
+		if (existing) {
+			const path = join(dataFolder, `${id}.json`)
+			await unlink(path)
+		}
+		return existing
 	}
 
 	const saveAdvertVersion: AdvertsRepository['saveAdvertVersion'] = async (versionid, advert) => {
@@ -69,5 +79,6 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 		list,
 		create,
 		update,
+		remove
 	}
 }

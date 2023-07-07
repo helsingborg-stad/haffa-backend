@@ -4,7 +4,7 @@ const advertProps = `
 	description
 	meta {
 		canEdit
-		canDelete
+		canRemove
 		canBook
 		canReserve
 	}
