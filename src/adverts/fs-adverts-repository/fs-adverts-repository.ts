@@ -35,7 +35,7 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 		const advert = mapCreateAdvertInputToAdvert(input, user)
 		const path = join(dataFolder, `${advert.id}.json`)
 		await mkdirp(dataFolder)
-		await writeFile(path, JSON.stringify(advert), { encoding: 'utf8' })
+		await writeFile(path, JSON.stringify(advert, null, 2), { encoding: 'utf8' })
 		return advert
 	}
 	const update: AdvertsRepository['update'] = async (id, user, input) => {
