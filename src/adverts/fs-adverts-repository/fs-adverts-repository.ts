@@ -4,6 +4,7 @@ import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
 import type { AdvertsRepository } from '../types'
 import { createAdvertFilterPredicate } from '../filters/advert-filter-predicate'
 import { createEmptyAdvert, mapCreateAdvertInputToAdvert, patchAdvertWithAdvertInput } from '../mappers'
+import { createAdvertFilterComparer } from '../filters/advert-filter-sorter'
 
 export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository => {
 	const getAdvert: AdvertsRepository['getAdvert'] = async (user, id) => readFile(join(dataFolder, `${id}.json`), { encoding: 'utf8' })
@@ -24,6 +25,7 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 			...JSON.parse(text),
 		})))
 		.then(adverts => adverts.filter(createAdvertFilterPredicate(user, filter)))
+		.then(adverts => ([...adverts].sort(createAdvertFilterComparer(user, filter))))
 		.catch(e => {
 			if (e?.code === 'ENOENT') {
 				return []

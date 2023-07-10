@@ -101,10 +101,15 @@ export interface AdvertRestrictionsFilterInput {
 	createdByMe?: boolean
 }
 
+export interface AdvertSorting {
+	field?: keyof AdvertUserFields
+	ascending?: boolean
+}
 export interface AdvertFilterInput {
 	search?: string
 	fields?: AdvertFieldsFilterInput
 	restrictions?: AdvertRestrictionsFilterInput
+	sorting: AdvertSorting
 }
 
 export interface AdvertsRepository {

@@ -1,10 +1,11 @@
 import type { Advert, AdvertsRepository } from '../types'
 import { createAdvertFilterPredicate } from '../filters/advert-filter-predicate'
 import { mapCreateAdvertInputToAdvert, patchAdvertWithAdvertInput } from '../mappers'
+import { createAdvertFilterComparer } from '../filters/advert-filter-sorter'
 
 export const createInMemoryAdvertsRepository = (db: Record<string, Advert> = {}): AdvertsRepository => ({
 		getAdvert: async (user, id) => db[id] || null,
-		list: async (user, filter) => Object.values(db).filter(createAdvertFilterPredicate(user, filter)),
+		list: async (user, filter) => Object.values(db).filter(createAdvertFilterPredicate(user, filter)).sort(createAdvertFilterComparer(user, filter)),
 		create: async (user, input) => {
 			const advert = mapCreateAdvertInputToAdvert(input, user)
 			// eslint-disable-next-line no-param-reassign

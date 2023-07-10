@@ -34,6 +34,12 @@ input StringFilterInput {
 	contains: String
 } 
 
+enum AdvertSortableFieldEnum {
+	id
+	title
+	createdAt
+}
+
 input AdvertFieldsFilterInput {
 	id: StringFilterInput
 	title: StringFilterInput
@@ -54,10 +60,16 @@ input AdvertRestrictionsInput {
 	createdByMe: Boolean
 }
 
+input AdvertSortingInput {
+	field: AdvertSortableFieldEnum
+	ascending: Boolean
+}
+
 input AdvertFilterInput {
 	search: String
 	field: AdvertFieldsFilterInput
 	restrictions: AdvertRestrictionsInput
+	sorting: AdvertSortingInput
 }
 
 input AdvertLocationInput {
