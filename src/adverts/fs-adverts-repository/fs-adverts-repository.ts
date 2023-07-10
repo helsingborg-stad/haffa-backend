@@ -2,7 +2,7 @@ import { join } from 'path'
 import { mkdirp } from 'mkdirp'
 import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
 import type { AdvertsRepository } from '../types'
-import { createFilterPredicate } from '../filters/create-filter-predicate'
+import { createAdvertFilterPredicate } from '../filters/advert-filter-predicate'
 import { createEmptyAdvert, mapCreateAdvertInputToAdvert, patchAdvertWithAdvertInput } from '../mappers'
 
 export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository => {
@@ -23,7 +23,7 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 			...createEmptyAdvert(),
 			...JSON.parse(text),
 		})))
-		.then(adverts => adverts.filter(createFilterPredicate(filter)))
+		.then(adverts => adverts.filter(createAdvertFilterPredicate(filter)))
 		.catch(e => {
 			if (e?.code === 'ENOENT') {
 				return []

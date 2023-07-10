@@ -24,7 +24,7 @@ const createAndPredicate = <T>(input: any): Predicate<T> | null => {
     return null
   }
   const predicates = input
-    .map(inner => createFilterPredicate(inner))
+    .map(inner => createFieldFilterPredicate(inner))
     .filter(p => p)
   return value => predicates.every(p => p(value))
 }
@@ -33,7 +33,7 @@ const createOrPredicate = <T>(input: any): Predicate<T> | null => {
   if (!Array.isArray(input)) {
     return null
   }
-  const predicates = input.map(createFilterPredicate).filter(p => p)
+  const predicates = input.map(createFieldFilterPredicate).filter(p => p)
   return value => predicates.some(p => p(value))
 }
 
@@ -41,7 +41,7 @@ const createNotPredicate = <T>(input: any): Predicate<T> | null => {
   if (!isObject(input)) {
     return null
   }
-  const inner = createFilterPredicate(input)
+  const inner = createFieldFilterPredicate(input)
   return value => !inner(value)
 }
 
@@ -53,7 +53,7 @@ const combinators: Record<string, (input: any) => Predicate<any> | null> = {
 
 const ifSomethingThenStuffItInAnArray = <T>(v: T) => (v ? [v] : null)
 
-export const createFilterPredicate = <T>(input: any): Predicate<T> => {
+export const createFieldFilterPredicate = <T>(input: any): Predicate<T> => {
   if (!input) {
     return () => true
   }

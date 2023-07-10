@@ -1,7 +1,7 @@
 export const advertsGqlSchema = /* GraphQL */`
 
 type Query {
-	adverts(filter: FilterAdvertsInput): [Advert]
+	adverts(filter: AdvertFilterInput): [Advert]
 	getAdvert(id: ID!): Advert
 }
 
@@ -34,7 +34,7 @@ input StringFilterInput {
 	contains: String
 } 
 
-input FilterAdvertsInput {
+input AdvertFieldsFilterInput {
 	id: StringFilterInput
 	title: StringFilterInput
 	description: StringFilterInput
@@ -43,9 +43,14 @@ input FilterAdvertsInput {
 	condition: StringFilterInput
 	usage: StringFilterInput
 
-	and: [FilterAdvertsInput]
-	or: [FilterAdvertsInput]
-	not: FilterAdvertsInput
+	and: [AdvertFieldsFilterInput]
+	or: [AdvertFieldsFilterInput]
+	not: AdvertFieldsFilterInput
+}
+
+input AdvertFilterInput {
+	search: String
+	field: AdvertFieldsFilterInput
 }
 
 input AdvertLocationInput {

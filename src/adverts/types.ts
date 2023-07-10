@@ -88,17 +88,22 @@ export type FilterInput<T> = {
 	lte?: T
 } & (T extends string ? {contains?: string} : Record<string, never>)
 
-export type FilterAdvertsInput = {
+export type AdvertFieldsFilterInput = {
 	id?: FilterInput<string>
 }
 & {
-	[Property in keyof Omit<AdvertUserFields, 'images'>]: FilterInput<AdvertUserFields[Property]>
+	[Property in keyof Omit<AdvertUserFields, 'images'>]?: FilterInput<AdvertUserFields[Property]>
+}
+
+export interface AdvertFilterInput {
+	search?: string
+	fields?: AdvertFieldsFilterInput
 }
 
 export interface AdvertsRepository {
 	getAdvert: (id: string) => Promise<Advert | null>
 	saveAdvertVersion: (versionId: string, advert: Advert) => Promise<Advert | null>,
-	list: (filter?: FilterAdvertsInput) => Promise<Advert[]>
+	list: (filter?: AdvertFilterInput) => Promise<Advert[]>
 	create: (user: HaffaUser, advert: AdvertInput) => Promise<Advert>
 	update: (id: string, user: HaffaUser, advert: AdvertInput) => Promise<Advert|null>
 	remove: (id: string) => Promise<Advert|null>
