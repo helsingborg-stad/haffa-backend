@@ -1,5 +1,4 @@
 import type { HaffaUser } from '../login/types'
-import type { Profile } from '../profile/types'
 
 export enum AdvertType {
 	recycle = 'recycle',

@@ -25,12 +25,12 @@ export interface TxValidateContext<T> {
 	throwIf: (condition: boolean, error: TxError) => void
 }
 
-export interface TxLoadContext<T> {
+export interface TxLoadContext {
 	throwIf: (condition: boolean, error: TxError) => void
 }
 export interface TxCtx<T> {
 	maxRetries?: number, retryDelay?: number,
-	load: (ctx: TxLoadContext<T>) => Promise<T|null>|T|null,
+	load: (ctx: TxLoadContext) => Promise<T|null>|T|null,
 	validate: (data: T, ctx: TxValidateContext<T>) => Promise<void>|void
 	patch: (data: T, ctx: TxPatchContext<T>) => Promise<T|null>|T|null,
 	verify: (data: T, ctx: TxVerifyContext<T>) => Promise<T|null>|T|null

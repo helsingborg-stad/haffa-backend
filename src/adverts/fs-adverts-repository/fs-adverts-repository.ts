@@ -11,14 +11,14 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 			...createEmptyAdvert(),
 			...JSON.parse(text),	
 		}))
-		.catch(e => null)
+		.catch(() => null)
 
 	const list: AdvertsRepository['list'] = async (filter) => readdir(dataFolder)
 		.then(names => names.filter(name => /.*\.json$/.test(name)))
 		.then(names => names.map(name => join(dataFolder, name)))
-		.then(paths => Promise.all(paths.map(path => stat(path).then(stat => ({ stat, path })))))
+		.then(paths => Promise.all(paths.map(path => stat(path).then(s => ({ s, path })))))
 		.then(stats => Promise.all(stats
-			.filter(({ stat }) => stat.isFile()).map(({ path }) => readFile(path, { encoding: 'utf8' }) )))
+			.filter(({ s }) => s.isFile()).map(({ path }) => readFile(path, { encoding: 'utf8' }) )))
 		.then(texts => texts.map(text => ({
 			...createEmptyAdvert(),
 			...JSON.parse(text),
