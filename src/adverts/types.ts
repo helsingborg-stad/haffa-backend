@@ -88,20 +88,37 @@ export type FilterInput<T> = {
 	lte?: T
 } & (T extends string ? {contains?: string} : Record<string, never>)
 
-export type FilterAdvertsInput = {
+export type AdvertFieldsFilterInput = {
 	id?: FilterInput<string>
 }
 & {
-	[Property in keyof Omit<AdvertUserFields, 'images'>]: FilterInput<AdvertUserFields[Property]>
+	[Property in keyof Omit<AdvertUserFields, 'images'>]?: FilterInput<AdvertUserFields[Property]>
+}
+
+export interface AdvertRestrictionsFilterInput {
+	canBeReserved?: boolean,
+	reservedByMe?: boolean,
+	createdByMe?: boolean
+}
+
+export interface AdvertSorting {
+	field?: keyof AdvertUserFields
+	ascending?: boolean
+}
+export interface AdvertFilterInput {
+	search?: string
+	fields?: AdvertFieldsFilterInput
+	restrictions?: AdvertRestrictionsFilterInput
+	sorting: AdvertSorting
 }
 
 export interface AdvertsRepository {
-	getAdvert: (id: string) => Promise<Advert | null>
-	saveAdvertVersion: (versionId: string, advert: Advert) => Promise<Advert | null>,
-	list: (filter?: FilterAdvertsInput) => Promise<Advert[]>
+	getAdvert: (user: HaffaUser, id: string) => Promise<Advert | null>
+	saveAdvertVersion: (user: HaffaUser, versionId: string, advert: Advert) => Promise<Advert | null>,
+	list: (user: HaffaUser, filter?: AdvertFilterInput) => Promise<Advert[]>
 	create: (user: HaffaUser, advert: AdvertInput) => Promise<Advert>
-	update: (id: string, user: HaffaUser, advert: AdvertInput) => Promise<Advert|null>
-	remove: (id: string) => Promise<Advert|null>
+	update: (user: HaffaUser, id: string, advert: AdvertInput) => Promise<Advert|null>
+	remove: (user: HaffaUser, id: string) => Promise<Advert|null>
 }
 
 export interface AdvertMutations {

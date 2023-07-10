@@ -1,8 +1,8 @@
-import { createFilterPredicate } from './create-filter-predicate'
+import { createFieldFilterPredicate } from "./field-filter-predicate"
 
 const range = (n: number): number[] => [...Array(n).keys()]
 
-describe('createFilterPredicate', () => {
+describe('createFieldFilterPredicate', () => {
   const data = range(100).map(i => ({
     id: i,
     title: `title ${i}`,
@@ -11,7 +11,7 @@ describe('createFilterPredicate', () => {
   }))
 
   const filteredData = (filter: any): any[] =>
-    data.filter(createFilterPredicate(filter))
+    data.filter(createFieldFilterPredicate(filter))
 
   const testData = (filter: any, expected: any) =>
     expect(filteredData(filter)).toMatchObject(expected)

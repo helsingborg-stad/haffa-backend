@@ -1,7 +1,7 @@
 export const advertsGqlSchema = /* GraphQL */`
 
 type Query {
-	adverts(filter: FilterAdvertsInput): [Advert]
+	adverts(filter: AdvertFilterInput): [Advert]
 	getAdvert(id: ID!): Advert
 }
 
@@ -34,7 +34,13 @@ input StringFilterInput {
 	contains: String
 } 
 
-input FilterAdvertsInput {
+enum AdvertSortableFieldEnum {
+	id
+	title
+	createdAt
+}
+
+input AdvertFieldsFilterInput {
 	id: StringFilterInput
 	title: StringFilterInput
 	description: StringFilterInput
@@ -43,9 +49,27 @@ input FilterAdvertsInput {
 	condition: StringFilterInput
 	usage: StringFilterInput
 
-	and: [FilterAdvertsInput]
-	or: [FilterAdvertsInput]
-	not: FilterAdvertsInput
+	and: [AdvertFieldsFilterInput]
+	or: [AdvertFieldsFilterInput]
+	not: AdvertFieldsFilterInput
+}
+
+input AdvertRestrictionsInput {
+	canBeReserved: Boolean
+	reservedByMe: Boolean
+	createdByMe: Boolean
+}
+
+input AdvertSortingInput {
+	field: AdvertSortableFieldEnum
+	ascending: Boolean
+}
+
+input AdvertFilterInput {
+	search: String
+	field: AdvertFieldsFilterInput
+	restrictions: AdvertRestrictionsInput
+	sorting: AdvertSortingInput
 }
 
 input AdvertLocationInput {

@@ -2,18 +2,19 @@ import { join } from 'path'
 import { mkdirp } from 'mkdirp'
 import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
 import type { AdvertsRepository } from '../types'
-import { createFilterPredicate } from '../filters/create-filter-predicate'
+import { createAdvertFilterPredicate } from '../filters/advert-filter-predicate'
 import { createEmptyAdvert, mapCreateAdvertInputToAdvert, patchAdvertWithAdvertInput } from '../mappers'
+import { createAdvertFilterComparer } from '../filters/advert-filter-sorter'
 
 export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository => {
-	const getAdvert: AdvertsRepository['getAdvert'] = async (id: string) => readFile(join(dataFolder, `${id}.json`), { encoding: 'utf8' })
+	const getAdvert: AdvertsRepository['getAdvert'] = async (user, id) => readFile(join(dataFolder, `${id}.json`), { encoding: 'utf8' })
 		.then(text => ({
 			...createEmptyAdvert(),
 			...JSON.parse(text),	
 		}))
 		.catch(() => null)
 
-	const list: AdvertsRepository['list'] = async (filter) => readdir(dataFolder)
+	const list: AdvertsRepository['list'] = async (user, filter) => readdir(dataFolder)
 		.then(names => names.filter(name => /.*\.json$/.test(name)))
 		.then(names => names.map(name => join(dataFolder, name)))
 		.then(paths => Promise.all(paths.map(path => stat(path).then(s => ({ s, path })))))
@@ -23,7 +24,8 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 			...createEmptyAdvert(),
 			...JSON.parse(text),
 		})))
-		.then(adverts => adverts.filter(createFilterPredicate(filter)))
+		.then(adverts => adverts.filter(createAdvertFilterPredicate(user, filter)))
+		.then(adverts => ([...adverts].sort(createAdvertFilterComparer(user, filter))))
 		.catch(e => {
 			if (e?.code === 'ENOENT') {
 				return []
@@ -39,8 +41,8 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 		return advert
 	}
 	
-	const update: AdvertsRepository['update'] = async (id, user, input) => {
-		const existing = await getAdvert(id)
+	const update: AdvertsRepository['update'] = async (user, id, input) => {
+		const existing = await getAdvert(user, id)
 		if (!existing) {
 			return null
 		}
@@ -51,8 +53,8 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 		return updated
 	}
 
-	const remove: AdvertsRepository['remove'] = async (id) => {
-		const existing = await getAdvert(id)
+	const remove: AdvertsRepository['remove'] = async (user, id) => {
+		const existing = await getAdvert(user, id)
 		if (existing) {
 			const path = join(dataFolder, `${id}.json`)
 			await unlink(path)
@@ -60,9 +62,9 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 		return existing
 	}
 
-	const saveAdvertVersion: AdvertsRepository['saveAdvertVersion'] = async (versionid, advert) => {
+	const saveAdvertVersion: AdvertsRepository['saveAdvertVersion'] = async (user, versionid, advert) => {
 		const { id } = advert
-		const existing = await getAdvert(id)
+		const existing = await getAdvert(user, id)
 		if (existing && (existing.versionId === versionid)) {
 			const path = join(dataFolder, `${id}.json`)
 			await mkdirp(dataFolder)

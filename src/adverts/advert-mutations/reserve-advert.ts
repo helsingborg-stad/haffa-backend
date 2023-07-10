@@ -6,7 +6,7 @@ import { verifyAll, verifyReservationLimits, verifyTypeIsReservation } from './v
 
 export const createReserveAdvert = ({ adverts, notifications }: Pick<Services, 'adverts'|'notifications'>): AdvertMutations['reserveAdvert'] => 
 	(user, id, quantity) => txBuilder<Advert>()
-		.load(() => adverts.getAdvert(id))
+		.load(() => adverts.getAdvert(user, id))
 		.validate(() => {})
 		.patch((advert, {actions}) => {
 			if (quantity > 0) {
@@ -27,6 +27,6 @@ export const createReserveAdvert = ({ adverts, notifications }: Pick<Services, '
 				verifyTypeIsReservation,
 				verifyReservationLimits,
 			))
-		.saveVersion( (versionId, advert) => adverts.saveAdvertVersion(versionId, advert))
+		.saveVersion( (versionId, advert) => adverts.saveAdvertVersion(user, versionId, advert))
 		.run()
 		.then(mapTxResultToAdvertMutationResult)

@@ -9,7 +9,7 @@ const countReservationsByUser = (user: HaffaUser, reservations: AdvertReservatio
 	
 export const createCancelAdvertReservation = ({ adverts, notifications }: Pick<Services, 'adverts'|'notifications'>): AdvertMutations['cancelAdvertReservation'] => 
 	(user, id) => txBuilder<Advert>()
-		.load(() => adverts.getAdvert(id))
+		.load(() => adverts.getAdvert(user, id))
 		.validate(() => undefined)
 		.patch((advert, {actions}) => {
 				actions((patched, original) => notifications.advertReservationWasCancelled(
@@ -22,7 +22,7 @@ export const createCancelAdvertReservation = ({ adverts, notifications }: Pick<S
 				}
 			})
 			.verify((update) => update)
-			.saveVersion( (versionId, advert) => adverts.saveAdvertVersion(versionId, advert))
+			.saveVersion( (versionId, advert) => adverts.saveAdvertVersion(user, versionId, advert))
 			.run()
 			.then(mapTxResultToAdvertMutationResult)
 
