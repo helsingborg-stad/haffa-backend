@@ -48,9 +48,16 @@ input AdvertFieldsFilterInput {
 	not: AdvertFieldsFilterInput
 }
 
+input AdvertRestrictionsInput {
+	canBeReserved: Boolean
+	reservedByMe: Boolean
+	createdByMe: Boolean
+}
+
 input AdvertFilterInput {
 	search: String
 	field: AdvertFieldsFilterInput
+	restrictions: AdvertRestrictionsInput
 }
 
 input AdvertLocationInput {

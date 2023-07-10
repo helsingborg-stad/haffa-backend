@@ -95,14 +95,16 @@ export type AdvertFieldsFilterInput = {
 	[Property in keyof Omit<AdvertUserFields, 'images'>]?: FilterInput<AdvertUserFields[Property]>
 }
 
+export interface AdvertRestrictionsFilterInput {
+	canBeReserved?: boolean,
+	reservedByMe?: boolean,
+	createdByMe?: boolean
+}
+
 export interface AdvertFilterInput {
 	search?: string
 	fields?: AdvertFieldsFilterInput
-	restrictions?: {
-		canBeReserved?: boolean,
-		reservedByMe?: boolean,
-		createdByMe?: boolean
-	}
+	restrictions?: AdvertRestrictionsFilterInput
 }
 
 export interface AdvertsRepository {

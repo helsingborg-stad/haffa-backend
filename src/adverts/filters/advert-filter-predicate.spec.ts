@@ -6,7 +6,8 @@ describe('createAdvertFilterPredicate', () => {
 
   const createTestUser = (user?: Partial<HaffaUser>): HaffaUser => ({
     id: 'test@testerson.com',
-    roles: []
+    roles: [],
+    ...user
   })
 
   const createSampleAdverts = (
@@ -71,4 +72,65 @@ describe('createAdvertFilterPredicate', () => {
       .map(({id}) => id))
       .toMatchObject(['advert-30'])
   })
+
+  it('restricts to creator', () => {
+    const p = createAdvertFilterPredicate(createTestUser({id: 'a@b.com'}), {search: 'unicorn', restrictions: {createdByMe: true}})
+
+    const adverts = createSampleAdverts(100, {
+      'advert-10': {title: 'I like my unicorn!'},
+      'advert-20': {description: ' UniCorns are the best'},
+      'advert-30': {description: ' My very own little unicorn', createdBy: 'a@b.com'}
+    });
+    
+    expect(
+      adverts.filter(p)
+      .map(({id}) => id))
+      .toMatchObject(['advert-30'])
+  })
+
+  it('restricts to reserved by', () => {
+    const p = createAdvertFilterPredicate(createTestUser({id: 'a@b.com'}), {search: 'unicorn', restrictions: {reservedByMe: true}})
+
+    const adverts = createSampleAdverts(100, {
+      'advert-10': {title: 'I like my unicorn!'},
+      'advert-20': {description: ' UniCorns are the best'},
+      'advert-30': {description: ' My very own little unicorn', reservations: [{
+        reservedBy: 'a@b.com',
+        reservedAt: new Date().toISOString(),
+        quantity: 1
+      }]}
+    });
+    
+    expect(
+      adverts.filter(p)
+      .map(({id}) => id))
+      .toMatchObject(['advert-30'])
+  })
+
+  it('restricts to can be reserved', () => {
+    const p = createAdvertFilterPredicate(createTestUser({id: 'a@b.com'}), {search: 'unicorn', restrictions: {canBeReserved: true}})
+
+    let adverts = createSampleAdverts(100, {
+      'advert-10': {title: 'I like my unicorn!'},
+      'advert-20': {description: ' UniCorns are the best'},
+      'advert-30': {description: ' My very own little unicorn'}})
+
+    // reserve all adverts except advert-30
+    adverts = adverts.map(advert => 
+      advert.id === 'advert-30' 
+      ? advert
+      : ({
+      ...advert,
+      reservations: [{
+        reservedBy: 'someone@else',
+        reservedAt: new Date().toISOString(),
+        quantity: advert.quantity
+      }]
+    }))
+
+    expect(
+      adverts.filter(p)
+      .map(({id}) => id))
+      .toMatchObject(['advert-30'])
+  })  
 })
