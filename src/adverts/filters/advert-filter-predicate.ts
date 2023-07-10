@@ -1,3 +1,4 @@
+import type { HaffaUser } from "../../login/types"
 import type { Advert, AdvertFilterInput } from "../types"
 import { createFieldFilterPredicate } from "./field-filter-predicate"
 import type { Predicate } from "./types"
@@ -19,7 +20,7 @@ const createFreeTextPredicate = (search: string): Predicate<Advert> => {
 }
 
 
-export const createAdvertFilterPredicate = (input?: AdvertFilterInput): Predicate<Advert> => {
+export const createAdvertFilterPredicate = (user: HaffaUser, input?: AdvertFilterInput): Predicate<Advert> => {
   const matchers = [
     createFreeTextPredicate(input?.search || ''),
     createFieldFilterPredicate(input?.fields)

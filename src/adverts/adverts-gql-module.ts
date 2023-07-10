@@ -14,7 +14,7 @@ export const createAdvertsGqlModule = (services: Pick<Services, 'adverts'|'files
 				return  mapAdvertsToAdvertsWithMeta(user, l)
 			},
 			getAdvert: async ({ ctx: { user }, args: { id } }) => {
-				const advert = await services.adverts.getAdvert(id)
+				const advert = await services.adverts.getAdvert(user, id)
 				return mapAdvertToAdvertWithMeta(user, advert)
 			},
 		},

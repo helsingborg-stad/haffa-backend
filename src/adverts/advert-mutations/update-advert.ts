@@ -9,13 +9,13 @@ import { verifyAll, verifyQuantityAtleatOne, verifyReservationsDoesNotExceedQuan
 
 export const createUpdateAdvert = ({ adverts, files }: Pick<Services, 'adverts'|'files'>): AdvertMutations['updateAdvert'] => 
 	(user, id, input) => txBuilder<Advert>()
-		.load(() => adverts.getAdvert(id))
+		.load(() => adverts.getAdvert(user, id))
 		.validate((advert, {throwIf}) => throwIf(!getAdvertMeta(advert, user).canEdit, TxErrors.Unauthorized))
 		.patch(async (advert) => ({
 			...advert,
 			...await processAdvertInput(input, files),
 		}))
 		.verify((_, ctx) => verifyAll(ctx, verifyQuantityAtleatOne, verifyReservationsDoesNotExceedQuantity))
-		.saveVersion((versionId, advert) => adverts.saveAdvertVersion(versionId, advert))
+		.saveVersion((versionId, advert) => adverts.saveAdvertVersion(user, versionId, advert))
 		.run()
 		.then(mapTxResultToAdvertMutationResult)

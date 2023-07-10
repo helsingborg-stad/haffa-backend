@@ -1,7 +1,13 @@
 import {createAdvertFilterPredicate} from './advert-filter-predicate'
 import {createEmptyAdvert} from './../mappers'
 import { Advert } from '../types'
+import { HaffaUser } from '../../login/types'
 describe('createAdvertFilterPredicate', () => {
+
+  const createTestUser = (user?: Partial<HaffaUser>): HaffaUser => ({
+    id: 'test@testerson.com',
+    roles: []
+  })
 
   const createSampleAdverts = (
     count: number, 
@@ -15,12 +21,12 @@ describe('createAdvertFilterPredicate', () => {
 
   it('matches all by default', () => {
     const adverts = createSampleAdverts(10);
-    expect(adverts.filter(createAdvertFilterPredicate()))
+    expect(adverts.filter(createAdvertFilterPredicate(createTestUser())))
       .toMatchObject(adverts)
   })
 
   it('does free text search in {title, description}', () => {
-    const p = createAdvertFilterPredicate({search: 'unicorn'})
+    const p = createAdvertFilterPredicate(createTestUser(), {search: 'unicorn'})
 
     const adverts = createSampleAdverts(100, {
       'advert-10': {title: 'I like my unicorn!'},
@@ -34,7 +40,7 @@ describe('createAdvertFilterPredicate', () => {
   })
 
   it('treats search text as a list of separate words combined with or to match {title, description}', () => {
-    const p = createAdvertFilterPredicate({search: 'unicorn orange banana'})
+    const p = createAdvertFilterPredicate(createTestUser(), {search: 'unicorn orange banana'})
 
     const adverts = createSampleAdverts(100, {
       'advert-10': {title: 'I like my unicorn!'},
@@ -49,7 +55,7 @@ describe('createAdvertFilterPredicate', () => {
   })
 
   it('combines search text with filter predicates with logical AND', () => {
-    const p = createAdvertFilterPredicate({search: 'unicorn', fields: {
+    const p = createAdvertFilterPredicate(createTestUser(), {search: 'unicorn', fields: {
       description: {
         'contains': 'orange'
       }

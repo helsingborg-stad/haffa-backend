@@ -98,15 +98,20 @@ export type AdvertFieldsFilterInput = {
 export interface AdvertFilterInput {
 	search?: string
 	fields?: AdvertFieldsFilterInput
+	restrictions?: {
+		canBeReserved?: boolean,
+		reservedByMe?: boolean,
+		createdByMe?: boolean
+	}
 }
 
 export interface AdvertsRepository {
-	getAdvert: (id: string) => Promise<Advert | null>
-	saveAdvertVersion: (versionId: string, advert: Advert) => Promise<Advert | null>,
-	list: (filter?: AdvertFilterInput) => Promise<Advert[]>
+	getAdvert: (user: HaffaUser, id: string) => Promise<Advert | null>
+	saveAdvertVersion: (user: HaffaUser, versionId: string, advert: Advert) => Promise<Advert | null>,
+	list: (user: HaffaUser, filter?: AdvertFilterInput) => Promise<Advert[]>
 	create: (user: HaffaUser, advert: AdvertInput) => Promise<Advert>
-	update: (id: string, user: HaffaUser, advert: AdvertInput) => Promise<Advert|null>
-	remove: (id: string) => Promise<Advert|null>
+	update: (user: HaffaUser, id: string, advert: AdvertInput) => Promise<Advert|null>
+	remove: (user: HaffaUser, id: string) => Promise<Advert|null>
 }
 
 export interface AdvertMutations {
