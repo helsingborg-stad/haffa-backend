@@ -32,6 +32,7 @@ export interface AdvertUserFields {
 }
 
 export interface AdvertMeta {
+	reservableQuantity: number
 	canEdit: boolean
 	canRemove: boolean
 	canBook: boolean
@@ -109,7 +110,7 @@ export interface AdvertFilterInput {
 	search?: string
 	fields?: AdvertFieldsFilterInput
 	restrictions?: AdvertRestrictionsFilterInput
-	sorting: AdvertSorting
+	sorting?: AdvertSorting
 }
 
 export interface AdvertsRepository {

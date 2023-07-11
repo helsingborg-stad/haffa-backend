@@ -99,6 +99,7 @@ input AdvertInput {
 }
 
 type AdvertMeta {
+	reservableQuantity: Int
 	canEdit: Boolean!
 	canRemove: Boolean!
 	canBook: Boolean!
@@ -128,6 +129,7 @@ type Image {
 
 type Advert {
 	id: ID!
+	createdAt: String
 	meta: AdvertMeta
 	title: String
 	description: String

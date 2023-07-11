@@ -2,12 +2,20 @@ import type { HaffaUser } from '../login/types'
 import type { Advert, AdvertMeta} from './types';
 import { AdvertType } from './types'
 
-export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => ({
-	canEdit: advert.createdBy === user.id,
-	canRemove: advert.createdBy === user.id,
-	canBook: advert.type === AdvertType.borrow,
-	canReserve: advert.type === AdvertType.recycle && (
-		advert.quantity > advert.reservations.map(({ quantity }) => quantity).reduce((s, v) => s + v, 0)
-	),
-	canCancelReservation: advert.reservations.some(({ reservedBy }) => reservedBy === user.id),
-})
+interface AdvertSummary {
+	reservationCount: number
+}
+const summarizeAdvert = <T>(advert: Advert, map: (advert: Advert, summary: AdvertSummary) => T) => {
+	const reservationCount = advert.reservations.map(({ quantity }) => quantity).reduce((s, v) => s + v, 0)
+	return map(advert, {reservationCount})
+}
+
+export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => 
+	summarizeAdvert(advert, ({type, createdBy, reservations, quantity}, {reservationCount}) => ({
+		reservableQuantity: type === AdvertType.recycle ? quantity - reservationCount : 0,
+		canEdit: createdBy === user.id,
+		canRemove: createdBy === user.id,
+		canBook: type === AdvertType.borrow,
+		canReserve: (type === AdvertType.recycle) && (advert.quantity > reservationCount),
+		canCancelReservation: reservations.some(({ reservedBy }) => reservedBy === user.id),
+	}))
