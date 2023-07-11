@@ -9,7 +9,8 @@ const regexpEscape = (s: string): string => s.replace(/[|\\{}()[\]^$+*?.]/g, '\\
 const createFreeTextPredicate = (search: string): Predicate<Advert> => {
   // extract individual words from search
 
-  const matchers = ((search||'').match(/(\w+)/g) || [])
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Character_classes#looking_for_a_word_from_unicode_characters
+  const matchers = ((search||'').match(/([\u0000-\u0019\u0021-\uFFFF]+)/gm) || [])
     .filter(v => v)
     .filter(v => v.length >= 3)
     .map(regexpEscape)

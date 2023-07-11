@@ -133,4 +133,19 @@ describe('createAdvertFilterPredicate', () => {
       .map(({id}) => id))
       .toMatchObject(['advert-30'])
   })  
+
+  it('bugfix: supports exotic characters', () => {
+    const p = createAdvertFilterPredicate(createTestUser(), {search: 'ÅÄÖ'})
+
+    const adverts = createSampleAdverts(100, {
+      'advert-10': {title: 'I like my unicorn named åäö!'},
+      'advert-20': {description: ' UniCorns are the best in the whole wåäörld'}
+    });
+    
+    expect(
+      adverts.filter(p)
+      .map(({id}) => id))
+      .toMatchObject(['advert-10', 'advert-20'])
+  })
+
 })
