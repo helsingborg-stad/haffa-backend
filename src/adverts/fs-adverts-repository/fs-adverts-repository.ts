@@ -3,7 +3,7 @@ import { mkdirp } from 'mkdirp'
 import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
 import type { AdvertsRepository } from '../types'
 import { createAdvertFilterPredicate } from '../filters/advert-filter-predicate'
-import { createEmptyAdvert, mapCreateAdvertInputToAdvert, patchAdvertWithAdvertInput } from '../mappers'
+import { createEmptyAdvert, mapCreateAdvertInputToAdvert } from '../mappers'
 import { createAdvertFilterComparer } from '../filters/advert-filter-sorter'
 
 export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository => {
@@ -41,18 +41,6 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 		return advert
 	}
 	
-	const update: AdvertsRepository['update'] = async (user, id, input) => {
-		const existing = await getAdvert(user, id)
-		if (!existing) {
-			return null
-		}
-		const updated = patchAdvertWithAdvertInput(existing, input)
-		const path = join(dataFolder, `${id}.json`)
-		await mkdirp(dataFolder)
-		await writeFile(path, JSON.stringify(updated, null, 2), { encoding: 'utf8' })
-		return updated
-	}
-
 	const remove: AdvertsRepository['remove'] = async (user, id) => {
 		const existing = await getAdvert(user, id)
 		if (existing) {
@@ -80,7 +68,6 @@ export const createFsAdvertsRepository = (dataFolder: string): AdvertsRepository
 		saveAdvertVersion,
 		list,
 		create,
-		update,
 		remove
 	}
 }

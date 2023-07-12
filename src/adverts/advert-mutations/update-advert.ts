@@ -1,6 +1,7 @@
 import { TxErrors, txBuilder } from '../../transactions'
 import type { Services } from '../../types'
 import { getAdvertMeta } from '../advert-meta'
+import { patchAdvertWithAdvertInput } from '../mappers'
 import type { Advert, AdvertMutations } from '../types'
 import { mapTxResultToAdvertMutationResult } from './mappers'
 import { processAdvertInput } from './process-advert-input'
@@ -12,7 +13,7 @@ export const createUpdateAdvert = ({ adverts, files }: Pick<Services, 'adverts'|
 		.load(() => adverts.getAdvert(user, id))
 		.validate((advert, {throwIf}) => throwIf(!getAdvertMeta(advert, user).canEdit, TxErrors.Unauthorized))
 		.patch(async (advert) => ({
-			...advert,
+			...patchAdvertWithAdvertInput(advert, input),
 			...await processAdvertInput(input, files),
 		}))
 		.verify((_, ctx) => verifyAll(ctx, verifyQuantityAtleatOne, verifyReservationsDoesNotExceedQuantity))

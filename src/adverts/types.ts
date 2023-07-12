@@ -117,8 +117,7 @@ export interface AdvertsRepository {
 	getAdvert: (user: HaffaUser, id: string) => Promise<Advert | null>
 	saveAdvertVersion: (user: HaffaUser, versionId: string, advert: Advert) => Promise<Advert | null>,
 	list: (user: HaffaUser, filter?: AdvertFilterInput) => Promise<Advert[]>
-	create: (user: HaffaUser, advert: AdvertInput) => Promise<Advert>
-	update: (user: HaffaUser, id: string, advert: AdvertInput) => Promise<Advert|null>
+	create: (user: HaffaUser, advert: Advert) => Promise<Advert>
 	remove: (user: HaffaUser, id: string) => Promise<Advert|null>
 }
 
