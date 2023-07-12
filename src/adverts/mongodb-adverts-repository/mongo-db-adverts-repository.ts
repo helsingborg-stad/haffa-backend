@@ -1,19 +1,11 @@
-import type {Collection, CollationOptions} from 'mongodb'
+import type { CollationOptions } from "mongodb";
 import type { Advert, AdvertsRepository } from "../types";
 import type { MongoAdvert} from "./types";
 import { mapAdvertFilterInputToMongoQuery, mapAdvertFilterInputToMongoSort, mapAdvertToMongoAdvert } from './mappers';
 import { createEmptyAdvert } from '../mappers';
+import type { MongoConnection } from "../../mongodb-utils/types";
 
-interface MongoDbAdvertsRepositoryParams {
-	getCollection: () => Promise<Collection<MongoAdvert>>,
-	collation: CollationOptions
-}
-
-export const createMongoDbAdvertsRepository = ({
-	getCollection,
-	collation
-}: MongoDbAdvertsRepositoryParams): AdvertsRepository => {
-
+export const createMongoAdvertsRepository = ({getCollection}: MongoConnection<MongoAdvert>, collation: CollationOptions): AdvertsRepository => {
 	const getAdvert: AdvertsRepository['getAdvert'] = async (_user, id) => getCollection()
 		.then(collection => collection.findOne({id}))
 		.then(envelope => envelope?.advert || null)
@@ -26,7 +18,6 @@ export const createMongoDbAdvertsRepository = ({
 			.toArray()
 			.then(envelopes => envelopes.map(envelope => envelope.advert))
 			.then(adverts => adverts.map<Advert>(advert => ({ ...createEmptyAdvert(), ...advert }))))
-
 
 	const create: AdvertsRepository['create'] = async (user, advert) => 
 			getCollection()

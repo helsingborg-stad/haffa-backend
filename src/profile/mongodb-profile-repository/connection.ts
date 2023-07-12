@@ -1,31 +1,9 @@
-import { MongoClient } from "mongodb"
-import type { MongoProfile, MongoProfileConnection } from "./types"
+import type { MongoProfile } from "./types"
+import type { MongoConnection, MongoConnectionOptions } from "../../mongodb-utils/types"
+import { createMongoConnection } from "../../mongodb-utils"
 
-interface ConnectionOptions {
-	uri: string, collectionName: string
-}
+export const createProfileDbConnection = ({uri, collectionName}: Pick<MongoConnectionOptions<MongoProfile>,'uri'|'collectionName'>): MongoConnection<MongoProfile> => createMongoConnection({
+	uri,
+	collectionName
+})
 
-const once = <T>(fn: () => T): () => T => {
-	let state: {result: T}|null = null
-	
-	return () => {
-		if (state === null) {
-			state = {result: fn()}
-		}
-		return state.result
-	}
-}
-
-export const createProfileDbConnection = ({uri, collectionName}: ConnectionOptions): MongoProfileConnection => {
-	const connect = once(async () => {
-		const client = await MongoClient.connect(uri)
-		const db = client.db()
-		const collection = db.collection<MongoProfile>(collectionName)
-		await collection.createIndex({id: 1}, {name: 'unique_index__id', unique: true})
-		return db
-	})
-
-	return {
-		getCollection: () => connect().then(db => db.collection<MongoProfile>(collectionName))
-	}
-}

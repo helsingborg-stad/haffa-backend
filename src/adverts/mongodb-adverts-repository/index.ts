@@ -1,54 +1,32 @@
 import { getEnv } from '@helsingborg-stad/gdi-api-node'
-import type { Collection, Db} from 'mongodb';
-import { MongoClient } from 'mongodb';
 import type { AdvertsRepository } from '../types'
-import type { MongoAdvert, MongoClientFactory, MongoDBConnectionConfiguration } from './types';
-import { createMongoDbAdvertsRepository } from './mongo-db-adverts-repository';
+import type { MongoAdvert } from './types';
+import { createMongoAdvertsRepository } from './mongo-db-adverts-repository';
+import { createMongoConnection } from '../../mongodb-utils';
+import type { MongoConnectionOptions } from '../../mongodb-utils/types';
 
-const defaultClientFactory: MongoClientFactory = {
-  getClient: ({ uri }) => MongoClient.connect(uri),
-}
-
-const connect = async (
-  config: MongoDBConnectionConfiguration,
-  clientFactory: MongoClientFactory
-): Promise<Db> => {
-  const client = await clientFactory.getClient(config)
-  const db = client.db()
-  const collection = db.collection(config.collectionName)
-  
-  await collection.createIndex({ id: 1 }, { unique: true, name: 'unique_index__id' })
-  await collection.createIndex({'advert.title': 'text', 'advert.description': 'text'})
-
-  return db
-}
-
-export const createAndConfigureMongoDBAdvertsRepository = (
-  config: MongoDBConnectionConfiguration,
-  clientFactory: MongoClientFactory = defaultClientFactory
-): AdvertsRepository => {
-
-  let dbOnce: Promise<Db>|null = null
-
-  const getCollection = (): Promise<Collection<MongoAdvert>> => {
-    if (!dbOnce) {
-      dbOnce = connect(config, clientFactory)
+export const createAndConfigureMongoAdvertsRepository = ({
+  uri, collectionName
+}: Pick<MongoConnectionOptions<MongoAdvert>,'uri'|'collectionName'>): AdvertsRepository => {
+  const connection = createMongoConnection<MongoAdvert>({
+    uri,
+    collectionName,
+    setupCollection: async (c) => {
+      await c.createIndex({ id: 1 }, { unique: true, name: 'unique_index__id' })
+      await c.createIndex({'advert.title': 'text', 'advert.description': 'text'})
     }
-    return dbOnce.then(db => db.collection<MongoAdvert>(config.collectionName))
-  }
-  
-  return createMongoDbAdvertsRepository({
-    getCollection,
-    collation: {
+  })
+  return createMongoAdvertsRepository(connection,
+    {
       locale: 'sv',
       caseLevel: true,
     }
-  })
+  )
 }
 
-export const tryCreateMongoDBAdvertsRepositoryFromEnv =
+export const tryCreateMongoAdvertsRepositoryFromEnv =
   (): AdvertsRepository | null => {
     const uri = getEnv('MONGODB_URI', { fallback: '' })
     const collectionName = getEnv('MONGODB_ADVERTS_COLLECTION', {fallback: 'adverts'})
-    return uri ? createAndConfigureMongoDBAdvertsRepository({ uri, collectionName }) : null
+    return uri ? createAndConfigureMongoAdvertsRepository({ uri, collectionName }) : null
   }

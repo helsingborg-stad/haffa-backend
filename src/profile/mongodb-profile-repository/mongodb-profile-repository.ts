@@ -1,9 +1,10 @@
 import type { ProfileRepository } from "../types";
-import type { MongoProfileConnection } from "./types";
 import { createEmptyProfile } from "../mappers";
+import type { MongoProfile } from "./types";
+import type { MongoConnection } from "../../mongodb-utils/types";
 
 
-export const createMongoDBProfileRepository = (connection: MongoProfileConnection): ProfileRepository => {
+export const createMongoDBProfileRepository = (connection: MongoConnection<MongoProfile>): ProfileRepository => {
 	const getProfile: ProfileRepository['getProfile'] = async ({ id }) => {
 		const collection = await connection.getCollection()
 		const envelope = await collection.findOne({id: id.toLowerCase()})
