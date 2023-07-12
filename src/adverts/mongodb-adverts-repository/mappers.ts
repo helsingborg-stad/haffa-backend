@@ -58,7 +58,7 @@ export const mapAdvertFilterInputToMongoQuery = (
     [search]
       .map(s => (s || '').trim())
       .filter(s => s)
-      .map(s => ({ $text: { $search: s, $caseSensitive: false } }))[0] || null
+      .map(s => ({ $text: { $search: s, $caseSensitive: false  } }))[0] || null
 
   const mapRestrictions = (
     restrictions?: AdvertRestrictionsFilterInput

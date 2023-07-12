@@ -6,5 +6,5 @@ export const createEmptyProfile = (): Profile => ({
   adress: '',
   zipCode: '',
   city: '',
-  country: '',
+  country: 'Sverige',
 })

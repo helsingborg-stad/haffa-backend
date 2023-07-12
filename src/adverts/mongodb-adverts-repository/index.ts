@@ -49,6 +49,6 @@ export const createAndConfigureMongoDBAdvertsRepository = (
 export const tryCreateMongoDBAdvertsRepositoryFromEnv =
   (): AdvertsRepository | null => {
     const uri = getEnv('MONGODB_URI', { fallback: '' })
-    const collectionName = getEnv('MONGODB_COLLECTION', {fallback: 'adverts'})
+    const collectionName = getEnv('MONGODB_ADVERTS_COLLECTION', {fallback: 'adverts'})
     return uri ? createAndConfigureMongoDBAdvertsRepository({ uri, collectionName }) : null
   }
