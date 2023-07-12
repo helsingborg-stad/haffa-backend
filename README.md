@@ -73,6 +73,12 @@ As such, it includes
 
 <!-- GETTING STARTED -->
 
+## Integrations
+
+haffa-baclkend works with different storage and service providers including in memory, disk and MongoDB.
+
+Check out our [integration guide](./integrations.md) for more info.
+
 ## Getting Started
 
 ### Configuration
