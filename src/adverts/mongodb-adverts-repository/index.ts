@@ -1,116 +1,54 @@
 import { getEnv } from '@helsingborg-stad/gdi-api-node'
+import type { Collection, Db} from 'mongodb';
 import { MongoClient } from 'mongodb';
-import type { Collection } from 'mongodb';
-import {
-  createEmptyAdvert,
-} from '../mappers'
-import type { Advert, AdvertsRepository } from '../types'
-import type { MongoAdvert } from './types';
-import { mapAdvertFilterInputToMongoQuery, mapAdvertFilterInputToMongoSort, mapAdvertToMongoAdvert } from './mappers';
-
-const COLLECTION_NAME = 'adverts'
-
-interface MongoDBConnectionConfiguration {
-  uri: string
-}
-
-interface MongoClientFactory {
-  getClient: (config: MongoDBConnectionConfiguration) => Promise<MongoClient>
-}
-
-interface MongoConnection {
-  collection: Collection<MongoAdvert>
-}
-
-const connect = async (
-  config: MongoDBConnectionConfiguration,
-  clientFactory: MongoClientFactory
-): Promise<MongoConnection> => {
-  const client = await clientFactory.getClient(config)
-  const db = client.db()
-
-  await db
-    .collection(COLLECTION_NAME)
-    .createIndex({ id: 1 }, { unique: true, name: 'unique_index__id' })
-  await db
-    .collection(COLLECTION_NAME)
-    .createIndex({'advert.title': 'text', 'advert.description': 'text'})
-
-  return {
-    collection: db.collection<MongoAdvert>(COLLECTION_NAME),
-  }
-}
+import type { AdvertsRepository } from '../types'
+import type { MongoAdvert, MongoClientFactory, MongoDBConnectionConfiguration } from './types';
+import { createMongoDbAdvertsRepository } from './mongo-db-adverts-repository';
 
 const defaultClientFactory: MongoClientFactory = {
   getClient: ({ uri }) => MongoClient.connect(uri),
 }
 
-export const createMongoDBAdvertsRepository = (
+const connect = async (
+  config: MongoDBConnectionConfiguration,
+  clientFactory: MongoClientFactory
+): Promise<Db> => {
+  const client = await clientFactory.getClient(config)
+  const db = client.db()
+  const collection = db.collection(config.collectionName)
+  
+  await collection.createIndex({ id: 1 }, { unique: true, name: 'unique_index__id' })
+  await collection.createIndex({'advert.title': 'text', 'advert.description': 'text'})
+
+  return db
+}
+
+export const createAndConfigureMongoDBAdvertsRepository = (
   config: MongoDBConnectionConfiguration,
   clientFactory: MongoClientFactory = defaultClientFactory
 ): AdvertsRepository => {
-  const getAdvert: AdvertsRepository['getAdvert'] = (_user, id) =>
-    connect(config, clientFactory)
-      .then(({ collection }) => collection.findOne({ id }))
-      .then(envelope => envelope?.advert || null)
 
-  const list: AdvertsRepository['list'] = (user, filter) =>
-    connect(config, clientFactory).then(({ collection }) =>
-      collection
-        .find(mapAdvertFilterInputToMongoQuery(user, filter))
-        .collation({
-          locale: 'sv',
-          caseLevel: true,
-        })
-        .sort(mapAdvertFilterInputToMongoSort(filter))
-        .toArray()
-        .then(envelopes => envelopes.map(envelope => envelope.advert))
-        .then(adverts =>
-          adverts.map<Advert>(advert => ({ ...createEmptyAdvert(), ...advert }))
-        )
-    )
+  let dbOnce: Promise<Db>|null = null
 
-  const create: AdvertsRepository['create'] = async (user, advert) => {
-    const newDocument = mapAdvertToMongoAdvert(advert)
-    const { collection } = await connect(config, clientFactory)
-    await collection.insertOne(newDocument)
-    return newDocument.advert
-  }
-
-  const remove: AdvertsRepository['remove'] = async (user, id) => {
-    const existing = await getAdvert(user, id)
-    if (!existing) {
-      return null
+  const getCollection = (): Promise<Collection<MongoAdvert>> => {
+    if (!dbOnce) {
+      dbOnce = connect(config, clientFactory)
     }
-    const { collection } = await connect(config, clientFactory)
-    await collection.deleteOne({ id })
-    return existing
+    return dbOnce.then(db => db.collection<MongoAdvert>(config.collectionName))
   }
-
-  const saveAdvertVersion: AdvertsRepository['saveAdvertVersion'] = async (
-    user,
-    versionId,
-    advert
-  ) => {
-    const { collection } = await connect(config, clientFactory)
-    const result = await collection.updateOne({id: advert.id, versionId}, {
-      $set: mapAdvertToMongoAdvert(advert)
-    }, {upsert: false})
-
-    return result.modifiedCount > 0 ? advert : null
-  }
-
-  return {
-    getAdvert,
-    list,
-    create,
-    remove,
-    saveAdvertVersion,
-  }
+  
+  return createMongoDbAdvertsRepository({
+    getCollection,
+    collation: {
+      locale: 'sv',
+      caseLevel: true,
+    }
+  })
 }
 
 export const tryCreateMongoDBAdvertsRepositoryFromEnv =
   (): AdvertsRepository | null => {
     const uri = getEnv('MONGODB_URI', { fallback: '' })
-    return uri ? createMongoDBAdvertsRepository({ uri }) : null
+    const collectionName = getEnv('MONGODB_COLLECTION', {fallback: 'adverts'})
+    return uri ? createAndConfigureMongoDBAdvertsRepository({ uri, collectionName }) : null
   }
