@@ -11,7 +11,7 @@ export const tryCreateMongoLoginServiceFromEnv = (): LoginService|null => {
 	const uri = getEnv('MONGODB_URI', { fallback: '' })
 	const collectionName = getEnv('MONGODB_LOGIN_COLLECTION', {fallback: 'login'})
 	const ttl = ms(getEnv('LOGIN_ATTEMPT_TTL', {fallback: '10m'}))
-	const maxAttempts = Math.min(1, parseInt((getEnv('LOGIN_ATTEMPT_MAX_COUNT', {fallback: '16'})),10))
+	const maxAttempts = Math.max(1, parseInt((getEnv('LOGIN_ATTEMPT_MAX_COUNT', {fallback: '16'})),10))
 	return uri ? createMongoLoginService(createMongoLoginConnection({uri, collectionName}), ttl, maxAttempts) : null
 }
 
