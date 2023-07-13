@@ -45,7 +45,7 @@ export const createMongoLoginService = (connection: MongoConnection<MongoLogin>,
 					$push: {
 						pending: {
 							$each: [],
-							$sort: {'expires': 1},
+							// $sort: {'expires': 1},
 							$slice: -maxAttempts
 						}
 					}

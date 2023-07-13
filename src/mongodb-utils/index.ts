@@ -12,19 +12,21 @@ const once = <T>(fn: () => T): () => T => {
 	}
 }
 
-export const createMongoConnection = <T extends {id: string}>({uri, collectionName, setupDatabase, setupCollection}: MongoConnectionOptions<T>): MongoConnection<T> => {
+export const createMongoConnection = <T extends {id: string}>({uri, collectionName, clientFactory, setupClient, setupDatabase, setupCollection}: MongoConnectionOptions<T>): MongoConnection<T> => {
 	const connect = once(async () => {
-		const client = await MongoClient.connect(uri)
+		const client = await (clientFactory?.(uri) || MongoClient.connect(uri))
 		const db = client.db()
 		const collection = db.collection<T>(collectionName)
 		await collection.createIndex({id: 1}, {name: 'unique_index__id', unique: true})
 
+		await setupClient?.(client)
 		await setupDatabase?.(db)
 		await setupCollection?.(collection)
-		return db
+		return {client, db} 
 	})
 
 	return {
-		getCollection: () => connect().then(db => db.collection<T>(collectionName))
+		getCollection: () => connect().then(({db}) => db.collection<T>(collectionName)),
+		close: () => connect().then(({client}) => client.close())
 	}
 }
