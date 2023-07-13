@@ -3,13 +3,18 @@ export interface HaffaUser {
   roles: string[]
 }
 
-export enum RequestPincodeResult {
+export interface RequestPincodeResult {
+  status: RequestPincodeStatus
+  pincode: string
+}
+
+export enum RequestPincodeStatus {
   accepted = 'accepted',
   denied = 'denied',
   invalid = 'invalid',
 }
 
 export interface LoginService {
-  requestPincode: (email: string) => Promise<RequestPincodeResult>
-  tryLogin: (email: string, pincode: string) => Promise<HaffaUser | null>
+  requestPincode: (email: string, origin: string) => Promise<RequestPincodeResult>
+  tryLogin: (email: string, pincode: string, origin: string) => Promise<HaffaUser | null>
 }

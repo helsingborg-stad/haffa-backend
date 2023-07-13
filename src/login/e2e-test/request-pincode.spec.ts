@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { StatusCodes } from 'http-status-codes'
 import { createTestNotificationServices, end2endTest } from '../../test-utils'
-import { RequestPincodeResult } from '../types'
+import { RequestPincodeStatus } from '../types'
 
 describe('request', () => {
 	it('POST /api/v1/haffa/auth/request-pincode should save an entry in the login database and notify', () => {
@@ -19,7 +19,7 @@ describe('request', () => {
 					email: 'test@user.com',
 				})
 			expect(status).toBe(StatusCodes.OK)
-			expect(body.status).toBe(RequestPincodeResult.accepted)
+			expect(body.status).toBe(RequestPincodeStatus.accepted)
 			expect(logins).toMatchObject({
 				'test@user.com': {},
 			})
@@ -36,7 +36,7 @@ describe('request', () => {
 				})
 				
 			expect(status).toBe(StatusCodes.OK)
-			expect(body.status).toBe(RequestPincodeResult.invalid)
+			expect(body.status).toBe(RequestPincodeStatus.invalid)
 			expect(Object.keys(logins).length).toBe(0)
 		}))
 })

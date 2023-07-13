@@ -5,11 +5,12 @@ import type {
 } from '@helsingborg-stad/gdi-api-node'
 import HttpStatusCodes from 'http-status-codes'
 import EmailValidator from 'email-validator'
-import type { LoginService } from './types'
+import { RequestPincodeStatus, type LoginService } from './types'
 import type { TokenService } from '../tokens/types'
+import type { NotificationService } from '../notifications/types'
 
 export const loginModule =
-  (loginService: LoginService, tokenService: TokenService): ApplicationModule =>
+  (loginService: LoginService, tokenService: TokenService, notifications: NotificationService): ApplicationModule =>
   ({ registerKoaApi }: ApplicationContext) => {
     const verifyToken: Koa.Middleware = (ctx) => {
       const {
@@ -25,9 +26,13 @@ export const loginModule =
     const requestPincode: Koa.Middleware = async (ctx: any) => {
       const email = (ctx?.request?.body?.email || '').toString()
       const isValid = EmailValidator.validate(email)
-      const status = isValid
-        ? await loginService.requestPincode(email)
-        : 'invalid'
+      const {status, pincode} = isValid
+        ? await loginService.requestPincode(email, ctx.ip)
+        : {status: RequestPincodeStatus.invalid, pincode: ''}
+
+      if (status === RequestPincodeStatus.accepted) {
+        await notifications.pincodeRequested(email, pincode)
+      }
       ctx.body = { status }
     }
 
@@ -39,7 +44,7 @@ export const loginModule =
         ctx.throw(HttpStatusCodes.BAD_REQUEST)
       }
 
-      const user = await loginService.tryLogin(email, pincode)
+      const user = await loginService.tryLogin(email, pincode, ctx.ip)
       ctx.body = {
         token: user ? tokenService.sign(user) : '',
       }

@@ -1,38 +1,36 @@
 import ms from 'ms'
 import { validateHaffaUser } from '../validate-haffa-user'
 import type { LoginService} from '../types';
-import { RequestPincodeResult } from '../types'
-import type { NotificationService } from '../../notifications/types';
+import { RequestPincodeStatus } from '../types'
+import { issuePincode } from '../issue-pincode';
 
 interface Options {
 	maxAge: number
 	db: Record<string, LoginRequestEntry|null>,
-	notifications?: NotificationService
 }
 
 export interface LoginRequestEntry {
 	pincode: string
 	expires: number
 }
-
-const issuePinCode = () => '123456'
-
 export const createInMemoryLoginService = (options?: Partial<Options>): LoginService => {
-	const { maxAge, db, notifications }: Options = {
+	const { maxAge, db }: Options = {
 		db: {},
 		maxAge: ms('10m'),
 		...options,
 	}
 	return {
 		requestPincode: async (email) =>  {
-			const pincode = issuePinCode()
+			const pincode = issuePincode()
 			db[email] = {
 				pincode,
 				expires: Date.now() + maxAge,
 			}
-			await notifications?.pincodeRequested(email, pincode)
 			
-			return RequestPincodeResult.accepted
+			return {
+				status: RequestPincodeStatus.accepted,
+				pincode
+			}
 		},
 		tryLogin: async (email, pincode) => {
 			const entry = db[email]

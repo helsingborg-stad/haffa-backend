@@ -5,11 +5,11 @@ In runtime, the actual driver is chosen based on environment configuration.
 
 In order of precedence (from top to bottom), the rules are
 
-| Environment  | Adverts     | Profiles    | Files       |
-| ------------ | ----------- | ----------- | ----------- |
-| MONGOBD_URI  | MongoDB     | MongoDB     |             |
-| FS_DATA_PATH | File system | File system | File system |
-| \<none>      | In memory   | In memory   |             |
+| Environment  | Adverts     | Profiles    | Files       | Login      |
+| ------------ | ----------- | ----------- | ----------- | ---------- |
+| MONGOBD_URI  | MongoDB     | MongoDB     |             | MongoDB    |
+| FS_DATA_PATH | File system | File system | File system |            |
+| \<none>      | In memory   | In memory   |             | In memory  |
 
 ## MongoDB as persistence layer
 

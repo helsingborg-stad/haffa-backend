@@ -30,5 +30,5 @@ export const createApp = ({
     .use(jwtUserModule(services.tokens))
     .use(healthCheckModule())
     .use(graphQLModule(services))
-    .use(loginModule(services.login, services.tokens))
+    .use(loginModule(services.login, services.tokens, services.notifications))
     .use(services.files.tryCreateApplicationModule() || (() => 0))
