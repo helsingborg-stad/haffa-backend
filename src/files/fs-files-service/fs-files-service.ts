@@ -1,11 +1,10 @@
-import * as uuid from 'uuid'
 import { join, relative } from 'path'
 import { mkdirp } from 'mkdirp'
-import { extension } from 'mime-types'
 import { writeFile } from 'fs/promises'
 import send from 'koa-send'
 import type { ApplicationContext } from '@helsingborg-stad/gdi-api-node'
 import type { FilesService } from '../types'
+import { generateFileId, splitBase64DataUri } from '../file-utils'
 
 export const createFsFilesService = (
   folder: string,
@@ -13,20 +12,17 @@ export const createFsFilesService = (
 ): FilesService => {
   const tryConvertDataUrlToUrl: FilesService['tryConvertDataUrlToUrl'] =
     async url => {
-      const [, mimeType = '', base64encoding = ''] =
-        /^data:([^;]*);base64,(.+$)$/m.exec(url) || []
+      const { mimeType, dataBuffer } = splitBase64DataUri(url)
 
-      if (!base64encoding) {
+      if (!mimeType || !dataBuffer) {
         return null
       }
-      const buffer = Buffer.from(base64encoding, 'base64')
 
-      const id = uuid.v4().split('-').join('')
-      const ext = extension(mimeType)
-      const fileId = ext ? `${id}.${ext}` : id
+      const fileId = generateFileId(mimeType)
+
       const path = join(folder, fileId)
       await mkdirp(folder)
-      await writeFile(path, buffer)
+      await writeFile(path, dataBuffer)
       return `${baseUrl}/${fileId}`
     }
 

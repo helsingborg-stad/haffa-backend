@@ -1,3 +1,6 @@
+/**
+ * @type {import("eslint").Linter.Config}
+ */
 module.exports = {
   env: {
     browser: true,
@@ -10,7 +13,6 @@ module.exports = {
     'plugin:jest/style',
     'prettier',
   ],
-  overrides: [],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',

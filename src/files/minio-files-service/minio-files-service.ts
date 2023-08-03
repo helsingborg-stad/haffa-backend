@@ -1,8 +1,7 @@
 import { Client } from 'minio'
-import * as uuid from 'uuid'
-import { extension } from 'mime-types'
 import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
 import type { FilesService } from '../types'
+import { generateFileId, splitBase64DataUri } from '../file-utils'
 
 interface MinioConfig {
   endpoint: string
@@ -58,20 +57,15 @@ class MinioFilesService implements FilesService {
       this.config.region
     )
 
-    const [, mimeType = '', base64encoding = ''] =
-      /^data:([^;]*);base64,(.+$)$/m.exec(url) || []
+    const { mimeType, dataBuffer } = splitBase64DataUri(url)
 
-    if (!base64encoding) {
+    if (!mimeType || !dataBuffer) {
       return null
     }
 
-    const buffer = Buffer.from(base64encoding, 'base64')
+    const fileId = generateFileId(mimeType)
 
-    const id = uuid.v4().split('-').join('')
-    const ext = extension(mimeType)
-    const fileId = ext ? `${id}.${ext}` : id
-
-    await client.putObject(this.config.bucket, fileId, buffer, {
+    await client.putObject(this.config.bucket, fileId, dataBuffer, {
       'Content-Type': mimeType,
     })
 
