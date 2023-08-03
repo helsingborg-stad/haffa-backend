@@ -1,8 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import { end2endTest } from '../../test-utils'
-import { createEmptyProfile } from '../mappers'
-import { Profile, ProfileInput } from '../types'
-import { AdvertInput } from '../../adverts/types'
+import type { ProfileInput } from '../types';
 
 describe('getProfile', () => {
 	it('returns repository content with email set to calling user', () => end2endTest(null, async ({ user, profiles, gqlRequest }) => {

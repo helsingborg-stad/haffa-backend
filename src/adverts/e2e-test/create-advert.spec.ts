@@ -1,7 +1,7 @@
-import { T, end2endTest } from '../../test-utils'
 import { StatusCodes } from 'http-status-codes'
+import { T, end2endTest } from '../../test-utils'
 import { createAdvertMutation } from './queries'
-import { Advert, AdvertInput, AdvertWithMetaMutationResult } from '../types'
+import type { AdvertInput, AdvertWithMetaMutationResult } from '../types';
 import { createEmptyAdvertInput } from '../mappers'
 
 

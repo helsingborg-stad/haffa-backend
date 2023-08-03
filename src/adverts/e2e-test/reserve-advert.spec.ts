@@ -1,9 +1,8 @@
 import { StatusCodes } from "http-status-codes"
 import { T, createTestNotificationServices, end2endTest } from "../../test-utils"
 import { createEmptyAdvert } from "../mappers"
-import { AdvertWithMetaMutationResult } from "../types"
+import type { AdvertWithMetaMutationResult } from "../types"
 import { reserveAdvertMutation } from "./queries"
-import { NotificationService } from "../../notifications/types"
 
 describe('reserveAdvert', () => {
 	it('updates an advert in the database', () => {
@@ -34,7 +33,7 @@ describe('reserveAdvert', () => {
 
 
 			T('should have notified about the interesting event', () =>
-				expect(advertWasReserved).toBeCalledWith(user, 1, adverts['advert-123'])
+				expect(advertWasReserved).toHaveBeenCalledWith(user, 1, adverts['advert-123'])
 			)
 		})
 	})

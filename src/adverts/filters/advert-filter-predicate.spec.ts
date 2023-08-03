@@ -1,7 +1,8 @@
 import {createAdvertFilterPredicate} from './advert-filter-predicate'
-import {createEmptyAdvert} from './../mappers'
-import { Advert } from '../types'
-import { HaffaUser } from '../../login/types'
+import {createEmptyAdvert} from "../mappers"
+import type { Advert } from '../types'
+import type { HaffaUser } from '../../login/types'
+
 describe('createAdvertFilterPredicate', () => {
 
   const createTestUser = (user?: Partial<HaffaUser>): HaffaUser => ({

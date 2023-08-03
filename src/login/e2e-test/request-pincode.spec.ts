@@ -37,6 +37,6 @@ describe('request', () => {
 				
 			expect(status).toBe(StatusCodes.OK)
 			expect(body.status).toBe(RequestPincodeStatus.invalid)
-			expect(Object.keys(logins).length).toBe(0)
+			expect(Object.keys(logins)).toHaveLength(0)
 		}))
 })

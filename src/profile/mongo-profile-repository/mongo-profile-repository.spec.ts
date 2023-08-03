@@ -1,12 +1,12 @@
-import {createMongoConnection} from '../../mongodb-utils'
-import { MongoConnection, MongoConnectionOptions } from '../../mongodb-utils/types'
-const mongoMock = require('mongo-mock')
-import { MongoProfile } from './types'
+import type { MongoConnection} from '../../mongodb-utils/types';
+import type { MongoProfile } from './types'
 import {createMongoProfileRepository} from './mongo-profile-repository'
 import { createEmptyProfile, createEmptyProfileInput } from '../mappers'
-import { HaffaUser } from '../../login/types'
-import { ProfileInput, ProfileRepository } from '../types'
+import type { HaffaUser } from '../../login/types'
+import type { ProfileInput, ProfileRepository } from '../types'
 import {createMongoProfileConnection} from './mongio-profile-connection'
+
+const mongoMock = require('mongo-mock')
 
 const mongoTest = async <T extends {id: string}>(connection: MongoConnection<T>, testfn: ((connection: MongoConnection<T>) => Promise<any>)): Promise<any> => {
 	try {

@@ -1,4 +1,4 @@
-import { createFieldFilterPredicate } from "./field-filter-predicate"
+import { createFieldFilterPredicate } from './field-filter-predicate'
 
 const range = (n: number): number[] => [...Array(n).keys()]
 
@@ -13,119 +13,30 @@ describe('createFieldFilterPredicate', () => {
   const filteredData = (filter: any): any[] =>
     data.filter(createFieldFilterPredicate(filter))
 
-  const testData = (filter: any, expected: any) =>
-    expect(filteredData(filter)).toMatchObject(expected)
-
-  it('eq', () => {
-    testData(
-      {
-        title: { eq: 'title 3' },
-      },
-      [data[3]]
-    )
-
-    testData(
-      {
-        id: { eq: 3 },
-      },
-      [data[3]]
-    )
-
-    testData(
-      {
-        id: { eq: 3 },
-        idx2: { eq: 6 },
-      },
-      [data[3]]
-    )
-  })
-  it('ne', () => {
-    testData(
-      {
-        title: { ne: 'title 3' },
-      },
-      data.filter(({ id }) => id !== 3)
-    )
-  })
-  it('gt', () => {
-    testData(
-      {
-        id: { gt: 50 },
-      },
-      data.filter(({ id }) => id > 50)
-    )
-  })
-  it('gte', () => {
-    testData(
-      {
-        id: { gte: 50 },
-      },
-      data.filter(({ id }) => id >= 50)
-    )
-  })
-  it('lt', () => {
-    testData(
-      {
-        id: { lt: 50 },
-      },
-      data.filter(({ id }) => id < 50)
-    )
-  })
-  it('lte', () => {
-    testData(
-      {
-        id: { lte: 50 },
-      },
-      data.filter(({ id }) => id <= 50)
-    )
-  })
-  it('contains', () => {
-    testData(
-      {
-        description: { contains: 'ion 5' },
-      },
-      [data[5], ...data.slice(50, 60)]
-    )
-  })
-
-  it('not', () => {
-    testData(
-      {
-        not: {
-          id: { lte: 50 },
-        },
-      },
-      data.filter(({ id }) => id > 50)
-    )
-
-    testData(
-      {
-        not: {
-          title: { eq: 'missing' },
-        },
-      },
-      data
-    )
-  })
-
-  it('and', () => {
-    testData(
-      {
-        and: [{ id: { gt: 50 } }, { idx2: { eq: 98 * 2 } }],
-      },
-      data.filter(({ id }) => id === 98)
-    )
-
-    testData(
-      {
-        and: [{ id: { gt: 50 } }, { title: { eq: 'missing' } }],
-      },
-      []
-    )
-  })
-
-  it('or', () => {
-    testData(
+  it.each([
+    ['eq 1', { title: { eq: 'title 3' } }, [data[3]]],
+    ['eq 2', { id: { eq: 3 } }, [data[3]]],
+    ['eq 3', { id: { eq: 3 }, idx2: { eq: 6 } }, [data[3]]],
+    ['ne', { title: { ne: 'title 3' } }, data.filter(({ id }) => id !== 3)],
+    ['gt', { id: { gt: 50 } }, data.filter(({ id }) => id > 50)],
+    ['gte', { id: { gte: 50 } }, data.filter(({ id }) => id >= 50)],
+    ['lt', { id: { lt: 50 } }, data.filter(({ id }) => id < 50)],
+    ['lte', { id: { lte: 50 } }, data.filter(({ id }) => id <= 50)],
+    [
+      'contains',
+      { description: { contains: 'ion 5' } },
+      [data[5], ...data.slice(50, 60)],
+    ],
+    ['not 1', { not: { id: { lte: 50 } } }, data.filter(({ id }) => id > 50)],
+    ['not 2', { not: { title: { eq: 'missing' } } }, data],
+    [
+      'and 1',
+      { and: [{ id: { gt: 50 } }, { idx2: { eq: 98 * 2 } }] },
+      data.filter(({ id }) => id === 98),
+    ],
+    ['and 2', { and: [{ id: { gt: 50 } }, { title: { eq: 'missing' } }] }, []],
+    [
+      'or 1',
       {
         or: [
           { id: { eq: 10 } },
@@ -135,28 +46,15 @@ describe('createFieldFilterPredicate', () => {
           { randomField: { eq: '?' } },
         ],
       },
-      [data[10], data[20], data[30]]
-    )
-
-    testData(
-      {
-        and: [{ id: { gt: 50 } }, { title: { eq: 'missing' } }],
-      },
-      []
-    )
-  })
-
-  it('and, or, not', () => {
-    testData(
-      {
-        and: [
-          { not: { id: { gt: 41 } } },
-          {
-            or: [{ id: { gte: 40 } }],
-          },
-        ],
-      },
-      [data[40], data[41]]
-    )
+      [data[10], data[20], data[30]],
+    ],
+    ['or 2', { and: [{ id: { gt: 50 } }, { title: { eq: 'missing' } }] }, []],
+    [
+      'and, or, not',
+      { and: [{ not: { id: { gt: 41 } } }, { or: [{ id: { gte: 40 } }] }] },
+      [data[40], data[41]],
+    ],
+  ])('%s', (_title: string, filter: any, expected: any) => {
+    expect(filteredData(filter)).toMatchObject(expected)
   })
 })

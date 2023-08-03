@@ -1,8 +1,8 @@
 import { StatusCodes } from 'http-status-codes'
 import { T, createTestNotificationServices, end2endTest } from '../../test-utils'
 import { createEmptyAdvert } from '../mappers'
-import { AdvertWithMetaMutationResult } from '../types'
 import { cancelAdvertReservationMutation } from './queries'
+import type { AdvertWithMetaMutationResult } from '../types'
 
 describe('cancelAdvertReservation', () => {
 	it('removes all reservations (by user) from database', () => {
@@ -54,7 +54,7 @@ describe('cancelAdvertReservation', () => {
 				}]))
 
 			T('should have notified about the interesting event', () =>
-				expect(advertReservationWasCancelled).toBeCalledWith(user, 3, adverts['advert-123'])
+				expect(advertReservationWasCancelled).toHaveBeenCalledWith(user, 3, adverts['advert-123'])
 			)
 		})
 	})

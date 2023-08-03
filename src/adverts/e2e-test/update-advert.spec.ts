@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes"
 import { T, end2endTest } from "../../test-utils"
 import { createEmptyAdvert, createEmptyAdvertInput } from "../mappers"
-import { AdvertInput, AdvertWithMetaMutationResult } from "../types"
+import type { AdvertInput, AdvertWithMetaMutationResult } from "../types"
 import { updateAdvertMutation } from "./queries"
 import { TxErrors } from "../../transactions"
 
