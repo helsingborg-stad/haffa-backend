@@ -1,6 +1,6 @@
 import { join, relative } from 'path'
 import { mkdirp } from 'mkdirp'
-import { writeFile } from 'fs/promises'
+import { writeFile, unlink } from 'fs/promises'
 import send from 'koa-send'
 import type { ApplicationContext } from '@helsingborg-stad/gdi-api-node'
 import type { FilesService } from '../types'
@@ -45,8 +45,21 @@ export const createFsFilesService = (
         })
       }
 
+  const tryCleanupUrl: FilesService['tryCleanupUrl'] = async url => {
+    const match = new RegExp(`${baseUrl}/(.*)`).exec(url)
+    if (match !== null) {
+      const path = join(folder, match[1])
+      try {
+        await unlink(path)
+      } catch {
+        // ignore errors and do nothing
+      }
+    }
+  }
+
   return {
     tryConvertDataUrlToUrl,
     tryCreateApplicationModule,
+    tryCleanupUrl,
   }
 }

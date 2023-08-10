@@ -27,6 +27,15 @@ class MinioFilesService implements FilesService {
     }
   }
 
+  async tryCleanupUrl(url: string) {
+    const match = new RegExp(`${this.config.baseUrl}/(.*)`).exec(url)
+    if (match !== null) {
+      const client = this.createMinioClient()
+      const objectId = match[1]
+      await client.removeObject(this.config.bucket, objectId)
+    }
+  }
+
   createMinioClient() {
     return new Client({
       endPoint: this.config.endpoint,
