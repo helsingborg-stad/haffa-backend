@@ -39,8 +39,7 @@ const mutationProps = `
 	}
 `
 
-
-export const getAdvertQuery = /* GraphQL */`
+export const getAdvertQuery = /* GraphQL */ `
 query Query($id: ID!) {
 	getAdvert(id: $id) {
 		${advertProps}
@@ -48,7 +47,7 @@ query Query($id: ID!) {
   }
  `
 
-export const listAdvertsQuery = /* GraphQL */`
+export const listAdvertsQuery = /* GraphQL */ `
 query Query($filter: FilterAdvertsInput) {
 	adverts(filter: $filter) {
 		${mutationProps}
@@ -56,7 +55,7 @@ query Query($filter: FilterAdvertsInput) {
   }
 `
 
-export const createAdvertMutation = /* GraphQL */`
+export const createAdvertMutation = /* GraphQL */ `
 mutation Mutation(
 	$input: AdvertInput!
 ) {
@@ -66,7 +65,7 @@ mutation Mutation(
 }
 `
 
-export const updateAdvertMutation = /* GraphQL */`
+export const updateAdvertMutation = /* GraphQL */ `
 mutation Mutation(
 	$id: ID!
 	$input: AdvertInput!
@@ -77,7 +76,7 @@ mutation Mutation(
 }
 `
 
-export const reserveAdvertMutation = /* GraphQL */`
+export const reserveAdvertMutation = /* GraphQL */ `
 mutation Mutation(
 	$id: ID!
 	$quantity: Int
@@ -88,7 +87,17 @@ mutation Mutation(
 }
 `
 
-export const cancelAdvertReservationMutation = /* GraphQL */`
+export const removeAdvertMutation = /* GraphQL */ `
+mutation Mutation(
+	$id: ID!
+) {
+	removeAdvert(id: $id) {
+		${mutationProps}
+	}
+}
+`
+
+export const cancelAdvertReservationMutation = /* GraphQL */ `
 mutation Mutation(
 	$id: ID!
 ) {
@@ -98,12 +107,13 @@ mutation Mutation(
 }
 `
 
-export const getTermsQuery = /* GraphQL */`
-query Query {
-	terms {
-		unit
-		material
-		condition
-		usage
-	}
-}`
+export const getTermsQuery = /* GraphQL */ `
+  query Query {
+    terms {
+      unit
+      material
+      condition
+      usage
+    }
+  }
+`
