@@ -38,9 +38,10 @@ describe('removeAdvert', () => {
       // eslint-disable-next-line no-param-reassign
       adverts['remove-advert-test-1'] = mockAdvert
 
-      await gqlRequest(removeAdvertMutation, {
+      const {body: {data}} = await gqlRequest(removeAdvertMutation, {
         id: 'remove-advert-test-1',
       })
+      expect(data?.removeAdvert?.status?.code).toBe('EHAFFA_UNAUTHORIZED')
 
       T('advert has not been removed', () =>
         expect(adverts['remove-advert-test-1']).toBeDefined()
