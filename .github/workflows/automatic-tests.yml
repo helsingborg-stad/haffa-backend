@@ -26,9 +26,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-dev-
 
-      - name: yarn install
-        run: yarn install
-
       - name: setup npm
         run: |
           echo "registry=https://registry.yarnpkg.com/" >> ~/.npmrc
@@ -36,6 +33,9 @@ jobs:
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
           echo "unsafe-perm=true" >> ~/.npmrc
           echo "always-auth=true" >> ~/.npmrc
+
+      - name: yarn install
+        run: yarn install
 
       - name: run tests
         run: yarn test-ci
