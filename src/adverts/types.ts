@@ -33,6 +33,7 @@ export interface AdvertUserFields {
 
 export interface AdvertMeta {
 	reservableQuantity: number
+	collectableQuantity: number
 	canEdit: boolean
 	canRemove: boolean
 	canBook: boolean
@@ -63,16 +64,15 @@ export interface AdvertImage {
 	url: string
 }
 
-export interface AdvertReservation {
-	reservedBy: string
-	reservedAt: string
-	quantity: number
+export enum AdvertClaimType {
+	reserved = 'reserved',
+	collected = 'collected'
 }
-
-export interface AdvertCollect {
-	collectedBy: string
-	collectedAt: string
+export interface AdvertClaim {
 	quantity: number
+	by: string
+	at: string
+	type: AdvertClaimType
 }
 
 export interface Advert extends AdvertUserFields {
@@ -82,8 +82,7 @@ export interface Advert extends AdvertUserFields {
 	createdBy: string
 	createdAt: string
 	modifiedAt: string,
-	reservations: AdvertReservation[]
-	collects: AdvertCollect[]
+	claims: AdvertClaim[]
 }
 
 export type AdvertWithMeta = Advert & {meta: AdvertMeta}

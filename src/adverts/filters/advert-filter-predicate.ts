@@ -1,6 +1,6 @@
 import type { HaffaUser } from "../../login/types"
 import { getAdvertMeta } from "../advert-meta"
-import type { Advert, AdvertFilterInput, AdvertRestrictionsFilterInput } from "../types"
+import { AdvertClaimType, type Advert, type AdvertFilterInput, type AdvertRestrictionsFilterInput } from "../types"
 import { createFieldFilterPredicate } from "./field-filter-predicate"
 import type { Predicate } from "./types"
 
@@ -28,7 +28,7 @@ const createRestrictionsPredicate = (user: HaffaUser, restrictions: AdvertRestri
 
   const matchers: (Predicate<Advert>)[] = [
     makeMatcher(restrictions?.createdByMe, ({createdBy}) => createdBy === user.id),
-    makeMatcher(restrictions?.reservedByMe, ({reservations}) => reservations.some(({reservedBy}) => reservedBy === user.id)),
+    makeMatcher(restrictions?.reservedByMe, ({claims}) => claims.some(({by, type}) => (by === user.id) && (type === AdvertClaimType.reserved))),
     makeMatcher(restrictions?.canBeReserved, advert => getAdvertMeta(advert, user).canReserve)
   ]
   .filter(p => p) as Predicate<Advert>[]

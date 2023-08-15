@@ -1,23 +1,23 @@
 import { getAdvertMeta } from ".."
 import { HaffaUser } from "../../../login/types"
 import { createEmptyAdvert } from "../../mappers"
-import { AdvertReservation, AdvertType } from "../../types"
+import { AdvertClaim, AdvertClaimType, AdvertType } from "../../types"
 
 describe('getAdvertMeta::canReserve', () => {
 	const testUser: HaffaUser = {id: 'test@user', roles: []}
 
-	const createReservation = (defaults?: Partial<AdvertReservation>): AdvertReservation => ({reservedBy: 'test@user', reservedAt: new Date().toISOString(), quantity: 1, ...defaults})
+	const createReservation = (defaults?: Partial<AdvertClaim>): AdvertClaim => ({by: 'test@user', at: new Date().toISOString(), quantity: 1, type: AdvertClaimType.reserved, ...defaults})
 
 	const reservableAdverts = [
 		createEmptyAdvert({quantity: 1}),
-		createEmptyAdvert({quantity: 2, reservations: [createReservation({quantity: 1})]}),
-		createEmptyAdvert({quantity: 10, reservations: [createReservation({quantity: 9})]}),
+		createEmptyAdvert({quantity: 2, claims: [createReservation({quantity: 1})]}),
+		createEmptyAdvert({quantity: 10, claims: [createReservation({quantity: 9})]}),
 	]
 
 	const unreservableAdverts = [
 		createEmptyAdvert({quantity: 1, type: AdvertType.borrow}),
-		createEmptyAdvert({quantity: 2, reservations: [createReservation({quantity: 2})]}),
-		createEmptyAdvert({quantity: 10, reservations: [createReservation({quantity: 9}), createReservation({quantity: 1})]}),
+		createEmptyAdvert({quantity: 2, claims: [createReservation({quantity: 2})]}),
+		createEmptyAdvert({quantity: 10, claims: [createReservation({quantity: 9}), createReservation({quantity: 1})]}),
 
 	]
 

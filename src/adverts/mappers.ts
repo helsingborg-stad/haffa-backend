@@ -21,8 +21,7 @@ export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
 	condition: '',
 	usage: '',
 
-	reservations: [],
-	collects: [],
+	claims: [],
 
 	location: createEmptyAdvertLocation(),
 	contact: createEmptyAdvertContact(),

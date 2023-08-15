@@ -101,6 +101,7 @@ input AdvertInput {
 
 type AdvertMeta {
 	reservableQuantity: Int
+	collectableQuantity: Int
 	canEdit: Boolean!
 	canRemove: Boolean!
 	canBook: Boolean!
