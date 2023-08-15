@@ -2,7 +2,7 @@ import type { TxVerifyContext } from '../../transactions'
 import type { Advert} from '../types';
 import { AdvertType } from '../types'
 
-const getReservationCount = (advert: Advert): number => advert.reservations.reduce((s, { quantity }) => s+quantity, 0)
+const getClaimCount = (advert: Advert): number => advert.claims.reduce((s, { quantity }) => s + quantity, 0)
 
 export interface Verifier {
 	(ctx: TxVerifyContext<Advert>): void
@@ -26,7 +26,7 @@ export const verifyQuantityAtleatOne = ({update, throwIf}: TxVerifyContext<Adver
 		field: 'quantity'
 	})
 
-export const verifyReservationsDoesNotExceedQuantity = ({update, throwIf}: TxVerifyContext<Advert>): void => throwIf(update.quantity < getReservationCount(update), {
+export const verifyReservationsDoesNotExceedQuantity = ({update, throwIf}: TxVerifyContext<Advert>): void => throwIf(update.quantity < getClaimCount(update), {
 		code: 'EADVERT_',
 		message: 'Antalet reservationer överstiger angivet antal',
 		field: 'quantity'
@@ -34,7 +34,7 @@ export const verifyReservationsDoesNotExceedQuantity = ({update, throwIf}: TxVer
 
 
 export const verifyReservationLimits = ({ update, throwIf }: TxVerifyContext<Advert>): void => throwIf(
-	update.quantity < getReservationCount(update),
+	update.quantity < getClaimCount(update),
 	{
 		code: 'EADVERT_',
 		message: 'För många reservationer',

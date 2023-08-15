@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes'
 import { T, createTestNotificationServices, end2endTest } from '../../test-utils'
 import { createEmptyAdvert } from '../mappers'
 import { cancelAdvertReservationMutation } from './queries'
-import type { AdvertWithMetaMutationResult } from '../types'
+import { AdvertClaimType, type AdvertWithMetaMutationResult } from '../types'
 
 describe('cancelAdvertReservation', () => {
 	it('removes all reservations (by user) from database', () => {
@@ -17,22 +17,26 @@ describe('cancelAdvertReservation', () => {
 				...createEmptyAdvert(),
 				id: 'advert-123',
 				quantity: 50,
-				reservations: [ {
-					reservedBy: 'someone I used to know',
-					reservedAt: '',
-					quantity: 2
-				},{
-					reservedBy: user.id,
-					reservedAt: '',
-					quantity: 1,
-				}, {
-					reservedBy: user.id,
-					reservedAt: '',
+				claims: [ {
+					by: 'someone I used to know',
+					at: '',
 					quantity: 2,
-				}, {
-					reservedBy: 'someone else',
-					reservedAt: '',
+					type: AdvertClaimType.reserved
+				},{
+					by: user.id,
+					at: '',
 					quantity: 1,
+					type: AdvertClaimType.reserved
+				}, {
+					by: user.id,
+					at: '',
+					quantity: 2,
+					type: AdvertClaimType.reserved
+				}, {
+					by: 'someone else',
+					at: '',
+					quantity: 1,
+					type: AdvertClaimType.reserved
 				},
 				],
 			}
@@ -45,11 +49,11 @@ describe('cancelAdvertReservation', () => {
 
 		
 			T('reservations by user should be removed from database', () => 
-				expect(adverts['advert-123'].reservations).toMatchObject([{
-					reservedBy: 'someone I used to know',
+				expect(adverts['advert-123'].claims).toMatchObject([{
+					by: 'someone I used to know',
 					quantity: 2
 				},{
-					reservedBy: 'someone else',
+					by: 'someone else',
 					quantity: 1,
 				}]))
 

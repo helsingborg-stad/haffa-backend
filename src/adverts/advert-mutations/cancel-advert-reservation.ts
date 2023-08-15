@@ -1,11 +1,7 @@
-import type { HaffaUser } from '../../login/types'
 import { txBuilder } from '../../transactions'
 import type { Services } from '../../types'
-import type { Advert, AdvertMutations, AdvertReservation } from '../types'
+import { AdvertClaimType, type Advert, type AdvertMutations } from '../types'
 import { mapTxResultToAdvertMutationResult } from './mappers'
-
-const countReservationsByUser = (user: HaffaUser, reservations: AdvertReservation[]): number => 
-	reservations.filter(({ reservedBy }) => reservedBy === user.id).reduce((s, { quantity }) => s + quantity, 0)
 	
 export const createCancelAdvertReservation = ({ adverts, notifications }: Pick<Services, 'adverts'|'notifications'>): AdvertMutations['cancelAdvertReservation'] => 
 	(user, id) => txBuilder<Advert>()
@@ -14,11 +10,15 @@ export const createCancelAdvertReservation = ({ adverts, notifications }: Pick<S
 		.patch((advert, {actions}) => {
 				actions((patched, original) => notifications.advertReservationWasCancelled(
 					user, 
-					countReservationsByUser(user, original.reservations),
+					original.claims
+						.filter(({by, type}) => (by === user.id) && (type === AdvertClaimType.reserved))
+						.reduce((s, {quantity}) => s+ quantity, 0),
 					patched))
 				return {
 					...advert,
-					reservations: advert.reservations.filter(({ reservedBy }) => reservedBy !== user.id),
+					claims: advert // remove all reservations for user
+						.claims
+						.filter(({ by, type }) => !((by === user.id) && (type === AdvertClaimType.reserved))),
 				}
 			})
 			.verify((update) => update)

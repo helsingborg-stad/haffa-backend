@@ -1,11 +1,11 @@
 import { StatusCodes } from "http-status-codes"
 import { T, createTestNotificationServices, end2endTest } from "../../test-utils"
 import { createEmptyAdvert } from "../mappers"
-import type { Advert, AdvertWithMetaMutationResult } from "../types"
+import { AdvertClaimType, type Advert, type AdvertWithMetaMutationResult } from "../types"
 import { collectAdvertMutation, reserveAdvertMutation } from "./queries"
 
 describe('collectAdvert', () => {
-	it('also creates reservation if missing', () => {
+	it('creates reservation claim', () => {
 		const advertWasCollected = jest.fn(async () => void 0)
 		const notifications = createTestNotificationServices({
 			advertWasCollected,	
@@ -24,16 +24,11 @@ describe('collectAdvert', () => {
 			const result = body?.data?.collectAdvert as AdvertWithMetaMutationResult
 			// expect(adverts['advert-123']).toMatchObject(result?.advert as Advert)
 			
-			T('should have reservation logged in database', () => 
-				expect(adverts['advert-123'].reservations).toMatchObject([{
-					reservedBy: user.id,
-					quantity: 1
-				}]))
-
 			T('should have collect logged in database', () => 
-				expect(adverts['advert-123'].collects).toMatchObject([{
-					collectedBy: user.id,
-					quantity: 1
+				expect(adverts['advert-123'].claims).toMatchObject([{
+					by: user.id,
+					quantity: 1,
+					type: AdvertClaimType.collected
 				}]))
 
 			T('should have notified about the interesting event', () =>
@@ -62,12 +57,8 @@ describe('collectAdvert', () => {
 			const result = body?.data?.reserveAdvert as AdvertWithMetaMutationResult
 			// expect(adverts['advert-123']).toMatchObject(result?.advert as Advert)
 
-		
-			T('no reservation should be written to database', () => 
-				expect(adverts['advert-123'].reservations).toMatchObject([]))
-
 			T('no collect should be written to database', () => 
-				expect(adverts['advert-123'].collects).toMatchObject([]))
+				expect(adverts['advert-123'].claims).toMatchObject([]))
 
 			T('no notifications should be called', () =>
 				expect(advertWasCollected).not.toHaveBeenCalled()

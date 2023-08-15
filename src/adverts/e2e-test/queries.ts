@@ -94,7 +94,7 @@ mutation Mutation(
 	$id: ID!
 	$quantity: Int
 ) {
-	collectAdvert(id: $id, $quantity) {
+	collectAdvert(id: $id, quantity: $quantity) {
 		${mutationProps}
 	}
 }

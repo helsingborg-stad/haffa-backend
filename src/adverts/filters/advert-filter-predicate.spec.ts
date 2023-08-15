@@ -1,6 +1,6 @@
 import {createAdvertFilterPredicate} from './advert-filter-predicate'
 import {createEmptyAdvert} from "../mappers"
-import type { Advert } from '../types'
+import { AdvertClaimType, type Advert } from '../types'
 import type { HaffaUser } from '../../login/types'
 
 describe('createAdvertFilterPredicate', () => {
@@ -95,10 +95,11 @@ describe('createAdvertFilterPredicate', () => {
     const adverts = createSampleAdverts(100, {
       'advert-10': {title: 'I like my unicorn!'},
       'advert-20': {description: ' UniCorns are the best'},
-      'advert-30': {description: ' My very own little unicorn', reservations: [{
-        reservedBy: 'a@b.com',
-        reservedAt: new Date().toISOString(),
-        quantity: 1
+      'advert-30': {description: ' My very own little unicorn', claims: [{
+        by: 'a@b.com',
+        at: new Date().toISOString(),
+        quantity: 1,
+        type: AdvertClaimType.reserved
       }]}
     });
     
@@ -122,10 +123,11 @@ describe('createAdvertFilterPredicate', () => {
       ? advert
       : ({
       ...advert,
-      reservations: [{
-        reservedBy: 'someone@else',
-        reservedAt: new Date().toISOString(),
-        quantity: advert.quantity
+      claims: [{
+        by: 'someone@else',
+        at: new Date().toISOString(),
+        quantity: advert.quantity,
+        type: AdvertClaimType.reserved
       }]
     }))
 
@@ -148,5 +150,4 @@ describe('createAdvertFilterPredicate', () => {
       .map(({id}) => id))
       .toMatchObject(['advert-10', 'advert-20'])
   })
-
 })

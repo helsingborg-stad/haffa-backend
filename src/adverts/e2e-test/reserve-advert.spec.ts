@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes"
 import { T, createTestNotificationServices, end2endTest } from "../../test-utils"
 import { createEmptyAdvert } from "../mappers"
-import type { AdvertWithMetaMutationResult } from "../types"
+import { AdvertClaimType, type AdvertWithMetaMutationResult } from "../types"
 import { reserveAdvertMutation } from "./queries"
 
 describe('reserveAdvert', () => {
@@ -26,9 +26,10 @@ describe('reserveAdvert', () => {
 
 		
 			T('should have reservation logged in database', () => 
-				expect(adverts['advert-123'].reservations).toMatchObject([{
-					reservedBy: user.id,
-					quantity: 1
+				expect(adverts['advert-123'].claims).toMatchObject([{
+					by: user.id,
+					quantity: 1,
+					type: AdvertClaimType.reserved
 				}]))
 
 
@@ -56,10 +57,9 @@ describe('reserveAdvert', () => {
 
 			const result = body?.data?.reserveAdvert as AdvertWithMetaMutationResult
 			// expect(adverts['advert-123']).toMatchObject(result?.advert as Advert)
-
 		
 			T('no reservation should be written to database', () => 
-				expect(adverts['advert-123'].reservations).toMatchObject([]))
+				expect(adverts['advert-123'].claims).toMatchObject([]))
 
 
 			T('no notifications should be called', () =>

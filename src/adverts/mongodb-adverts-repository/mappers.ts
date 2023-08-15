@@ -11,7 +11,7 @@ import type { HaffaUser } from '../../login/types'
 export const mapAdvertToMongoAdvert = (advert: Advert): MongoAdvert => {
   const isRecycle = advert.type === AdvertType.recycle
   const reservedCount = isRecycle
-    ? advert.reservations
+    ? advert.claims
         .map(({ quantity }) => quantity)
         .reduce((sum, q) => sum + q, 0)
     : 0

@@ -1,43 +1,32 @@
 import type { HaffaUser } from '../../login/types'
-import { AdvertType} from '../types';
+import { AdvertClaimType, AdvertType} from '../types';
 import type { Advert, AdvertMeta} from '../types';
 
 export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
 	const {type, quantity} = advert
 	const isMine = advert.createdBy === user.id
-	const reservationCount = advert.reservations
-		.map(({ quantity }) => quantity)
-		.reduce((s, v) => s + v, 0)
-	const collectCount = advert.collects
-		.map(({ quantity }) => quantity)
-		.reduce((s, v) => s + v, 0)
-	const myReservationCount = advert.reservations
-		.filter(({ reservedBy }) => reservedBy === user.id)
-		.map(({ quantity }) => quantity)
-		.reduce((s, v) => s + v, 0)
-	const myCollectCount = advert.collects
-		.filter(({ collectedBy }) => collectedBy === user.id)
+
+	const claimCount = advert.claims.reduce((s, {quantity}) => s + quantity, 0)
+	const myReservationCount = advert.claims
+		.filter(({ by, type }) => (by === user.id) && (type === AdvertClaimType.reserved))
 		.map(({ quantity }) => quantity)
 		.reduce((s, v) => s + v, 0)
 
 	if (type === AdvertType.recycle) {
 		return {
-			reservableQuantity: quantity - reservationCount,
+			reservableQuantity: quantity - claimCount,
+			collectableQuantity: myReservationCount + quantity - claimCount,
 			canEdit: isMine,
 			canRemove: isMine,
 			canBook: false, // type === AdvertType.borrow,
-			canReserve: quantity > reservationCount,
-			canCancelReservation: myReservationCount > myCollectCount,
-			canCollect: 
-					(
-						(quantity > reservationCount) // advert has free reservations
-						&& (quantity > collectCount)
-					)
-					|| (myReservationCount > myCollectCount) // I have pending reservations
+			canReserve: quantity > claimCount,
+			canCancelReservation: myReservationCount > 0,
+			canCollect: (myReservationCount > 0) || (quantity > claimCount)
 		}
 	}
 	return {
 		reservableQuantity: 0,
+		collectableQuantity: 0,
 		canEdit: isMine,
 		canRemove: isMine,
 		canBook: false, // type === AdvertType.borrow,
