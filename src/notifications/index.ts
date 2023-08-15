@@ -7,4 +7,5 @@ export const createNullNotificationService = (): NotificationService => ({
 	pincodeRequested: async () => undefined,
 	advertWasReserved: async () => undefined,
 	advertReservationWasCancelled: async () => undefined,
+	advertWasCollected: async () => undefined
 })

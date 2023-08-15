@@ -1,6 +1,7 @@
 import type { Services } from '../../types'
 import type { AdvertMutations } from '../types'
 import { createCancelAdvertReservation } from './cancel-advert-reservation'
+import { createCollectAdvert } from './collect-advert'
 import { createCreateAdvert } from './create-advert'
 import { createRemoveAdvert } from './remove-advert'
 import { createReserveAdvert } from './reserve-advert'
@@ -12,4 +13,5 @@ export const createAdvertMutations = (services: Pick<Services, 'adverts'|'files'
 	removeAdvert: createRemoveAdvert(services),
 	reserveAdvert: createReserveAdvert(services),
 	cancelAdvertReservation: createCancelAdvertReservation(services),
+	collectAdvert: createCollectAdvert(services)
 })

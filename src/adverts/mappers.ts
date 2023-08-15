@@ -4,7 +4,7 @@ import { AdvertType } from './types'
 import type { HaffaUser } from '../login/types'
 import { getAdvertMeta } from './advert-meta'
 
-export const createEmptyAdvert = (): Advert => ({
+export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
 	id: '',
 	versionId: '',
 	type: AdvertType.recycle,
@@ -22,9 +22,11 @@ export const createEmptyAdvert = (): Advert => ({
 	usage: '',
 
 	reservations: [],
+	collects: [],
 
 	location: createEmptyAdvertLocation(),
-	contact: createEmptyAdvertContact()
+	contact: createEmptyAdvertContact(),
+	...defaults
 })
 
 export const createEmptyAdvertLocation = (): AdvertLocation => ({

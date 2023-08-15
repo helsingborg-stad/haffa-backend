@@ -34,6 +34,9 @@ export const createAdvertsGqlModule = (services: Pick<Services, 'adverts'|'files
 			cancelAdvertReservation: async ({ ctx: { user }, args: { id } }) => createAdvertMutations(services)
 				.cancelAdvertReservation(user, id)
 				.then(result => mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)),
+			collectAdvert: async ({ctx: {user}, args: {id, quantity}}) => createAdvertMutations(services)
+				.collectAdvert(user, id, quantity)
+				.then(result => mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result))
 		},
 	},
 })

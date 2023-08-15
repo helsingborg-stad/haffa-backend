@@ -7,6 +7,8 @@ const advertProps = `
 		canRemove
 		canBook
 		canReserve
+		canCancelReservation
+		canCollect
 	}
 	images {
 		url
@@ -82,6 +84,17 @@ mutation Mutation(
 	$quantity: Int
 ) {
 	reserveAdvert(id: $id, quantity: $quantity) {
+		${mutationProps}
+	}
+}
+`
+
+export const collectAdvertMutation = /* GraphQL */ `
+mutation Mutation(
+	$id: ID!
+	$quantity: Int
+) {
+	collectAdvert(id: $id, $quantity) {
 		${mutationProps}
 	}
 }
