@@ -21,7 +21,7 @@
 
 [![MIT License][license-shield]][license-url]
 
-![test-badge-url]
+[![Test Status][test-badge-url]][test-workflow-url]
 
 <p>
   <a href="https://github.com/helsingborg-stad/haffa-backend">
@@ -182,3 +182,4 @@ Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 [license-shield]: https://img.shields.io/github/license/helsingborg-stad/haffa-backend.svg?style=for-the-badge
 [license-url]: https://github.com/helsingborg-stad/haffa-backend/blob/master/LICENSE.txt
 [test-badge-url]: https://github.com/helsingborg-stad/haffa-backend/actions/workflows/automatic-tests.yml/badge.svg
+[test-workflow-url]: https://github.com/helsingborg-stad/haffa-backend/actions/workflows/automatic-tests.yml
