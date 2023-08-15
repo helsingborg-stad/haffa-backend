@@ -17,4 +17,10 @@ export const createConsoleNotificationService = (): NotificationService => ({
 			by, quantity, advert,
 		},
 	}),
+	// eslint-disable-next-line no-console
+	advertWasCollected: async (by, quantity, advert) => console.log({
+		advertWasCollected: {
+			by, quantity, advert,
+		},
+	})
 })

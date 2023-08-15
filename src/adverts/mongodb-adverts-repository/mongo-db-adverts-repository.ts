@@ -9,6 +9,7 @@ export const createMongoAdvertsRepository = ({getCollection}: MongoConnection<Mo
 	const getAdvert: AdvertsRepository['getAdvert'] = async (_user, id) => getCollection()
 		.then(collection => collection.findOne({id}))
 		.then(envelope => envelope?.advert || null)
+		.then(advert => advert ? {...createEmptyAdvert(), ...advert} : null)
 
 	const list: AdvertsRepository['list'] = (user, filter) => getCollection()
 		.then(collection =>	collection

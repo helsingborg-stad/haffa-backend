@@ -24,6 +24,7 @@ export const createTestNotificationServices = (notifications: Partial<Notificati
 	pincodeRequested: unexpectedInvocation('NotificationService::pincodeRequested'),
 	advertWasReserved: unexpectedInvocation('NotificationService::advertWasReserved'),
 	advertReservationWasCancelled: unexpectedInvocation('NotificationService::advertReservationWasCancelled'),
+	advertWasCollected: unexpectedInvocation('NotificationService::advertWasCollected'),
 	...notifications,
 })
 

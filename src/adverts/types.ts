@@ -36,8 +36,9 @@ export interface AdvertMeta {
 	canEdit: boolean
 	canRemove: boolean
 	canBook: boolean
-	canReserve: boolean,
+	canReserve: boolean
 	canCancelReservation: boolean
+	canCollect: boolean
 }
 
 export interface AdvertMutationStatus {
@@ -68,6 +69,12 @@ export interface AdvertReservation {
 	quantity: number
 }
 
+export interface AdvertCollect {
+	collectedBy: string
+	collectedAt: string
+	quantity: number
+}
+
 export interface Advert extends AdvertUserFields {
 	id: string
 	versionId: string,
@@ -76,6 +83,7 @@ export interface Advert extends AdvertUserFields {
 	createdAt: string
 	modifiedAt: string,
 	reservations: AdvertReservation[]
+	collects: AdvertCollect[]
 }
 
 export type AdvertWithMeta = Advert & {meta: AdvertMeta}
@@ -127,4 +135,5 @@ export interface AdvertMutations {
 	removeAdvert: (user: HaffaUser, id: string) => Promise<AdvertMutationResult>,
 	reserveAdvert: (user: HaffaUser, id: string, quantity: number) => Promise<AdvertMutationResult>
 	cancelAdvertReservation: (user: HaffaUser, id: string) => Promise<AdvertMutationResult>
+	collectAdvert: (user: HaffaUser, id: string, quantity: number) => Promise<AdvertMutationResult>
 }

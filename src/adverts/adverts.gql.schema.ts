@@ -9,8 +9,9 @@ type Mutation {
 	createAdvert(input: AdvertInput!): AdvertMutationResult
 	updateAdvert(id: ID!, input: AdvertInput!): AdvertMutationResult
 	removeAdvert(id: ID!): AdvertMutationResult
-	reserveAdvert(id: ID!, quantity: Int): AdvertMutationResult
+	reserveAdvert(id: ID!, quantity: Int = 1): AdvertMutationResult
 	cancelAdvertReservation(id: ID!): AdvertMutationResult
+	collectAdvert(id: ID!, quantity: Int = 1): AdvertMutationResult
 }
 
 type AdvertMutationStatus {
@@ -105,6 +106,7 @@ type AdvertMeta {
 	canBook: Boolean!
 	canReserve: Boolean!
 	canCancelReservation: Boolean!
+	canCollect: Boolean!
 }
 
 type AdvertLocation {

@@ -104,7 +104,7 @@ const runTransaction = async <T extends {versionId: string}>(
 		if (!update) {
 			return null
 		}
-
+		update.versionId = uuid.v4().split('-').join()
 	
 		const verified = await verify(update, {
 			update,
@@ -115,9 +115,7 @@ const runTransaction = async <T extends {versionId: string}>(
 		if (!verified) {
 			return null
 		}
-	
-		update.versionId = uuid.v4().split('-').join()
-	
+		
 		const saved = await saveVersion(original.versionId, verified)
 		if (!saved) {
 			return {
