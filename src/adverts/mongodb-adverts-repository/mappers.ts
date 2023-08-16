@@ -1,5 +1,5 @@
 import type { Filter, Sort } from 'mongodb'
-import { AdvertType } from '../types'
+import { AdvertClaimType, AdvertType } from '../types'
 import type {
   AdvertRestrictionsFilterInput,
   Advert,
@@ -70,11 +70,11 @@ export const mapAdvertFilterInputToMongoQuery = (
         },
         restrictions?.canBeReserved === false && { 'meta.unreservedCount': 0 },
         restrictions?.reservedByMe === true && {
-          'advert.reservations': { $elemMatch: { reservedBy: user.id } },
+          'advert.claims': { $elemMatch: { by: user.id, type: AdvertClaimType.reserved } },
         },
         restrictions?.reservedByMe === false && {
           $not: {
-            'advert.reservations': { $elemMatch: { reservedBy: user.id } },
+            'advert.claims': { $elemMatch: { by: user.id, type: AdvertClaimType.reserved } },
           },
         },
         restrictions?.createdByMe === true && { 'advert.createdBy': user.id },
