@@ -35,6 +35,10 @@ input StringFilterInput {
 	contains: String
 } 
 
+enum AdvertClaimType {
+	reserved
+	collected
+}
 enum AdvertSortableFieldEnum {
 	id
 	title
@@ -99,6 +103,13 @@ input AdvertInput {
 	contact: AdvertContactInput
 }
 
+type AdvertClaim {
+	quantity: Int
+	by: String
+	at: String
+	type: AdvertClaimType
+}
+
 type AdvertMeta {
 	reservableQuantity: Int
 	collectableQuantity: Int
@@ -108,6 +119,7 @@ type AdvertMeta {
 	canReserve: Boolean!
 	canCancelReservation: Boolean!
 	canCollect: Boolean!
+	claims: [AdvertClaim]!
 }
 
 type AdvertLocation {

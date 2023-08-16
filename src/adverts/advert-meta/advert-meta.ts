@@ -21,7 +21,8 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
 			canBook: false, // type === AdvertType.borrow,
 			canReserve: quantity > claimCount,
 			canCancelReservation: myReservationCount > 0,
-			canCollect: (myReservationCount > 0) || (quantity > claimCount)
+			canCollect: (myReservationCount > 0) || (quantity > claimCount),
+			claims: isMine ? advert.claims : []
 		}
 	}
 	return {
@@ -32,6 +33,7 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
 		canBook: false, // type === AdvertType.borrow,
 		canReserve: false,
 		canCancelReservation: false,
-		canCollect: false 
+		canCollect: false,
+		claims: [] 
 	}
 }

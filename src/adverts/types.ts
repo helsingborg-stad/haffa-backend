@@ -40,6 +40,7 @@ export interface AdvertMeta {
 	canReserve: boolean
 	canCancelReservation: boolean
 	canCollect: boolean
+	claims: AdvertClaim[]
 }
 
 export interface AdvertMutationStatus {
