@@ -15,6 +15,7 @@
   "dependencies": {
     "@helsingborg-stad/gdi-api-node": "^1.0.9",
     "@koa/cors": "^3.4.1",
+    "@sendgrid/mail": "^7.7.0",
     "debug": "^4.3.4",
     "dotenv": "^16.0.2",
     "email-validator": "^2.0.4",
