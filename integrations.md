@@ -9,8 +9,8 @@ In order of precedence (from top to bottom), the rules are
 | ---------------- | ----------- | ----------- | ----------- | ---------- | ------------- |
 | MONGOBD_URI      | MongoDB     | MongoDB     |             | MongoDB    |               |
 | FS_DATA_PATH     | File system | File system | File system |            |               |
-| SENDGRID_API_KEY | File system | File system |             |            | SendGrid      |
-| \<none>          | In memory   | In memory   |             | In memory  | console       |
+| SENDGRID_API_KEY |             |             |             |            | SendGrid      |
+| \<none>          | In memory   | In memory   | In memory   | In memory  | console       |
 
 ## MongoDB as persistence layer
 
@@ -37,7 +37,7 @@ docker run --name mongodb -p 27017:27017 -d mongo
  MONGODB_URI=mongodb://127.0.0.1:27017/haffa
  ``` 
 
- ### SendGrid notifications
+### SendGrid notifications
 
 Mail notifications can be sent using [www.sendgrid.com](www.sendgrid.com).
 
