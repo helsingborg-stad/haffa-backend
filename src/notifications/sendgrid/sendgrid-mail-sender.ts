@@ -1,4 +1,5 @@
 import sgmail from '@sendgrid/mail'
+import { responsePathAsArray } from 'graphql'
 import { createSendGridTemplateMapper } from './sendgrid-templates'
 import type { MailSender, SendGridConfig } from './types'
 
@@ -9,15 +10,17 @@ export const createSendGridMailSender = ({apiKey, from}: SendGridConfig): MailSe
 
 	return async (to, template, data) => {
 		const templateId = await getTemplateId(template)
-		if (templateId) {
-			await sgmail.send({
-				from,
-				templateId,
-				personalizations: [{
-					to: [{email: to}],
-					dynamicTemplateData: data
-				}]
-			})
+		if (!templateId) {
+			return console.error(`sendgrid notifications: no template for event ${template} was found`)
 		}
+		
+		await sgmail.send({
+			from,
+			templateId,
+			personalizations: [{
+				to: [{email: to}],
+				dynamicTemplateData: data
+			}]
+		})
 	}
 }

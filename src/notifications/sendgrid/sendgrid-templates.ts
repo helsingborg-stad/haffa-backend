@@ -12,7 +12,6 @@ export const createSendGridTemplateMapper = ({apiKey}: Pick<SendGridConfig, 'api
 			 .send()
 			
 			templateCache = (templates as {id: string, name: string}[]).reduce((cache, {id, name}) => ({...cache, [name as string]: id}), {} as Record<string, string>)
-			// console.log(JSON.stringify({templateCache, templates}, null, 2))
 		}
 		return templateCache?.[template]
 	}
