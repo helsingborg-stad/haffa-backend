@@ -1,5 +1,4 @@
 import sgmail from '@sendgrid/mail'
-import { responsePathAsArray } from 'graphql'
 import { createSendGridTemplateMapper } from './sendgrid-templates'
 import type { MailSender, SendGridConfig } from './types'
 
