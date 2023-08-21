@@ -10,6 +10,7 @@ import { createTokenService } from '../tokens'
 import { createInMemoryProfileRepository } from '../profile'
 import { createNullNotificationService } from '../notifications'
 import type { NotificationService } from '../notifications/types'
+import { createInMemoryUserMapper } from '../users'
 
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
@@ -28,15 +29,19 @@ export const createTestNotificationServices = (notifications: Partial<Notificati
 	...notifications,
 })
 
-export const createTestServices = (services: Partial<Services>): Services => ({
-	login: createInMemoryLoginService(),
-	tokens: createTokenService(TEST_SHARED_SECRET),
-	adverts: createInMemoryAdvertsRepository(),
-	profiles: createInMemoryProfileRepository(),
-	files: createNullFileService(),
-	notifications: createNullNotificationService(),
-	...services,
-})
+export const createTestServices = (services: Partial<Services>): Services => {
+	const userMapper = services.userMapper || createInMemoryUserMapper('')
+	return {
+		userMapper,
+		login: createInMemoryLoginService(userMapper),
+		tokens: createTokenService(userMapper, TEST_SHARED_SECRET),
+		adverts: createInMemoryAdvertsRepository(),
+		profiles: createInMemoryProfileRepository(),
+		files: createNullFileService(),
+		notifications: createNullNotificationService(),
+		...services,
+	}
+}
 
 export const createTestApp = (services: Partial<Services>): Application => createApp({
 	services: createTestServices(services),

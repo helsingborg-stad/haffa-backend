@@ -1,8 +1,8 @@
 import ms from 'ms'
-import { validateHaffaUser } from '../validate-haffa-user'
 import type { LoginService} from '../types';
 import { RequestPincodeStatus } from '../types'
 import { issuePincode } from '../issue-pincode';
+import type { UserMapper } from '../../users/types';
 
 interface Options {
 	maxAge: number
@@ -13,7 +13,7 @@ export interface LoginRequestEntry {
 	pincode: string
 	expires: number
 }
-export const createInMemoryLoginService = (options?: Partial<Options>): LoginService => {
+export const createInMemoryLoginService = (userMapper: UserMapper, options?: Partial<Options>): LoginService => {
 	const { maxAge, db }: Options = {
 		db: {},
 		maxAge: ms('10m'),
@@ -21,6 +21,13 @@ export const createInMemoryLoginService = (options?: Partial<Options>): LoginSer
 	}
 	return {
 		requestPincode: async (email) =>  {
+			const user = await userMapper.mapAndValidateEmail(email)
+			if (!user) {
+				return {
+					status: RequestPincodeStatus.denied,
+					pincode: ''
+				}
+			}
 			const pincode = issuePincode()
 			db[email] = {
 				pincode,
@@ -37,10 +44,7 @@ export const createInMemoryLoginService = (options?: Partial<Options>): LoginSer
 			if (entry && (entry.pincode === pincode) && (entry.expires >= Date.now())) {
 				// clear entry on successful login
 				db[email] = null
-				return validateHaffaUser({
-					id: email,
-					roles: [],
-				})
+				return userMapper.mapAndValidateEmail(email)
 			}
 			return null
 		},

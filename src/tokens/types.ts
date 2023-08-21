@@ -2,7 +2,7 @@ import type { AuthorizationService } from '@helsingborg-stad/gdi-api-node/servic
 import type { HaffaUser } from '../login/types'
 
 export interface TokenService extends AuthorizationService {
-  verify: (token: string) => boolean
+  verify: (token: string) => Promise<boolean>
   sign: (user: HaffaUser) => string
-  decode: (token: string) => HaffaUser|null
+  decode: (token: string) => Promise<HaffaUser|null>
 }

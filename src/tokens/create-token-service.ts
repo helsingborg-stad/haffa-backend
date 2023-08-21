@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import type { TokenService } from './types'
 import type { HaffaUser } from '../login/types'
-import { validateHaffaUser } from '../login'
+import type { UserMapper } from '../users/types'
 
 const jwtOptions = {
   audience: 'urn://haffa',
@@ -9,6 +9,7 @@ const jwtOptions = {
 }
 
 export const createTokenService = (
+  userMapper: UserMapper,
   secret: string,
   defaultUser?: any
 ): TokenService => {
@@ -18,22 +19,23 @@ export const createTokenService = (
       expiresIn: '30d',
     })
 
-  const decode: TokenService['decode'] = token => {
+  const tryDecodeRaw = (token: string): HaffaUser|null => {
     try {
-      const user = jwt.verify((token || '').toString(), secret, {
+      return jwt.verify((token || '').toString(), secret, {
         ...jwtOptions,
         maxAge: '30d',
       }) as HaffaUser
-      return validateHaffaUser(user)
-    } catch (e) {
+    } catch {
       return null
     }
   }
 
-  const verify: TokenService['verify'] = token => !!decode(token)
+  const decode: TokenService['decode'] = async token => userMapper.mapAndValidateUser(tryDecodeRaw(token))
+
+  const verify: TokenService['verify'] = token => decode(token).then(user => !!user)
 
   const tryGetUserFromJwt: TokenService['tryGetUserFromJwt'] = token =>
-    decode(token) || validateHaffaUser(defaultUser)
+    tryDecodeRaw(token) || defaultUser
 
   return {
     tryGetUserFromJwt,
