@@ -1,12 +1,12 @@
 import { requireJwtUser } from '@helsingborg-stad/gdi-api-node'
 import type Koa from 'koa'
 import { StatusCodes } from 'http-status-codes'
-import { tryCreateHaffaUser } from './try-create-haffa-user'
+import type { UserMapper } from '../users/types'
 
-export const requireHaffaUser = (mv: Koa.Middleware): Koa.Middleware => requireJwtUser((ctx, next) => {
-	ctx.user = tryCreateHaffaUser(ctx.user)
+export const requireHaffaUser = (userMapper: UserMapper, mv: Koa.Middleware): Koa.Middleware => requireJwtUser(async (ctx, next) => {
+	ctx.user = await userMapper.mapAndValidateUser(ctx.user)
 	if (ctx.user) {
 		return mv(ctx, next)
 	}
-	ctx.throw(StatusCodes.UNAUTHORIZED)
+	return ctx.throw(StatusCodes.UNAUTHORIZED)
 })

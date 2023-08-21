@@ -11,6 +11,8 @@ import type { TokenService } from '../tokens/types'
 import { createInMemoryProfileRepository } from '../profile'
 import type { Profile } from '../profile/types'
 import type { HaffaUser } from '../login/types'
+import { createInMemoryUserMapper } from '../users';
+import { type UserMapper } from '../users/types';
 
 const createGqlRequest = (tokens: TokenService, server: Parameters<ApplicationRunHandler>[0], user: HaffaUser) => 
 	(query: string, variables: any): Test => 
@@ -45,10 +47,12 @@ export const end2endTest = (
 	const adverts: Record<string, Advert> = {}
 	const logins: Record<string, LoginRequestEntry> = {}
 	const profiles: Record<string, Profile> = {}
+	const userMapper: UserMapper = config?.services?.userMapper || createInMemoryUserMapper('')
 	const services = createTestServices({
+		userMapper,
 		adverts: createInMemoryAdvertsRepository(adverts),
 		profiles: createInMemoryProfileRepository(profiles),
-		login: createInMemoryLoginService({ db: logins }),
+		login: createInMemoryLoginService(userMapper, { db: logins }),
 		...config?.services,
 	})
 

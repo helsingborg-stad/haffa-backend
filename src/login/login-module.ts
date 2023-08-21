@@ -12,19 +12,19 @@ import type { NotificationService } from '../notifications/types'
 export const loginModule =
   (loginService: LoginService, tokenService: TokenService, notifications: NotificationService): ApplicationModule =>
   ({ registerKoaApi }: ApplicationContext) => {
-    const verifyToken: Koa.Middleware = (ctx) => {
+    const verifyToken: Koa.Middleware = async (ctx) => {
       const {
         request: {
           body: { token },
         },
       } = ctx as any
       ctx.body = {
-        token: tokenService.verify(token as string) ? token : '',
+        token: await tokenService.verify(token as string) ? token : '',
       }
     }
 
     const requestPincode: Koa.Middleware = async (ctx: any) => {
-      const email = (ctx?.request?.body?.email || '').toString()
+      const email = (ctx?.request?.body?.email || '').toString().toLowerCase()
       const isValid = EmailValidator.validate(email)
       const {status, pincode} = isValid
         ? await loginService.requestPincode(email, ctx.ip)
@@ -37,7 +37,7 @@ export const loginModule =
     }
 
     const login: Koa.Middleware = async (ctx: any) => {
-      const email = (ctx?.request?.body?.email || '').toString()
+      const email = (ctx?.request?.body?.email || '').toString().toLowerCase()
       const pincode = (ctx?.request?.body?.pincode || '').toString()
 
       if (!EmailValidator.validate(email)) {
