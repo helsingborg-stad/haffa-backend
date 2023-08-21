@@ -58,7 +58,12 @@ export const mapAdvertFilterInputToMongoQuery = (
     [search]
       .map(s => (s || '').trim())
       .filter(s => s)
-      .map(s => ({ $text: { $search: s, $caseSensitive: false  } }))[0] || null
+      .map(s => ({
+        $or: [
+          { 'advert.title': { $regex: new RegExp(s, 'i') } },
+          { 'advert.description': { $regex: new RegExp(s, 'i') } },
+        ],
+      }))[0] || null
 
   const mapRestrictions = (
     restrictions?: AdvertRestrictionsFilterInput
@@ -70,11 +75,15 @@ export const mapAdvertFilterInputToMongoQuery = (
         },
         restrictions?.canBeReserved === false && { 'meta.unreservedCount': 0 },
         restrictions?.reservedByMe === true && {
-          'advert.claims': { $elemMatch: { by: user.id, type: AdvertClaimType.reserved } },
+          'advert.claims': {
+            $elemMatch: { by: user.id, type: AdvertClaimType.reserved },
+          },
         },
         restrictions?.reservedByMe === false && {
           $not: {
-            'advert.claims': { $elemMatch: { by: user.id, type: AdvertClaimType.reserved } },
+            'advert.claims': {
+              $elemMatch: { by: user.id, type: AdvertClaimType.reserved },
+            },
           },
         },
         restrictions?.createdByMe === true && { 'advert.createdBy': user.id },
