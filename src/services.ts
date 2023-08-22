@@ -6,11 +6,14 @@ import { createTokenServiceFromEnv } from './tokens'
 import { createProfileRepositoryFromEnv } from './profile'
 import { createNotificationServiceFromEnv } from './notifications'
 import { createUserMapperFromEnv } from './users'
+import { createSettingsServiceFromEnv } from './settings'
 
 const createServicesFromEnv = (): Services => {
-	const userMapper = createUserMapperFromEnv()
+	const settings = createSettingsServiceFromEnv()
+	const userMapper = createUserMapperFromEnv(settings)
 	return {
 		userMapper,
+		settings,
 		login: createLoginServiceFromEnv(userMapper),
 		tokens: createTokenServiceFromEnv(userMapper),
 		adverts: createAdvertsRepositoryFromEnv(),

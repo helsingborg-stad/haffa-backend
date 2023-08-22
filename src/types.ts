@@ -5,9 +5,11 @@ import type { TokenService } from './tokens/types'
 import type { ProfileRepository } from './profile/types'
 import type { NotificationService } from './notifications/types'
 import type { UserMapper } from './users/types'
+import type { SettingsService } from './settings/types'
 
 export interface Services {
     userMapper: UserMapper
+    settings: SettingsService
     login: LoginService
     tokens: TokenService
     adverts: AdvertsRepository
