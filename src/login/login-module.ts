@@ -18,8 +18,14 @@ export const loginModule =
           body: { token },
         },
       } = ctx as any
-      ctx.body = {
-        token: await tokenService.verify(token as string) ? token : '',
+      const user = await tokenService.decode(token)
+      ctx.body = user 
+      ? {
+        token,
+        roles: user.roles
+      } : {
+        token: '',
+        roles: []
       }
     }
 
