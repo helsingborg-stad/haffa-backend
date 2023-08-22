@@ -93,9 +93,14 @@ paths:
                 type: object
                 required:
                   - token
+                  - roles
                 properties:
                   token:
                     type: string
+                  roles:
+                    type: array
+                    items:
+                      type: string
 
   /api/v1/haffa/graphql:
     post:
