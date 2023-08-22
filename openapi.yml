@@ -29,8 +29,12 @@ paths:
                 required:
                   - token
                 properties:
-                  verified:
+                  token:
                     type: string
+                  roles:
+                    type: array
+                    items:
+                      type: string
 
   /api/v1/haffa/auth/request-pincode:
     post:
