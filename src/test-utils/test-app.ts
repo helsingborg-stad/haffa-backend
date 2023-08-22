@@ -10,7 +10,8 @@ import { createTokenService } from '../tokens'
 import { createInMemoryProfileRepository } from '../profile'
 import { createNullNotificationService } from '../notifications'
 import type { NotificationService } from '../notifications/types'
-import { createInMemoryUserMapper } from '../users'
+import { createInMemorySettingsService } from '../settings/in-memory-settings'
+import { createUserMapper } from '../users'
 
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
@@ -30,9 +31,11 @@ export const createTestNotificationServices = (notifications: Partial<Notificati
 })
 
 export const createTestServices = (services: Partial<Services>): Services => {
-	const userMapper = services.userMapper || createInMemoryUserMapper('')
+	const settings = services.settings || createInMemorySettingsService()
+	const userMapper = services.userMapper || createUserMapper(settings)
 	return {
 		userMapper,
+		settings,
 		login: createInMemoryLoginService(userMapper),
 		tokens: createTokenService(userMapper, TEST_SHARED_SECRET),
 		adverts: createInMemoryAdvertsRepository(),

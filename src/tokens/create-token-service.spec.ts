@@ -1,8 +1,9 @@
 import { createTokenService } from '.'
 import type { HaffaUser } from '../login/types'
-import { createInMemoryUserMapper } from '../users'
+import { createInMemorySettingsService } from '../settings/in-memory-settings'
+import { createUserMapper } from '../users'
 
-const createTokenServiceForTest = (secret: string) => createTokenService(createInMemoryUserMapper(''), secret)
+const createTokenServiceForTest = (secret: string) => createTokenService(createUserMapper(createInMemorySettingsService()), secret)
 
 describe('createTokenService', () => {
   const unverifiableTokens = [
