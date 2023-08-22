@@ -53,6 +53,7 @@ export const loginModule =
       const user = await loginService.tryLogin(email, pincode, ctx.ip)
       ctx.body = {
         token: user ? tokenService.sign(user) : '',
+        roles: user?.roles || []
       }
     }
 

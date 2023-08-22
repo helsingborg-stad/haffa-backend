@@ -6,13 +6,14 @@ import type { MongoConnection, MongoConnectionOptions } from "../../mongodb-util
 import type { MongoLogin } from "./types"
 import { createMongoConnection } from "../../mongodb-utils"
 import { issuePincode } from "../issue-pincode";
+import type { UserMapper } from "../../users/types";
 
-export const tryCreateMongoLoginServiceFromEnv = (): LoginService|null => {
+export const tryCreateMongoLoginServiceFromEnv = (userMapper: UserMapper): LoginService|null => {
 	const uri = getEnv('MONGODB_URI', { fallback: '' })
 	const collectionName = getEnv('MONGODB_LOGIN_COLLECTION', {fallback: 'login'})
 	const ttl = ms(getEnv('LOGIN_ATTEMPT_TTL', {fallback: '10m'}))
 	const maxAttempts = Math.max(1, parseInt((getEnv('LOGIN_ATTEMPT_MAX_COUNT', {fallback: '16'})),10))
-	return uri ? createMongoLoginService(createMongoLoginConnection({uri, collectionName}), ttl, maxAttempts) : null
+	return uri ? createMongoLoginService(userMapper, createMongoLoginConnection({uri, collectionName}), ttl, maxAttempts) : null
 }
 
 export const createMongoLoginConnection = ({uri, collectionName}: Pick<MongoConnectionOptions<MongoLogin>, 'uri'|'collectionName'>): MongoConnection<MongoLogin> => createMongoConnection({
@@ -21,7 +22,7 @@ export const createMongoLoginConnection = ({uri, collectionName}: Pick<MongoConn
 	setupCollection: (collection) => collection.createIndex({ id: 1 }, { unique: true, name: 'unique_index__id' })
 })
 
-export const createMongoLoginService = (connection: MongoConnection<MongoLogin>, ttl: number = ms('10m'), maxAttempts: number = 16): LoginService => ({
+export const createMongoLoginService = (userMapper: UserMapper, connection: MongoConnection<MongoLogin>, ttl: number = ms('10m'), maxAttempts: number = 16): LoginService => ({
 		requestPincode: async (email, origin) => {
 			const pincode = issuePincode()
 			const collection = await connection.getCollection()
@@ -73,10 +74,7 @@ export const createMongoLoginService = (connection: MongoConnection<MongoLogin>,
 				}
 			})
 			if (modifiedCount > 0) {
-				return {
-					id: email,
-					roles: []
-				}
+				return userMapper.mapAndValidateEmail(email)
 			}
 			return null
 		}

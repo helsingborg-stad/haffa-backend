@@ -3,4 +3,4 @@ import { createInMemoryLoginService } from './in-memory-login-service/in-memory-
 import { tryCreateMongoLoginServiceFromEnv } from './mongo-login-service'
 import type { LoginService } from './types'
 
-export const createLoginServiceFromEnv = (userMapper: UserMapper): LoginService => tryCreateMongoLoginServiceFromEnv() || createInMemoryLoginService(userMapper)
+export const createLoginServiceFromEnv = (userMapper: UserMapper): LoginService => tryCreateMongoLoginServiceFromEnv(userMapper) || createInMemoryLoginService(userMapper)
