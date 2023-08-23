@@ -26,7 +26,7 @@ export const createApp = ({
     // .use(webFrameworkModule())
     .use(({ app }) => app.use(cors()))
     .use(({ app }) => app.use(bodyparser({ jsonLimit: '50mb' })))
-    .use(swaggerModule())
+    .use(swaggerModule({routePrefix: '/api/v1/haffa/swagger'}))
     .use(jwtUserModule(services.tokens))
     .use(healthCheckModule())
     .use(graphQLModule(services))
