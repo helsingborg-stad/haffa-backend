@@ -1,4 +1,6 @@
-import type { LoginPolicy, SettingsService } from "./types"
+
+import { normalizeLoginPolicies } from "../normalize-login-policies"
+import type { LoginPolicy, SettingsService } from "../types"
 
 interface SettingsServiceProps {
 	superUser?: string
@@ -25,9 +27,15 @@ export const createInMemorySettingsService = (props?: SettingsServiceProps): Set
 		superUser,
 		loginPolicies
 	} = normalizeProps(props)
+
+	let mutLoginPolicies = loginPolicies
 	
 	return {
 		isSuperUser: email => !!superUser && (email === superUser),
-		getLoginPolicies: async () => loginPolicies
+		getLoginPolicies: async () => mutLoginPolicies,
+		updateLoginPolicies: async (p) => {
+			mutLoginPolicies = normalizeLoginPolicies(p)
+			return mutLoginPolicies
+		}
 	}
 }

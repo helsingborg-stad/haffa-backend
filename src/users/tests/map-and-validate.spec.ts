@@ -1,5 +1,5 @@
 import { HaffaUser } from "../../login/types"
-import { createInMemorySettingsService } from "../../settings/in-memory-settings"
+import { createInMemorySettingsService } from "../../settings"
 import { createUserMapper } from "../user-mapper"
 
 describe('inMemoryUserMapper::mapAndValidate*', ( )=> {
