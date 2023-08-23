@@ -24,6 +24,13 @@ export const createMongoLoginConnection = ({uri, collectionName}: Pick<MongoConn
 
 export const createMongoLoginService = (userMapper: UserMapper, connection: MongoConnection<MongoLogin>, ttl: number = ms('10m'), maxAttempts: number = 16): LoginService => ({
 		requestPincode: async (email, origin) => {
+			const user = await userMapper.mapAndValidateEmail(email)
+			if (!user) {
+				return {
+					status: RequestPincodeStatus.denied,
+					pincode: ''
+				}
+			}
 			const pincode = issuePincode()
 			const collection = await connection.getCollection()
 			// make sure we have an entry
