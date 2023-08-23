@@ -11,10 +11,10 @@ import type { TokenService } from '../tokens/types'
 import { createInMemoryProfileRepository } from '../profile'
 import type { Profile } from '../profile/types'
 import type { HaffaUser } from '../login/types'
-import { type UserMapper } from '../users/types';
-import { createInMemorySettingsService } from '../settings/in-memory-settings';
-import { SettingsService } from '../settings/types';
-import { createUserMapper } from '../users';
+import { type UserMapper } from '../users/types'
+import type { SettingsService } from '../settings/types'
+import { createUserMapper } from '../users'
+import { createInMemorySettingsService } from '../settings'
 
 const createGqlRequest = (tokens: TokenService, server: Parameters<ApplicationRunHandler>[0], user: HaffaUser) => 
 	(query: string, variables: any): Test => 

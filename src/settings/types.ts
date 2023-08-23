@@ -7,4 +7,5 @@ export interface LoginPolicy {
 export interface SettingsService {
 	isSuperUser: (email: string) => boolean
 	getLoginPolicies: () => Promise<LoginPolicy[]>
+	updateLoginPolicies: (policies: LoginPolicy[]) => Promise<LoginPolicy[]>
 }
