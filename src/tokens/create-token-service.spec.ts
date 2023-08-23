@@ -1,6 +1,6 @@
 import { createTokenService } from '.'
 import type { HaffaUser } from '../login/types'
-import { createInMemorySettingsService } from '../settings/in-memory-settings'
+import { createInMemorySettingsService } from '../settings'
 import { createUserMapper } from '../users'
 
 const createTokenServiceForTest = (secret: string) => createTokenService(createUserMapper(createInMemorySettingsService()), secret)

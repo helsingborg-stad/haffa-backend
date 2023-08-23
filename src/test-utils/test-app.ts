@@ -10,8 +10,8 @@ import { createTokenService } from '../tokens'
 import { createInMemoryProfileRepository } from '../profile'
 import { createNullNotificationService } from '../notifications'
 import type { NotificationService } from '../notifications/types'
-import { createInMemorySettingsService } from '../settings/in-memory-settings'
 import { createUserMapper } from '../users'
+import { createInMemorySettingsService } from '../settings'
 
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
