@@ -1,7 +1,7 @@
 import type { LoginPolicy } from "./types"
 
-export const normalizeLoginPolicies = (policies: LoginPolicy[]): LoginPolicy[] => 
-	(policies || [])
+export const normalizeLoginPolicies = (policies: LoginPolicy[]|null|undefined): LoginPolicy[] => 
+	(Array.isArray(policies) ? policies : [])
 		.map(({emailPattern, roles, deny }) => ({
 			emailPattern: (emailPattern || '').trim().toLowerCase(),
 			roles: Array.from(new Set<string>((roles||[]).map(v => (v||'').trim().toLowerCase()))).filter(r => r),
