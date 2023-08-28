@@ -1,7 +1,7 @@
-import { readFile, writeFile, unlink } from 'fs/promises'
+import { readFile, writeFile } from 'fs/promises'
 import { mkdirp } from 'mkdirp'
 import { join } from 'path';
-import type { LoginPolicy, SettingsService } from "../types";
+import type { Category, LoginPolicy, SettingsService } from "../types";
 import { normalizeLoginPolicies } from '../normalize-login-policies';
 
 export const createFsSettingsService = (superUser: string, folder: string): SettingsService => {
@@ -20,9 +20,17 @@ export const createFsSettingsService = (superUser: string, folder: string): Sett
 	const updateLoginPolicies: SettingsService['updateLoginPolicies'] = policies => writeSetting('login-policies.json', policies)
 		.then(normalizeLoginPolicies)
 
+	const getCategories: SettingsService['getCategories'] = () => readSetting<Category[]>('categories.json')
+		.then(c => c || [])
+
+	const updateCategories: SettingsService['updateCategories'] = categories => writeSetting('categories.json', categories)
+		.then(getCategories)
+
 	return {
 		isSuperUser: email => !!superUser && (email === superUser),
 		getLoginPolicies,
-		updateLoginPolicies
+		updateLoginPolicies,
+		getCategories,
+		updateCategories
 	}
 }

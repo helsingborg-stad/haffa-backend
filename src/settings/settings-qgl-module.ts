@@ -14,7 +14,8 @@ export const createSettingsGqlModule = ({settings}: Pick<Services, 'settings'>):
 					ctx.throw(HttpStatusCodes.UNAUTHORIZED)	
 				}
 				return settings.getLoginPolicies()
-			}
+			},
+			categories: async () => settings.getCategories()
 		},
 		Mutation: {
 			updateLoginPolicies: async ({ ctx, args: { input } }) => {
@@ -23,6 +24,13 @@ export const createSettingsGqlModule = ({settings}: Pick<Services, 'settings'>):
 					ctx.throw(HttpStatusCodes.UNAUTHORIZED)	
 				}
 				return settings.updateLoginPolicies(input)
+			},
+			updateCategories: async ({ ctx, args: { input } }) => {
+				const {user} = ctx
+				if (!user.roles.includes('admin')) {
+					ctx.throw(HttpStatusCodes.UNAUTHORIZED)	
+				}
+				return settings.updateCategories(input)
 			}
 		}
 	}
