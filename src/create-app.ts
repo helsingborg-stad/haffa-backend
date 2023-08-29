@@ -10,6 +10,7 @@ import {
 import type { Services } from './types'
 import { graphQLModule } from './haffa/haffa-module'
 import { loginModule } from './login/login-module'
+import { gitRevisionModule } from './git-revision-module'
 
 /** Create fully packaged web application, given dependencies */
 export const createApp = ({
@@ -24,6 +25,7 @@ export const createApp = ({
     validateResponse,
   })
     // .use(webFrameworkModule())
+    .use(gitRevisionModule())
     .use(({ app }) => app.use(cors()))
     .use(({ app }) => app.use(bodyparser({ jsonLimit: '50mb' })))
     .use(swaggerModule({routePrefix: '/api/v1/haffa/swagger'}))

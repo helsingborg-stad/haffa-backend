@@ -3,6 +3,7 @@
 
 # Local stuff
 .local
+git_revision.txt
 
 # Logs
 logs
