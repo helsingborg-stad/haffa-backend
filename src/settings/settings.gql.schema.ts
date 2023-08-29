@@ -27,6 +27,7 @@ type Category {
 	parentId: String!
 	label: String
 }
+
 input CategoryInput {
 	id: String!
 	parentId: String!

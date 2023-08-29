@@ -6,8 +6,8 @@ export interface LoginPolicy {
 
 export interface Category {
 	id: string
+	parentId: string
 	label: string
-	categories: Category[]
 }
 
 export interface SettingsService {
