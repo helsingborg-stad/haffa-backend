@@ -7,7 +7,7 @@ import { TxErrors } from "../../transactions"
 
 describe('updateAdvert', () => {
 
-	it('denies unauthorized attempts', () => end2endTest(null, async ({ gqlRequest, adverts, user }) => {
+	it('denies unauthorized attempts', () => end2endTest(null, async ({ gqlRequest, adverts }) => {
 		adverts['advert-123'] = {
 			...createEmptyAdvert(),
 			createdBy: 'someone else',

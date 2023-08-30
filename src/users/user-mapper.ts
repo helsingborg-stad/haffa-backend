@@ -23,14 +23,14 @@ const tryMatchUserPolicy = (email: string, {emailPattern}: LoginPolicy) => new R
 const matchLoginPolicies = (email: string, policies: LoginPolicy[]) => 
 	policies.filter(policy => tryMatchUserPolicy(email, policy))
 
-
-export const createUserMapper = (settings: SettingsService): types.UserMapper => {
+export const createUserMapper = (superUser: string|null, settings: SettingsService): types.UserMapper => {
+	const su = superUser?.toLowerCase()
 	const mapAndValidateUser: types.UserMapper['mapAndValidateUser'] = async (user) => {
-		const id = user?.id
-		if (!id) {
+		if (!(user && user.id && typeof user.id === 'string')) {
 			return null
 		}
-		if (settings.isSuperUser(id)) {
+		const id = user.id.toLowerCase()
+		if (id === su) {
 			return validateHaffaUser({
 				id,
 				roles: ['admin']

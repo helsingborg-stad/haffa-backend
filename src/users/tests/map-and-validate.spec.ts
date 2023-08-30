@@ -13,12 +13,12 @@ describe('inMemoryUserMapper::mapAndValidate*', ( )=> {
 	]
 
 	it.each(ExpectToMapToNull)('mapAndValidateUser(%j) should give null', async (user) => {
-		const mapper = createUserMapper(createInMemorySettingsService())
+		const mapper = createUserMapper(null, createInMemorySettingsService())
 		expect(await mapper.mapAndValidateUser(user as HaffaUser)).toBeNull()
 	})
 
 	it('mapAndValidateEmail(superUser) => {id, roles: <admin roles>}', async () => {
-		const mapper = createUserMapper(createInMemorySettingsService({superUser: 'super@user.com'}))
+		const mapper = createUserMapper('super@user.com', createInMemorySettingsService())
 		const mapped = await mapper.mapAndValidateEmail('super@user.com')
 		expect(mapped).toMatchObject({
 			id: 'super@user.com',
@@ -27,14 +27,12 @@ describe('inMemoryUserMapper::mapAndValidate*', ( )=> {
 	})
 
 	it('mapAndValidateEmail(email) => {id, roles}', async () => {
-		const mapper = createUserMapper(createInMemorySettingsService({
-			db: {
-				'login-policies': [{
-					emailPattern: '.*@user.com',
-					roles: ['a', 'b'],
-					deny: false
-				}]
-			}
+		const mapper = createUserMapper(null, createInMemorySettingsService({
+			'login-policies': [{
+				emailPattern: '.*@user.com',
+				roles: ['a', 'b'],
+				deny: false
+			}]
 		}))
 		const mapped = await mapper.mapAndValidateEmail('test@user.com')
 		expect(mapped).toMatchObject({
@@ -44,32 +42,28 @@ describe('inMemoryUserMapper::mapAndValidate*', ( )=> {
 	})
 
 	it('mapAndValidateEmail(email) => null if email is denied', async () => {
-		const mapper = createUserMapper(createInMemorySettingsService({
-			db: {
-				'login-policies': [{
-					emailPattern: '.*@user.com',
+		const mapper = createUserMapper(null, createInMemorySettingsService({
+			'login-policies': [{
+				emailPattern: '.*@user.com',
+				roles: ['a', 'b'],
+				deny: true
+				}, {
+					emailPattern: '.*',
 					roles: ['a', 'b'],
-					deny: true
-					}, {
-						emailPattern: '.*',
-						roles: ['a', 'b'],
-						deny: false
-						}]
-			}
+					deny: false
+					}]
 		}))
 		const mapped = await mapper.mapAndValidateEmail('test@user.com')
 		expect(mapped).toBeNull()
 	})
 
 	it('mapAndValidateEmail(email) => null if domain is not matched', async () => {
-		const mapper = createUserMapper(createInMemorySettingsService({
-			db: {
-				'login-policies': [{
-					emailPattern: '.*@others.com',
-					roles: ['a', 'b'],
-					deny: true
-				}]
-			}
+		const mapper = createUserMapper(null, createInMemorySettingsService({
+			'login-policies': [{
+				emailPattern: '.*@others.com',
+				roles: ['a', 'b'],
+				deny: true
+			}]
 		}))
 		const mapped = await mapper.mapAndValidateEmail('test@user.com')
 		expect(mapped).toBeNull()

@@ -50,7 +50,7 @@ export const end2endTest = (
 	const logins: Record<string, LoginRequestEntry> = {}
 	const profiles: Record<string, Profile> = {}
 	const settings: SettingsService = config?.services?.settings || createInMemorySettingsService()
-	const userMapper: UserMapper = config?.services?.userMapper || createUserMapper(settings)
+	const userMapper: UserMapper = config?.services?.userMapper || createUserMapper(null, settings)
 	const services = createTestServices({
 		userMapper,
 		settings,

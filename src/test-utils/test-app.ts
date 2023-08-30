@@ -32,7 +32,7 @@ export const createTestNotificationServices = (notifications: Partial<Notificati
 
 export const createTestServices = (services: Partial<Services>): Services => {
 	const settings = services.settings || createInMemorySettingsService()
-	const userMapper = services.userMapper || createUserMapper(settings)
+	const userMapper = services.userMapper || createUserMapper(null, settings)
 	return {
 		userMapper,
 		settings,
