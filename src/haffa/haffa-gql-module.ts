@@ -4,14 +4,16 @@ import type { Services } from '../types'
 import { createAdvertsGqlModule } from '../adverts/adverts-gql-module'
 import { createProfileGqlModule } from '../profile/profile-gql-module'
 import { createTermsGqlModule } from '../terms/terms-gql-module'
-import { createSettingsGqlModule } from '../settings/settings-qgl-module'
+import { createLoginPoliciesGqlModule } from '../login-policies'
+import { createCategoriesGqlModule } from '../categories'
 
 export const createHaffaGqlModule = ({ adverts, files, profiles, notifications, settings }: Pick<Services, 'adverts'|'files'|'profiles'|'notifications'|'settings'>): GraphQLModule => 
 	mergeModules(
 		createAdvertsGqlModule({ adverts, files, notifications }),
 		createProfileGqlModule(profiles),
 		createTermsGqlModule(),
-		createSettingsGqlModule({settings})
+		createCategoriesGqlModule({settings}),
+		createLoginPoliciesGqlModule({settings})
 	)
 
 const mergeModules = (...modules: GraphQLModule[]): GraphQLModule => ({

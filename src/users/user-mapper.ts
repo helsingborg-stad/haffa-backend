@@ -1,7 +1,9 @@
 import EmailValidator from 'email-validator'
 import type { HaffaUser } from "../login/types";
 import type * as types from "./types";
-import type { LoginPolicy, SettingsService } from '../settings/types';
+import type { SettingsService } from '../settings/types';
+import { loginPolicyAdapter } from '../login-policies/login-policy-adapter';
+import type { LoginPolicy } from '../login-policies/types';
 
 const isString = (v: any) => typeof v === 'string'
 const isStringOrNull = (v: any) => (v === null) || typeof v === 'string'
@@ -34,7 +36,7 @@ export const createUserMapper = (settings: SettingsService): types.UserMapper =>
 				roles: ['admin']
 			})
 		}
-		const loginPolicies = await settings.getLoginPolicies()
+		const loginPolicies = await loginPolicyAdapter(settings).getLoginPolicies()
 		const matchings = matchLoginPolicies(id, loginPolicies)
 		if (matchings.some(({deny}) => deny)) {
 			return null

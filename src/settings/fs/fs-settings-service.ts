@@ -1,37 +1,22 @@
 import { readFile, writeFile } from 'fs/promises'
 import { mkdirp } from 'mkdirp'
 import { join } from 'path';
-import type { LoginPolicy, SettingsService } from "../types";
-import { normalizeLoginPolicies } from '../normalize-login-policies';
-import type { Category } from '../../categories/types';
+import type { SettingsService } from "../types";
 
 export const createFsSettingsService = (superUser: string, folder: string): SettingsService => {
-	const settingPath = (name: string) => join(folder, name)
-	const readSetting = <T>(name: string): Promise<T|null> => readFile(settingPath(name), { encoding: 'utf8' })
+	const settingPath = (name: string) => join(folder, `${name}.json`)
+	const getSetting: SettingsService['getSetting'] = <T>(name: string): Promise<T|null> => readFile(settingPath(name), { encoding: 'utf8' })
 		.then(text => JSON.parse(text))
 		.catch(() => null)
 
-	const writeSetting = <T>(name: string, value: T): Promise<T|null> => mkdirp(folder)
+	const updateSetting: SettingsService['updateSetting'] = <T>(name: string, value: T): Promise<T|null> => mkdirp(folder)
 		.then(() => writeFile(settingPath(name), JSON.stringify(value, null, 2), { encoding: 'utf8' }))
-		.then(() => readSetting<T>(name))
+		.then(() => getSetting<T>(name))
 
-	const getLoginPolicies: SettingsService['getLoginPolicies'] = () => readSetting<LoginPolicy[]>('login-policies.json')
-		.then(normalizeLoginPolicies)
-
-	const updateLoginPolicies: SettingsService['updateLoginPolicies'] = policies => writeSetting('login-policies.json', policies)
-		.then(normalizeLoginPolicies)
-
-	const getCategories: SettingsService['getCategories'] = () => readSetting<Category[]>('categories.json')
-		.then(c => c || [])
-
-	const updateCategories: SettingsService['updateCategories'] = categories => writeSetting('categories.json', categories)
-		.then(getCategories)
 
 	return {
 		isSuperUser: email => !!superUser && (email === superUser),
-		getLoginPolicies,
-		updateLoginPolicies,
-		getCategories,
-		updateCategories
+		getSetting,
+		updateSetting
 	}
 }

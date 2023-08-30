@@ -1,10 +1,11 @@
 import type { GraphQLModule } from "@helsingborg-stad/gdi-api-node"
 import HttpStatusCodes from 'http-status-codes'
 import type { Services } from "../types"
-import { settingsGqlSchema } from "./settings.gql.schema"
+import { loginPoliciesGqlSchema } from "./login-policies.gql.schema"
+import { loginPolicyAdapter } from "./login-policy-adapter"
 
-export const createSettingsGqlModule = ({settings}: Pick<Services, 'settings'>): GraphQLModule => ({
-	schema: settingsGqlSchema,
+export const createLoginPoliciesGqlModule = ({settings}: Pick<Services, 'settings'>): GraphQLModule => ({
+	schema: loginPoliciesGqlSchema,
 	resolvers:{
 		Query: {
 			// https://www.graphql-tools.com/docs/resolvers
@@ -13,9 +14,8 @@ export const createSettingsGqlModule = ({settings}: Pick<Services, 'settings'>):
 				if (!user.roles.includes('admin')) {
 					ctx.throw(HttpStatusCodes.UNAUTHORIZED)	
 				}
-				return settings.getLoginPolicies()
+				return loginPolicyAdapter(settings).getLoginPolicies()
 			},
-			categories: async () => settings.getCategories()
 		},
 		Mutation: {
 			updateLoginPolicies: async ({ ctx, args: { input } }) => {
@@ -23,15 +23,8 @@ export const createSettingsGqlModule = ({settings}: Pick<Services, 'settings'>):
 				if (!user.roles.includes('admin')) {
 					ctx.throw(HttpStatusCodes.UNAUTHORIZED)	
 				}
-				return settings.updateLoginPolicies(input)
+				return loginPolicyAdapter(settings).updateLoginPolicies(input)
 			},
-			updateCategories: async ({ ctx, args: { input } }) => {
-				const {user} = ctx
-				if (!user.roles.includes('admin')) {
-					ctx.throw(HttpStatusCodes.UNAUTHORIZED)	
-				}
-				return settings.updateCategories(input)
-			}
 		}
 	}
 })

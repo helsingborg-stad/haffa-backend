@@ -1,4 +1,4 @@
-export const settingsGqlSchema = /* GraphQL */`
+export const loginPoliciesGqlSchema = /* GraphQL */`
 
 type Query {
 	loginPolicies: [LoginPolicy]
@@ -20,19 +20,5 @@ input LoginPolicyInput {
 	emailPattern: String
 	roles: [String]
 	deny: Boolean
-}
-
-type Category {
-	id: String!
-	parentId: String!
-	label: String!
-	co2kg: Int
-}
-
-input CategoryInput {
-	id: String!
-	parentId: String!
-	label: String!
-	co2kg: Int
 }
 `

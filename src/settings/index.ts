@@ -10,6 +10,5 @@ export const createSettingsServiceFromEnv = (): SettingsService =>
 	tryCreateMongoDbSettingsServiceFromEnv()
 	|| tryCreateFsSettingsServiceFromEnv()
 	|| createInMemorySettingsService({
-		superUser: getEnv('SUPER_USER', {fallback: ''}),
-		loginPolicies: []
+		superUser: getEnv('SUPER_USER', {fallback: ''})
 	})

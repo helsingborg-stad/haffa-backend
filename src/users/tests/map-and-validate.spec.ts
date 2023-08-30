@@ -1,4 +1,4 @@
-import { HaffaUser } from "../../login/types"
+import type { HaffaUser } from "../../login/types"
 import { createInMemorySettingsService } from "../../settings"
 import { createUserMapper } from "../user-mapper"
 
@@ -28,11 +28,13 @@ describe('inMemoryUserMapper::mapAndValidate*', ( )=> {
 
 	it('mapAndValidateEmail(email) => {id, roles}', async () => {
 		const mapper = createUserMapper(createInMemorySettingsService({
-			loginPolicies: [{
-				emailPattern: '.*@user.com',
-				roles: ['a', 'b'],
-				deny: false
-			}]
+			db: {
+				'login-policies': [{
+					emailPattern: '.*@user.com',
+					roles: ['a', 'b'],
+					deny: false
+				}]
+			}
 		}))
 		const mapped = await mapper.mapAndValidateEmail('test@user.com')
 		expect(mapped).toMatchObject({
@@ -43,11 +45,17 @@ describe('inMemoryUserMapper::mapAndValidate*', ( )=> {
 
 	it('mapAndValidateEmail(email) => null if email is denied', async () => {
 		const mapper = createUserMapper(createInMemorySettingsService({
-			loginPolicies: [{
-				emailPattern: '.*@user.com',
-				roles: ['a', 'b'],
-				deny: true
-			}]
+			db: {
+				'login-policies': [{
+					emailPattern: '.*@user.com',
+					roles: ['a', 'b'],
+					deny: true
+					}, {
+						emailPattern: '.*',
+						roles: ['a', 'b'],
+						deny: false
+						}]
+			}
 		}))
 		const mapped = await mapper.mapAndValidateEmail('test@user.com')
 		expect(mapped).toBeNull()
@@ -55,14 +63,15 @@ describe('inMemoryUserMapper::mapAndValidate*', ( )=> {
 
 	it('mapAndValidateEmail(email) => null if domain is not matched', async () => {
 		const mapper = createUserMapper(createInMemorySettingsService({
-			loginPolicies: [{
-				emailPattern: '.*@others.com',
-				roles: ['a', 'b'],
-				deny: true
-			}]
+			db: {
+				'login-policies': [{
+					emailPattern: '.*@others.com',
+					roles: ['a', 'b'],
+					deny: true
+				}]
+			}
 		}))
 		const mapped = await mapper.mapAndValidateEmail('test@user.com')
 		expect(mapped).toBeNull()
 	})
-
 })

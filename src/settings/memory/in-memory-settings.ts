@@ -1,48 +1,41 @@
-
-import type { Category } from "../../categories/types"
-import { normalizeLoginPolicies } from "../normalize-login-policies"
-import type { LoginPolicy, SettingsService } from "../types"
+import type { SettingsService } from "../types"
 
 interface SettingsServiceProps {
 	superUser?: string
-	loginPolicies?: LoginPolicy[]
+	db?: any
 }
 
 const normalizeProps = (props?: SettingsServiceProps): Required<SettingsServiceProps> => {
 	const {
 		superUser,
-		loginPolicies
+		db
 	} = {
 		superUser: '',
-		loginPolicies: [],
+		db: {},
 		...props
 	}
 	return {
 		superUser: superUser.trim().toLocaleLowerCase(),
-		loginPolicies
+		db: db || {}
 	}
 }
 
 export const createInMemorySettingsService = (props?: SettingsServiceProps): SettingsService => {
 	const {
 		superUser,
-		loginPolicies
+		db
 	} = normalizeProps(props)
 
-	let mutLoginPolicies = loginPolicies
-	let mutCategories: Category[] = []
-	
+	const getSetting: SettingsService['getSetting'] = async <T>(name: string) => (db[name] || null) as T
+
+	const updateSetting: SettingsService['updateSetting'] = async (name, value) => {
+		db[name] = value
+		return getSetting(name)
+	}
+
 	return {
 		isSuperUser: email => !!superUser && (email === superUser),
-		getLoginPolicies: async () => mutLoginPolicies,
-		updateLoginPolicies: async (p) => {
-			mutLoginPolicies = normalizeLoginPolicies(p)
-			return mutLoginPolicies
-		},
-		getCategories: async () => mutCategories,
-		updateCategories: async (categories) => {
-			mutCategories = categories
-			return mutCategories
-		}
+		getSetting,
+		updateSetting
 	}
 }
