@@ -16,7 +16,7 @@ const validateHaffaUser = (user: HaffaUser|null): HaffaUser|null => user
 	&& Array.isArray(user.roles) 
 	&& user.roles.every(isStringOrNull)
 	&& EmailValidator.validate(user.id)
-	? { id: user.id, roles: user.roles.filter(v => v) }
+	? { id: user.id.toString(), roles: user.roles.filter(v => v) }
 	: null
 
 const tryMatchUserPolicy = (email: string, {emailPattern}: LoginPolicy) => new RegExp(`^${emailPattern}$`).test(email)
@@ -25,16 +25,17 @@ const matchLoginPolicies = (email: string, policies: LoginPolicy[]) =>
 
 export const createUserMapper = (superUser: string|null, settings: SettingsService): types.UserMapper => {
 	const su = superUser?.toLowerCase()
-	const mapAndValidateUser: types.UserMapper['mapAndValidateUser'] = async (user) => {
-		if (!(user && user.id && typeof user.id === 'string')) {
+	const mapAndValidateUser: types.UserMapper['mapAndValidateUser'] = async (u) => {
+		const user = validateHaffaUser(u)
+		if (!user) {
 			return null
 		}
-		const id = user.id.toLowerCase()
+		const {id} = user
 		if (id === su) {
-			return validateHaffaUser({
+			return {
 				id,
 				roles: ['admin']
-			})
+			}
 		}
 		const loginPolicies = await loginPolicyAdapter(settings).getLoginPolicies()
 		const matchings = matchLoginPolicies(id, loginPolicies)
@@ -46,11 +47,11 @@ export const createUserMapper = (superUser: string|null, settings: SettingsServi
 			return null
 		}
 
-		const roles = matchings.reduce((r, policy) => r.concat(policy.roles), user.roles || [])
-		return validateHaffaUser({
+		const roles = matchings.reduce((r, policy) => r.concat(policy.roles), user.roles)
+		return {
 			id,
 			roles: Array.from(new Set(roles))
-		})
+		}
 	}
 	const mapAndValidateEmail: types.UserMapper['mapAndValidateEmail'] = async (email) => mapAndValidateUser({id: email||'', roles: []})
 
