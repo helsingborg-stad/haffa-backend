@@ -1,8 +1,9 @@
 import { readFile, writeFile } from 'fs/promises'
 import { mkdirp } from 'mkdirp'
 import { join } from 'path';
-import type { Category, LoginPolicy, SettingsService } from "../types";
+import type { LoginPolicy, SettingsService } from "../types";
 import { normalizeLoginPolicies } from '../normalize-login-policies';
+import type { Category } from '../../categories/types';
 
 export const createFsSettingsService = (superUser: string, folder: string): SettingsService => {
 	const settingPath = (name: string) => join(folder, name)

@@ -1,6 +1,7 @@
 
+import type { Category } from "../../categories/types"
 import { normalizeLoginPolicies } from "../normalize-login-policies"
-import type { Category, LoginPolicy, SettingsService } from "../types"
+import type { LoginPolicy, SettingsService } from "../types"
 
 interface SettingsServiceProps {
 	superUser?: string

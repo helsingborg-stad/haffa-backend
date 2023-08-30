@@ -1,7 +1,9 @@
+import { normalizeCategories } from "../../categories"
+import type { Category } from "../../categories/types"
 import { createMongoConnection } from "../../mongodb-utils"
 import type { MongoConnection, MongoConnectionOptions } from "../../mongodb-utils/types"
 import { normalizeLoginPolicies } from "../normalize-login-policies"
-import type { Category, LoginPolicy, SettingsService } from "../types"
+import type { LoginPolicy, SettingsService } from "../types"
 
 export interface MongoSetting {
 	id: string
@@ -29,7 +31,7 @@ export const createMongoSettingsService = (superUser: string, {getCollection}: M
 		.then(normalizeLoginPolicies)
 
 	const getCategories: SettingsService['getCategories'] = () => readSetting<Category[]>('categories')
-		.then(categories => categories || [])
+		.then(categories => normalizeCategories(categories || []))
 
 	const updateCategories: SettingsService['updateCategories'] = categories => writeSetting<Category[]>('categories', categories)
 		.then(getCategories)

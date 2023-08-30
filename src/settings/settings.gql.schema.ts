@@ -25,12 +25,14 @@ input LoginPolicyInput {
 type Category {
 	id: String!
 	parentId: String!
-	label: String
+	label: String!
+	co2kg: Int
 }
 
 input CategoryInput {
 	id: String!
 	parentId: String!
-	label: String
+	label: String!
+	co2kg: Int
 }
 `

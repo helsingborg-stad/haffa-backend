@@ -1,13 +1,9 @@
+import type { Category } from "../categories/types"
+
 export interface LoginPolicy {
 	emailPattern: string
 	roles: string[]
 	deny: boolean
-}
-
-export interface Category {
-	id: string
-	parentId: string
-	label: string
 }
 
 export interface SettingsService {
