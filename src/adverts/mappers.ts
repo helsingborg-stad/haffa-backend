@@ -20,6 +20,7 @@ export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
 	material: '',
 	condition: '',
 	usage: '',
+	category: '',
 
 	claims: [],
 
@@ -50,6 +51,7 @@ export const createEmptyAdvertInput = (): AdvertInput => ({
 	material: '',
 	condition: '',
 	usage: '',
+	category: '',
 
 	location: createEmptyAdvertLocation(),
 	contact: createEmptyAdvertContact()
