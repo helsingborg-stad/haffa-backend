@@ -16,6 +16,7 @@ const operators: Record<
   gte: (field, v) => o => o[field] >= v,
   lt: (field, v) => o => o[field] < v,
   lte: (field, v) => o => o[field] <= v,
+  in: (field, v) => o => v.includes(o[field]),
   contains: (field, v) => o =>
     isString(o[field]) && isString(v) && o[field].includes(v),
 }

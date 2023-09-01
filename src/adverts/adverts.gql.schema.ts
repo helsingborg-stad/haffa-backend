@@ -33,6 +33,7 @@ input StringFilterInput {
 	lt: String
 	lte: String
 	contains: String
+	in: [String]
 } 
 
 enum AdvertClaimType {
@@ -53,6 +54,7 @@ input AdvertFieldsFilterInput {
 	material: StringFilterInput
 	condition: StringFilterInput
 	usage: StringFilterInput
+	category: StringFilterInput
 
 	and: [AdvertFieldsFilterInput]
 	or: [AdvertFieldsFilterInput]
@@ -72,7 +74,7 @@ input AdvertSortingInput {
 
 input AdvertFilterInput {
 	search: String
-	field: AdvertFieldsFilterInput
+	fields: AdvertFieldsFilterInput
 	restrictions: AdvertRestrictionsInput
 	sorting: AdvertSortingInput
 }
