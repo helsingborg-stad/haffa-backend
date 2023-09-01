@@ -98,6 +98,7 @@ input AdvertInput {
 	material: String
 	condition: String
 	usage: String
+	category: String
 	
 	location: AdvertLocationInput
 	contact: AdvertContactInput
@@ -155,6 +156,8 @@ type Advert {
 	material: String
 	condition: String
 	usage: String
+	category: String
+
 	location: AdvertLocation
 	contact: AdvertContact
 }
