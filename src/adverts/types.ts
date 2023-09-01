@@ -34,6 +34,7 @@ export interface AdvertUserFields {
 export interface AdvertMeta {
 	reservableQuantity: number
 	collectableQuantity: number
+	isMine: boolean,
 	canEdit: boolean
 	canRemove: boolean
 	canBook: boolean

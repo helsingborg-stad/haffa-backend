@@ -113,6 +113,7 @@ type AdvertClaim {
 type AdvertMeta {
 	reservableQuantity: Int
 	collectableQuantity: Int
+	isMine: Boolean!
 	canEdit: Boolean!
 	canRemove: Boolean!
 	canBook: Boolean!
@@ -154,7 +155,6 @@ type Advert {
 	material: String
 	condition: String
 	usage: String
-
 	location: AdvertLocation
 	contact: AdvertContact
 }
