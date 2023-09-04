@@ -15,7 +15,6 @@ export const createAdvertsGqlModule = (
   resolvers: {
     Query: {
       // https://www.graphql-tools.com/docs/resolvers
-      stats: () => services.adverts.stats,
       adverts: async ({ ctx: { user }, args: { filter } }) => {
         const l = await services.adverts.list(user, filter)
         return mapAdvertsToAdvertsWithMeta(user, l)

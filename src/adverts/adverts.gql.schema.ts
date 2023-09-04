@@ -1,6 +1,5 @@
 export const advertsGqlSchema = /* GraphQL */ `
   type Query {
-    stats: AdvertStats
     adverts(filter: AdvertFilterInput): [Advert]
     getAdvert(id: ID!): Advert
   }
@@ -163,9 +162,5 @@ export const advertsGqlSchema = /* GraphQL */ `
     externalId: String
     location: AdvertLocation
     contact: AdvertContact
-  }
-
-  type AdvertStats {
-    advertCount: Int
   }
 `
