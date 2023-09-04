@@ -94,7 +94,27 @@ export const createFsAdvertsRepository = (
       )
     )
 
+  const stats: AdvertsRepository['stats'] = {
+    get advertCount() {
+      return readdir(dataFolder)
+        .then(names => names.filter(name => /.*\.json$/.test(name)))
+        .then(names => names.map(name => join(dataFolder, name)))
+        .then(paths =>
+          Promise.all(paths.map(path => stat(path).then(s => ({ s }))))
+        )
+        .then(fileStat => Promise.all(fileStat.filter(({ s }) => s.isFile())))
+        .then(s => s.length)
+        .catch(e => {
+          if (e?.code === 'ENOENT') {
+            return 0
+          }
+          throw e
+        })
+    },
+  }
+
   return {
+    stats,
     getAdvert,
     saveAdvertVersion,
     list,
