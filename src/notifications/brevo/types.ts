@@ -19,7 +19,8 @@ export interface BrevoClient {
   send(
     to: Identity,
     templateCommonName: TemplateName,
-    params: Record<string, unknown>
+    params: Record<string, unknown>,
+    replyTo?: Identity
   ): Promise<void>
 }
 
