@@ -1,3 +1,3 @@
-import { createCategoriesGqlModule } from "./categories-gql-module";
+import { createCategoriesGqlModule } from './categories-gql-module'
 
-export {createCategoriesGqlModule}
+export { createCategoriesGqlModule }

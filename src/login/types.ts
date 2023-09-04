@@ -15,6 +15,13 @@ export enum RequestPincodeStatus {
 }
 
 export interface LoginService {
-  requestPincode: (email: string, origin: string) => Promise<RequestPincodeResult>
-  tryLogin: (email: string, pincode: string, origin: string) => Promise<HaffaUser | null>
+  requestPincode: (
+    email: string,
+    origin: string
+  ) => Promise<RequestPincodeResult>
+  tryLogin: (
+    email: string,
+    pincode: string,
+    origin: string
+  ) => Promise<HaffaUser | null>
 }

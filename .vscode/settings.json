@@ -10,9 +10,7 @@
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.insertSpaces": false,
-  "eslint.validate": [
-    "typescript"
-  ],
-  "cmake.configureOnOpen": false
+  "eslint.validate": ["typescript"],
+  "cmake.configureOnOpen": false,
+  "editor.formatOnSave": true
 }
-

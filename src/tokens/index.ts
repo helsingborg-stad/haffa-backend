@@ -8,7 +8,9 @@ export { createTokenService }
 const tryParseJson = (json?: string): any | null =>
   json ? JSON.parse(json) : null
 
-export const createTokenServiceFromEnv = (userMapper: UserMapper): TokenService =>
+export const createTokenServiceFromEnv = (
+  userMapper: UserMapper
+): TokenService =>
   createTokenService(
     userMapper,
     getEnv('JWT_SHARED_SECRET'),

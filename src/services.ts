@@ -9,18 +9,18 @@ import { createUserMapperFromEnv } from './users'
 import { createSettingsServiceFromEnv } from './settings'
 
 const createServicesFromEnv = (): Services => {
-	const settings = createSettingsServiceFromEnv()
-	const userMapper = createUserMapperFromEnv(settings)
-	return {
-		userMapper,
-		settings,
-		login: createLoginServiceFromEnv(userMapper),
-		tokens: createTokenServiceFromEnv(userMapper),
-		adverts: createAdvertsRepositoryFromEnv(),
-		profiles: createProfileRepositoryFromEnv(),
-		files: createFilesServiceFromEnv(),
-		notifications: createNotificationServiceFromEnv(),
-	}
+  const settings = createSettingsServiceFromEnv()
+  const userMapper = createUserMapperFromEnv(settings)
+  return {
+    userMapper,
+    settings,
+    login: createLoginServiceFromEnv(userMapper),
+    tokens: createTokenServiceFromEnv(userMapper),
+    adverts: createAdvertsRepositoryFromEnv(),
+    profiles: createProfileRepositoryFromEnv(),
+    files: createFilesServiceFromEnv(),
+    notifications: createNotificationServiceFromEnv(),
+  }
 }
 
 export { createServicesFromEnv }

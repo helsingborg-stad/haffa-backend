@@ -7,11 +7,13 @@ import { createRemoveAdvert } from './remove-advert'
 import { createReserveAdvert } from './reserve-advert'
 import { createUpdateAdvert } from './update-advert'
 
-export const createAdvertMutations = (services: Pick<Services, 'adverts'|'files'|'notifications'>): AdvertMutations => ({
-	createAdvert: createCreateAdvert(services),
-	updateAdvert: createUpdateAdvert(services),
-	removeAdvert: createRemoveAdvert(services),
-	reserveAdvert: createReserveAdvert(services),
-	cancelAdvertReservation: createCancelAdvertReservation(services),
-	collectAdvert: createCollectAdvert(services)
+export const createAdvertMutations = (
+  services: Pick<Services, 'adverts' | 'files' | 'notifications'>
+): AdvertMutations => ({
+  createAdvert: createCreateAdvert(services),
+  updateAdvert: createUpdateAdvert(services),
+  removeAdvert: createRemoveAdvert(services),
+  reserveAdvert: createReserveAdvert(services),
+  cancelAdvertReservation: createCancelAdvertReservation(services),
+  collectAdvert: createCollectAdvert(services),
 })

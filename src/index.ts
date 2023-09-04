@@ -9,6 +9,6 @@ void createApp({
   services,
   validateResponse: false,
 })
-.start(process.env.PORT || 4000)
-// eslint-disable-next-line no-console
-.then(() => console.log(`Haffa backend running on port ${port}`))
+  .start(process.env.PORT || 4000)
+  // eslint-disable-next-line no-console
+  .then(() => console.log(`Haffa backend running on port ${port}`))

@@ -8,12 +8,12 @@ import type { UserMapper } from './users/types'
 import type { SettingsService } from './settings/types'
 
 export interface Services {
-    userMapper: UserMapper
-    settings: SettingsService
-    login: LoginService
-    tokens: TokenService
-    adverts: AdvertsRepository
-    profiles: ProfileRepository
-    files: FilesService
-    notifications: NotificationService
+  userMapper: UserMapper
+  settings: SettingsService
+  login: LoginService
+  tokens: TokenService
+  adverts: AdvertsRepository
+  profiles: ProfileRepository
+  files: FilesService
+  notifications: NotificationService
 }

@@ -1,5 +1,5 @@
 export interface LoginPolicy {
-	emailPattern: string
-	roles: string[]
-	deny: boolean
+  emailPattern: string
+  roles: string[]
+  deny: boolean
 }

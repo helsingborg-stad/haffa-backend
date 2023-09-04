@@ -1,6 +1,6 @@
-import { createMongoLoginService, tryCreateMongoLoginServiceFromEnv } from "./mongo-login-service";
+import {
+  createMongoLoginService,
+  tryCreateMongoLoginServiceFromEnv,
+} from './mongo-login-service'
 
-export {
-	tryCreateMongoLoginServiceFromEnv,
-	createMongoLoginService
-}
+export { tryCreateMongoLoginServiceFromEnv, createMongoLoginService }

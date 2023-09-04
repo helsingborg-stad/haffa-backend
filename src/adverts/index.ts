@@ -6,4 +6,7 @@ import type { AdvertsRepository } from './types'
 
 export { graphQLModule as advertsModule }
 
-export const createAdvertsRepositoryFromEnv = (): AdvertsRepository => tryCreateMongoAdvertsRepositoryFromEnv() || tryCreateFsAdvertsRepositoryFromEnv() || createInMemoryAdvertsRepository()
+export const createAdvertsRepositoryFromEnv = (): AdvertsRepository =>
+  tryCreateMongoAdvertsRepositoryFromEnv() ||
+  tryCreateFsAdvertsRepositoryFromEnv() ||
+  createInMemoryAdvertsRepository()

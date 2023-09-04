@@ -1,9 +1,6 @@
 import type { Filter, Sort } from 'mongodb'
 import { AdvertType } from '../types'
-import type {
-  Advert,
-  AdvertFilterInput,
-} from '../types'
+import type { Advert, AdvertFilterInput } from '../types'
 import type { MongoAdvert } from './types'
 import type { HaffaUser } from '../../login/types'
 import { mapFields } from './filters/map-fields'

@@ -1,6 +1,6 @@
-import type { Profile } from "../types";
+import type { Profile } from '../types'
 
 export interface MongoProfile {
-	id: string
-	profile: Profile
+  id: string
+  profile: Profile
 }

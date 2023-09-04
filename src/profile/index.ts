@@ -5,4 +5,7 @@ import type { ProfileRepository } from './types'
 
 export { createInMemoryProfileRepository }
 
-export const createProfileRepositoryFromEnv = (): ProfileRepository => tryCreateMongoDbProfileRepositoryFromEnv() || tryCreateFsProfileRepositoryFromEnv() || createInMemoryProfileRepository()
+export const createProfileRepositoryFromEnv = (): ProfileRepository =>
+  tryCreateMongoDbProfileRepositoryFromEnv() ||
+  tryCreateFsProfileRepositoryFromEnv() ||
+  createInMemoryProfileRepository()

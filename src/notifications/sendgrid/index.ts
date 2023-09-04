@@ -1,3 +1,6 @@
-import { createSendGridNotifications, tryCreateSendGridNofificationsFromEnv } from "./sendgrid-notifications";
+import {
+  createSendGridNotifications,
+  tryCreateSendGridNofificationsFromEnv,
+} from './sendgrid-notifications'
 
-export {tryCreateSendGridNofificationsFromEnv, createSendGridNotifications}
+export { tryCreateSendGridNofificationsFromEnv, createSendGridNotifications }

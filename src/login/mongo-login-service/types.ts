@@ -1,9 +1,9 @@
 export interface MongoLoginPendingAttempt {
-	pincode: string
-	origin: string
-	expires: number
+  pincode: string
+  origin: string
+  expires: number
 }
 export interface MongoLogin {
-	id: string
-	pending: MongoLoginPendingAttempt[]  
+  id: string
+  pending: MongoLoginPendingAttempt[]
 }

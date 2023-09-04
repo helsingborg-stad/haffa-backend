@@ -13,40 +13,55 @@ import type { NotificationService } from '../notifications/types'
 import { createUserMapper } from '../users'
 import { createInMemorySettingsService } from '../settings'
 
-
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
 
-export const createAuthorizationHeadersFor = (user: HaffaUser, secret: string = TEST_SHARED_SECRET): {authorization: string} => ({
-	authorization: `Bearer ${jwt.sign(user, secret)}`,
+export const createAuthorizationHeadersFor = (
+  user: HaffaUser,
+  secret: string = TEST_SHARED_SECRET
+): { authorization: string } => ({
+  authorization: `Bearer ${jwt.sign(user, secret)}`,
 })
 
-const unexpectedInvocation = (message: string) => () => { throw new Error(message) }
+const unexpectedInvocation = (message: string) => () => {
+  throw new Error(message)
+}
 
-export const createTestNotificationServices = (notifications: Partial<NotificationService>): NotificationService => ({
-	pincodeRequested: unexpectedInvocation('NotificationService::pincodeRequested'),
-	advertWasReserved: unexpectedInvocation('NotificationService::advertWasReserved'),
-	advertReservationWasCancelled: unexpectedInvocation('NotificationService::advertReservationWasCancelled'),
-	advertWasCollected: unexpectedInvocation('NotificationService::advertWasCollected'),
-	...notifications,
+export const createTestNotificationServices = (
+  notifications: Partial<NotificationService>
+): NotificationService => ({
+  pincodeRequested: unexpectedInvocation(
+    'NotificationService::pincodeRequested'
+  ),
+  advertWasReserved: unexpectedInvocation(
+    'NotificationService::advertWasReserved'
+  ),
+  advertReservationWasCancelled: unexpectedInvocation(
+    'NotificationService::advertReservationWasCancelled'
+  ),
+  advertWasCollected: unexpectedInvocation(
+    'NotificationService::advertWasCollected'
+  ),
+  ...notifications,
 })
 
 export const createTestServices = (services: Partial<Services>): Services => {
-	const settings = services.settings || createInMemorySettingsService()
-	const userMapper = services.userMapper || createUserMapper(null, settings)
-	return {
-		userMapper,
-		settings,
-		login: createInMemoryLoginService(userMapper),
-		tokens: createTokenService(userMapper, TEST_SHARED_SECRET),
-		adverts: createInMemoryAdvertsRepository(),
-		profiles: createInMemoryProfileRepository(),
-		files: createNullFileService(),
-		notifications: createNullNotificationService(),
-		...services,
-	}
+  const settings = services.settings || createInMemorySettingsService()
+  const userMapper = services.userMapper || createUserMapper(null, settings)
+  return {
+    userMapper,
+    settings,
+    login: createInMemoryLoginService(userMapper),
+    tokens: createTokenService(userMapper, TEST_SHARED_SECRET),
+    adverts: createInMemoryAdvertsRepository(),
+    profiles: createInMemoryProfileRepository(),
+    files: createNullFileService(),
+    notifications: createNullNotificationService(),
+    ...services,
+  }
 }
 
-export const createTestApp = (services: Partial<Services>): Application => createApp({
-	services: createTestServices(services),
-	validateResponse: true,
-})
+export const createTestApp = (services: Partial<Services>): Application =>
+  createApp({
+    services: createTestServices(services),
+    validateResponse: true,
+  })

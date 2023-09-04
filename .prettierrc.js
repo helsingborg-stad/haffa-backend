@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 module.exports = {
   trailingComma: 'es5',
@@ -6,4 +6,4 @@ module.exports = {
   singleQuote: true,
   arrowParens: 'avoid',
   endOfLine: 'lf',
-}
+};

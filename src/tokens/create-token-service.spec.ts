@@ -3,7 +3,11 @@ import type { HaffaUser } from '../login/types'
 import { createInMemorySettingsService } from '../settings'
 import { createUserMapper } from '../users'
 
-const createTokenServiceForTest = (secret: string) => createTokenService(createUserMapper(null, createInMemorySettingsService()), secret)
+const createTokenServiceForTest = (secret: string) =>
+  createTokenService(
+    createUserMapper(null, createInMemorySettingsService()),
+    secret
+  )
 
 describe('createTokenService', () => {
   const unverifiableTokens = [
@@ -11,7 +15,10 @@ describe('createTokenService', () => {
     { id: 'test@user.com', roles: [] },
     [123],
     'abc123',
-    createTokenServiceForTest('wrong token').sign({ id: 'test@user.com', roles: [] }),
+    createTokenServiceForTest('wrong token').sign({
+      id: 'test@user.com',
+      roles: [],
+    }),
   ]
   it('TokenService:sign() returns a token', () => {
     const service = createTokenServiceForTest('a secret')
@@ -30,11 +37,21 @@ describe('createTokenService', () => {
     expect(verifiedUser).toMatchObject(user)
   })
 
-  it.each(unverifiableTokens)('TokenService:verify(%s) => false', async token => {
-    expect(await createTokenServiceForTest('a secret').verify(token as string)).toBe(false)
-  })
+  it.each(unverifiableTokens)(
+    'TokenService:verify(%s) => false',
+    async token => {
+      expect(
+        await createTokenServiceForTest('a secret').verify(token as string)
+      ).toBe(false)
+    }
+  )
 
-  it.each(unverifiableTokens)('TokenService:decode(%s) => false', async token => {
-    expect(await createTokenServiceForTest('a secret').decode(token as string)).toBeNull()
-  })
+  it.each(unverifiableTokens)(
+    'TokenService:decode(%s) => false',
+    async token => {
+      expect(
+        await createTokenServiceForTest('a secret').decode(token as string)
+      ).toBeNull()
+    }
+  )
 })

@@ -19,7 +19,7 @@ export const createTokenService = (
       expiresIn: '30d',
     })
 
-  const tryDecodeRaw = (token: string): HaffaUser|null => {
+  const tryDecodeRaw = (token: string): HaffaUser | null => {
     try {
       return jwt.verify((token || '').toString(), secret, {
         ...jwtOptions,
@@ -30,9 +30,11 @@ export const createTokenService = (
     }
   }
 
-  const decode: TokenService['decode'] = async token => userMapper.mapAndValidateUser(tryDecodeRaw(token))
+  const decode: TokenService['decode'] = async token =>
+    userMapper.mapAndValidateUser(tryDecodeRaw(token))
 
-  const verify: TokenService['verify'] = token => decode(token).then(user => !!user)
+  const verify: TokenService['verify'] = token =>
+    decode(token).then(user => !!user)
 
   const tryGetUserFromJwt: TokenService['tryGetUserFromJwt'] = token =>
     tryDecodeRaw(token) || defaultUser

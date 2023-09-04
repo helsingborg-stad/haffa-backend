@@ -10,31 +10,36 @@ import type { TokenService } from '../tokens/types'
 import type { NotificationService } from '../notifications/types'
 
 export const loginModule =
-  (loginService: LoginService, tokenService: TokenService, notifications: NotificationService): ApplicationModule =>
+  (
+    loginService: LoginService,
+    tokenService: TokenService,
+    notifications: NotificationService
+  ): ApplicationModule =>
   ({ registerKoaApi }: ApplicationContext) => {
-    const verifyToken: Koa.Middleware = async (ctx) => {
+    const verifyToken: Koa.Middleware = async ctx => {
       const {
         request: {
           body: { token },
         },
       } = ctx as any
       const user = await tokenService.decode(token)
-      ctx.body = user 
-      ? {
-        token,
-        roles: user.roles
-      } : {
-        token: '',
-        roles: []
-      }
+      ctx.body = user
+        ? {
+            token,
+            roles: user.roles,
+          }
+        : {
+            token: '',
+            roles: [],
+          }
     }
 
     const requestPincode: Koa.Middleware = async (ctx: any) => {
       const email = (ctx?.request?.body?.email || '').toString().toLowerCase()
       const isValid = EmailValidator.validate(email)
-      const {status, pincode} = isValid
+      const { status, pincode } = isValid
         ? await loginService.requestPincode(email, ctx.ip)
-        : {status: RequestPincodeStatus.invalid, pincode: ''}
+        : { status: RequestPincodeStatus.invalid, pincode: '' }
 
       if (status === RequestPincodeStatus.accepted) {
         await notifications.pincodeRequested(email, pincode)
@@ -53,7 +58,7 @@ export const loginModule =
       const user = await loginService.tryLogin(email, pincode, ctx.ip)
       ctx.body = {
         token: user ? tokenService.sign(user) : '',
-        roles: user?.roles || []
+        roles: user?.roles || [],
       }
     }
 
