@@ -48,7 +48,8 @@ export function createClient(config: BrevoConfig): BrevoClient {
   const send = async (
     to: Identity,
     templateCommonName: TemplateName,
-    params: Record<string, string>
+    params: Record<string, string>,
+    replyTo?: Identity
   ) => {
     const templateId = await getTemplateId(templateCommonName)
 
@@ -61,6 +62,7 @@ export function createClient(config: BrevoConfig): BrevoClient {
       to: [to],
       templateId,
       params,
+      replyTo,
     })
   }
 

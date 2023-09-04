@@ -23,10 +23,15 @@ export const createBrevoNotifications = (
       }),
 
     advertWasReserved: (by, quantity, advert) =>
-      client.send({ name: by.id, email: by.id }, 'advert-was-reserved', {
-        quantity,
-        advert: stripAdvert(advert),
-      }),
+      client.send(
+        { name: by.id, email: by.id },
+        'advert-was-reserved',
+        {
+          quantity,
+          advert: stripAdvert(advert),
+        },
+        { name: advert.createdBy, email: advert.contact.email }
+      ),
 
     advertReservationWasCancelled: (by, quantity, advert) =>
       client.send(
