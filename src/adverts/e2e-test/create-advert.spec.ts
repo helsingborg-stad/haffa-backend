@@ -16,6 +16,7 @@ describe('createAdvert', () => {
 			material: 'm',
 			condition: 'c',
 			usage: 'u',
+			category: 'c'
 		}
 		const { status, body } = await gqlRequest(createAdvertMutation, { input })
 		T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))

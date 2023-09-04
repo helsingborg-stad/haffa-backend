@@ -18,6 +18,7 @@ const advertProps = `
 	material
 	condition
 	usage
+	category
 	contact {
 		email
 		phone
