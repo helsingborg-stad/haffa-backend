@@ -1,7 +1,6 @@
 import type { Filter, Sort } from 'mongodb'
-import { AdvertClaimType, AdvertType } from '../types'
+import { AdvertType } from '../types'
 import type {
-  AdvertRestrictionsFilterInput,
   Advert,
   AdvertFilterInput,
 } from '../types'
