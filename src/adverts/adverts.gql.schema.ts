@@ -55,7 +55,7 @@ input AdvertFieldsFilterInput {
 	condition: StringFilterInput
 	usage: StringFilterInput
 	category: StringFilterInput
-
+	externalId: StringFilterInput
 	and: [AdvertFieldsFilterInput]
 	or: [AdvertFieldsFilterInput]
 	not: AdvertFieldsFilterInput
@@ -101,6 +101,7 @@ input AdvertInput {
 	condition: String
 	usage: String
 	category: String
+	externalId: String
 	
 	location: AdvertLocationInput
 	contact: AdvertContactInput
@@ -159,7 +160,7 @@ type Advert {
 	condition: String
 	usage: String
 	category: String
-
+	externalId: String
 	location: AdvertLocation
 	contact: AdvertContact
 }

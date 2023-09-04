@@ -27,7 +27,7 @@ export interface AdvertUserFields {
 	condition: string
 	usage: string
 	category: string
-
+	externalId: string
 	location: AdvertLocation
 	contact: AdvertContact
 }

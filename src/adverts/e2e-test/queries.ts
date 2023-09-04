@@ -19,6 +19,7 @@ const advertProps = `
 	condition
 	usage
 	category
+	externalId
 	contact {
 		email
 		phone
