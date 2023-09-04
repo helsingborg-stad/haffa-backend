@@ -7,6 +7,10 @@ import type {
 } from '../types'
 import type { MongoAdvert } from './types'
 import type { HaffaUser } from '../../login/types'
+import { mapFields } from './filters/map-fields'
+import { mapSearch } from './filters/map-search'
+import { mapRestrictions } from './filters/map-restrictions'
+import { combineAnd } from './filters/filter-utils'
 
 export const mapAdvertToMongoAdvert = (advert: Advert): MongoAdvert => {
   const isRecycle = advert.type === AdvertType.recycle
@@ -45,57 +49,10 @@ export const mapAdvertFilterInputToMongoQuery = (
   user: HaffaUser,
   filter?: AdvertFilterInput
 ): Filter<MongoAdvert> => {
-  const combineAnd = (
-    queries: (Filter<MongoAdvert> | null | undefined)[]
-  ): Filter<MongoAdvert> | null => {
-    const [first, second, ...tail] = queries.filter(v => v)
-    return first && second
-      ? { $and: [first, second, ...(tail as Filter<MongoAdvert>[])] }
-      : first || null
-  }
-
-  const mapSearch = (search?: string): Filter<MongoAdvert> | null | undefined =>
-    [search]
-      .map(s => (s || '').trim())
-      .filter(s => s)
-      .map(s => ({
-        $or: [
-          { 'advert.title': { $regex: new RegExp(s, 'i') } },
-          { 'advert.description': { $regex: new RegExp(s, 'i') } },
-        ],
-      }))[0] || null
-
-  const mapRestrictions = (
-    restrictions?: AdvertRestrictionsFilterInput
-  ): Filter<MongoAdvert> | null =>
-    combineAnd(
-      [
-        restrictions?.canBeReserved === true && {
-          'meta.unreservedCount': { $gt: 0 },
-        },
-        restrictions?.canBeReserved === false && { 'meta.unreservedCount': 0 },
-        restrictions?.reservedByMe === true && {
-          'advert.claims': {
-            $elemMatch: { by: user.id, type: AdvertClaimType.reserved },
-          },
-        },
-        restrictions?.reservedByMe === false && {
-          $not: {
-            'advert.claims': {
-              $elemMatch: { by: user.id, type: AdvertClaimType.reserved },
-            },
-          },
-        },
-        restrictions?.createdByMe === true && { 'advert.createdBy': user.id },
-        restrictions?.createdByMe === false && {
-          'advert.createdBy': { $ne: user.id },
-        },
-      ].map(v => v as Filter<MongoAdvert>)
-    )
-
   const queries = [
     mapSearch(filter?.search),
-    mapRestrictions(filter?.restrictions),
+    mapFields(filter?.fields),
+    mapRestrictions(user, filter?.restrictions),
   ]
 
   return combineAnd(queries) || {}
