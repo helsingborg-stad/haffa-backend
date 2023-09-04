@@ -90,7 +90,14 @@ export const createMongoAdvertsRepository = (
     )
   }
 
+  const stats: AdvertsRepository['stats'] = {
+    get advertCount() {
+      return getCollection().then(c => c.countDocuments())
+    },
+  }
+
   return {
+    stats,
     getAdvert,
     list,
     create,
