@@ -21,7 +21,7 @@ export const createHaffaGqlModule = ({
     createAdvertsGqlModule({ adverts, files, notifications }),
     createProfileGqlModule(profiles),
     createTermsGqlModule(),
-    createCategoriesGqlModule({ settings }),
+    createCategoriesGqlModule({ adverts, settings }),
     createLoginPoliciesGqlModule({ settings })
   )
 

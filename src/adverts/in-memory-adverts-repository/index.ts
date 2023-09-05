@@ -30,4 +30,11 @@ export const createInMemoryAdvertsRepository = (
     }
     return null
   },
+  countBy: async (user, by) =>
+    Object.values(db).reduce<Record<string, number>>((s, advert) => {
+      const v = (advert[by] || '').toString()
+      // eslint-disable-next-line no-param-reassign
+      s[v] = (s[v] || 0) + 1
+      return s
+    }, {}),
 })
