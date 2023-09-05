@@ -1,3 +1,4 @@
+import type { Only } from '../lib/types'
 import type { HaffaUser } from '../login/types'
 
 export enum AdvertType {
@@ -135,6 +136,13 @@ export interface AdvertsRepository {
   list: (user: HaffaUser, filter?: AdvertFilterInput) => Promise<Advert[]>
   create: (user: HaffaUser, advert: Advert) => Promise<Advert>
   remove: (user: HaffaUser, id: string) => Promise<Advert | null>
+
+  // return count of adverts per value of selected property
+  countBy: (
+    user: HaffaUser,
+    by: keyof Only<Advert, string>
+    // by: keyof Extract<Advert, string>
+  ) => Promise<Record<string, number>>
 }
 
 export interface AdvertMutations {

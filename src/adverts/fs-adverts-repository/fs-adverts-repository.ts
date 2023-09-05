@@ -5,6 +5,7 @@ import type { AdvertsRepository } from '../types'
 import { createAdvertFilterPredicate } from '../filters/advert-filter-predicate'
 import { createEmptyAdvert, mapCreateAdvertInputToAdvert } from '../mappers'
 import { createAdvertFilterComparer } from '../filters/advert-filter-sorter'
+import { mapValues, toLookup } from '../../lib'
 
 export const createFsAdvertsRepository = (
   dataFolder: string
@@ -85,11 +86,20 @@ export const createFsAdvertsRepository = (
     return null
   }
 
+  const countBy: AdvertsRepository['countBy'] = async (user, by) =>
+    list(user).then(adverts =>
+      mapValues(
+        toLookup(adverts, advert => advert[by]),
+        l => l.length
+      )
+    )
+
   return {
     getAdvert,
     saveAdvertVersion,
     list,
     create,
     remove,
+    countBy,
   }
 }

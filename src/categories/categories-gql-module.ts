@@ -5,10 +5,21 @@ import { categoriesGqlSchema } from './categories.gql.schema'
 import { categoryAdapter } from './category-adapter'
 
 export const createCategoriesGqlModule = ({
+  adverts,
   settings,
-}: Pick<Services, 'settings'>): GraphQLModule => ({
+}: Pick<Services, 'adverts' | 'settings'>): GraphQLModule => ({
   schema: categoriesGqlSchema,
   resolvers: {
+    Category: {
+      // This is a computed property not stored in our internal model
+      advertCount: async ({ source, ctx, cache }) => {
+        const summary = await cache.getOrCreateCachedValue(
+          'adverts-category-summary',
+          () => adverts.countBy(ctx.user, 'category')
+        )
+        return summary[source.id] || 0
+      },
+    },
     Query: {
       // https://www.graphql-tools.com/docs/resolvers
       categories: async () => categoryAdapter(settings).getCategories(),

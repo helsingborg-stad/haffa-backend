@@ -8,6 +8,7 @@ import {
 } from './mappers'
 import { createEmptyAdvert } from '../mappers'
 import type { MongoConnection } from '../../mongodb-utils/types'
+import { toMap } from '../../lib'
 
 export const createMongoAdvertsRepository = (
   { getCollection }: MongoConnection<MongoAdvert>,
@@ -68,11 +69,33 @@ export const createMongoAdvertsRepository = (
     return result.modifiedCount > 0 ? advert : null
   }
 
+  const countBy: AdvertsRepository['countBy'] = async (user, by) => {
+    // https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/#use-in--group-stage
+    const collection = await getCollection()
+    const cursor = collection.aggregate<{ _id: string; c: number }>([
+      {
+        $group: {
+          _id: `$advert.${by}`,
+          c: {
+            $count: {},
+          },
+        },
+      },
+    ])
+    const rows = await cursor.toArray()
+    return toMap(
+      rows,
+      ({ _id }) => _id,
+      ({ c }) => c
+    )
+  }
+
   return {
     getAdvert,
     list,
     create,
     remove,
     saveAdvertVersion,
+    countBy,
   }
 }

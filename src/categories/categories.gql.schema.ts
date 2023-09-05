@@ -12,6 +12,7 @@ export const categoriesGqlSchema = /* GraphQL */ `
     parentId: String!
     label: String!
     co2kg: Int
+    advertCount: Int!
   }
 
   input CategoryInput {
