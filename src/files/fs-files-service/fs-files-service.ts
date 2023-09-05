@@ -3,8 +3,12 @@ import { mkdirp } from 'mkdirp'
 import { writeFile, unlink } from 'fs/promises'
 import send from 'koa-send'
 import type { ApplicationContext } from '@helsingborg-stad/gdi-api-node'
+import ms from 'ms'
 import type { FilesService } from '../types'
 import { generateFileId, splitBase64DataUri } from '../file-utils'
+
+// max-age in ms header for transmitted files
+const SEND_MAX_AGE = ms('30 days')
 
 export const createFsFilesService = (
   folder: string,
@@ -34,9 +38,12 @@ export const createFsFilesService = (
           const {
             params: { fileId },
           } = ctx
-          const path = join(folder, fileId)
+          const path = join(process.cwd(), folder, fileId)
           try {
-            await send(ctx, relative(process.cwd(), path), { hidden: true })
+            await send(ctx, relative(process.cwd(), path), {
+              hidden: true,
+              maxAge: SEND_MAX_AGE,
+            })
           } catch {
             // unfortunately, send() exposes to much info on errors
             // so we clear it out
