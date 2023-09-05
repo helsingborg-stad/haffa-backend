@@ -38,7 +38,7 @@ export const createFsFilesService = (
           const {
             params: { fileId },
           } = ctx
-          const path = join(process.cwd(), folder, fileId)
+          const path = join(folder, fileId)
           try {
             await send(ctx, relative(process.cwd(), path), {
               hidden: true,
