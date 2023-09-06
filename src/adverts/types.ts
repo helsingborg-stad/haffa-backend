@@ -127,6 +127,7 @@ export interface AdvertFilterInput {
 }
 
 export interface AdvertsRepository {
+  stats: AdvertStats
   getAdvert: (user: HaffaUser, id: string) => Promise<Advert | null>
   saveAdvertVersion: (
     user: HaffaUser,
@@ -170,4 +171,8 @@ export interface AdvertMutations {
     id: string,
     quantity: number
   ) => Promise<AdvertMutationResult>
+}
+
+interface AdvertStats {
+  advertCount: number | Promise<number>
 }

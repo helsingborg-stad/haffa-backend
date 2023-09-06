@@ -5,6 +5,11 @@ import { createAdvertFilterComparer } from '../filters/advert-filter-sorter'
 export const createInMemoryAdvertsRepository = (
   db: Record<string, Advert> = {}
 ): AdvertsRepository => ({
+  stats: {
+    get advertCount() {
+      return Object.keys(db).length
+    },
+  },
   getAdvert: async (user, id) => db[id] || null,
   list: async (user, filter) =>
     Object.values(db)
