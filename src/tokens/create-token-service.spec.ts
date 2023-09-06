@@ -3,11 +3,15 @@ import type { HaffaUser } from '../login/types'
 import { createInMemorySettingsService } from '../settings'
 import { createUserMapper } from '../users'
 
-const createTokenServiceForTest = (secret: string) =>
-  createTokenService(
-    createUserMapper(null, createInMemorySettingsService()),
-    secret
-  )
+const createTokenServiceForTest = (secret: string, expiresIn?: string) =>
+  createTokenService(createUserMapper(null, createInMemorySettingsService()), {
+    secret,
+    expiresIn,
+  })
+
+const delay = (ms: number): Promise<void> =>
+  // eslint-disable-next-line no-promise-executor-return
+  new Promise(resolve => setTimeout(resolve, ms))
 
 describe('createTokenService', () => {
   const unverifiableTokens = [
@@ -54,4 +58,17 @@ describe('createTokenService', () => {
       ).toBeNull()
     }
   )
+
+  it('TokenService respects EXPIRES_IN', async () => {
+    const service = createTokenServiceForTest('a secret', '1ms')
+    const token = service.sign({
+      id: 'test@user.com',
+      roles: [],
+    })
+    expect(token).toBeTruthy()
+
+    await delay(50)
+
+    expect(await service.decode(token)).toBeNull()
+  })
 })

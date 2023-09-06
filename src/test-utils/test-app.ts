@@ -51,7 +51,7 @@ export const createTestServices = (services: Partial<Services>): Services => {
     userMapper,
     settings,
     login: createInMemoryLoginService(userMapper),
-    tokens: createTokenService(userMapper, TEST_SHARED_SECRET),
+    tokens: createTokenService(userMapper, { secret: TEST_SHARED_SECRET }),
     adverts: createInMemoryAdvertsRepository(),
     profiles: createInMemoryProfileRepository(),
     files: createNullFileService(),

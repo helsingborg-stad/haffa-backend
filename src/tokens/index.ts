@@ -13,6 +13,9 @@ export const createTokenServiceFromEnv = (
 ): TokenService =>
   createTokenService(
     userMapper,
-    getEnv('JWT_SHARED_SECRET'),
+    {
+      secret: getEnv('JWT_SHARED_SECRET'),
+      expiresIn: getEnv('JWT_EXPIRES_IN', { fallback: '30 days' }),
+    },
     tryParseJson(getEnv('JWT_DEFAULT_USER', { fallback: '' }))
   )

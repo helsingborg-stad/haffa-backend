@@ -8,22 +8,28 @@ const jwtOptions = {
   subject: 'haffa-web-client',
 }
 
+export interface TokenServiceConfig {
+  secret: string
+  expiresIn?: string
+}
 export const createTokenService = (
   userMapper: UserMapper,
-  secret: string,
+  { secret, expiresIn }: TokenServiceConfig,
   defaultUser?: any
 ): TokenService => {
+  const ttl = expiresIn || '30d'
+
   const sign: TokenService['sign'] = user =>
     jwt.sign(user, secret, {
       ...jwtOptions,
-      expiresIn: '30d',
+      expiresIn: ttl,
     })
 
   const tryDecodeRaw = (token: string): HaffaUser | null => {
     try {
       return jwt.verify((token || '').toString(), secret, {
         ...jwtOptions,
-        maxAge: '30d',
+        maxAge: ttl,
       }) as HaffaUser
     } catch {
       return null
