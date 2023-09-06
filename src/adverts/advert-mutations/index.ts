@@ -1,5 +1,6 @@
 import type { Services } from '../../types'
 import type { AdvertMutations } from '../types'
+import { createCancelAdvertClaim } from './cancel-advert-claim'
 import { createCancelAdvertReservation } from './cancel-advert-reservation'
 import { createCollectAdvert } from './collect-advert'
 import { createCreateAdvert } from './create-advert'
@@ -16,4 +17,5 @@ export const createAdvertMutations = (
   reserveAdvert: createReserveAdvert(services),
   cancelAdvertReservation: createCancelAdvertReservation(services),
   collectAdvert: createCollectAdvert(services),
+  cancelAdvertClaim: createCancelAdvertClaim(services),
 })

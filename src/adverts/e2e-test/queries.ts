@@ -122,6 +122,18 @@ mutation Mutation(
 }
 `
 
+export const cancelAdvertClaimMutation = /* GraphQL */ `
+mutation Mutation(
+	$id: ID!,
+	$by: String!,
+	$type: AdvertClaimType!
+) {
+	cancelAdvertClaim(id: $id, by: $by, type: $type) {
+		${mutationProps}
+	}
+}
+`
+
 export const getTermsQuery = /* GraphQL */ `
   query Query {
     terms {

@@ -43,6 +43,7 @@ export interface AdvertMeta {
   canReserve: boolean
   canCancelReservation: boolean
   canCollect: boolean
+  canCancelClaim: boolean
   claims: AdvertClaim[]
 }
 
@@ -170,6 +171,12 @@ export interface AdvertMutations {
     user: HaffaUser,
     id: string,
     quantity: number
+  ) => Promise<AdvertMutationResult>
+  cancelAdvertClaim: (
+    user: HaffaUser,
+    id: string,
+    by: string,
+    type: AdvertClaimType
   ) => Promise<AdvertMutationResult>
 }
 

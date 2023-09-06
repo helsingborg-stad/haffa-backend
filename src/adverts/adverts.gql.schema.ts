@@ -11,6 +11,11 @@ export const advertsGqlSchema = /* GraphQL */ `
     reserveAdvert(id: ID!, quantity: Int = 1): AdvertMutationResult
     cancelAdvertReservation(id: ID!): AdvertMutationResult
     collectAdvert(id: ID!, quantity: Int = 1): AdvertMutationResult
+    cancelAdvertClaim(
+      id: ID!
+      by: String!
+      type: AdvertClaimType!
+    ): AdvertMutationResult
   }
 
   type AdvertMutationStatus {
@@ -123,6 +128,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     canReserve: Boolean!
     canCancelReservation: Boolean!
     canCollect: Boolean!
+    canCancelClaim: Boolean!
     claims: [AdvertClaim]!
   }
 

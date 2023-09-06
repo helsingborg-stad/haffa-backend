@@ -26,6 +26,7 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
       canReserve: quantity > claimCount,
       canCancelReservation: myReservationCount > 0,
       canCollect: myReservationCount > 0 || quantity > claimCount,
+      canCancelClaim: isMine || isAdmin,
       claims: isMine || isAdmin ? advert.claims : [],
     }
   }
@@ -39,6 +40,7 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
     canReserve: false,
     canCancelReservation: false,
     canCollect: false,
+    canCancelClaim: false,
     claims: [],
   }
 }
