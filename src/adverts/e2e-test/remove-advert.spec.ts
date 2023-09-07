@@ -7,7 +7,13 @@ import type { FilesService } from '../../files/types'
 
 describe('removeAdvert', () => {
   it('removes advert', () =>
-    end2endTest(null, async ({ gqlRequest, adverts, user }) => {
+    end2endTest(null, async ({ gqlRequest, adverts, user, loginPolicies }) => {
+      await loginPolicies.updateLoginPolicies([
+        {
+          emailPattern: user.id,
+          roles: ['admin'], // must be admin for removal...
+        },
+      ])
       const mockAdvert: Advert = {
         ...createEmptyAdvert(),
         id: 'remove-advert-test-1',

@@ -15,6 +15,7 @@ import { type UserMapper } from '../users/types'
 import type { SettingsService } from '../settings/types'
 import { createUserMapper } from '../users'
 import { createInMemorySettingsService } from '../settings'
+import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 
 const createGqlRequest =
   (
@@ -38,6 +39,7 @@ export interface End2EndTestContext {
   adverts: Record<string, Advert>
   profiles: Record<string, Profile>
   logins: Record<string, LoginRequestEntry>
+  loginPolicies: ReturnType<typeof loginPolicyAdapter>
 }
 
 export interface End2EndTestHandler {
@@ -76,6 +78,7 @@ export const end2endTest = (
       adverts,
       profiles,
       logins,
+      loginPolicies: loginPolicyAdapter(services.settings),
     })
   )
 }

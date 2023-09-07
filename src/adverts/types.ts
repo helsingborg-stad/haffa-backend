@@ -38,6 +38,8 @@ export interface AdvertMeta {
   collectableQuantity: number
   isMine: boolean
   canEdit: boolean
+  canArchive: boolean
+  canUnarchive: boolean
   canRemove: boolean
   canBook: boolean
   canReserve: boolean
@@ -87,6 +89,7 @@ export interface Advert extends AdvertUserFields {
   createdBy: string
   createdAt: string
   modifiedAt: string
+  archivedAt: string
   claims: AdvertClaim[]
 }
 

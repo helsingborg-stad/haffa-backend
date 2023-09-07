@@ -6,16 +6,25 @@ export const loginPolicyAdapter = (settings: SettingsService) => ({
     settings
       .getSetting<LoginPolicy[]>('login-policies')
       .then(normalizeLoginPolicies),
-  updateLoginPolicies: (policies: LoginPolicy[]) =>
-    settings
-      .updateSetting<LoginPolicy[]>('login-policies', policies)
-      .then(normalizeLoginPolicies),
+  updateLoginPolicies: (policies: Partial<LoginPolicy>[]) =>
+    settings.updateSetting<LoginPolicy[]>(
+      'login-policies',
+      normalizeLoginPolicies(policies)
+    ),
+})
+
+const normalizeLoginPolicy = (p?: Partial<LoginPolicy>): LoginPolicy => ({
+  emailPattern: '',
+  roles: [],
+  deny: false,
+  ...p,
 })
 
 const normalizeLoginPolicies = (
-  policies: LoginPolicy[] | null | undefined
+  policies: Partial<LoginPolicy>[] | null | undefined
 ): LoginPolicy[] =>
   (Array.isArray(policies) ? policies : [])
+    .map(normalizeLoginPolicy)
     .map(({ emailPattern, roles, deny }) => ({
       emailPattern: (emailPattern || '').trim().toLowerCase(),
       roles: Array.from(
