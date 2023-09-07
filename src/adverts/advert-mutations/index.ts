@@ -1,12 +1,17 @@
 import type { Services } from '../../types'
 import type { AdvertMutations } from '../types'
-import { createCancelAdvertClaim } from './cancel-advert-claim'
-import { createCancelAdvertReservation } from './cancel-advert-reservation'
-import { createCollectAdvert } from './collect-advert'
-import { createCreateAdvert } from './create-advert'
-import { createRemoveAdvert } from './remove-advert'
-import { createReserveAdvert } from './reserve-advert'
-import { createUpdateAdvert } from './update-advert'
+import { createArchiveAdvert, createUnarchiveAdvert } from './archiving'
+import { createCancelAdvertClaim } from './claims'
+import {
+  createCancelAdvertReservation,
+  createReserveAdvert,
+} from './reservations'
+import { createCollectAdvert } from './collecting'
+import {
+  createCreateAdvert,
+  createRemoveAdvert,
+  createUpdateAdvert,
+} from './crud'
 
 export const createAdvertMutations = (
   services: Pick<Services, 'adverts' | 'files' | 'notifications'>
@@ -17,5 +22,7 @@ export const createAdvertMutations = (
   reserveAdvert: createReserveAdvert(services),
   cancelAdvertReservation: createCancelAdvertReservation(services),
   collectAdvert: createCollectAdvert(services),
+  archiveAdvert: createArchiveAdvert(services),
+  unarchiveAdvert: createUnarchiveAdvert(services),
   cancelAdvertClaim: createCancelAdvertClaim(services),
 })

@@ -117,6 +117,7 @@ export interface AdvertRestrictionsFilterInput {
   canBeReserved?: boolean
   reservedByMe?: boolean
   createdByMe?: boolean
+  isArchived?: boolean
 }
 
 export interface AdvertSorting {
@@ -174,6 +175,11 @@ export interface AdvertMutations {
     user: HaffaUser,
     id: string,
     quantity: number
+  ) => Promise<AdvertMutationResult>
+  archiveAdvert: (user: HaffaUser, id: string) => Promise<AdvertMutationResult>
+  unarchiveAdvert: (
+    user: HaffaUser,
+    id: string
   ) => Promise<AdvertMutationResult>
   cancelAdvertClaim: (
     user: HaffaUser,

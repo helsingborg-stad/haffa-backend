@@ -1,12 +1,24 @@
-import { StatusCodes } from 'http-status-codes'
 import {
   T,
   createTestNotificationServices,
   end2endTest,
-} from '../../test-utils'
-import { createEmptyAdvert } from '../mappers'
-import { AdvertClaimType, type AdvertWithMetaMutationResult } from '../types'
-import { reserveAdvertMutation } from './queries'
+} from '../../../test-utils'
+import { TxErrors } from '../../../transactions'
+import { createEmptyAdvert } from '../../mappers'
+import { AdvertClaimType } from '../../types'
+import { expectAdvertMutationResult } from '../test-utils/expect-advert-mutation-result'
+import { mutationProps } from '../test-utils/gql-test-definitions'
+
+const reserveAdvertMutation = /* GraphQL */ `
+mutation Mutation(
+	$id: ID!
+	$quantity: Int
+) {
+	reserveAdvert(id: $id, quantity: $quantity) {
+		${mutationProps}
+	}
+}
+`
 
 describe('reserveAdvert', () => {
   it('updates an advert in the database', () => {
@@ -24,14 +36,10 @@ describe('reserveAdvert', () => {
           quantity: 5,
         }
 
-        const { status, body } = await gqlRequest(reserveAdvertMutation, {
+        await gqlRequest(reserveAdvertMutation, {
           id: 'advert-123',
           quantity: 1,
-        })
-        T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))
-
-        const result = body?.data?.reserveAdvert as AdvertWithMetaMutationResult
-        // expect(adverts['advert-123']).toMatchObject(result?.advert as Advert)
+        }).then(expectAdvertMutationResult('reserveAdvert'))
 
         T('should have reservation logged in database', () =>
           expect(adverts['advert-123'].claims).toMatchObject([
@@ -69,14 +77,15 @@ describe('reserveAdvert', () => {
           quantity: 5,
         }
 
-        const { status, body } = await gqlRequest(reserveAdvertMutation, {
+        await gqlRequest(reserveAdvertMutation, {
           id: 'advert-123',
           quantity: 10,
-        })
-        T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))
-
-        const result = body?.data?.reserveAdvert as AdvertWithMetaMutationResult
-        // expect(adverts['advert-123']).toMatchObject(result?.advert as Advert)
+        }).then(
+          expectAdvertMutationResult(
+            'reserveAdvert',
+            TxErrors.TooManyReservations
+          )
+        )
 
         T('no reservation should be written to database', () =>
           expect(adverts['advert-123'].claims).toMatchObject([])

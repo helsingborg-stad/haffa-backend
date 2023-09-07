@@ -61,6 +61,18 @@ export const createAdvertsGqlModule = (
           .then(result =>
             mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
           ),
+      archiveAdvert: async ({ ctx: { user }, args: { id } }) =>
+        createAdvertMutations(services)
+          .archiveAdvert(user, id)
+          .then(result =>
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+          ),
+      unarchiveAdvert: async ({ ctx: { user }, args: { id } }) =>
+        createAdvertMutations(services)
+          .unarchiveAdvert(user, id)
+          .then(result =>
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+          ),
       cancelAdvertClaim: async ({ ctx: { user }, args: { id, by, type } }) =>
         createAdvertMutations(services)
           .cancelAdvertClaim(user, id, by, type)

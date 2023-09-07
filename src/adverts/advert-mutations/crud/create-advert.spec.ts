@@ -1,9 +1,18 @@
-import { StatusCodes } from 'http-status-codes'
-import { T, end2endTest } from '../../test-utils'
-import { createAdvertMutation } from './queries'
-import type { AdvertInput, AdvertWithMetaMutationResult } from '../types'
-import { createEmptyAdvertInput } from '../mappers'
+import { T, end2endTest } from '../../../test-utils'
+import { createEmptyAdvertInput } from '../../mappers'
+import type { AdvertInput } from '../../types'
+import { expectAdvertMutationResult } from '../test-utils/expect-advert-mutation-result'
+import { mutationProps } from '../test-utils/gql-test-definitions'
 
+const createAdvertMutation = /* GraphQL */ `
+mutation Mutation(
+	$input: AdvertInput!
+) {
+	createAdvert(input: $input) {
+		${mutationProps}
+	}
+}
+`
 describe('createAdvert', () => {
   it('creates an advert in the database', () =>
     end2endTest(null, async ({ gqlRequest, adverts }) => {
@@ -19,10 +28,9 @@ describe('createAdvert', () => {
         category: 'c',
         externalId: 'eid',
       }
-      const { status, body } = await gqlRequest(createAdvertMutation, { input })
-      T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))
-
-      const result = body?.data?.createAdvert as AdvertWithMetaMutationResult
+      const result = await gqlRequest(createAdvertMutation, { input }).then(
+        expectAdvertMutationResult('createAdvert')
+      )
 
       T('gql result should match input', () =>
         expect(result?.advert).toMatchObject(input)

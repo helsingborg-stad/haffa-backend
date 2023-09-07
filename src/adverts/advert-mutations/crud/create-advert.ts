@@ -1,6 +1,6 @@
-import type { Services } from '../../types'
-import { mapCreateAdvertInputToAdvert } from '../mappers'
-import type { AdvertMutations } from '../types'
+import type { Services } from '../../../types'
+import { mapCreateAdvertInputToAdvert } from '../../mappers'
+import type { AdvertMutations } from '../../types'
 import { processAdvertInput } from './process-advert-input'
 
 export const createCreateAdvert =

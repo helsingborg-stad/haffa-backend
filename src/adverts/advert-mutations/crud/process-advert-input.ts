@@ -1,7 +1,7 @@
 // Images uploaded ad dataurls are converted to images in configured storage and
 
-import type { FilesService } from '../../files/types'
-import type { AdvertInput } from '../types'
+import type { FilesService } from '../../../files/types'
+import type { AdvertInput } from '../../types'
 
 // a new url is returned
 export const processAdvertInput = async (

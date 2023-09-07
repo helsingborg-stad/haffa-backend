@@ -1,9 +1,21 @@
-import { StatusCodes } from 'http-status-codes'
-import { T, end2endTest } from '../../test-utils'
-import { createEmptyAdvert, createEmptyAdvertInput } from '../mappers'
-import type { AdvertInput, AdvertWithMetaMutationResult } from '../types'
-import { updateAdvertMutation } from './queries'
-import { TxErrors } from '../../transactions'
+import type { FilesService } from '../../../files/types'
+import { T, end2endTest } from '../../../test-utils'
+import { TxErrors } from '../../../transactions'
+import { createEmptyAdvert, createEmptyAdvertInput } from '../../mappers'
+import type { Advert, AdvertInput } from '../../types'
+import { expectAdvertMutationResult } from '../test-utils/expect-advert-mutation-result'
+import { mutationProps } from '../test-utils/gql-test-definitions'
+
+const updateAdvertMutation = /* GraphQL */ `
+mutation Mutation(
+	$id: ID!
+	$input: AdvertInput!
+) {
+	updateAdvert(id: $id, input: $input) {
+		${mutationProps}
+	}
+}
+`
 
 describe('updateAdvert', () => {
   it('denies unauthorized attempts', () =>
@@ -15,17 +27,11 @@ describe('updateAdvert', () => {
       }
 
       const input: AdvertInput = createEmptyAdvertInput()
-      const { status, body } = await gqlRequest(updateAdvertMutation, {
+      const result = await gqlRequest(updateAdvertMutation, {
         id: 'advert-123',
         input,
-      })
-      T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))
-
-      const result = body?.data?.updateAdvert as AdvertWithMetaMutationResult
-
-      T('status should reflect denied access', () =>
-        expect(result.status).toMatchObject(TxErrors.Unauthorized)
-      )
+      }).then(expectAdvertMutationResult('updateAdvert', TxErrors.Unauthorized))
+      expect(result).toBeTruthy()
     }))
 
   it('updates an advert in the database', () =>
@@ -48,18 +54,13 @@ describe('updateAdvert', () => {
         category: 'c',
         externalId: 'eid',
       }
-      const { status, body } = await gqlRequest(updateAdvertMutation, {
+      const result = await gqlRequest(updateAdvertMutation, {
         id: 'advert-123',
         input,
-      })
-      T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))
-
-      const result = body?.data?.updateAdvert as AdvertWithMetaMutationResult
-
+      }).then(expectAdvertMutationResult('updateAdvert'))
       T('returned advert should match input', () =>
-        expect(result?.advert).toMatchObject(input)
+        expect(result.advert).toMatchObject(input)
       )
-      // expect(adverts['advert-123']).toMatchObject(input)
 
       T('database should be updated with input', () =>
         expect(adverts[result?.advert?.id as string]).toMatchObject(input)

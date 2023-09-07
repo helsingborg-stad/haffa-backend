@@ -1,4 +1,4 @@
-import type { TxVerifyContext } from '../../transactions'
+import { TxErrors, type TxVerifyContext } from '../../transactions'
 import type { Advert } from '../types'
 import { AdvertType } from '../types'
 
@@ -50,7 +50,4 @@ export const verifyReservationLimits = ({
   update,
   throwIf,
 }: TxVerifyContext<Advert>): void =>
-  throwIf(update.quantity < getClaimCount(update), {
-    code: 'EADVERT_',
-    message: 'För många reservationer',
-  })
+  throwIf(update.quantity < getClaimCount(update), TxErrors.TooManyReservations)

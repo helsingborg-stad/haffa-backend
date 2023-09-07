@@ -24,6 +24,7 @@ export const mapAdvertToMongoAdvert = (advert: Advert): MongoAdvert => {
     meta: {
       reservedCount,
       unreservedCount,
+      archived: !!advert.archivedAt,
     },
   }
 }
@@ -44,12 +45,9 @@ export const mapAdvertFilterInputToMongoSort = (
 export const mapAdvertFilterInputToMongoQuery = (
   user: HaffaUser,
   filter?: AdvertFilterInput
-): Filter<MongoAdvert> => {
-  const queries = [
+): Filter<MongoAdvert> =>
+  combineAnd(
     mapSearch(filter?.search),
     mapFields(filter?.fields),
-    mapRestrictions(user, filter?.restrictions),
-  ]
-
-  return combineAnd(queries) || {}
-}
+    mapRestrictions(user, filter?.restrictions)
+  ) || {}

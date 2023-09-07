@@ -7,7 +7,7 @@ export const escapeRegExp = (s: string): string =>
 
 // Combine many filters with logical and handling edge cases of 0, 1 or many
 export const combineAnd = (
-  queries: (Filter<MongoAdvert> | null | undefined)[]
+  ...queries: (Filter<MongoAdvert> | null | undefined | false)[]
 ): Filter<MongoAdvert> | null => {
   const [first, second, ...tail] = queries.filter(v => v)
   return first && second

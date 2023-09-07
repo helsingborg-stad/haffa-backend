@@ -1,12 +1,22 @@
-import { StatusCodes } from 'http-status-codes'
 import {
   T,
   createTestNotificationServices,
   end2endTest,
-} from '../../test-utils'
-import { createEmptyAdvert } from '../mappers'
-import { cancelAdvertReservationMutation } from './queries'
-import { AdvertClaimType, type AdvertWithMetaMutationResult } from '../types'
+} from '../../../test-utils'
+import { createEmptyAdvert } from '../../mappers'
+import { AdvertClaimType } from '../../types'
+import { expectAdvertMutationResult } from '../test-utils/expect-advert-mutation-result'
+import { mutationProps } from '../test-utils/gql-test-definitions'
+
+const cancelAdvertReservationMutation = /* GraphQL */ `
+mutation Mutation(
+	$id: ID!
+) {
+	cancelAdvertReservation(id: $id) {
+		${mutationProps}
+	}
+}
+`
 
 describe('cancelAdvertReservation', () => {
   it('removes all reservations (by user) from database', () => {
@@ -19,6 +29,7 @@ describe('cancelAdvertReservation', () => {
         services: { notifications },
       },
       async ({ gqlRequest, adverts, user }) => {
+        // eslint-disable-next-line no-param-reassign
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
           id: 'advert-123',
@@ -51,14 +62,9 @@ describe('cancelAdvertReservation', () => {
           ],
         }
 
-        const { status, body } = await gqlRequest(
-          cancelAdvertReservationMutation,
-          { id: 'advert-123' }
-        )
-        T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))
-
-        const result = body?.data?.reserveAdvert as AdvertWithMetaMutationResult
-        // expect(adverts['advert-123']).toMatchObject(result?.advert as Advert)
+        await gqlRequest(cancelAdvertReservationMutation, {
+          id: 'advert-123',
+        }).then(expectAdvertMutationResult('cancelAdvertReservation'))
 
         T('reservations by user should be removed from database', () =>
           expect(adverts['advert-123'].claims).toMatchObject([

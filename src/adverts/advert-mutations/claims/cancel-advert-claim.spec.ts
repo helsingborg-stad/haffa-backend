@@ -1,13 +1,24 @@
-import { StatusCodes } from 'http-status-codes'
 import {
   T,
   createTestNotificationServices,
   end2endTest,
-} from '../../test-utils'
-import { createEmptyAdvert } from '../mappers'
-import { AdvertClaimType, type AdvertWithMetaMutationResult } from '../types'
-import { cancelAdvertClaimMutation } from './queries'
+} from '../../../test-utils'
+import { createEmptyAdvert } from '../../mappers'
+import { AdvertClaimType } from '../../types'
+import { expectAdvertMutationResult } from '../test-utils/expect-advert-mutation-result'
+import { mutationProps } from '../test-utils/gql-test-definitions'
 
+const cancelAdvertClaimMutation = /* GraphQL */ `
+mutation Mutation(
+	$id: ID!,
+	$by: String!,
+	$type: AdvertClaimType!
+) {
+	cancelAdvertClaim(id: $id, by: $by, type: $type) {
+		${mutationProps}
+	}
+}
+`
 describe('cancelAdvertClaim', () => {
   it('removes all reservations (by user) from database', () => {
     const advertReservationWasCancelled = jest.fn(async () => void 0)
@@ -46,12 +57,11 @@ describe('cancelAdvertClaim', () => {
           ],
         }
 
-        const { status, body } = await gqlRequest(cancelAdvertClaimMutation, {
+        await gqlRequest(cancelAdvertClaimMutation, {
           id: 'advert-123',
           by: user.id,
           type: AdvertClaimType.reserved,
-        })
-        T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))
+        }).then(expectAdvertMutationResult('cancelAdvertClaim'))
 
         T('reservations by user should be removed from database', () =>
           expect(adverts['advert-123'].claims).toMatchObject([

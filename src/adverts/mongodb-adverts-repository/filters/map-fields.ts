@@ -41,7 +41,7 @@ export const mapFields = (
   fields?: AdvertFieldsFilterInput
 ): Filter<MongoAdvert> | null =>
   combineAnd(
-    Object.entries(fields || {})
+    ...Object.entries(fields || {})
       // detect mentioned fields
       .map(([field, filter]) => ({ field, filter }))
       // per field, mentioned operators

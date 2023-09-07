@@ -1,15 +1,15 @@
-import { TxErrors, txBuilder } from '../../transactions'
-import type { Services } from '../../types'
-import { getAdvertMeta } from '../advert-meta'
-import { AdvertClaimType } from '../types'
-import type { AdvertClaim, Advert, AdvertMutations } from '../types'
-import { mapTxResultToAdvertMutationResult } from './mappers'
+import { TxErrors, txBuilder } from '../../../transactions'
+import type { Services } from '../../../types'
+import { getAdvertMeta } from '../../advert-meta'
+import { AdvertClaimType } from '../../types'
+import type { AdvertClaim, Advert, AdvertMutations } from '../../types'
+import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
   verifyAll,
   verifyReservationLimits,
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
-} from './verifiers'
+} from '../verifiers'
 
 export const createCancelAdvertClaim =
   ({

@@ -1,11 +1,7 @@
 import { getAdvertMeta } from '..'
+import { makeAdmin } from '../../../login'
 import type { HaffaUser } from '../../../login/types'
 import { createEmptyAdvert } from '../../mappers'
-
-const makeAdmin = (u: HaffaUser): HaffaUser => ({
-  ...u,
-  roles: ['admin'],
-})
 
 describe('getAdvertMeta::canRemove', () => {
   const testUser: HaffaUser = { id: 'test@user', roles: [] }

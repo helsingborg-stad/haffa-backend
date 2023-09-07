@@ -1,9 +1,20 @@
-import { StatusCodes } from 'http-status-codes'
-import { T, end2endTest } from '../../test-utils'
-import { createEmptyAdvert } from '../mappers'
-import { removeAdvertMutation } from './queries'
-import type { Advert } from '../types'
-import type { FilesService } from '../../files/types'
+import type { FilesService } from '../../../files/types'
+import { T, end2endTest } from '../../../test-utils'
+import { TxErrors } from '../../../transactions'
+import { createEmptyAdvert } from '../../mappers'
+import type { Advert } from '../../types'
+import { expectAdvertMutationResult } from '../test-utils/expect-advert-mutation-result'
+import { mutationProps } from '../test-utils/gql-test-definitions'
+
+const removeAdvertMutation = /* GraphQL */ `
+mutation Mutation(
+	$id: ID!
+) {
+	removeAdvert(id: $id) {
+		${mutationProps}
+	}
+}
+`
 
 describe('removeAdvert', () => {
   it('removes advert', () =>
@@ -23,11 +34,10 @@ describe('removeAdvert', () => {
       // eslint-disable-next-line no-param-reassign
       adverts['remove-advert-test-1'] = mockAdvert
 
-      const { status } = await gqlRequest(removeAdvertMutation, {
+      await gqlRequest(removeAdvertMutation, {
         id: 'remove-advert-test-1',
-      })
+      }).then(expectAdvertMutationResult('removeAdvert'))
 
-      T('REST call returns OK', () => expect(status).toBe(StatusCodes.OK))
       T('advert has been removed', () =>
         expect(adverts['remove-advert-test-1']).toBeUndefined()
       )
@@ -44,12 +54,9 @@ describe('removeAdvert', () => {
       // eslint-disable-next-line no-param-reassign
       adverts['remove-advert-test-1'] = mockAdvert
 
-      const {
-        body: { data },
-      } = await gqlRequest(removeAdvertMutation, {
+      await gqlRequest(removeAdvertMutation, {
         id: 'remove-advert-test-1',
-      })
-      expect(data?.removeAdvert?.status?.code).toBe('EHAFFA_UNAUTHORIZED')
+      }).then(expectAdvertMutationResult('removeAdvert', TxErrors.Unauthorized))
 
       T('advert has not been removed', () =>
         expect(adverts['remove-advert-test-1']).toBeDefined()
@@ -66,7 +73,13 @@ describe('removeAdvert', () => {
 
     return end2endTest(
       { services: { files } },
-      async ({ gqlRequest, adverts }) => {
+      async ({ gqlRequest, user, adverts, loginPolicies }) => {
+        await loginPolicies.updateLoginPolicies([
+          {
+            emailPattern: user.id,
+            roles: ['admin'], // must be admin for removal...
+          },
+        ])
         const mockAdvert: Advert = {
           ...createEmptyAdvert(),
           id: 'remove-advert-test-1',
@@ -85,7 +98,7 @@ describe('removeAdvert', () => {
 
         await gqlRequest(removeAdvertMutation, {
           id: 'remove-advert-test-1',
-        })
+        }).then(expectAdvertMutationResult('removeAdvert'))
 
         T('removes images from files', () =>
           expect(mockCleanupFunc).toHaveBeenCalledTimes(2)
