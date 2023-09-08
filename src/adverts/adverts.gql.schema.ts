@@ -11,6 +11,8 @@ export const advertsGqlSchema = /* GraphQL */ `
     reserveAdvert(id: ID!, quantity: Int = 1): AdvertMutationResult
     cancelAdvertReservation(id: ID!): AdvertMutationResult
     collectAdvert(id: ID!, quantity: Int = 1): AdvertMutationResult
+    archiveAdvert(id: ID!): AdvertMutationResult
+    unarchiveAdvert(id: ID!): AdvertMutationResult
     cancelAdvertClaim(
       id: ID!
       by: String!
@@ -69,6 +71,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     canBeReserved: Boolean
     reservedByMe: Boolean
     createdByMe: Boolean
+    isArchived: Boolean
   }
 
   input AdvertSortingInput {
@@ -123,6 +126,8 @@ export const advertsGqlSchema = /* GraphQL */ `
     collectableQuantity: Int
     isMine: Boolean!
     canEdit: Boolean!
+    canArchive: Boolean!
+    canUnarchive: Boolean!
     canRemove: Boolean!
     canBook: Boolean!
     canReserve: Boolean!
@@ -155,6 +160,7 @@ export const advertsGqlSchema = /* GraphQL */ `
   type Advert {
     id: ID!
     createdAt: String
+    archivedAt: String
     meta: AdvertMeta
     title: String
     description: String

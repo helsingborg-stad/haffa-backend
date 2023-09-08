@@ -1,12 +1,24 @@
-import { StatusCodes } from 'http-status-codes'
 import {
   T,
   createTestNotificationServices,
   end2endTest,
-} from '../../test-utils'
-import { createEmptyAdvert } from '../mappers'
-import { AdvertClaimType, type AdvertWithMetaMutationResult } from '../types'
-import { reserveAdvertMutation } from './queries'
+} from '../../../test-utils'
+import { TxErrors } from '../../../transactions'
+import { createEmptyAdvert } from '../../mappers'
+import type { AdvertMutationResult } from '../../types'
+import { AdvertClaimType } from '../../types'
+import { mutationProps } from '../test-utils/gql-test-definitions'
+
+const reserveAdvertMutation = /* GraphQL */ `
+mutation Mutation(
+	$id: ID!
+	$quantity: Int
+) {
+	reserveAdvert(id: $id, quantity: $quantity) {
+		${mutationProps}
+	}
+}
+`
 
 describe('reserveAdvert', () => {
   it('updates an advert in the database', () => {
@@ -17,21 +29,22 @@ describe('reserveAdvert', () => {
 
     return end2endTest(
       { services: { notifications } },
-      async ({ gqlRequest, adverts, user }) => {
+      async ({ mappedGqlRequest, adverts, user }) => {
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
           id: 'advert-123',
           quantity: 5,
         }
 
-        const { status, body } = await gqlRequest(reserveAdvertMutation, {
-          id: 'advert-123',
-          quantity: 1,
-        })
-        T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))
-
-        const result = body?.data?.reserveAdvert as AdvertWithMetaMutationResult
-        // expect(adverts['advert-123']).toMatchObject(result?.advert as Advert)
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'reserveAdvert',
+          reserveAdvertMutation,
+          {
+            id: 'advert-123',
+            quantity: 1,
+          }
+        )
+        expect(result.status).toBeNull()
 
         T('should have reservation logged in database', () =>
           expect(adverts['advert-123'].claims).toMatchObject([
@@ -62,21 +75,22 @@ describe('reserveAdvert', () => {
 
     return end2endTest(
       { services: { notifications } },
-      async ({ gqlRequest, adverts, user }) => {
+      async ({ mappedGqlRequest, adverts, user }) => {
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
           id: 'advert-123',
           quantity: 5,
         }
 
-        const { status, body } = await gqlRequest(reserveAdvertMutation, {
-          id: 'advert-123',
-          quantity: 10,
-        })
-        T('REST call should succeed', () => expect(status).toBe(StatusCodes.OK))
-
-        const result = body?.data?.reserveAdvert as AdvertWithMetaMutationResult
-        // expect(adverts['advert-123']).toMatchObject(result?.advert as Advert)
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'reserveAdvert',
+          reserveAdvertMutation,
+          {
+            id: 'advert-123',
+            quantity: 10,
+          }
+        )
+        expect(result.status).toMatchObject(TxErrors.TooManyReservations)
 
         T('no reservation should be written to database', () =>
           expect(adverts['advert-123'].claims).toMatchObject([])

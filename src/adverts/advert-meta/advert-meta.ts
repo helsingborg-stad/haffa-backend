@@ -4,8 +4,8 @@ import type { Advert, AdvertMeta } from '../types'
 
 export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
   const { type, quantity } = advert
-  const isMine = advert.createdBy === user.id
-  const isAdmin = user.roles.includes('admin')
+  const mine = advert.createdBy === user.id
+  const admin = user.roles.includes('admin')
 
   const claimCount = advert.claims.reduce((s, { quantity }) => s + quantity, 0)
   const myReservationCount = advert.claims
@@ -19,23 +19,27 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
     return {
       reservableQuantity: quantity - claimCount,
       collectableQuantity: myReservationCount + quantity - claimCount,
-      isMine,
-      canEdit: isMine || isAdmin,
-      canRemove: isMine || isAdmin,
+      isMine: mine,
+      canEdit: mine || admin,
+      canArchive: !advert.archivedAt && (mine || admin),
+      canUnarchive: !!advert.archivedAt && (mine || admin),
+      canRemove: admin,
       canBook: false, // type === AdvertType.borrow,
       canReserve: quantity > claimCount,
       canCancelReservation: myReservationCount > 0,
       canCollect: myReservationCount > 0 || quantity > claimCount,
-      canCancelClaim: isMine || isAdmin,
-      claims: isMine || isAdmin ? advert.claims : [],
+      canCancelClaim: mine || admin,
+      claims: mine || admin ? advert.claims : [],
     }
   }
   return {
     reservableQuantity: 0,
     collectableQuantity: 0,
-    isMine,
-    canEdit: isMine,
-    canRemove: isMine,
+    isMine: mine,
+    canEdit: mine,
+    canArchive: !advert.archivedAt && (mine || admin),
+    canUnarchive: !!advert.archivedAt && (mine || admin),
+    canRemove: admin,
     canBook: false, // type === AdvertType.borrow,
     canReserve: false,
     canCancelReservation: false,

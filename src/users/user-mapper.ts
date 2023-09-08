@@ -4,6 +4,7 @@ import type * as types from './types'
 import type { SettingsService } from '../settings/types'
 import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import type { LoginPolicy } from '../login-policies/types'
+import { makeAdmin } from '../login'
 
 const isString = (v: any) => typeof v === 'string'
 const isStringOrNull = (v: any) => v === null || typeof v === 'string'
@@ -38,10 +39,9 @@ export const createUserMapper = (
       }
       const { id } = user
       if (id === su) {
-        return {
+        return makeAdmin({
           id,
-          roles: ['admin'],
-        }
+        })
       }
       const loginPolicies = await loginPolicyAdapter(
         settings

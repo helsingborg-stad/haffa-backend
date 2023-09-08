@@ -1,5 +1,6 @@
 import type { Test } from 'supertest'
 import request from 'supertest'
+import HttpStatusCodes from 'http-status-codes'
 import type { ApplicationRunHandler } from '@helsingborg-stad/gdi-api-node/application'
 import type { Services } from '../types'
 import type { Advert } from '../adverts/types'
@@ -15,6 +16,7 @@ import { type UserMapper } from '../users/types'
 import type { SettingsService } from '../settings/types'
 import { createUserMapper } from '../users'
 import { createInMemorySettingsService } from '../settings'
+import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 
 const createGqlRequest =
   (
@@ -30,14 +32,31 @@ const createGqlRequest =
       })
       .send({ query, variables })
 
+const createMappedGqlRequest =
+  (
+    tokens: TokenService,
+    server: Parameters<ApplicationRunHandler>[0],
+    user: HaffaUser
+  ) =>
+  <T>(name: string, query: string, variables: any): Promise<T> =>
+    createGqlRequest(
+      tokens,
+      server,
+      user
+    )(query, variables)
+      .expect(HttpStatusCodes.OK)
+      .then(({ body }) => body.data[name] as T)
+
 export interface End2EndTestContext {
   user: HaffaUser
   gqlRequest: ReturnType<typeof createGqlRequest>
+  mappedGqlRequest: ReturnType<typeof createMappedGqlRequest>
   server: Parameters<ApplicationRunHandler>[0]
   services: Services
   adverts: Record<string, Advert>
   profiles: Record<string, Profile>
   logins: Record<string, LoginRequestEntry>
+  loginPolicies: ReturnType<typeof loginPolicyAdapter>
 }
 
 export interface End2EndTestHandler {
@@ -71,11 +90,13 @@ export const end2endTest = (
     handler({
       user,
       gqlRequest: createGqlRequest(services.tokens, server, user),
+      mappedGqlRequest: createMappedGqlRequest(services.tokens, server, user),
       server,
       services,
       adverts,
       profiles,
       logins,
+      loginPolicies: loginPolicyAdapter(services.settings),
     })
   )
 }

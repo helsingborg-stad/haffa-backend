@@ -1,14 +1,14 @@
-import { TxErrors, txBuilder } from '../../transactions'
-import type { Services } from '../../types'
-import { getAdvertMeta } from '../advert-meta'
-import { AdvertClaimType, type Advert, type AdvertMutations } from '../types'
-import { mapTxResultToAdvertMutationResult } from './mappers'
+import { TxErrors, txBuilder } from '../../../transactions'
+import type { Services } from '../../../types'
+import { getAdvertMeta } from '../../advert-meta'
+import { AdvertClaimType, type Advert, type AdvertMutations } from '../../types'
+import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
   verifyAll,
   verifyReservationLimits,
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
-} from './verifiers'
+} from '../verifiers'
 
 export const createCollectAdvert =
   ({

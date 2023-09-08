@@ -1,13 +1,13 @@
-import { txBuilder } from '../../transactions'
-import type { Services } from '../../types'
-import { AdvertClaimType } from '../types'
-import type { AdvertClaim, Advert, AdvertMutations } from '../types'
-import { mapTxResultToAdvertMutationResult } from './mappers'
+import { txBuilder } from '../../../transactions'
+import type { Services } from '../../../types'
+import type { Advert, AdvertClaim, AdvertMutations } from '../../types'
+import { AdvertClaimType } from '../../types'
+import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
   verifyAll,
   verifyReservationLimits,
   verifyTypeIsReservation,
-} from './verifiers'
+} from '../verifiers'
 
 export const createReserveAdvert =
   ({

@@ -47,6 +47,10 @@ export const TxErrors: Record<string, TxError> = {
     code: 'EHAFFA_UNAUTHORIZED',
     message: 'Du saknar behörighet för åtgärden',
   },
+  TooManyReservations: {
+    code: 'EHAFFA_TOO_MANY_RESERVATIONS',
+    message: 'För många reservationer',
+  },
 }
 
 export interface TxError {
