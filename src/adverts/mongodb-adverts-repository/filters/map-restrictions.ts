@@ -4,18 +4,9 @@ import { AdvertClaimType } from '../../types'
 import type { MongoAdvert } from '../types'
 import { combineAnd } from './filter-utils'
 import type { HaffaUser } from '../../../login/types'
-import { isAdmin } from '../../../login'
-
-export const archivedAdvertsFilter = (user: HaffaUser): Filter<MongoAdvert> =>
-  combineAnd(
-    {
-      'meta.archived': { $eq: true },
-    },
-    isAdmin(user) ? null : { 'advert.createdBy': user.id }
-  )!
 
 export const regularAdvertsFilter: Filter<MongoAdvert> = {
-  'meta.archived': { $ne: true },
+  'meta.archived': { $not: { $eq: true } },
 }
 
 export const mapRestrictions = (
@@ -39,11 +30,13 @@ export const mapRestrictions = (
         },
       },
     },
-    restrictions?.createdByMe === true && { 'advert.createdBy': user.id },
+    (restrictions?.isArchived || restrictions?.createdByMe === true) && {
+      'advert.createdBy': user.id,
+    },
     restrictions?.createdByMe === false && {
       'advert.createdBy': { $ne: user.id },
     },
     restrictions?.isArchived
-      ? archivedAdvertsFilter(user)
+      ? { 'meta.archived': { $eq: true } }
       : regularAdvertsFilter
   )

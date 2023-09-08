@@ -46,9 +46,9 @@ export interface AdvertMeta {
   canCancelReservation: boolean
   canCollect: boolean
   canCancelClaim: boolean
-  claims: AdvertClaim[]
   reservedyMe: number
   collectedByMe: number
+  claims: AdvertClaim[]
 }
 
 export interface AdvertMutationStatus {
