@@ -8,6 +8,13 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
   const admin = user.roles.includes('admin')
 
   const claimCount = advert.claims.reduce((s, { quantity }) => s + quantity, 0)
+  const myCollectedCount = advert.claims
+    .filter(
+      ({ by, type }) => by === user.id && type === AdvertClaimType.collected
+    )
+    .map(({ quantity }) => quantity)
+    .reduce((s, v) => s + v, 0)
+
   const myReservationCount = advert.claims
     .filter(
       ({ by, type }) => by === user.id && type === AdvertClaimType.reserved
@@ -29,6 +36,8 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
       canCancelReservation: myReservationCount > 0,
       canCollect: myReservationCount > 0 || quantity > claimCount,
       canCancelClaim: mine || admin,
+      reservedyMe: myReservationCount,
+      collectedByMe: myCollectedCount,
       claims: mine || admin ? advert.claims : [],
     }
   }
@@ -45,6 +54,8 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
     canCancelReservation: false,
     canCollect: false,
     canCancelClaim: false,
+    reservedyMe: myReservationCount,
+    collectedByMe: myCollectedCount,
     claims: [],
   }
 }

@@ -122,8 +122,8 @@ export const advertsGqlSchema = /* GraphQL */ `
   }
 
   type AdvertMeta {
-    reservableQuantity: Int
-    collectableQuantity: Int
+    reservableQuantity: Int!
+    collectableQuantity: Int!
     isMine: Boolean!
     canEdit: Boolean!
     canArchive: Boolean!
@@ -134,6 +134,8 @@ export const advertsGqlSchema = /* GraphQL */ `
     canCancelReservation: Boolean!
     canCollect: Boolean!
     canCancelClaim: Boolean!
+    reservedyMe: Int!
+    collectedByMe: Int!
     claims: [AdvertClaim]!
   }
 

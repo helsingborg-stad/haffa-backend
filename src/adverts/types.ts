@@ -47,6 +47,8 @@ export interface AdvertMeta {
   canCollect: boolean
   canCancelClaim: boolean
   claims: AdvertClaim[]
+  reservedyMe: number
+  collectedByMe: number
 }
 
 export interface AdvertMutationStatus {
