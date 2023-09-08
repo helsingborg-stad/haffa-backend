@@ -2,8 +2,7 @@ import type { FilesService } from '../../../files/types'
 import { T, end2endTest } from '../../../test-utils'
 import { TxErrors } from '../../../transactions'
 import { createEmptyAdvert } from '../../mappers'
-import type { Advert } from '../../types'
-import { expectAdvertMutationResult } from '../test-utils/expect-advert-mutation-result'
+import type { AdvertMutationResult, Advert } from '../../types'
 import { mutationProps } from '../test-utils/gql-test-definitions'
 
 const removeAdvertMutation = /* GraphQL */ `
@@ -18,33 +17,42 @@ mutation Mutation(
 
 describe('removeAdvert', () => {
   it('removes advert', () =>
-    end2endTest(null, async ({ gqlRequest, adverts, user, loginPolicies }) => {
-      await loginPolicies.updateLoginPolicies([
-        {
-          emailPattern: user.id,
-          roles: ['admin'], // must be admin for removal...
-        },
-      ])
-      const mockAdvert: Advert = {
-        ...createEmptyAdvert(),
-        id: 'remove-advert-test-1',
-        createdBy: user.id,
+    end2endTest(
+      null,
+      async ({ mappedGqlRequest, adverts, user, loginPolicies }) => {
+        await loginPolicies.updateLoginPolicies([
+          {
+            emailPattern: user.id,
+            roles: ['admin'], // must be admin for removal...
+          },
+        ])
+        const mockAdvert: Advert = {
+          ...createEmptyAdvert(),
+          id: 'remove-advert-test-1',
+          createdBy: user.id,
+        }
+
+        // eslint-disable-next-line no-param-reassign
+        adverts['remove-advert-test-1'] = mockAdvert
+
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'removeAdvert',
+          removeAdvertMutation,
+          {
+            id: 'remove-advert-test-1',
+          }
+        )
+        expect(result.status).toBeNull()
+        expect(result.advert).toMatchObject({ id: 'remove-advert-test-1' })
+
+        T('advert has been removed', () =>
+          expect(adverts['remove-advert-test-1']).toBeUndefined()
+        )
       }
-
-      // eslint-disable-next-line no-param-reassign
-      adverts['remove-advert-test-1'] = mockAdvert
-
-      await gqlRequest(removeAdvertMutation, {
-        id: 'remove-advert-test-1',
-      }).then(expectAdvertMutationResult('removeAdvert'))
-
-      T('advert has been removed', () =>
-        expect(adverts['remove-advert-test-1']).toBeUndefined()
-      )
-    }))
+    ))
 
   it('denies unauthorized attempts', () =>
-    end2endTest(null, async ({ gqlRequest, adverts }) => {
+    end2endTest(null, async ({ mappedGqlRequest, adverts }) => {
       const mockAdvert: Advert = {
         ...createEmptyAdvert(),
         id: 'remove-advert-test-1',
@@ -54,9 +62,14 @@ describe('removeAdvert', () => {
       // eslint-disable-next-line no-param-reassign
       adverts['remove-advert-test-1'] = mockAdvert
 
-      await gqlRequest(removeAdvertMutation, {
-        id: 'remove-advert-test-1',
-      }).then(expectAdvertMutationResult('removeAdvert', TxErrors.Unauthorized))
+      const result = await mappedGqlRequest<AdvertMutationResult>(
+        'removeAdvert',
+        removeAdvertMutation,
+        {
+          id: 'remove-advert-test-1',
+        }
+      )
+      expect(result.status).toMatchObject(TxErrors.Unauthorized)
 
       T('advert has not been removed', () =>
         expect(adverts['remove-advert-test-1']).toBeDefined()
@@ -73,7 +86,7 @@ describe('removeAdvert', () => {
 
     return end2endTest(
       { services: { files } },
-      async ({ gqlRequest, user, adverts, loginPolicies }) => {
+      async ({ mappedGqlRequest, user, adverts, loginPolicies }) => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: user.id,
@@ -96,9 +109,14 @@ describe('removeAdvert', () => {
         // eslint-disable-next-line no-param-reassign
         adverts['remove-advert-test-1'] = mockAdvert
 
-        await gqlRequest(removeAdvertMutation, {
-          id: 'remove-advert-test-1',
-        }).then(expectAdvertMutationResult('removeAdvert'))
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'removeAdvert',
+          removeAdvertMutation,
+          {
+            id: 'remove-advert-test-1',
+          }
+        )
+        expect(result.status).toBeNull()
 
         T('removes images from files', () =>
           expect(mockCleanupFunc).toHaveBeenCalledTimes(2)

@@ -5,7 +5,7 @@ import {
 } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
 import { mutationProps } from '../test-utils/gql-test-definitions'
-import { expectAdvertMutationResult } from '../test-utils/expect-advert-mutation-result'
+import type { AdvertMutationResult } from '../../types'
 
 const unarchiveAdvertMutation = /* GraphQL */ `
 mutation Mutation(
@@ -26,7 +26,7 @@ describe('archiveAdvert', () => {
 
     return end2endTest(
       { services: { notifications } },
-      async ({ gqlRequest, adverts, user }) => {
+      async ({ mappedGqlRequest, adverts, user }) => {
         // eslint-disable-next-line no-param-reassign
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
@@ -35,9 +35,15 @@ describe('archiveAdvert', () => {
           archivedAt: 'some date',
         }
 
-        await gqlRequest(unarchiveAdvertMutation, {
-          id: 'advert-123',
-        }).then(expectAdvertMutationResult('unarchiveAdvert'))
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'unarchiveAdvert',
+          unarchiveAdvertMutation,
+          {
+            id: 'advert-123',
+          }
+        )
+        expect(result.status).toBeNull()
+        expect(result.advert).toBeTruthy()
 
         T('should have archive data logged in database', () =>
           expect(adverts['advert-123'].archivedAt).toHaveLength(0)

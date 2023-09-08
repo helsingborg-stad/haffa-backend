@@ -5,8 +5,8 @@ import {
 } from '../../../test-utils'
 import { TxErrors } from '../../../transactions'
 import { createEmptyAdvert } from '../../mappers'
+import type { AdvertMutationResult } from '../../types'
 import { AdvertClaimType } from '../../types'
-import { expectAdvertMutationResult } from '../test-utils/expect-advert-mutation-result'
 import { mutationProps } from '../test-utils/gql-test-definitions'
 
 const reserveAdvertMutation = /* GraphQL */ `
@@ -29,17 +29,22 @@ describe('reserveAdvert', () => {
 
     return end2endTest(
       { services: { notifications } },
-      async ({ gqlRequest, adverts, user }) => {
+      async ({ mappedGqlRequest, adverts, user }) => {
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
           id: 'advert-123',
           quantity: 5,
         }
 
-        await gqlRequest(reserveAdvertMutation, {
-          id: 'advert-123',
-          quantity: 1,
-        }).then(expectAdvertMutationResult('reserveAdvert'))
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'reserveAdvert',
+          reserveAdvertMutation,
+          {
+            id: 'advert-123',
+            quantity: 1,
+          }
+        )
+        expect(result.status).toBeNull()
 
         T('should have reservation logged in database', () =>
           expect(adverts['advert-123'].claims).toMatchObject([
@@ -70,22 +75,22 @@ describe('reserveAdvert', () => {
 
     return end2endTest(
       { services: { notifications } },
-      async ({ gqlRequest, adverts, user }) => {
+      async ({ mappedGqlRequest, adverts, user }) => {
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
           id: 'advert-123',
           quantity: 5,
         }
 
-        await gqlRequest(reserveAdvertMutation, {
-          id: 'advert-123',
-          quantity: 10,
-        }).then(
-          expectAdvertMutationResult(
-            'reserveAdvert',
-            TxErrors.TooManyReservations
-          )
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'reserveAdvert',
+          reserveAdvertMutation,
+          {
+            id: 'advert-123',
+            quantity: 10,
+          }
         )
+        expect(result.status).toMatchObject(TxErrors.TooManyReservations)
 
         T('no reservation should be written to database', () =>
           expect(adverts['advert-123'].claims).toMatchObject([])

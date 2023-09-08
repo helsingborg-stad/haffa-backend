@@ -4,8 +4,8 @@ import {
   end2endTest,
 } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
+import type { AdvertMutationResult } from '../../types'
 import { AdvertClaimType } from '../../types'
-import { expectAdvertMutationResult } from '../test-utils/expect-advert-mutation-result'
 import { mutationProps } from '../test-utils/gql-test-definitions'
 
 const cancelAdvertReservationMutation = /* GraphQL */ `
@@ -28,7 +28,7 @@ describe('cancelAdvertReservation', () => {
       {
         services: { notifications },
       },
-      async ({ gqlRequest, adverts, user }) => {
+      async ({ mappedGqlRequest, adverts, user }) => {
         // eslint-disable-next-line no-param-reassign
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
@@ -62,9 +62,14 @@ describe('cancelAdvertReservation', () => {
           ],
         }
 
-        await gqlRequest(cancelAdvertReservationMutation, {
-          id: 'advert-123',
-        }).then(expectAdvertMutationResult('cancelAdvertReservation'))
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'cancelAdvertReservation',
+          cancelAdvertReservationMutation,
+          {
+            id: 'advert-123',
+          }
+        )
+        expect(result.status).toBeNull()
 
         T('reservations by user should be removed from database', () =>
           expect(adverts['advert-123'].claims).toMatchObject([

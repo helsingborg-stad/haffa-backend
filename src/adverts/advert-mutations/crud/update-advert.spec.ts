@@ -1,9 +1,7 @@
-import type { FilesService } from '../../../files/types'
 import { T, end2endTest } from '../../../test-utils'
 import { TxErrors } from '../../../transactions'
 import { createEmptyAdvert, createEmptyAdvertInput } from '../../mappers'
-import type { Advert, AdvertInput } from '../../types'
-import { expectAdvertMutationResult } from '../test-utils/expect-advert-mutation-result'
+import type { AdvertInput, AdvertMutationResult } from '../../types'
 import { mutationProps } from '../test-utils/gql-test-definitions'
 
 const updateAdvertMutation = /* GraphQL */ `
@@ -19,7 +17,7 @@ mutation Mutation(
 
 describe('updateAdvert', () => {
   it('denies unauthorized attempts', () =>
-    end2endTest(null, async ({ gqlRequest, adverts }) => {
+    end2endTest(null, async ({ mappedGqlRequest, adverts }) => {
       adverts['advert-123'] = {
         ...createEmptyAdvert(),
         createdBy: 'someone else',
@@ -27,15 +25,19 @@ describe('updateAdvert', () => {
       }
 
       const input: AdvertInput = createEmptyAdvertInput()
-      const result = await gqlRequest(updateAdvertMutation, {
-        id: 'advert-123',
-        input,
-      }).then(expectAdvertMutationResult('updateAdvert', TxErrors.Unauthorized))
-      expect(result).toBeTruthy()
+      const result = await mappedGqlRequest<AdvertMutationResult>(
+        'updateAdvert',
+        updateAdvertMutation,
+        {
+          id: 'advert-123',
+          input,
+        }
+      )
+      expect(result.status).toMatchObject(TxErrors.Unauthorized)
     }))
 
   it('updates an advert in the database', () =>
-    end2endTest(null, async ({ gqlRequest, adverts, user }) => {
+    end2endTest(null, async ({ mappedGqlRequest, adverts, user }) => {
       adverts['advert-123'] = {
         ...createEmptyAdvert(),
         createdBy: user.id,
@@ -54,10 +56,15 @@ describe('updateAdvert', () => {
         category: 'c',
         externalId: 'eid',
       }
-      const result = await gqlRequest(updateAdvertMutation, {
-        id: 'advert-123',
-        input,
-      }).then(expectAdvertMutationResult('updateAdvert'))
+      const result = await mappedGqlRequest<AdvertMutationResult>(
+        'updateAdvert',
+        updateAdvertMutation,
+        {
+          id: 'advert-123',
+          input,
+        }
+      )
+      expect(result.status).toBeNull()
       T('returned advert should match input', () =>
         expect(result.advert).toMatchObject(input)
       )

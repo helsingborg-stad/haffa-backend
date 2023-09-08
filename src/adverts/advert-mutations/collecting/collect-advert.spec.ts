@@ -5,8 +5,8 @@ import {
 } from '../../../test-utils'
 import { TxErrors } from '../../../transactions'
 import { createEmptyAdvert } from '../../mappers'
-import { AdvertClaimType, type AdvertWithMetaMutationResult } from '../../types'
-import { expectAdvertMutationResult } from '../test-utils/expect-advert-mutation-result'
+import { AdvertClaimType } from '../../types'
+import type { AdvertMutationResult } from '../../types'
 import { mutationProps } from '../test-utils/gql-test-definitions'
 
 const collectAdvertMutation = /* GraphQL */ `
@@ -29,17 +29,23 @@ describe('collectAdvert', () => {
 
     return end2endTest(
       { services: { notifications } },
-      async ({ gqlRequest, adverts, user }) => {
+      async ({ mappedGqlRequest, adverts, user }) => {
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
           id: 'advert-123',
           quantity: 5,
         }
 
-        await gqlRequest(collectAdvertMutation, {
-          id: 'advert-123',
-          quantity: 1,
-        }).then(expectAdvertMutationResult('collectAdvert'))
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'collectAdvert',
+          collectAdvertMutation,
+          {
+            id: 'advert-123',
+            quantity: 1,
+          }
+        )
+        expect(result.status).toBeNull()
+        expect(adverts['advert-123']).toMatchObject(result.advert!)
 
         T('should have collect logged in database', () =>
           expect(adverts['advert-123'].claims).toMatchObject([
@@ -70,27 +76,22 @@ describe('collectAdvert', () => {
 
     return end2endTest(
       { services: { notifications } },
-      async ({ gqlRequest, adverts, user }) => {
+      async ({ mappedGqlRequest, adverts, user }) => {
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
           id: 'advert-123',
           quantity: 5,
         }
 
-        const x = await gqlRequest(collectAdvertMutation, {
-          id: 'advert-123',
-          quantity: 10,
-        })
-
-        await gqlRequest(collectAdvertMutation, {
-          id: 'advert-123',
-          quantity: 10,
-        }).then(
-          expectAdvertMutationResult(
-            'collectAdvert',
-            TxErrors.TooManyReservations
-          )
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'collectAdvert',
+          collectAdvertMutation,
+          {
+            id: 'advert-123',
+            quantity: 10,
+          }
         )
+        expect(result.status).toMatchObject(TxErrors.TooManyReservations)
 
         T('no collect should be written to database', () =>
           expect(adverts['advert-123'].claims).toMatchObject([])

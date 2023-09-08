@@ -2,14 +2,6 @@ export const advertProps = `
 	id
 	title
 	description
-	meta {
-		canEdit
-		canRemove
-		canBook
-		canReserve
-		canCancelReservation
-		canCollect
-	}
 	images {
 		url
 	}
