@@ -22,19 +22,22 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
     .map(({ quantity }) => quantity)
     .reduce((s, v) => s + v, 0)
 
+  const isNotArchived = !advert.archivedAt
+  const isArchived = !isNotArchived
   if (type === AdvertType.recycle) {
     return {
       reservableQuantity: quantity - claimCount,
       collectableQuantity: myReservationCount + quantity - claimCount,
       isMine: mine,
       canEdit: mine || admin,
-      canArchive: !advert.archivedAt && (mine || admin),
-      canUnarchive: !!advert.archivedAt && (mine || admin),
+      canArchive: isNotArchived && (mine || admin),
+      canUnarchive: isArchived && (mine || admin),
       canRemove: admin,
       canBook: false, // type === AdvertType.borrow,
-      canReserve: quantity > claimCount,
+      canReserve: isNotArchived && quantity > claimCount,
       canCancelReservation: myReservationCount > 0,
-      canCollect: myReservationCount > 0 || quantity > claimCount,
+      canCollect:
+        isNotArchived && (myReservationCount > 0 || quantity > claimCount),
       canCancelClaim: mine || admin,
       reservedyMe: myReservationCount,
       collectedByMe: myCollectedCount,
