@@ -36,7 +36,5 @@ export const mapRestrictions = (
     restrictions?.createdByMe === false && {
       'advert.createdBy': { $ne: user.id },
     },
-    restrictions?.isArchived
-      ? { 'meta.archived': { $eq: true } }
-      : regularAdvertsFilter
+    restrictions?.isArchived ? { 'meta.archived': true } : regularAdvertsFilter
   )
