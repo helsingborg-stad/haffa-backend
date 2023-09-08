@@ -1,5 +1,5 @@
 import { getAdvertMeta } from '..'
-import { HaffaUser } from '../../../login/types'
+import type { HaffaUser } from '../../../login/types'
 import { createEmptyAdvert } from '../../mappers'
 
 describe('getAdvertMeta::canEdit', () => {
