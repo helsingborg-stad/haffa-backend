@@ -1,7 +1,10 @@
 import type { Test } from 'supertest'
 import request from 'supertest'
 import HttpStatusCodes from 'http-status-codes'
-import type { ApplicationRunHandler } from '@helsingborg-stad/gdi-api-node/application'
+import type {
+  Application,
+  ApplicationRunHandler,
+} from '@helsingborg-stad/gdi-api-node/application'
 import type { Services } from '../types'
 import type { Advert } from '../adverts/types'
 import type { LoginRequestEntry } from '../login/in-memory-login-service/in-memory-login-service'
@@ -59,14 +62,18 @@ export interface End2EndTestContext {
   loginPolicies: ReturnType<typeof loginPolicyAdapter>
 }
 
+export interface End2EndTestConfig {
+  user?: HaffaUser
+  services?: Partial<Services>
+  setupApplication?: (app: Application, services: Services) => Application
+}
+
 export interface End2EndTestHandler {
   (context: End2EndTestContext): Promise<void>
 }
+
 export const end2endTest = (
-  config: {
-    user?: HaffaUser
-    services: Partial<Services>
-  } | null,
+  config: End2EndTestConfig | null,
   handler: End2EndTestHandler
 ): Promise<void> => {
   const user: HaffaUser = config?.user || { id: 'test@user.com', roles: [] }
@@ -86,17 +93,21 @@ export const end2endTest = (
     ...config?.services,
   })
 
-  return createTestApp(services).run(async server =>
-    handler({
-      user,
-      gqlRequest: createGqlRequest(services.tokens, server, user),
-      mappedGqlRequest: createMappedGqlRequest(services.tokens, server, user),
-      server,
-      services,
-      adverts,
-      profiles,
-      logins,
-      loginPolicies: loginPolicyAdapter(services.settings),
-    })
+  const effectiveSetupApplication =
+    config?.setupApplication || ((a: Application) => a)
+
+  return effectiveSetupApplication(createTestApp(services), services).run(
+    async server =>
+      handler({
+        user,
+        gqlRequest: createGqlRequest(services.tokens, server, user),
+        mappedGqlRequest: createMappedGqlRequest(services.tokens, server, user),
+        server,
+        services,
+        adverts,
+        profiles,
+        logins,
+        loginPolicies: loginPolicyAdapter(services.settings),
+      })
   )
 }

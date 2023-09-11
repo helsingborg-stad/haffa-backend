@@ -12,6 +12,13 @@ export const createLoginServiceFromEnv = (
 export const isAdmin = (user: HaffaUser): boolean =>
   user.roles.includes('admin')
 
+export const makeUser = (
+  u: Partial<HaffaUser> & Pick<HaffaUser, 'id'>
+): HaffaUser => ({
+  roles: [],
+  ...u,
+})
+
 export const makeAdmin = (u: Partial<HaffaUser>): HaffaUser => ({
   id: '',
   ...u,
