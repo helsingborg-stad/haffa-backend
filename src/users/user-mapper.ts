@@ -55,9 +55,9 @@ export const createUserMapper = (
         return null
       }
 
-      const roles = matchings.reduce(
+      const roles = matchings.reduce<string[]>(
         (r, policy) => r.concat(policy.roles),
-        user.roles
+        []
       )
       return {
         id,
