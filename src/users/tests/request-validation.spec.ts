@@ -44,7 +44,7 @@ describe('user access validation', () => {
       },
     ],
     [
-      'user is denied when denied by pattern in loginpolicy',
+      'user is denied when denied by pattern in login policy',
       {
         givenUser: 'test@user.com',
         givenLoginPolicies: [{ emailPattern: '.*@user.com', deny: true }],
@@ -54,7 +54,7 @@ describe('user access validation', () => {
       },
     ],
     [
-      'user is denied when explicitly denied by loginpolicy',
+      'user is denied when explicitly denied by login policy',
       {
         givenUser: 'test@user.com',
         givenLoginPolicies: [{ emailPattern: 'test@user.com', deny: true }],
