@@ -5,7 +5,7 @@ import send from 'koa-send'
 import type { ApplicationContext } from '@helsingborg-stad/gdi-api-node'
 import ms from 'ms'
 import type { FilesService } from '../types'
-import { generateFileId, splitBase64DataUri } from '../file-utils'
+import { generateFileId, tryConvertDataUriToImageBuffer } from '../utils'
 
 // max-age in ms header for transmitted files
 const SEND_MAX_AGE = ms('30 days')
@@ -16,17 +16,17 @@ export const createFsFilesService = (
 ): FilesService => {
   const tryConvertDataUrlToUrl: FilesService['tryConvertDataUrlToUrl'] =
     async url => {
-      const { mimeType, dataBuffer } = splitBase64DataUri(url)
-
-      if (!mimeType || !dataBuffer) {
+      const convertedImage = await tryConvertDataUriToImageBuffer(url)
+      if (!convertedImage) {
         return null
       }
+      const { mimeType, buffer } = convertedImage
 
       const fileId = generateFileId(mimeType)
 
       const path = join(folder, fileId)
       await mkdirp(folder)
-      await writeFile(path, dataBuffer)
+      await writeFile(path, buffer)
       return `${baseUrl}/${fileId}`
     }
 

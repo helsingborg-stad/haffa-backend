@@ -1,7 +1,7 @@
 import { Client } from 'minio'
 import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
 import type { FilesService } from '../types'
-import { generateFileId, splitBase64DataUri } from '../file-utils'
+import { generateFileId, tryConvertDataUriToImageBuffer } from '../utils'
 
 interface MinioConfig {
   endpoint: string
@@ -59,6 +59,12 @@ class MinioFilesService implements FilesService {
   }
 
   async tryConvertDataUrlToUrl(url: string) {
+    const convertedImage = await tryConvertDataUriToImageBuffer(url)
+    if (!convertedImage) {
+      return null
+    }
+    const { mimeType, buffer } = convertedImage
+
     const client = this.createMinioClient()
     await MinioFilesService.ensureBucket(
       client,
@@ -66,15 +72,9 @@ class MinioFilesService implements FilesService {
       this.config.region
     )
 
-    const { mimeType, dataBuffer } = splitBase64DataUri(url)
-
-    if (!mimeType || !dataBuffer) {
-      return null
-    }
-
     const fileId = generateFileId(mimeType)
 
-    await client.putObject(this.config.bucket, fileId, dataBuffer, {
+    await client.putObject(this.config.bucket, fileId, buffer, {
       'Content-Type': mimeType,
     })
 

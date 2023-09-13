@@ -2,16 +2,18 @@ import * as uuid from 'uuid'
 import { extension } from 'mime-types'
 
 export function splitBase64DataUri(dataUri: string): {
-  mimeType: string | null
-  dataBuffer: Buffer | null
-} {
+  mimeType: string
+  buffer: Buffer
+} | null {
   const [, mimeType = null, content = null] =
-    /^data:([^;]*);base64,(.+$)$/m.exec(dataUri) || []
+    /^data:([^;]*);base64,(.+$)$/m.exec(dataUri || '') || []
 
-  return {
-    mimeType,
-    dataBuffer: content ? Buffer.from(content, 'base64') : null,
-  }
+  return mimeType && content
+    ? {
+        mimeType,
+        buffer: Buffer.from(content, 'base64'),
+      }
+    : null
 }
 
 export function generateFileId(mimeType: string): string {
