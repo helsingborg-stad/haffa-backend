@@ -16,9 +16,10 @@ ARG GITHUB_ACCESS_TOKEN
 WORKDIR /work
 COPY . ./
 COPY deploy.npmrc .npmrc
-RUN yarn install --production --ignore-optional
+RUN yarn install --production --ignore-optional --platform=linux --arch=x64
 
-FROM gcr.io/distroless/nodejs:18
+#FROM gcr.io/distroless/nodejs18-debian11
+FROM node:18-alpine
 EXPOSE 3000
 ENV NODE_ENV=production
 ENV PORT=3000
