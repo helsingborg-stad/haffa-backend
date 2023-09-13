@@ -7,6 +7,7 @@ import { createProfileRepositoryFromEnv } from './profile'
 import { createNotificationServiceFromEnv } from './notifications'
 import { createUserMapperFromEnv } from './users'
 import { createSettingsServiceFromEnv } from './settings'
+import { createJobExecutorServiceFromEnv } from './jobs'
 
 const createStartupLog = (): StartupLog => ({
   echo: (service, { name, config }) => {
@@ -33,6 +34,7 @@ const createServicesFromEnv = (): Services => {
     profiles: createProfileRepositoryFromEnv(startupLog),
     files: createFilesServiceFromEnv(startupLog),
     notifications: createNotificationServiceFromEnv(startupLog),
+    jobs: createJobExecutorServiceFromEnv(),
   }
 }
 

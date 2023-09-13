@@ -7,6 +7,7 @@ import { createTermsGqlModule } from '../terms/terms-gql-module'
 import { createLoginPoliciesGqlModule } from '../login-policies'
 import { createCategoriesGqlModule } from '../categories'
 import { createStatsGqlModule } from '../stats'
+import { createJobsGqlModule } from '../jobs/jobs-gql-module'
 
 export const createHaffaGqlModule = ({
   adverts,
@@ -14,9 +15,10 @@ export const createHaffaGqlModule = ({
   profiles,
   notifications,
   settings,
+  jobs,
 }: Pick<
   Services,
-  'adverts' | 'files' | 'profiles' | 'notifications' | 'settings'
+  'adverts' | 'files' | 'profiles' | 'notifications' | 'settings' | 'jobs'
 >): GraphQLModule =>
   mergeModules(
     createAdvertsGqlModule({ adverts, files, notifications }),
@@ -24,7 +26,8 @@ export const createHaffaGqlModule = ({
     createTermsGqlModule(),
     createCategoriesGqlModule({ adverts, settings }),
     createLoginPoliciesGqlModule({ settings }),
-    createStatsGqlModule({ adverts })
+    createStatsGqlModule({ adverts }),
+    createJobsGqlModule({ adverts, jobs, profiles, files, notifications })
   )
 
 const mergeModules = (...modules: GraphQLModule[]): GraphQLModule => ({

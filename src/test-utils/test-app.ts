@@ -12,6 +12,7 @@ import { createNullNotificationService } from '../notifications'
 import type { NotificationService } from '../notifications/types'
 import { createUserMapper } from '../users'
 import { createInMemorySettingsService } from '../settings'
+import { createJobExecutorServiceFromEnv } from '../jobs'
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
 
@@ -56,6 +57,7 @@ export const createTestServices = (services: Partial<Services>): Services => {
     profiles: createInMemoryProfileRepository(),
     files: createNullFileService(),
     notifications: createNullNotificationService(),
+    jobs: createJobExecutorServiceFromEnv(),
     ...services,
   }
 }
