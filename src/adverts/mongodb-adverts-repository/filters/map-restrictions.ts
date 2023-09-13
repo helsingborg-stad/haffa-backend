@@ -6,7 +6,7 @@ import { combineAnd } from './filter-utils'
 import type { HaffaUser } from '../../../login/types'
 
 export const regularAdvertsFilter: Filter<MongoAdvert> = {
-  'meta.archived': { $not: { $eq: true } },
+  'meta.archived': { $ne: true },
 }
 
 export const mapRestrictions = (
