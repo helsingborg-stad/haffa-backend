@@ -2,7 +2,6 @@ import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import HttpStatusCodes from 'http-status-codes'
 import type { Services } from '../types'
 import { jobsGqlSchema } from './jobs.gql.schema'
-import { expireReservations } from './expire-reservations'
 import { isAdmin } from '../login'
 
 export const createJobsGqlModule = ({
