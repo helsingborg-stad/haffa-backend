@@ -57,6 +57,11 @@ const createRestrictionsPredicate = (
       restrictions?.canBeReserved,
       advert => getAdvertMeta(advert, user).canReserve
     ),
+    makeMatcher(
+      restrictions?.isArchived === true,
+      ({ archivedAt, createdBy }) => !!archivedAt && createdBy === user.id
+    ),
+    makeMatcher(!restrictions?.isArchived, ({ archivedAt }) => !archivedAt),
   ].filter(p => p) as Predicate<Advert>[]
 
   return matchers.length > 0
