@@ -19,6 +19,7 @@ export async function tryConvertDataUriToImageBuffer(dataUri: string): Promise<{
       fit: 'inside',
       withoutEnlargement: true,
     })
+    .rotate() // to preserve EXIF rotation
     .webp()
     .toBuffer()
     .then(webp => ({
