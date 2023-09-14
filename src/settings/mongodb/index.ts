@@ -4,16 +4,28 @@ import {
   createMongoSettingsConnection,
   createMongoSettingsService,
 } from './mongodb-settings-service'
+import type { StartupLog } from '../../types'
 
-export const tryCreateMongoDbSettingsServiceFromEnv =
-  (): SettingsService | null => {
-    const uri = getEnv('MONGODB_URI', { fallback: '' })
-    const collectionName = getEnv('MONGODB_SETTINGS_COLLECTION', {
-      fallback: 'settings',
-    })
-    return uri
-      ? createMongoSettingsService(
+export const tryCreateMongoDbSettingsServiceFromEnv = (
+  startupLog: StartupLog
+): SettingsService | null => {
+  const uri = getEnv('MONGODB_URI', { fallback: '' })
+  const collectionName = getEnv('MONGODB_SETTINGS_COLLECTION', {
+    fallback: 'settings',
+  })
+  return uri
+    ? startupLog.echo(
+        createMongoSettingsService(
           createMongoSettingsConnection({ uri, collectionName })
-        )
-      : null
-  }
+        ),
+        {
+          name: 'settings',
+          config: {
+            on: 'mongodb',
+            uri,
+            collectionName,
+          },
+        }
+      )
+    : null
+}

@@ -4,6 +4,7 @@ import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import { mkdirp } from 'mkdirp'
 import type { Profile, ProfileRepository } from './types'
 import { createEmptyProfile } from './mappers'
+import type { StartupLog } from '../types'
 
 export const createFsProfileRepository = (
   dataFolder: string
@@ -44,10 +45,20 @@ export const createFsProfileRepository = (
   }
 }
 
-export const tryCreateFsProfileRepositoryFromEnv =
-  (): ProfileRepository | null => {
-    const dataFolder = getEnv('FS_DATA_PATH', { fallback: '' })
-    return dataFolder
-      ? createFsProfileRepository(join(process.cwd(), dataFolder, 'profiles'))
-      : null
-  }
+export const tryCreateFsProfileRepositoryFromEnv = (
+  startupLog: StartupLog
+): ProfileRepository | null => {
+  const dataFolder = getEnv('FS_DATA_PATH', { fallback: '' })
+  return dataFolder
+    ? startupLog.echo(
+        createFsProfileRepository(join(process.cwd(), dataFolder, 'profiles')),
+        {
+          name: 'profiles',
+          config: {
+            on: 'fs',
+            dataFolder,
+          },
+        }
+      )
+    : null
+}

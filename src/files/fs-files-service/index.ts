@@ -2,10 +2,22 @@ import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import { join } from 'path'
 import type { FilesService } from '../types'
 import { createFsFilesService } from './fs-files-service'
+import type { StartupLog } from '../../types'
 
-export const tryCreateFsFilesServiceFromEnv = (): FilesService | null => {
+export const tryCreateFsFilesServiceFromEnv = (
+  startupLog: StartupLog
+): FilesService | null => {
   const folder = getEnv('FS_DATA_PATH', { fallback: '' })
   return folder
-    ? createFsFilesService(join(process.cwd(), folder, 'files'))
+    ? startupLog.echo(
+        createFsFilesService(join(process.cwd(), folder, 'files')),
+        {
+          name: 'files',
+          config: {
+            on: 'fs',
+            folder,
+          },
+        }
+      )
     : null
 }

@@ -7,6 +7,16 @@ import type { NotificationService } from './notifications/types'
 import type { UserMapper } from './users/types'
 import type { SettingsService } from './settings/types'
 
+export interface StartupLog {
+  echo: <TService>(
+    service: TService,
+    params: {
+      name: string
+      config: any
+    }
+  ) => TService
+}
+
 export interface Services {
   userMapper: UserMapper
   settings: SettingsService

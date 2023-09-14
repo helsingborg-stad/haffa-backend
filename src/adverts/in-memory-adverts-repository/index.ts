@@ -1,6 +1,17 @@
 import type { Advert, AdvertsRepository } from '../types'
 import { createAdvertFilterPredicate } from '../filters/advert-filter-predicate'
 import { createAdvertFilterComparer } from '../filters/advert-filter-sorter'
+import type { StartupLog } from '../../types'
+
+export const createInMemoryAdvertsRepositoryFromEnv = (
+  startupLog: StartupLog
+) =>
+  startupLog.echo(createInMemoryAdvertsRepository(), {
+    name: 'adverts',
+    config: {
+      on: 'memory',
+    },
+  })
 
 export const createInMemoryAdvertsRepository = (
   db: Record<string, Advert> = {}

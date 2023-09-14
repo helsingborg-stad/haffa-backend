@@ -1,4 +1,4 @@
-import type { Services } from './types'
+import type { Services, StartupLog } from './types'
 import { createAdvertsRepositoryFromEnv } from './adverts'
 import { createLoginServiceFromEnv } from './login'
 import { createFilesServiceFromEnv } from './files'
@@ -8,18 +8,31 @@ import { createNotificationServiceFromEnv } from './notifications'
 import { createUserMapperFromEnv } from './users'
 import { createSettingsServiceFromEnv } from './settings'
 
+const createStartupLog = (): StartupLog => ({
+  echo: (service, { name, config }) => {
+    // eslint-disable-next-line no-console
+    console.log(
+      config
+        ? `[startup] ${name} ${JSON.stringify(config)}`
+        : `[startup] ${name}`
+    )
+    return service
+  },
+})
+
 const createServicesFromEnv = (): Services => {
-  const settings = createSettingsServiceFromEnv()
-  const userMapper = createUserMapperFromEnv(settings)
+  const startupLog = createStartupLog()
+  const settings = createSettingsServiceFromEnv(startupLog)
+  const userMapper = createUserMapperFromEnv(startupLog, settings)
   return {
     userMapper,
     settings,
-    login: createLoginServiceFromEnv(userMapper),
-    tokens: createTokenServiceFromEnv(userMapper),
-    adverts: createAdvertsRepositoryFromEnv(),
-    profiles: createProfileRepositoryFromEnv(),
-    files: createFilesServiceFromEnv(),
-    notifications: createNotificationServiceFromEnv(),
+    login: createLoginServiceFromEnv(startupLog, userMapper),
+    tokens: createTokenServiceFromEnv(startupLog, userMapper),
+    adverts: createAdvertsRepositoryFromEnv(startupLog),
+    profiles: createProfileRepositoryFromEnv(startupLog),
+    files: createFilesServiceFromEnv(startupLog),
+    notifications: createNotificationServiceFromEnv(startupLog),
   }
 }
 

@@ -4,6 +4,7 @@ import type { MongoAdvert } from './types'
 import { createMongoAdvertsRepository } from './mongo-db-adverts-repository'
 import { createMongoConnection } from '../../mongodb-utils'
 import type { MongoConnectionOptions } from '../../mongodb-utils/types'
+import type { StartupLog } from '../../types'
 
 export const createAndConfigureMongoAdvertsRepository = ({
   uri,
@@ -29,13 +30,24 @@ export const createAndConfigureMongoAdvertsRepository = ({
   })
 }
 
-export const tryCreateMongoAdvertsRepositoryFromEnv =
-  (): AdvertsRepository | null => {
-    const uri = getEnv('MONGODB_URI', { fallback: '' })
-    const collectionName = getEnv('MONGODB_ADVERTS_COLLECTION', {
-      fallback: 'adverts',
-    })
-    return uri
-      ? createAndConfigureMongoAdvertsRepository({ uri, collectionName })
-      : null
-  }
+export const tryCreateMongoAdvertsRepositoryFromEnv = (
+  startupLog: StartupLog
+): AdvertsRepository | null => {
+  const uri = getEnv('MONGODB_URI', { fallback: '' })
+  const collectionName = getEnv('MONGODB_ADVERTS_COLLECTION', {
+    fallback: 'adverts',
+  })
+  return uri
+    ? startupLog.echo(
+        createAndConfigureMongoAdvertsRepository({ uri, collectionName }),
+        {
+          name: 'adverts',
+          config: {
+            on: 'mongodb',
+            uri,
+            collectionName,
+          },
+        }
+      )
+    : null
+}

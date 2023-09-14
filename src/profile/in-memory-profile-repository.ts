@@ -1,5 +1,16 @@
+import type { StartupLog } from '../types'
 import { createEmptyProfile } from './mappers'
 import type { Profile, ProfileRepository } from './types'
+
+export const createInMemoryProfileRepositoryFromEnv = (
+  startupLog: StartupLog
+) =>
+  startupLog.echo(createInMemoryProfileRepository(), {
+    name: 'profiles',
+    config: {
+      on: 'memory',
+    },
+  })
 
 export const createInMemoryProfileRepository = (
   db: Record<string, Profile> = {}

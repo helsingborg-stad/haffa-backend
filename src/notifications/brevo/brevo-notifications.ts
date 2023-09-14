@@ -3,6 +3,7 @@ import type { NotificationService } from '../types'
 import type { Advert } from '../../adverts/types'
 import { createClient } from './brevo-client'
 import type { BrevoConfig } from './types'
+import type { StartupLog } from '../../types'
 
 export const createBrevoNotifications = (
   config: BrevoConfig
@@ -51,15 +52,26 @@ export const createBrevoNotifications = (
   }
 }
 
-export const tryCreateBrevoNotificationsFromEnv =
-  (): NotificationService | null => {
-    const apiKey = getEnv('BREVO_API_KEY', { fallback: '' })
-    const fromName = getEnv('BREVO_FROM_NAME', { fallback: '' })
-    const fromEmail = getEnv('BREVO_FROM_EMAIL', { fallback: '' })
-    return apiKey && fromName && fromEmail
-      ? createBrevoNotifications({
+export const tryCreateBrevoNotificationsFromEnv = (
+  startupLog: StartupLog
+): NotificationService | null => {
+  const apiKey = getEnv('BREVO_API_KEY', { fallback: '' })
+  const fromName = getEnv('BREVO_FROM_NAME', { fallback: '' })
+  const fromEmail = getEnv('BREVO_FROM_EMAIL', { fallback: '' })
+  return apiKey && fromName && fromEmail
+    ? startupLog.echo(
+        createBrevoNotifications({
           apiKey,
           from: { name: fromName, email: fromEmail },
-        })
-      : null
-  }
+        }),
+        {
+          name: 'notifications',
+          config: {
+            on: 'brevo',
+            fromName,
+            fromEmail,
+          },
+        }
+      )
+    : null
+}
