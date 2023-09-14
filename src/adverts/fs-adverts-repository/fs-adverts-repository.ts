@@ -1,7 +1,11 @@
 import { join } from 'path'
 import { mkdirp } from 'mkdirp'
 import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
-import type { AdvertsRepository } from '../types'
+import type {
+  AdvertClaim,
+  AdvertReservations,
+  AdvertsRepository,
+} from '../types'
 import { createAdvertFilterPredicate } from '../filters/advert-filter-predicate'
 import { createEmptyAdvert, mapCreateAdvertInputToAdvert } from '../mappers'
 import { createAdvertFilterComparer } from '../filters/advert-filter-sorter'
@@ -112,6 +116,48 @@ export const createFsAdvertsRepository = (
         })
     },
   }
+  const getReservationList: AdvertsRepository['getReservationList'] =
+    async filter => {
+      const dateCompare = (claim: AdvertClaim): boolean =>
+        new Date(claim.at) <= (filter.olderThan ?? new Date())
+
+      return readdir(dataFolder)
+        .then(names => names.filter(name => /.*\.json$/.test(name)))
+        .then(names => names.map(name => join(dataFolder, name)))
+        .then(paths =>
+          Promise.all(paths.map(path => stat(path).then(s => ({ s, path }))))
+        )
+        .then(stats =>
+          Promise.all(
+            stats
+              .filter(({ s }) => s.isFile())
+              .map(({ path }) => readFile(path, { encoding: 'utf8' }))
+          )
+        )
+        .then(texts =>
+          texts.map(text => ({
+            ...createEmptyAdvert(),
+            ...JSON.parse(text),
+          }))
+        )
+        .then(adverts =>
+          adverts.filter(advert => advert.claims.some(dateCompare))
+        )
+        .then(adverts =>
+          adverts.map<AdvertReservations>(advert => ({
+            id: advert.id,
+            advert: {
+              claims: advert.claims.filter(dateCompare),
+            },
+          }))
+        )
+        .catch(e => {
+          if (e?.code === 'ENOENT') {
+            return []
+          }
+          throw e
+        })
+    }
 
   return {
     stats,
@@ -121,5 +167,6 @@ export const createFsAdvertsRepository = (
     create,
     remove,
     countBy,
+    getReservationList,
   }
 }

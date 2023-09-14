@@ -18,8 +18,20 @@ export const createJobsGqlModule = ({
   resolvers: {
     Query: {
       // https://www.graphql-tools.com/docs/resolvers
-      jobList: async () => jobs.list(),
-      jobFind: async ({ args: { JobId } }) => jobs.find(JobId),
+      jobList: async ({ ctx }) => {
+        const { user } = ctx
+        if (!isAdmin(user)) {
+          ctx.throw(HttpStatusCodes.UNAUTHORIZED)
+        }
+        return jobs.list()
+      },
+      jobFind: async ({ ctx, args: { JobId } }) => {
+        const { user } = ctx
+        if (!isAdmin(user)) {
+          ctx.throw(HttpStatusCodes.UNAUTHORIZED)
+        }
+        return jobs.find(JobId)
+      },
     },
     Mutation: {
       jobRun: async ({ ctx, args: { taskName } }) => {

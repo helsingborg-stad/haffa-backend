@@ -4,8 +4,8 @@ export const jobsGqlSchema = /* GraphQL */ `
   }
 
   type Query {
-    jobList: [JobDefinition]
-    jobFind(JobId: String!): JobDefinition
+    jobList: [String]
+    jobFind(JobId: String): [JobDefinition]
   }
 
   type JobDefinition {
@@ -18,6 +18,7 @@ export const jobsGqlSchema = /* GraphQL */ `
   }
 
   type TaskExecutionResult {
+    param: String
     message: String
   }
 `

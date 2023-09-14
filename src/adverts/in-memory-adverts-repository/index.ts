@@ -1,4 +1,4 @@
-import type { Advert, AdvertsRepository } from '../types'
+import type { Advert, AdvertClaim, AdvertsRepository } from '../types'
 import { createAdvertFilterPredicate } from '../filters/advert-filter-predicate'
 import { createAdvertFilterComparer } from '../filters/advert-filter-sorter'
 import type { StartupLog } from '../../types'
@@ -53,4 +53,18 @@ export const createInMemoryAdvertsRepository = (
       s[v] = (s[v] || 0) + 1
       return s
     }, {}),
+  getReservationList: async filter => {
+    const dateCompare = (claim: AdvertClaim): boolean =>
+      new Date(claim.at) <= (filter.olderThan ?? new Date()) &&
+      claim.type === 'reserved'
+
+    return Object.values(db)
+      .filter(advert => advert.claims.some(dateCompare))
+      .map(advert => ({
+        id: advert.id,
+        advert: {
+          claims: advert.claims.filter(dateCompare),
+        },
+      }))
+  },
 })

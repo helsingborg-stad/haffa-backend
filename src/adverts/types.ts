@@ -83,7 +83,12 @@ export interface AdvertClaim {
   at: string
   type: AdvertClaimType
 }
-
+export interface AdvertReservations {
+  id: string
+  advert: {
+    claims: AdvertClaim[]
+  }
+}
 export interface Advert extends AdvertUserFields {
   id: string
   versionId: string
@@ -133,6 +138,10 @@ export interface AdvertFilterInput {
   sorting?: AdvertSorting
 }
 
+export interface ReservationFilter {
+  olderThan?: Date
+}
+
 export interface AdvertsRepository {
   stats: AdvertStats
   getAdvert: (user: HaffaUser, id: string) => Promise<Advert | null>
@@ -151,6 +160,9 @@ export interface AdvertsRepository {
     by: keyof Only<Advert, string>
     // by: keyof Extract<Advert, string>
   ) => Promise<Record<string, number>>
+  getReservationList: (
+    filter: ReservationFilter
+  ) => Promise<AdvertReservations[]>
 }
 
 export interface AdvertMutations {

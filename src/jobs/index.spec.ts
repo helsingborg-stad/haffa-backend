@@ -22,7 +22,7 @@ const user = { id: 'admin@haffa.se', roles: [] }
 
 describe('JobsService', () => {
   it('should run asynchronously successfully', async () => {
-    const job = service.runAs(user, 'SUCCESSFUL_JOB', {})
+    const job = service.runAs(user, 'SUCCESSFUL_JOB', {}, 'param')
     expect(job.owner).toEqual('admin@haffa.se')
     expect(job.status).toEqual('Pending')
     expect(job.result).toBeNull()
@@ -37,7 +37,7 @@ describe('JobsService', () => {
     })
   })
   it('should handle errors gracefully', async () => {
-    const job = service.runAs(user, 'FAILING_JOB', {})
+    const job = service.runAs(user, 'FAILING_JOB', {}, 'param')
     expect(job.owner).toEqual('admin@haffa.se')
     expect(job.status).toEqual('Pending')
     expect(job.result).toBeNull()
@@ -52,15 +52,15 @@ describe('JobsService', () => {
     })
   })
   it('should keep jobs and statuses in memory', async () => {
-    expect(service.list().length).toEqual(2)
+    expect(service.find().length).toEqual(2)
   })
   it('should return job definition when requested', async () => {
-    const job = service.find(service.list()[0].jobId)
-    expect(job?.status).toEqual('Succeeded')
+    const job = service.find()
+    expect(job[0]?.status).toEqual('Succeeded')
   })
 
   it('should prune list when requested', async () => {
     service.prune()
-    expect(service.list().length).toEqual(0)
+    expect(service.find().length).toEqual(0)
   })
 })

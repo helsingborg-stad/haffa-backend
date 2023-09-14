@@ -1,4 +1,3 @@
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import { JobDefinition, JobExcecutorService, Task } from './types'
 import { randomUUID } from 'crypto'
 import { tasks } from './tasks'
@@ -9,7 +8,7 @@ export const createJobExecutorService = (
   const pendingJobs: JobDefinition[] = []
 
   return {
-    runAs: (user, taskName, services) => {
+    runAs: (user, taskName, services, param) => {
       const job: JobDefinition = {
         jobId: randomUUID(),
         owner: user.id,
@@ -20,7 +19,7 @@ export const createJobExecutorService = (
       }
       tasks
         .get(taskName)
-        ?.call(this, services)
+        ?.call(this, services, param)
         .then(result => {
           job.status = 'Succeeded'
           job.result = result
@@ -36,8 +35,11 @@ export const createJobExecutorService = (
       pendingJobs.push(job)
       return job
     },
-    list: () => pendingJobs,
-    find: jobId => pendingJobs.find(job => job.jobId === jobId),
+    list: () => Array.from(tasks.keys()),
+    find: jobId => {
+      const job = pendingJobs.find(job => job.jobId === jobId)
+      return job ? [job] : pendingJobs
+    },
     prune: () => (pendingJobs.length = 0),
   }
 }

@@ -2,6 +2,7 @@ import { HaffaUser } from '../login/types'
 import { Services } from '../types'
 
 export interface JobExecutionResult {
+  param?: string
   message: string
 }
 export type JOB_STATUS = 'Failed' | 'Succeeded' | 'Pending'
@@ -15,15 +16,19 @@ export interface JobDefinition {
   result: JobExecutionResult | null
 }
 
-export type Task = (services: Partial<Services>) => Promise<JobExecutionResult>
+export type Task = (
+  services: Partial<Services>,
+  param?: string
+) => Promise<JobExecutionResult>
 
 export interface JobExcecutorService {
   runAs: (
     user: HaffaUser,
     task: string,
-    services: Partial<Services>
+    services: Partial<Services>,
+    param?: string
   ) => JobDefinition
-  list: () => JobDefinition[]
-  find: (jobId: string) => JobDefinition | undefined
+  list: () => string[]
+  find: (jobId?: string) => JobDefinition[]
   prune: () => number
 }
