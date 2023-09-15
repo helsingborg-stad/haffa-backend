@@ -7,12 +7,12 @@ export const tryCreateMinioFilesServiceFromEnv = (
   startupLog: StartupLog
 ): FilesService | null => {
   const endpoint = getEnv('MINIO_ENDPOINT', { fallback: '' })
-  const port = getEnv('MINIO_PORT', { fallback: '' })
+  const port = getEnv('MINIO_PORT', { fallback: '9000' })
   const accessKey = getEnv('MINIO_ACCESS_KEY', { fallback: '' })
   const secretKey = getEnv('MINIO_SECRET_KEY', { fallback: '' })
-  const bucket = getEnv('MINIO_BUCKET', { fallback: '' })
-  const region = getEnv('MINIO_REGION', { fallback: '' })
-  const useSSL = getEnv('MINIO_USE_SSL', { fallback: '' }) === 'true'
+  const bucket = getEnv('MINIO_BUCKET', { fallback: 'haffa' })
+  const region = getEnv('MINIO_REGION', { fallback: 'eu-north-1' })
+  const useSSL = getEnv('MINIO_USE_SSL', { fallback: 'false' }) === 'true'
 
   const valid =
     !!endpoint && !!port && !!accessKey && !!secretKey && !!bucket && !!region
