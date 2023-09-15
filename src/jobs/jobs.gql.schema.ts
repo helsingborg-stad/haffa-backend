@@ -7,18 +7,23 @@ export const jobsGqlSchema = /* GraphQL */ `
     jobList: [String]
     jobFind(JobId: String): [JobDefinition]
   }
+  type JobParameters {
+    maxReservationDays: Int
+  }
 
   type JobDefinition {
     jobId: String!
+    jobName: String!
     owner: String!
     status: String!
     startDate: String!
     endDate: String
+    parameters: JobParameters
     result: TaskExecutionResult
   }
 
   type TaskExecutionResult {
-    param: String
+    action: String
     message: String
   }
 `

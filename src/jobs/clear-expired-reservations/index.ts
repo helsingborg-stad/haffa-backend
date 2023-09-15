@@ -1,14 +1,13 @@
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import { createAdvertMutations } from '../../adverts/advert-mutations'
 import { Services } from '../../types'
 import { JobExecutionResult, Task } from '../types'
 
-export const expireReservations: Task = async (
+export const clearExpiredReservations: Task = async (
   services,
-  param = getEnv('TASK_EXPIRE_RESERVATIONS', { fallback: '10' })
+  { maxReservationDays }
 ): Promise<JobExecutionResult> => {
   const now = new Date()
-  now.setDate(now.getDate() - Number.parseInt(param))
+  now.setDate(now.getDate() - maxReservationDays)
 
   const mutations = createAdvertMutations(services as Services)
 
@@ -28,7 +27,7 @@ export const expireReservations: Task = async (
     })
   })
   return {
+    action: 'Clear expired reservations',
     message: JSON.stringify(documents),
-    param,
   }
 }

@@ -1,36 +1,45 @@
-import { JobDefinition, JobExcecutorService, Task } from './types'
+import {
+  JobDefinition,
+  JobExcecutorService,
+  JobParameters,
+  Task,
+} from './types'
 import { randomUUID } from 'crypto'
 import { tasks } from './tasks'
+import { getEnv } from '@helsingborg-stad/gdi-api-node'
 
 export const createJobExecutorService = (
-  taskRepository: Map<string, Task[]>
+  taskRepository: Map<string, Task[]>,
+  parameters: JobParameters
 ): JobExcecutorService => {
   const pendingJobs: JobDefinition[] = []
 
   return {
-    runAs: (user, jobName, services, param) => {
+    runAs: (user, jobName, services = {}) => {
       const jobList =
         taskRepository.get(jobName)?.map(task => {
           const job: JobDefinition = {
             jobId: randomUUID(),
+            jobName,
             owner: user.id,
             startDate: new Date().toISOString(),
             endDate: null,
             status: 'Pending',
+            parameters,
             result: null,
           }
-          task(services, param)
+          task(services, parameters)
             .then(result => {
               job.status = 'Succeeded'
               job.result = result
             })
             .catch(ex => {
               job.status = 'Failed'
-              job.result = { message: ex.message }
+              job.result = { action: 'Exception caught', message: ex.message }
             })
             .finally(() => {
               job.endDate = new Date().toISOString()
-            }) ?? invalidTask(jobName, job)
+            }) ?? invalidTask(job)
           return job
         }) ?? []
       pendingJobs.push(...jobList)
@@ -45,13 +54,20 @@ export const createJobExecutorService = (
   }
 }
 
-export const createJobExecutorServiceFromEnv = (): JobExcecutorService =>
-  createJobExecutorService(tasks)
+export const createJobExecutorServiceFromEnv = (): JobExcecutorService => {
+  const parameters: JobParameters = {
+    maxReservationDays: Number(
+      getEnv('MAX_RESERVATION_DAYS', { fallback: '10' })
+    ),
+  }
+  return createJobExecutorService(tasks, parameters)
+}
 
-const invalidTask = (taskName: string, job: JobDefinition) => {
+const invalidTask = (job: JobDefinition) => {
   job.endDate = new Date().toISOString()
   job.status = 'Failed'
   job.result = {
-    message: `Invalid task ${taskName}`,
+    action: '-',
+    message: `Invalid task in ${job.jobName}`,
   }
 }

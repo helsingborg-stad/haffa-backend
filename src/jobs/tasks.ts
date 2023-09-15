@@ -1,7 +1,6 @@
-import { expireReservations } from './expire-reservations'
+import { clearExpiredReservations } from './clear-expired-reservations'
 import { Task } from './types'
 
 export const tasks = new Map<string, Task[]>([
-  ['TASK_PING', [async () => ({ message: 'pong' })]],
-  ['TASK_EXPIRE_RESERVATIONS', [expireReservations]],
+  ['TASK_DAILY_MAINTENANCE', [clearExpiredReservations]],
 ])
