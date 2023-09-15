@@ -34,12 +34,12 @@ export const createJobsGqlModule = ({
       },
     },
     Mutation: {
-      jobRun: async ({ ctx, args: { taskName } }) => {
+      jobRun: async ({ ctx, args: { jobName } }) => {
         const { user } = ctx
         if (!isAdmin(user)) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        return jobs.runAs(user, taskName, {
+        return jobs.runAs(user, jobName, {
           adverts,
           profiles,
           files,

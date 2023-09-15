@@ -1,6 +1,6 @@
 export const jobsGqlSchema = /* GraphQL */ `
   type Mutation {
-    jobRun(taskName: String!): JobDefinition
+    jobRun(jobName: String!): [JobDefinition]
   }
 
   type Query {

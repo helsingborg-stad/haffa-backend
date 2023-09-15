@@ -24,10 +24,10 @@ export type Task = (
 export interface JobExcecutorService {
   runAs: (
     user: HaffaUser,
-    task: string,
+    jobName: string,
     services: Partial<Services>,
     param?: string
-  ) => JobDefinition
+  ) => JobDefinition[]
   list: () => string[]
   find: (jobId?: string) => JobDefinition[]
   prune: () => number

@@ -14,15 +14,15 @@ const failingJob: Task = async () => {
 }
 
 const tasks = new Map([
-  ['SUCCESSFUL_JOB', successfulJob],
-  ['FAILING_JOB', failingJob],
+  ['SUCCESSFUL_JOB', [successfulJob]],
+  ['FAILING_JOB', [failingJob]],
 ])
 const service = createJobExecutorService(tasks)
 const user = { id: 'admin@haffa.se', roles: [] }
 
 describe('JobsService', () => {
   it('should run asynchronously successfully', async () => {
-    const job = service.runAs(user, 'SUCCESSFUL_JOB', {}, 'param')
+    const [job] = service.runAs(user, 'SUCCESSFUL_JOB', {}, 'param')
     expect(job.owner).toEqual('admin@haffa.se')
     expect(job.status).toEqual('Pending')
     expect(job.result).toBeNull()
@@ -37,7 +37,7 @@ describe('JobsService', () => {
     })
   })
   it('should handle errors gracefully', async () => {
-    const job = service.runAs(user, 'FAILING_JOB', {}, 'param')
+    const [job] = service.runAs(user, 'FAILING_JOB', {}, 'param')
     expect(job.owner).toEqual('admin@haffa.se')
     expect(job.status).toEqual('Pending')
     expect(job.result).toBeNull()
@@ -55,8 +55,8 @@ describe('JobsService', () => {
     expect(service.find().length).toEqual(2)
   })
   it('should return job definition when requested', async () => {
-    const job = service.find()
-    expect(job[0]?.status).toEqual('Succeeded')
+    const [job] = service.find()
+    expect(job?.status).toEqual('Succeeded')
   })
 
   it('should prune list when requested', async () => {
