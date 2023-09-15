@@ -16,10 +16,11 @@ export const createJobExecutorService = (
 
   return {
     runAs: (user, jobName, services = {}) => {
+      const jobId = randomUUID()
       const jobList =
         taskRepository.get(jobName)?.map(task => {
           const job: JobDefinition = {
-            jobId: randomUUID(),
+            jobId,
             jobName,
             owner: user.id,
             startDate: new Date().toISOString(),
@@ -39,17 +40,14 @@ export const createJobExecutorService = (
             })
             .finally(() => {
               job.endDate = new Date().toISOString()
-            }) ?? invalidTask(job)
+            })
           return job
         }) ?? []
       pendingJobs.push(...jobList)
       return jobList
     },
     list: () => Array.from(tasks.keys()),
-    find: jobId => {
-      const job = pendingJobs.find(job => job.jobId === jobId)
-      return job ? [job] : pendingJobs
-    },
+    find: jobId => pendingJobs.filter(job => job.jobId === jobId || !jobId),
     prune: () => (pendingJobs.length = 0),
   }
 }
@@ -61,13 +59,4 @@ export const createJobExecutorServiceFromEnv = (): JobExcecutorService => {
     ),
   }
   return createJobExecutorService(tasks, parameters)
-}
-
-const invalidTask = (job: JobDefinition) => {
-  job.endDate = new Date().toISOString()
-  job.status = 'Failed'
-  job.result = {
-    action: '-',
-    message: `Invalid task in ${job.jobName}`,
-  }
 }
