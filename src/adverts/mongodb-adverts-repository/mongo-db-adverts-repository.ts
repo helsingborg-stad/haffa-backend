@@ -1,5 +1,5 @@
 import type { CollationOptions } from 'mongodb'
-import type { Advert, AdvertsRepository } from '../types'
+import type { Advert, AdvertReservations, AdvertsRepository } from '../types'
 import type { MongoAdvert } from './types'
 import {
   mapAdvertFilterInputToMongoQuery,
@@ -96,6 +96,43 @@ export const createMongoAdvertsRepository = (
     },
   }
 
+  const getReservationList: AdvertsRepository['getReservationList'] =
+    async filter => {
+      const date = (filter.olderThan ?? new Date()).toISOString()
+
+      const cursor = (await getCollection()).aggregate<AdvertReservations>([
+        {
+          $match: {
+            'advert.claims': {
+              $elemMatch: {
+                at: { $lte: date },
+                type: 'reserved',
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            id: 1,
+            'advert.claims': {
+              $filter: {
+                input: '$advert.claims',
+                as: 'claim',
+                cond: {
+                  $and: [
+                    { $lte: ['$$claim.at', date] },
+                    { $eq: ['$$claim.type', 'reserved'] },
+                  ],
+                },
+              },
+            },
+          },
+        },
+      ])
+      return cursor.toArray()
+    }
+
   return {
     stats,
     getAdvert,
@@ -104,5 +141,6 @@ export const createMongoAdvertsRepository = (
     remove,
     saveAdvertVersion,
     countBy,
+    getReservationList,
   }
 }

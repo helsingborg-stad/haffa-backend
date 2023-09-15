@@ -17,6 +17,7 @@ export const graphQLModule =
       | 'profiles'
       | 'notifications'
       | 'settings'
+      | 'jobs'
     >
   ) =>
   ({ registerKoaApi }: ApplicationContext): void =>

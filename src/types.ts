@@ -6,6 +6,7 @@ import type { ProfileRepository } from './profile/types'
 import type { NotificationService } from './notifications/types'
 import type { UserMapper } from './users/types'
 import type { SettingsService } from './settings/types'
+import { JobExcecutorService } from './jobs/types'
 
 export interface StartupLog {
   echo: <TService>(
@@ -26,4 +27,5 @@ export interface Services {
   profiles: ProfileRepository
   files: FilesService
   notifications: NotificationService
+  jobs: JobExcecutorService
 }
