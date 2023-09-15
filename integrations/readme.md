@@ -9,7 +9,7 @@ Haffa manages high level concepts such as
 
 These concepts are caried out by different drivers, from which alternatives can be chosen based on performance requirements, budget etc.
 
-| Feature                                      | Production  | QA          | Local dvelopment | Unit testing   |
+| Feature                                      | Production  | QA          | Local development | Unit testing   |
 | -------------------------------------------- | ----------- | ----------- | ---------------- | -------------- |
 | [Minio](minio.md)                            | Recommended | Recommended | Situational      | Probably never |
 | [MongoDB](mongodb.md)                        | Recommended | Recommended | Situational      | Probably never |
