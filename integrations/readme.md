@@ -2,7 +2,7 @@
 
 Haffa manages high level concepts such as
 
-- peristence and querying of adverts and profiles
+- persistence and querying of adverts and profiles
 - persistence of settings (categories, login policies, api keys...)
 - managing password-less authentication flows
 - notifying users about intersting state changes
