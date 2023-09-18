@@ -1,6 +1,6 @@
 export const advertsGqlSchema = /* GraphQL */ `
   type Query {
-    adverts(filter: AdvertFilterInput): [Advert]
+    adverts(filter: AdvertFilterInput): AdvertList
     getAdvert(id: ID!): Advert
   }
 
@@ -87,11 +87,17 @@ export const advertsGqlSchema = /* GraphQL */ `
     ascending: Boolean
   }
 
+  input AdvertPagingInput {
+    cursor: String
+    limit: Int
+  }
+
   input AdvertFilterInput {
     search: String
     fields: AdvertFieldsFilterInput
     restrictions: AdvertRestrictionsInput
     sorting: AdvertSortingInput
+    paging: AdvertPagingInput
   }
 
   input AdvertLocationInput {
@@ -186,5 +192,10 @@ export const advertsGqlSchema = /* GraphQL */ `
     externalId: String
     location: AdvertLocation
     contact: AdvertContact
+  }
+
+  type AdvertList {
+    adverts: [Advert]
+    nextCursor: String
   }
 `

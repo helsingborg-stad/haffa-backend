@@ -137,11 +137,23 @@ export interface AdvertSorting {
   field?: keyof AdvertUserFields
   ascending?: boolean
 }
+
+export interface AdvertPaging {
+  cursor?: string
+  limit: number
+}
+
 export interface AdvertFilterInput {
   search?: string
   fields?: AdvertFieldsFilterInput
   restrictions?: AdvertRestrictionsFilterInput
   sorting?: AdvertSorting
+  paging?: AdvertPaging
+}
+
+export interface AdvertList {
+  adverts: Advert[]
+  nextCursor?: string
 }
 
 export interface ReservationFilter {
@@ -156,7 +168,7 @@ export interface AdvertsRepository {
     versionId: string,
     advert: Advert
   ) => Promise<Advert | null>
-  list: (user: HaffaUser, filter?: AdvertFilterInput) => Promise<Advert[]>
+  list: (user: HaffaUser, filter?: AdvertFilterInput) => Promise<AdvertList>
   create: (user: HaffaUser, advert: Advert) => Promise<Advert>
   remove: (user: HaffaUser, id: string) => Promise<Advert | null>
 

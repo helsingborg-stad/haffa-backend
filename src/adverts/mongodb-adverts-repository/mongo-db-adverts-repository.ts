@@ -31,6 +31,7 @@ export const createMongoAdvertsRepository = (
         .then(adverts =>
           adverts.map<Advert>(advert => ({ ...createEmptyAdvert(), ...advert }))
         )
+        .then(adverts => ({ adverts }))
     )
 
   const create: AdvertsRepository['create'] = async (user, advert) =>

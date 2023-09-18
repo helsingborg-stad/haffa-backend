@@ -2,6 +2,7 @@ import type { Advert, AdvertClaim, AdvertsRepository } from '../types'
 import { createAdvertFilterPredicate } from '../filters/advert-filter-predicate'
 import { createAdvertFilterComparer } from '../filters/advert-filter-sorter'
 import type { StartupLog } from '../../types'
+import { createPagedAdvertList } from '../mappers'
 
 export const createInMemoryAdvertsRepositoryFromEnv = (
   startupLog: StartupLog
@@ -22,10 +23,13 @@ export const createInMemoryAdvertsRepository = (
     },
   },
   getAdvert: async (user, id) => db[id] || null,
-  list: async (user, filter) =>
-    Object.values(db)
+  list: async (user, filter) => {
+    const allAdverts = Object.values(db)
       .filter(createAdvertFilterPredicate(user, filter))
-      .sort(createAdvertFilterComparer(user, filter)),
+      .sort(createAdvertFilterComparer(user, filter))
+
+    return createPagedAdvertList(allAdverts, filter)
+  },
   create: async (user, advert) => {
     // eslint-disable-next-line no-param-reassign
     db[advert.id] = advert

@@ -2,7 +2,9 @@ import * as uuid from 'uuid'
 import type {
   Advert,
   AdvertContact,
+  AdvertFilterInput,
   AdvertInput,
+  AdvertList,
   AdvertLocation,
   AdvertMutationResult,
   AdvertWithMeta,
@@ -119,3 +121,33 @@ export const mapAdvertMutationResultToAdvertWithMetaMutationResult = (
   advert: mapAdvertToAdvertWithMeta(user, result.advert),
   status: result.status,
 })
+
+export const createPagedAdvertList = (
+  adverts: Advert[],
+  filter?: AdvertFilterInput
+): AdvertList => {
+  if (!filter?.paging) {
+    return { adverts }
+  }
+
+  const { cursor, limit } = filter.paging
+  const cursorIndex = Math.max(
+    0,
+    adverts.findIndex(advert => advert.id === cursor)
+  )
+
+  const sliced = adverts.slice(
+    cursorIndex,
+    limit > 0 ? cursorIndex + limit + 1 : undefined
+  )
+
+  const nextCursor =
+    limit > 0 && sliced.length > limit ? sliced.at(-1)?.id : undefined
+  const finalSlice =
+    limit > 0 && sliced.length > limit ? sliced.slice(0, -1) : sliced
+
+  return {
+    adverts: finalSlice,
+    nextCursor,
+  }
+}
