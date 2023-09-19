@@ -29,7 +29,15 @@ describe('cancelAdvertClaim', () => {
       {
         services: { notifications },
       },
-      async ({ mappedGqlRequest, adverts, user }) => {
+      async ({ mappedGqlRequest, adverts, user, loginPolicies }) => {
+        // give us rights to handle claims
+        await loginPolicies.updateLoginPolicies([
+          {
+            emailPattern: user.id,
+            roles: ['canManageOwnAdvertsHistory'],
+          },
+        ])
+        // eslint-disable-next-line no-param-reassign
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
           id: 'advert-123',

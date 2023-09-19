@@ -5,10 +5,13 @@ import type { AdvertClaim } from '../../types'
 import { AdvertClaimType, AdvertType } from '../../types'
 
 describe('getAdvertMeta::canCancelReservation', () => {
-  const testUser: HaffaUser = { id: 'test@user', roles: [] }
+  const createUserWithRights = (id: string): HaffaUser => ({
+    id,
+    roles: { canReserveAdverts: true },
+  })
 
   const createReservation = (defaults?: Partial<AdvertClaim>): AdvertClaim => ({
-    by: testUser.id,
+    by: 'test@user',
     at: new Date().toISOString(),
     quantity: 1,
     type: AdvertClaimType.reserved,
@@ -54,12 +57,18 @@ describe('getAdvertMeta::canCancelReservation', () => {
 
   it('allows', () => {
     cancellableAdverts.forEach(advert =>
-      expect(getAdvertMeta(advert, testUser).canCancelReservation).toBe(true)
+      expect(
+        getAdvertMeta(advert, createUserWithRights('test@user'))
+          .canCancelReservation
+      ).toBe(true)
     )
   })
   it('denies', () => {
     uncancellableAdverts.forEach(advert =>
-      expect(getAdvertMeta(advert, testUser).canCancelReservation).toBe(false)
+      expect(
+        getAdvertMeta(advert, createUserWithRights('test@user'))
+          .canCancelReservation
+      ).toBe(false)
     )
   })
 })

@@ -4,18 +4,23 @@ import type { HaffaUser } from '../../../login/types'
 import { createEmptyAdvert } from '../../mappers'
 
 describe('getAdvertMeta::canArchive', () => {
-  const testUser: HaffaUser = { id: 'test@user', roles: [] }
-  it('owner can archive', () => {
+  const createUserWithRights = (id: string): HaffaUser => ({
+    id,
+    roles: { canArchiveOwnAdverts: true },
+  })
+  it('owner with rights can archive', () => {
     expect(
-      getAdvertMeta(createEmptyAdvert({ createdBy: 'test@user' }), testUser)
-        .canArchive
+      getAdvertMeta(
+        createEmptyAdvert({ createdBy: 'test@user' }),
+        createUserWithRights('test@user')
+      ).canArchive
     ).toBe(true)
   })
-  it('owner can archive unless already archived', () =>
+  it('owner with rights can archive unless already archived', () =>
     expect(
       getAdvertMeta(
         createEmptyAdvert({ createdBy: 'test@user', archivedAt: 'now' }),
-        testUser
+        createUserWithRights('test@user')
       ).canArchive
     ).toBe(false))
 
@@ -39,8 +44,10 @@ describe('getAdvertMeta::canArchive', () => {
 
   it('others may not archive', () => {
     expect(
-      getAdvertMeta(createEmptyAdvert({ createdBy: 'another@user' }), testUser)
-        .canArchive
+      getAdvertMeta(
+        createEmptyAdvert({ createdBy: 'test@user' }),
+        createUserWithRights('another@user')
+      ).canArchive
     ).toBe(false)
   })
 })

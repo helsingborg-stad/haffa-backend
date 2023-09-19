@@ -1,3 +1,4 @@
+import { normalizeRoles } from '../../login'
 import type { HaffaUser } from '../../login/types'
 import { AdvertClaimType, AdvertType } from '../types'
 import type { Advert, AdvertMeta } from '../types'
@@ -5,43 +6,57 @@ import type { Advert, AdvertMeta } from '../types'
 export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
   const { type, quantity } = advert
   const mine = advert.createdBy === user.id
-  const admin = user.roles.includes('admin')
 
-  const claimCount = advert.claims.reduce((s, { quantity }) => s + quantity, 0)
+  const claimCount = advert.claims.reduce((s, c) => s + c.quantity, 0)
   const myCollectedCount = advert.claims
-    .filter(
-      ({ by, type }) => by === user.id && type === AdvertClaimType.collected
-    )
-    .map(({ quantity }) => quantity)
+    .filter(c => c.by === user.id && c.type === AdvertClaimType.collected)
+    .map(c => c.quantity)
     .reduce((s, v) => s + v, 0)
 
   const myReservationCount = advert.claims
-    .filter(
-      ({ by, type }) => by === user.id && type === AdvertClaimType.reserved
-    )
-    .map(({ quantity }) => quantity)
+    .filter(c => c.by === user.id && c.type === AdvertClaimType.reserved)
+    .map(c => c.quantity)
     .reduce((s, v) => s + v, 0)
 
   const isNotArchived = !advert.archivedAt
   const isArchived = !isNotArchived
+
+  const {
+    canEditOwnAdverts,
+    canArchiveOwnAdverts,
+    canRemoveOwnAdverts,
+    canReserveAdverts,
+    canCollectAdverts,
+    canManageOwnAdvertsHistory,
+    canManageAllAdverts,
+  } = normalizeRoles(user.roles)
+
   if (type === AdvertType.recycle) {
     return {
       reservableQuantity: quantity - claimCount,
       collectableQuantity: myReservationCount + quantity - claimCount,
       isMine: mine,
-      canEdit: mine || admin,
-      canArchive: isNotArchived && (mine || admin),
-      canUnarchive: isArchived && (mine || admin),
-      canRemove: admin,
+      canEdit: canEditOwnAdverts && (mine || canManageAllAdverts),
+      canArchive:
+        isNotArchived && canArchiveOwnAdverts && (mine || canManageAllAdverts),
+      canUnarchive:
+        isArchived && canArchiveOwnAdverts && (mine || canManageAllAdverts),
+      canRemove: canRemoveOwnAdverts && (mine || canManageAllAdverts),
       canBook: false, // type === AdvertType.borrow,
-      canReserve: isNotArchived && quantity > claimCount,
-      canCancelReservation: myReservationCount > 0,
+      canReserve: isNotArchived && quantity > claimCount && canReserveAdverts,
+      canCancelReservation: myReservationCount > 0 && canReserveAdverts,
       canCollect:
-        isNotArchived && (myReservationCount > 0 || quantity > claimCount),
-      canCancelClaim: mine || admin,
+        isNotArchived &&
+        (myReservationCount > 0 || quantity > claimCount) &&
+        canCollectAdverts,
+      canCancelClaim:
+        canManageOwnAdvertsHistory && (mine || canManageAllAdverts),
       reservedyMe: myReservationCount,
       collectedByMe: myCollectedCount,
-      claims: mine || admin ? advert.claims : [],
+      claims:
+        canManageOwnAdvertsHistory && (mine || canManageAllAdverts)
+          ? advert.claims
+          : [],
     }
   }
   return {
@@ -49,9 +64,11 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
     collectableQuantity: 0,
     isMine: mine,
     canEdit: mine,
-    canArchive: !advert.archivedAt && (mine || admin),
-    canUnarchive: !!advert.archivedAt && (mine || admin),
-    canRemove: admin,
+    canArchive:
+      isNotArchived && canArchiveOwnAdverts && (mine || canManageAllAdverts),
+    canUnarchive:
+      isArchived && canArchiveOwnAdverts && (mine || canManageAllAdverts),
+    canRemove: canRemoveOwnAdverts && (mine || canManageAllAdverts),
     canBook: false, // type === AdvertType.borrow,
     canReserve: false,
     canCancelReservation: false,

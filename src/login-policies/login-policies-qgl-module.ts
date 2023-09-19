@@ -3,7 +3,7 @@ import HttpStatusCodes from 'http-status-codes'
 import type { Services } from '../types'
 import { loginPoliciesGqlSchema } from './login-policies.gql.schema'
 import { loginPolicyAdapter } from './login-policy-adapter'
-import { isAdmin } from '../login'
+import { normalizeRoles } from '../login'
 
 export const createLoginPoliciesGqlModule = ({
   settings,
@@ -14,7 +14,7 @@ export const createLoginPoliciesGqlModule = ({
       // https://www.graphql-tools.com/docs/resolvers
       loginPolicies: async ({ ctx }) => {
         const { user } = ctx
-        if (!isAdmin(user)) {
+        if (!normalizeRoles(user?.roles).canEditSystemLoginPolicies) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return loginPolicyAdapter(settings).getLoginPolicies()
@@ -23,7 +23,7 @@ export const createLoginPoliciesGqlModule = ({
     Mutation: {
       updateLoginPolicies: async ({ ctx, args: { input } }) => {
         const { user } = ctx
-        if (!isAdmin(user)) {
+        if (!normalizeRoles(user?.roles).canEditSystemLoginPolicies) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return loginPolicyAdapter(settings).updateLoginPolicies(input)

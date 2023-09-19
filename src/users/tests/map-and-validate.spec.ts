@@ -1,3 +1,5 @@
+import { makeRoles } from '../../login'
+import { loginPolicyAdapter } from '../../login-policies/login-policy-adapter'
 import type { HaffaUser } from '../../login/types'
 import { createInMemorySettingsService } from '../../settings'
 import { createUserMapper } from '../user-mapper'
@@ -7,13 +9,8 @@ describe('inMemoryUserMapper::mapAndValidate*', () => {
     null,
     {},
     'not an object',
-    { id: 123, roles: [], hint: 'id is not a string' }, // id should be string,
-    {
-      id: 'test@user.com',
-      roles: [123, 'admin'],
-      hint: 'roles is not a string[]',
-    }, // roles should be string[]
-    { id: 'not an email', roles: [], hint: 'id not an email' },
+    { id: 123, hint: 'id is not a string' }, // id should be string,
+    { id: 'not an email', hint: 'id not an email' },
   ]
 
   it.each(ExpectToMapToNull)(
@@ -32,27 +29,23 @@ describe('inMemoryUserMapper::mapAndValidate*', () => {
     const mapped = await mapper.mapAndValidateEmail('super@user.com')
     expect(mapped).toMatchObject({
       id: 'super@user.com',
-      roles: ['admin'],
+      roles: makeRoles(true),
     })
   })
 
   it('mapAndValidateEmail(email) => {id, roles}', async () => {
-    const mapper = createUserMapper(
-      null,
-      createInMemorySettingsService({
-        'login-policies': [
-          {
-            emailPattern: '.*@user.com',
-            roles: ['a', 'b'],
-            deny: false,
-          },
-        ],
-      })
-    )
+    const settings = createInMemorySettingsService()
+    await loginPolicyAdapter(settings).updateLoginPolicies([
+      {
+        emailPattern: '.*@user.com',
+        roles: ['canEditOwnAdverts'],
+      },
+    ])
+    const mapper = createUserMapper(null, settings)
     const mapped = await mapper.mapAndValidateEmail('test@user.com')
     expect(mapped).toMatchObject({
       id: 'test@user.com',
-      roles: ['a', 'b'],
+      roles: { canEditOwnAdverts: true },
     })
   })
 

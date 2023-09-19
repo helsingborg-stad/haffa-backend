@@ -152,4 +152,3 @@ components:
           type: array
           items:
             type: string
-

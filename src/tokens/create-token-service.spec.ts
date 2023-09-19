@@ -21,19 +21,17 @@ describe('createTokenService', () => {
     'abc123',
     createTokenServiceForTest('wrong token').sign({
       id: 'test@user.com',
-      roles: [],
     }),
   ]
   it('TokenService:sign() returns a token', () => {
     const service = createTokenServiceForTest('a secret')
-    const token = service.sign({ id: 'test@user.com', roles: [] })
+    const token = service.sign({ id: 'test@user.com' })
     expect(typeof token).toBe('string')
     expect(token.length > 0).toBeTruthy()
   })
   it('TokenService:verify() embeds user in token', async () => {
     const user: HaffaUser = {
       id: 'test@user.com',
-      roles: [],
     }
     const service = createTokenServiceForTest('a secret')
     const token = service.sign(user)
@@ -63,7 +61,6 @@ describe('createTokenService', () => {
     const service = createTokenServiceForTest('a secret', '1ms')
     const token = service.sign({
       id: 'test@user.com',
-      roles: [],
     })
     expect(token).toBeTruthy()
 

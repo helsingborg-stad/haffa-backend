@@ -2,7 +2,7 @@ import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import HttpStatusCodes from 'http-status-codes'
 import type { Services } from '../types'
 import { jobsGqlSchema } from './jobs.gql.schema'
-import { isAdmin } from '../login'
+import { normalizeRoles } from '../login'
 
 export const createJobsGqlModule = ({
   jobs,
@@ -20,14 +20,14 @@ export const createJobsGqlModule = ({
       // https://www.graphql-tools.com/docs/resolvers
       jobList: async ({ ctx }) => {
         const { user } = ctx
-        if (!isAdmin(user)) {
+        if (normalizeRoles(user?.roles).canRunSystemJobs) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return jobs.list()
       },
       jobFind: async ({ ctx, args: { JobId } }) => {
         const { user } = ctx
-        if (!isAdmin(user)) {
+        if (normalizeRoles(user?.roles).canRunSystemJobs) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return jobs.find(JobId)
@@ -36,7 +36,7 @@ export const createJobsGqlModule = ({
     Mutation: {
       jobRun: async ({ ctx, args: { jobName } }) => {
         const { user } = ctx
-        if (!isAdmin(user)) {
+        if (normalizeRoles(user?.roles).canRunSystemJobs) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return jobs.runAs(user, jobName, {

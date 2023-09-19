@@ -40,7 +40,7 @@ export const createCancelAdvertClaim =
           .forEach(claim =>
             actions(patched =>
               notifications.advertReservationWasCancelled(
-                { id: by, roles: [] },
+                { id: by },
                 claim.quantity,
                 patched
               )

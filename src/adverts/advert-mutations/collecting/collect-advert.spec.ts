@@ -29,7 +29,22 @@ describe('collectAdvert', () => {
 
     return end2endTest(
       { services: { notifications } },
-      async ({ mappedGqlRequest, adverts, user }) => {
+      async ({
+        mappedGqlRequest,
+        adverts,
+        user,
+        loginPolicies,
+        services: { userMapper },
+      }) => {
+        // give us rights to collect
+        await loginPolicies.updateLoginPolicies([
+          {
+            emailPattern: user.id,
+            roles: ['canCollectAdverts'],
+          },
+        ])
+
+        // eslint-disable-next-line no-param-reassign
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
           id: 'advert-123',
@@ -57,9 +72,11 @@ describe('collectAdvert', () => {
           ])
         )
 
+        // determine effective user when notifications where sent
+        const mappedUser = await userMapper.mapAndValidateUser(user)
         T('should have notified about the interesting event', () =>
           expect(advertWasCollected).toHaveBeenCalledWith(
-            user,
+            mappedUser,
             1,
             adverts['advert-123']
           )
@@ -76,7 +93,16 @@ describe('collectAdvert', () => {
 
     return end2endTest(
       { services: { notifications } },
-      async ({ mappedGqlRequest, adverts, user }) => {
+      async ({ mappedGqlRequest, adverts, user, loginPolicies }) => {
+        // give us rights to collect
+        await loginPolicies.updateLoginPolicies([
+          {
+            emailPattern: user.id,
+            roles: ['canCollectAdverts'],
+          },
+        ])
+
+        // eslint-disable-next-line no-param-reassign
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
           id: 'advert-123',

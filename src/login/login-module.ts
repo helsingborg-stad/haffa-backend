@@ -8,6 +8,7 @@ import EmailValidator from 'email-validator'
 import { RequestPincodeStatus, type LoginService } from './types'
 import type { TokenService } from '../tokens/types'
 import type { NotificationService } from '../notifications/types'
+import { rolesToRolesArray } from '.'
 
 export const loginModule =
   (
@@ -26,7 +27,7 @@ export const loginModule =
       ctx.body = user
         ? {
             token,
-            roles: user.roles,
+            roles: rolesToRolesArray(user.roles),
           }
         : {
             token: '',
@@ -58,7 +59,7 @@ export const loginModule =
       const user = await loginService.tryLogin(email, pincode, ctx.ip)
       ctx.body = {
         token: user ? tokenService.sign(user) : '',
-        roles: user?.roles || [],
+        roles: rolesToRolesArray(user?.roles),
       }
     }
 

@@ -1,6 +1,6 @@
 import { createAdvertMutations } from '../../adverts/advert-mutations'
-import { Services } from '../../types'
-import { JobExecutionResult, Task } from '../types'
+import type { Services } from '../../types'
+import type { JobExecutionResult, Task } from '../types'
 
 export const clearExpiredReservations: Task = async (
   services,
@@ -20,7 +20,6 @@ export const clearExpiredReservations: Task = async (
       await mutations.cancelAdvertReservation(
         {
           id: reservation.by,
-          roles: [],
         },
         document.id
       )

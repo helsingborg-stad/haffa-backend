@@ -5,6 +5,7 @@ import { createEmptyProfile, createEmptyProfileInput } from '../mappers'
 import type { HaffaUser } from '../../login/types'
 import type { ProfileInput, ProfileRepository } from '../types'
 import { createMongoProfileConnection } from './mongio-profile-connection'
+import { makeUser } from '../../login'
 
 const mongoMock = require('mongo-mock')
 
@@ -34,11 +35,11 @@ const profilesTest = (
     connection => testfn(createMongoProfileRepository(connection), connection)
   )
 
-const createTestUser = (user?: Partial<HaffaUser>): HaffaUser => ({
-  id: 'test@user.com',
-  roles: [],
-  ...user,
-})
+const createTestUser = (user?: Partial<HaffaUser>): HaffaUser =>
+  makeUser({
+    id: 'test@user.com',
+    ...user,
+  })
 
 const createProfileInput = (input?: Partial<ProfileInput>): ProfileInput => ({
   ...createEmptyProfileInput(),

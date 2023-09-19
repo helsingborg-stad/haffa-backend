@@ -8,7 +8,6 @@ describe('mapRestrictions', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const user: HaffaUser = {
     id: 'test@user',
-    roles: [],
   }
 
   const makeRegularFilter = (
