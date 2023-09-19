@@ -5,10 +5,13 @@ import type { AdvertClaim } from '../../types'
 import { AdvertClaimType, AdvertType } from '../../types'
 
 describe('getAdvertMeta::canCollect', () => {
-  const testUser: HaffaUser = { id: 'test@user', roles: [] }
+  const createUserWithRights = (id: string): HaffaUser => ({
+    id,
+    roles: { canCollectAdverts: true },
+  })
 
   const createClaim = (defaults?: Partial<AdvertClaim>): AdvertClaim => ({
-    by: testUser.id,
+    by: 'test@user',
     at: new Date().toISOString(),
     quantity: 1,
     type: AdvertClaimType.reserved,
@@ -54,14 +57,25 @@ describe('getAdvertMeta::canCollect', () => {
     createEmptyAdvert({ quantity: 1, claims: [createCollect()] }),
   ]
 
-  it('allows', () => {
+  it('allows user with rights', () => {
     collectableAdverts.forEach(advert =>
-      expect(getAdvertMeta(advert, testUser).canCollect).toBe(true)
+      expect(
+        getAdvertMeta(advert, createUserWithRights('test@user')).canCollect
+      ).toBe(true)
     )
   })
-  it('denies', () => {
+
+  it('denies user without rights', () => {
+    collectableAdverts.forEach(advert =>
+      expect(getAdvertMeta(advert, { id: 'test@user' }).canCollect).toBe(false)
+    )
+  })
+
+  it('denies fully collected', () => {
     uncollctableAdverts.forEach(advert =>
-      expect(getAdvertMeta(advert, testUser).canCollect).toBe(false)
+      expect(
+        getAdvertMeta(advert, createUserWithRights('test@user')).canCollect
+      ).toBe(false)
     )
   })
 })

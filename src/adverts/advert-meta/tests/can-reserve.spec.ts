@@ -1,10 +1,15 @@
 import { getAdvertMeta } from '..'
-import { HaffaUser } from '../../../login/types'
+import type { HaffaUser } from '../../../login/types'
 import { createEmptyAdvert } from '../../mappers'
-import { AdvertClaim, AdvertClaimType, AdvertType } from '../../types'
+import type { AdvertClaim } from '../../types'
+import { AdvertClaimType, AdvertType } from '../../types'
 
 describe('getAdvertMeta::canReserve', () => {
-  const testUser: HaffaUser = { id: 'test@user', roles: [] }
+  const testUser: HaffaUser = { id: 'test@user' }
+  const createUserWithRights = (id: string): HaffaUser => ({
+    id,
+    roles: { canReserveAdverts: true },
+  })
 
   const createReservation = (defaults?: Partial<AdvertClaim>): AdvertClaim => ({
     by: 'test@user',
@@ -43,12 +48,23 @@ describe('getAdvertMeta::canReserve', () => {
 
   it('allows reservations if advert.quantity exceeds total reservations', () => {
     reservableAdverts.forEach(advert =>
-      expect(getAdvertMeta(advert, testUser).canReserve).toBe(true)
+      expect(
+        getAdvertMeta(advert, createUserWithRights('test@user')).canReserve
+      ).toBe(true)
     )
   })
+
+  it('denies reservations if rights are missing', () => {
+    reservableAdverts.forEach(advert =>
+      expect(getAdvertMeta(advert, { id: 'test@user' }).canReserve).toBe(false)
+    )
+  })
+
   it('denies reservations if total reservations amounts ot advert.quantity', () => {
     unreservableAdverts.forEach(advert =>
-      expect(getAdvertMeta(advert, testUser).canReserve).toBe(false)
+      expect(
+        getAdvertMeta(advert, createUserWithRights('test@user')).canReserve
+      ).toBe(false)
     )
   })
 })

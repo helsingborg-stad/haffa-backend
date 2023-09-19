@@ -1,13 +1,12 @@
 import EmailValidator from 'email-validator'
-import type { HaffaUser } from '../login/types'
+import type { HaffaUser, HaffaUserRoles } from '../login/types'
 import type * as types from './types'
 import type { SettingsService } from '../settings/types'
 import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import type { LoginPolicy } from '../login-policies/types'
-import { makeAdmin } from '../login'
+import { combineRoles, makeAdmin, normalizeRoles } from '../login'
 
 const isString = (v: any) => typeof v === 'string'
-const isStringOrNull = (v: any) => v === null || typeof v === 'string'
 const isObject = (v: any) => v && typeof v === 'object' && !isArray(v)
 const isArray = (v: any) => Array.isArray(v)
 
@@ -15,10 +14,8 @@ const validateHaffaUser = (user: HaffaUser | null): HaffaUser | null =>
   user &&
   isObject(user) &&
   isString(user.id) &&
-  Array.isArray(user.roles) &&
-  user.roles.every(isStringOrNull) &&
   EmailValidator.validate(user.id)
-    ? { id: user.id.toString(), roles: user.roles.filter(v => v) }
+    ? { id: user.id.toString(), roles: normalizeRoles(user.roles) }
     : null
 
 const tryMatchUserPolicy = (email: string, { emailPattern }: LoginPolicy) =>
@@ -55,17 +52,17 @@ export const createUserMapper = (
         return null
       }
 
-      const roles = matchings.reduce<string[]>(
-        (r, policy) => r.concat(policy.roles),
-        []
+      const roles = matchings.reduce<HaffaUserRoles>(
+        (r, policy) => combineRoles(r, policy.roles),
+        {}
       )
       return {
         id,
-        roles: Array.from(new Set(roles)),
+        roles,
       }
     }
   const mapAndValidateEmail: types.UserMapper['mapAndValidateEmail'] =
-    async email => mapAndValidateUser({ id: email || '', roles: [] })
+    async email => mapAndValidateUser({ id: email || '' })
 
   return {
     mapAndValidateEmail,

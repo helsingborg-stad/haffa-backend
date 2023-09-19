@@ -6,7 +6,6 @@ import type { HaffaUser } from '../../login/types'
 describe('createAdvertFilterPredicate', () => {
   const createTestUser = (user?: Partial<HaffaUser>): HaffaUser => ({
     id: 'test@testerson.com',
-    roles: [],
     ...user,
   })
 
@@ -131,10 +130,13 @@ describe('createAdvertFilterPredicate', () => {
   })
 
   it('restricts to can be reserved', () => {
-    const p = createAdvertFilterPredicate(createTestUser({ id: 'a@b.com' }), {
-      search: 'unicorn',
-      restrictions: { canBeReserved: true },
-    })
+    const p = createAdvertFilterPredicate(
+      createTestUser({ id: 'a@b.com', roles: { canReserveAdverts: true } }),
+      {
+        search: 'unicorn',
+        restrictions: { canBeReserved: true },
+      }
+    )
 
     let adverts = createSampleAdverts(100, {
       'advert-10': { title: 'I like my unicorn!' },

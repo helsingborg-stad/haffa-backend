@@ -15,7 +15,6 @@ describe('mapCreateAdvertInputToAdvert', () => {
       },
       {
         id: 'the@user',
-        roles: [],
       },
       '2023-06-26'
     )

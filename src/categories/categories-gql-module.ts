@@ -3,7 +3,7 @@ import HttpStatusCodes from 'http-status-codes'
 import type { Services } from '../types'
 import { categoriesGqlSchema } from './categories.gql.schema'
 import { categoryAdapter } from './category-adapter'
-import { isAdmin } from '../login'
+import { normalizeRoles } from '../login'
 
 export const createCategoriesGqlModule = ({
   adverts,
@@ -28,7 +28,7 @@ export const createCategoriesGqlModule = ({
     Mutation: {
       updateCategories: async ({ ctx, args: { input } }) => {
         const { user } = ctx
-        if (!isAdmin(user)) {
+        if (!normalizeRoles(user?.roles).canEditSystemCategories) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return categoryAdapter(settings).updateCategories(input)

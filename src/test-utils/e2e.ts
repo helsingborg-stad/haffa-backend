@@ -76,7 +76,7 @@ export const end2endTest = (
   config: End2EndTestConfig | null,
   handler: End2EndTestHandler
 ): Promise<void> => {
-  const user: HaffaUser = config?.user || { id: 'test@user.com', roles: [] }
+  const user: HaffaUser = config?.user || { id: 'test@user.com' }
   const adverts: Record<string, Advert> = {}
   const logins: Record<string, LoginRequestEntry> = {}
   const profiles: Record<string, Profile> = {}

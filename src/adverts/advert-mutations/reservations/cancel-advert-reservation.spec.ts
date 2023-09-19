@@ -28,7 +28,23 @@ describe('cancelAdvertReservation', () => {
       {
         services: { notifications },
       },
-      async ({ mappedGqlRequest, adverts, user }) => {
+      async ({
+        mappedGqlRequest,
+        adverts,
+        user,
+        loginPolicies,
+        services: { userMapper },
+      }) => {
+        // give us rights to handle reservations
+        await loginPolicies.updateLoginPolicies([
+          {
+            emailPattern: user.id,
+            roles: {
+              canReserveAdverts: true,
+            },
+          },
+        ])
+
         // eslint-disable-next-line no-param-reassign
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
@@ -84,9 +100,11 @@ describe('cancelAdvertReservation', () => {
           ])
         )
 
+        // determine effective user when notifications where sent
+        const mappedUser = await userMapper.mapAndValidateUser(user)
         T('should have notified about the interesting event', () =>
           expect(advertReservationWasCancelled).toHaveBeenCalledWith(
-            user,
+            mappedUser,
             3,
             adverts['advert-123']
           )

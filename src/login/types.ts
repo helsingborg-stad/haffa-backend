@@ -1,6 +1,33 @@
+/* export enum HaffaRole  {
+  admin = 'admin', // can do everything
+
+
+  canCreateAdvert='can-create-advert',
+  canArchive='can-archive',
+  canRemove='can-remove',
+  canBook='can-book',
+  canReserve='can-reserve',
+  canCollect='can-collect',
+
+
+  advertAdmin='advert-admin',
+} */
 export interface HaffaUser {
   id: string
-  roles: string[]
+  roles?: HaffaUserRoles
+}
+
+export interface HaffaUserRoles {
+  canEditOwnAdverts?: boolean
+  canArchiveOwnAdverts?: boolean
+  canRemoveOwnAdverts?: boolean
+  canReserveAdverts?: boolean
+  canCollectAdverts?: boolean
+  canManageOwnAdvertsHistory?: boolean
+  canManageAllAdverts?: boolean
+  canEditSystemCategories?: boolean
+  canEditSystemLoginPolicies?: boolean
+  canRunSystemJobs?: boolean
 }
 
 export interface RequestPincodeResult {

@@ -23,7 +23,7 @@ describe('removeAdvert', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: user.id,
-            roles: ['admin'], // must be admin for removal...
+            roles: { canRemoveOwnAdverts: true },
           },
         ])
         const mockAdvert: Advert = {
@@ -90,12 +90,13 @@ describe('removeAdvert', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: user.id,
-            roles: ['admin'], // must be admin for removal...
+            roles: { canRemoveOwnAdverts: true },
           },
         ])
         const mockAdvert: Advert = {
           ...createEmptyAdvert(),
           id: 'remove-advert-test-1',
+          createdBy: user.id,
           images: [
             {
               url: 'image1',

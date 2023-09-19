@@ -26,7 +26,17 @@ describe('archiveAdvert', () => {
 
     return end2endTest(
       { services: { notifications } },
-      async ({ mappedGqlRequest, adverts, user }) => {
+      async ({ mappedGqlRequest, adverts, user, loginPolicies }) => {
+        // give us rights to archive
+        await loginPolicies.updateLoginPolicies([
+          {
+            emailPattern: user.id,
+            roles: {
+              canArchiveOwnAdverts: true,
+            },
+          },
+        ])
+
         // eslint-disable-next-line no-param-reassign
         adverts['advert-123'] = {
           ...createEmptyAdvert(),

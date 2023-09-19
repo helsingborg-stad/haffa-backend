@@ -1,11 +1,10 @@
 import { getAdvertMeta } from '..'
+import { makeAdmin } from '../../../login'
 import { HaffaUser } from '../../../login/types'
 import { createEmptyAdvert } from '../../mappers'
 import { AdvertType } from '../../types'
 
 describe('getAdvertMeta::canBook', () => {
-  const testUser: HaffaUser = { id: 'test@user', roles: [] }
-
   const unbookables = [
     createEmptyAdvert({ quantity: 1, type: AdvertType.recycle }),
     createEmptyAdvert({ quantity: 1, type: AdvertType.borrow }),
@@ -22,7 +21,9 @@ describe('getAdvertMeta::canBook', () => {
   ]
   it('bookings are never supported', () => {
     unbookables.forEach(advert =>
-      expect(getAdvertMeta(advert, testUser).canBook).toBe(false)
+      expect(
+        getAdvertMeta(advert, makeAdmin({ id: 'some@admin' })).canBook
+      ).toBe(false)
     )
   })
 })

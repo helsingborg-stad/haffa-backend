@@ -7,7 +7,7 @@ import { requireHaffaUser } from '../../login/require-haffa-user'
 import type { Services } from '../../types'
 import type { TokenService } from '../../tokens/types'
 import type { HaffaUser } from '../../login/types'
-import { makeUser } from '../../login'
+import { makeRoles, makeUser } from '../../login'
 import type { LoginPolicy } from '../../login-policies/types'
 
 describe('user access validation', () => {
@@ -24,7 +24,7 @@ describe('user access validation', () => {
         givenLoginPolicies: [] /* no policies what so ever */,
         expectResponse: {
           status: HttpStatusCodes.OK,
-          body: { id: 'test@user.com', roles: [] },
+          body: { id: 'test@user.com', roles: {} },
         },
       },
     ],
@@ -35,11 +35,19 @@ describe('user access validation', () => {
         givenLoginPolicies: [
           {
             emailPattern: '.*@user.com',
+            roles: { canReserveAdverts: true, canCollectAdverts: true },
           },
         ],
         expectResponse: {
           status: HttpStatusCodes.OK,
-          body: { id: 'test@user.com', roles: [] },
+          body: {
+            id: 'test@user.com',
+            roles: {
+              ...makeRoles(false),
+              canReserveAdverts: true,
+              canCollectAdverts: true,
+            },
+          },
         },
       },
     ],
@@ -93,7 +101,7 @@ describe('user access validation', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: 'test@user.com',
-            roles: ['a', 'b', 'c'],
+            roles: { canEditOwnAdverts: true, canCollectAdverts: false },
           },
         ])
         expect(
@@ -106,7 +114,7 @@ describe('user access validation', () => {
           status: HttpStatusCodes.OK,
           body: {
             id: 'test@user.com',
-            roles: ['a', 'b', 'c'],
+            roles: { canEditOwnAdverts: true, canCollectAdverts: false },
           },
         })
 
@@ -129,7 +137,7 @@ describe('user access validation', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: 'test@user.com',
-            roles: [],
+            roles: {},
           },
         ])
         expect(
@@ -142,7 +150,7 @@ describe('user access validation', () => {
           status: HttpStatusCodes.OK,
           body: {
             id: 'test@user.com',
-            roles: [],
+            roles: {},
           },
         })
       }
