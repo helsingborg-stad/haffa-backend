@@ -40,9 +40,7 @@ describe('reserveAdvert', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: user.id,
-            roles: {
-              canReserveAdverts: true,
-            },
+            roles: ['canReserveAdverts'],
           },
         ])
 

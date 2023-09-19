@@ -40,9 +40,7 @@ describe('collectAdvert', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: user.id,
-            roles: {
-              canCollectAdverts: true,
-            },
+            roles: ['canCollectAdverts'],
           },
         ])
 
@@ -100,9 +98,7 @@ describe('collectAdvert', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: user.id,
-            roles: {
-              canCollectAdverts: true,
-            },
+            roles: ['canCollectAdverts'],
           },
         ])
 

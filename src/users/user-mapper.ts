@@ -4,7 +4,7 @@ import type * as types from './types'
 import type { SettingsService } from '../settings/types'
 import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import type { LoginPolicy } from '../login-policies/types'
-import { combineRoles, makeAdmin, normalizeRoles } from '../login'
+import { makeAdmin, normalizeRoles, rolesArrayToRoles } from '../login'
 
 const isString = (v: any) => typeof v === 'string'
 const isObject = (v: any) => v && typeof v === 'object' && !isArray(v)
@@ -52,9 +52,11 @@ export const createUserMapper = (
         return null
       }
 
-      const roles = matchings.reduce<HaffaUserRoles>(
-        (r, policy) => combineRoles(r, policy.roles),
-        {}
+      const roles = rolesArrayToRoles(
+        matchings.reduce<string[]>(
+          (combinedRoles, policy) => combinedRoles.concat(policy.roles),
+          []
+        )
       )
       return {
         id,

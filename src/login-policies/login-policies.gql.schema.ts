@@ -7,41 +7,15 @@ export const loginPoliciesGqlSchema = /* GraphQL */ `
     updateLoginPolicies(input: [LoginPolicyInput]!): [LoginPolicy]
   }
 
-  type LoginPolicyRoles {
-    canEditOwnAdverts: Boolean
-    canArchiveOwnAdverts: Boolean
-    canRemoveOwnAdverts: Boolean
-    canReserveAdverts: Boolean
-    canCollectAdverts: Boolean
-    canManageOwnAdvertsHistory: Boolean
-    canManageAllAdverts: Boolean
-    canEditSystemCategories: Boolean
-    canEditSystemLoginPolicies: Boolean
-    canRunSystemJobs: Boolean
-  }
-
-  input LoginPolicyRolesInput {
-    canEditOwnAdverts: Boolean
-    canArchiveOwnAdverts: Boolean
-    canRemoveOwnAdverts: Boolean
-    canReserveAdverts: Boolean
-    canCollectAdverts: Boolean
-    canManageOwnAdvertsHistory: Boolean
-    canManageAllAdverts: Boolean
-    canEditSystemCategories: Boolean
-    canEditSystemLoginPolicies: Boolean
-    canRunSystemJobs: Boolean
-  }
-
   type LoginPolicy {
     emailPattern: String
-    roles: LoginPolicyRoles
+    roles: [String]
     deny: Boolean
   }
 
   input LoginPolicyInput {
     emailPattern: String
-    roles: LoginPolicyRolesInput
+    roles: [String]
     deny: Boolean
   }
 `

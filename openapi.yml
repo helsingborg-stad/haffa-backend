@@ -149,4 +149,6 @@ components:
         token:
           type: string
         roles:
-          type: object
+          type: array
+          items:
+            type: string

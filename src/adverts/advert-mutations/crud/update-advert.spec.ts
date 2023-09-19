@@ -44,9 +44,7 @@ describe('updateAdvert', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: user.id,
-            roles: {
-              canEditOwnAdverts: true,
-            },
+            roles: ['canEditOwnAdverts'],
           },
         ])
 

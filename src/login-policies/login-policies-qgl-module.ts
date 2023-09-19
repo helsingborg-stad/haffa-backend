@@ -17,8 +17,7 @@ export const createLoginPoliciesGqlModule = ({
         if (!normalizeRoles(user?.roles).canEditSystemLoginPolicies) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        const v = await loginPolicyAdapter(settings).getLoginPolicies()
-        return v
+        return loginPolicyAdapter(settings).getLoginPolicies()
       },
     },
     Mutation: {

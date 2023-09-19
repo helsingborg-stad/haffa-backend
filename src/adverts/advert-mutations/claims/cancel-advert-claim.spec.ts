@@ -34,9 +34,7 @@ describe('cancelAdvertClaim', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: user.id,
-            roles: {
-              canManageOwnAdvertsHistory: true,
-            },
+            roles: ['canManageOwnAdvertsHistory'],
           },
         ])
         // eslint-disable-next-line no-param-reassign

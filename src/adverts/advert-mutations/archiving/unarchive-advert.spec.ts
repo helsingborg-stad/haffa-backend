@@ -31,9 +31,7 @@ describe('archiveAdvert', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: user.id,
-            roles: {
-              canArchiveOwnAdverts: true,
-            },
+            roles: ['canArchiveOwnAdverts'],
           },
         ])
 

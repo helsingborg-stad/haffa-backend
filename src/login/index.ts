@@ -1,8 +1,25 @@
+import { toMap } from '../lib'
 import type { StartupLog } from '../types'
 import type { UserMapper } from '../users/types'
 import { createInMemoryLoginServiceFromEnv } from './in-memory-login-service'
 import { tryCreateMongoLoginServiceFromEnv } from './mongo-login-service'
 import type { HaffaUser, HaffaUserRoles, LoginService } from './types'
+
+export const rolesToRolesArray = (roles?: HaffaUserRoles) =>
+  Object.entries(normalizeRoles(roles))
+    .filter(([, enabled]) => enabled)
+    .map(([roleName]) => roleName)
+
+export const rolesArrayToRoles = (roles: string[]): HaffaUserRoles =>
+  Array.isArray(roles)
+    ? normalizeRoles(
+        toMap(
+          roles,
+          role => role,
+          () => true
+        )
+      )
+    : {}
 
 export const normalizeRoles = (
   roles?: HaffaUserRoles

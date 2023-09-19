@@ -23,7 +23,7 @@ describe('removeAdvert', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: user.id,
-            roles: { canRemoveOwnAdverts: true },
+            roles: ['canRemoveOwnAdverts'],
           },
         ])
         const mockAdvert: Advert = {
@@ -90,7 +90,7 @@ describe('removeAdvert', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: user.id,
-            roles: { canRemoveOwnAdverts: true },
+            roles: ['canRemoveOwnAdverts'],
           },
         ])
         const mockAdvert: Advert = {

@@ -38,18 +38,14 @@ describe('inMemoryUserMapper::mapAndValidate*', () => {
     await loginPolicyAdapter(settings).updateLoginPolicies([
       {
         emailPattern: '.*@user.com',
-        roles: { ...makeRoles(false), canEditOwnAdverts: true },
+        roles: ['canEditOwnAdverts'],
       },
     ])
     const mapper = createUserMapper(null, settings)
     const mapped = await mapper.mapAndValidateEmail('test@user.com')
     expect(mapped).toMatchObject({
       id: 'test@user.com',
-      roles: {
-        canEditOwnAdverts: true,
-        canReserveAdverts: false,
-        canCollectAdverts: false,
-      },
+      roles: { canEditOwnAdverts: true },
     })
   })
 

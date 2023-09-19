@@ -35,7 +35,7 @@ describe('user access validation', () => {
         givenLoginPolicies: [
           {
             emailPattern: '.*@user.com',
-            roles: { canReserveAdverts: true, canCollectAdverts: true },
+            roles: ['canReserveAdverts', 'canCollectAdverts'],
           },
         ],
         expectResponse: {
@@ -101,7 +101,7 @@ describe('user access validation', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: 'test@user.com',
-            roles: { canEditOwnAdverts: true, canCollectAdverts: false },
+            roles: ['canEditOwnAdverts'],
           },
         ])
         expect(
@@ -114,7 +114,7 @@ describe('user access validation', () => {
           status: HttpStatusCodes.OK,
           body: {
             id: 'test@user.com',
-            roles: { canEditOwnAdverts: true, canCollectAdverts: false },
+            roles: { canEditOwnAdverts: true },
           },
         })
 
@@ -137,7 +137,7 @@ describe('user access validation', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: 'test@user.com',
-            roles: {},
+            roles: [],
           },
         ])
         expect(
