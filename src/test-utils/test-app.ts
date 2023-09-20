@@ -13,6 +13,7 @@ import type { NotificationService } from '../notifications/types'
 import { createUserMapper } from '../users'
 import { createInMemorySettingsService } from '../settings'
 import { createJobExecutorServiceFromEnv } from '../jobs'
+import { createIssuePincode } from '../login'
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
 
@@ -51,7 +52,7 @@ export const createTestServices = (services: Partial<Services>): Services => {
   return {
     userMapper,
     settings,
-    login: createInMemoryLoginService(userMapper),
+    login: createInMemoryLoginService(userMapper, createIssuePincode('123456')),
     tokens: createTokenService(userMapper, { secret: TEST_SHARED_SECRET }),
     adverts: createInMemoryAdvertsRepository(),
     profiles: createInMemoryProfileRepository(),

@@ -4,6 +4,9 @@ import type { UserMapper } from '../users/types'
 import { createInMemoryLoginServiceFromEnv } from './in-memory-login-service'
 import { tryCreateMongoLoginServiceFromEnv } from './mongo-login-service'
 import type { HaffaUser, HaffaUserRoles, LoginService } from './types'
+import { createIssuePincode } from './issue-pincode'
+
+export { createIssuePincode }
 
 export const rolesToRolesArray = (roles?: HaffaUserRoles) =>
   Object.entries(normalizeRoles(roles))

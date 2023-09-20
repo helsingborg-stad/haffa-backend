@@ -8,9 +8,10 @@ import type {
 } from '../../mongodb-utils/types'
 import type { MongoLogin } from './types'
 import { createMongoConnection } from '../../mongodb-utils'
-import { issuePincode } from '../issue-pincode'
 import type { UserMapper } from '../../users/types'
 import type { StartupLog } from '../../types'
+import type { IssuePincode } from '../issue-pincode/types'
+import { createIssuePincode } from '../issue-pincode'
 
 export const tryCreateMongoLoginServiceFromEnv = (
   startupLog: StartupLog,
@@ -25,11 +26,17 @@ export const tryCreateMongoLoginServiceFromEnv = (
     1,
     parseInt(getEnv('LOGIN_ATTEMPT_MAX_COUNT', { fallback: '16' }), 10)
   )
+
+  const issuePincode = createIssuePincode(
+    getEnv('PASSWORDLESS_FIXED_PINCODE', { fallback: '' })
+  )
+
   return uri
     ? startupLog.echo(
         createMongoLoginService(
           userMapper,
           createMongoLoginConnection({ uri, collectionName }),
+          issuePincode,
           ttl,
           maxAttempts
         ),
@@ -67,6 +74,7 @@ export const createMongoLoginConnection = ({
 export const createMongoLoginService = (
   userMapper: UserMapper,
   connection: MongoConnection<MongoLogin>,
+  issuePincode: IssuePincode,
   ttl: number = ms('10m'),
   maxAttempts: number = 16
 ): LoginService => ({

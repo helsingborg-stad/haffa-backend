@@ -1,8 +1,8 @@
 import ms from 'ms'
 import type { LoginService } from '../types'
 import { RequestPincodeStatus } from '../types'
-import { issuePincode } from '../issue-pincode'
 import type { UserMapper } from '../../users/types'
+import type { IssuePincode } from '../issue-pincode/types'
 
 interface Options {
   maxAge: number
@@ -15,6 +15,7 @@ export interface LoginRequestEntry {
 }
 export const createInMemoryLoginService = (
   userMapper: UserMapper,
+  issuePincode: IssuePincode,
   options?: Partial<Options>
 ): LoginService => {
   const { maxAge, db }: Options = {

@@ -20,6 +20,7 @@ import type { SettingsService } from '../settings/types'
 import { createUserMapper } from '../users'
 import { createInMemorySettingsService } from '../settings'
 import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
+import { createIssuePincode } from '../login'
 
 const createGqlRequest =
   (
@@ -89,7 +90,11 @@ export const end2endTest = (
     settings,
     adverts: createInMemoryAdvertsRepository(adverts),
     profiles: createInMemoryProfileRepository(profiles),
-    login: createInMemoryLoginService(userMapper, { db: logins }),
+    login: createInMemoryLoginService(
+      userMapper,
+      createIssuePincode('123456'),
+      { db: logins }
+    ),
     ...config?.services,
   })
 
