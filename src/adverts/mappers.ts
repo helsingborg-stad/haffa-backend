@@ -127,7 +127,7 @@ export const createPagedAdvertList = (
   filter?: AdvertFilterInput
 ): AdvertList => {
   if (!filter?.paging) {
-    return { adverts }
+    return { adverts, paging: { totalCount: adverts.length } }
   }
 
   const { cursor, limit } = filter.paging
@@ -148,6 +148,9 @@ export const createPagedAdvertList = (
 
   return {
     adverts: finalSlice,
-    nextCursor,
+    paging: {
+      totalCount: adverts.length,
+      nextCursor,
+    },
   }
 }

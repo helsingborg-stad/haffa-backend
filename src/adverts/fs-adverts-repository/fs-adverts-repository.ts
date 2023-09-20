@@ -56,7 +56,7 @@ export const createFsAdvertsRepository = (
       .then(adverts => createPagedAdvertList(adverts, filter))
       .catch(e => {
         if (e?.code === 'ENOENT') {
-          return { adverts: [] }
+          return { adverts: [], paging: { totalCount: 0 } }
         }
         throw e
       })

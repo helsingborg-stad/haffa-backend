@@ -31,7 +31,7 @@ export const createMongoAdvertsRepository = (
         .then(adverts =>
           adverts.map<Advert>(advert => ({ ...createEmptyAdvert(), ...advert }))
         )
-        .then(adverts => ({ adverts }))
+        .then(adverts => ({ adverts, paging: { totalCount: adverts.length } }))
     )
 
   const create: AdvertsRepository['create'] = async (user, advert) =>

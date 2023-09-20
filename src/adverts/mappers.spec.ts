@@ -83,7 +83,7 @@ describe('normalizeAdvertsClaims', () => {
   })
 })
 
-describe('createAdvertList', () => {
+describe('createPagedAdvertList', () => {
   const adverts: Advert[] = [
     { id: '0' } as Advert,
     { id: '10' } as Advert,
@@ -101,6 +101,7 @@ describe('createAdvertList', () => {
     const result = createPagedAdvertList(adverts)
 
     expect(result.adverts).toEqual(adverts)
+    expect(result.paging.totalCount).toBe(adverts.length)
   })
 
   it('returns LIMIT amount of adverts normally', () => {
@@ -110,6 +111,7 @@ describe('createAdvertList', () => {
 
     expect(result.adverts).toHaveLength(5)
     expect(result.adverts).toEqual(adverts.slice(0, 5))
+    expect(result.paging.totalCount).toBe(adverts.length)
   })
 
   it('returns less than LIMIT when at end', () => {
@@ -119,6 +121,7 @@ describe('createAdvertList', () => {
 
     expect(result.adverts).toHaveLength(10)
     expect(result.adverts).toEqual(adverts)
+    expect(result.paging.totalCount).toBe(adverts.length)
   })
 
   it('starts from CURSOR', () => {
@@ -127,6 +130,7 @@ describe('createAdvertList', () => {
     })
 
     expect(result.adverts).toEqual(adverts.slice(2, 7))
+    expect(result.paging.totalCount).toBe(adverts.length)
   })
 
   it('starts from beginning for invalid CURSOR', () => {
@@ -135,6 +139,7 @@ describe('createAdvertList', () => {
     })
 
     expect(result.adverts).toEqual(adverts.slice(0, 5))
+    expect(result.paging.totalCount).toBe(adverts.length)
   })
 
   it('ignores LIMIT if invalid', () => {
@@ -143,18 +148,21 @@ describe('createAdvertList', () => {
     })
 
     expect(result.adverts).toEqual(adverts)
+    expect(result.paging.totalCount).toBe(adverts.length)
   })
 
   it('returns the CURSOR of the next', () => {
     const result = createPagedAdvertList(adverts, { paging: { limit: 5 } })
 
-    expect(result.nextCursor).toBe(adverts[5].id)
+    expect(result.paging.nextCursor).toBe(adverts[5].id)
+    expect(result.paging.totalCount).toBe(adverts.length)
   })
 
   it('returns no CURSOR for last page', () => {
     const result = createPagedAdvertList(adverts, { paging: { limit: 50 } })
 
-    expect(result.nextCursor).toBeUndefined()
+    expect(result.paging.nextCursor).toBeUndefined()
+    expect(result.paging.totalCount).toBe(adverts.length)
   })
 
   it('continues as expected when adverts are added before cursor', () => {
@@ -166,10 +174,11 @@ describe('createAdvertList', () => {
     ]
 
     const result = createPagedAdvertList(modifiedAdverts, {
-      paging: { cursor: firstResult.nextCursor, limit: 5 },
+      paging: { cursor: firstResult.paging.nextCursor, limit: 5 },
     })
 
     expect(result.adverts).toEqual(modifiedAdverts.slice(6))
+    expect(result.paging.totalCount).toBe(modifiedAdverts.length)
   })
 
   it('continues as expected when adverts are added after cursor', () => {
@@ -181,10 +190,11 @@ describe('createAdvertList', () => {
     ]
 
     const result = createPagedAdvertList(modifiedAdverts, {
-      paging: { cursor: firstResult.nextCursor, limit: 5 },
+      paging: { cursor: firstResult.paging.nextCursor, limit: 5 },
     })
 
     expect(result.adverts).toEqual(modifiedAdverts.slice(5, 10))
+    expect(result.paging.totalCount).toBe(modifiedAdverts.length)
   })
 
   it('continues as expected when adverts are removed before cursor', () => {
@@ -195,10 +205,11 @@ describe('createAdvertList', () => {
     ]
 
     const result = createPagedAdvertList(modifiedAdverts, {
-      paging: { cursor: firstResult.nextCursor, limit: 5 },
+      paging: { cursor: firstResult.paging.nextCursor, limit: 5 },
     })
 
     expect(result.adverts).toEqual(modifiedAdverts.slice(4))
+    expect(result.paging.totalCount).toBe(modifiedAdverts.length)
   })
 
   it('continues as expected when adverts are removed after cursor', () => {
@@ -209,9 +220,10 @@ describe('createAdvertList', () => {
     ]
 
     const result = createPagedAdvertList(modifiedAdverts, {
-      paging: { cursor: firstResult.nextCursor, limit: 5 },
+      paging: { cursor: firstResult.paging.nextCursor, limit: 5 },
     })
 
     expect(result.adverts).toEqual(modifiedAdverts.slice(5))
+    expect(result.paging.totalCount).toBe(modifiedAdverts.length)
   })
 })

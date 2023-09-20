@@ -138,7 +138,7 @@ export interface AdvertSorting {
   ascending?: boolean
 }
 
-export interface AdvertPaging {
+export interface AdvertPagingInput {
   cursor?: string
   limit: number
 }
@@ -148,12 +148,17 @@ export interface AdvertFilterInput {
   fields?: AdvertFieldsFilterInput
   restrictions?: AdvertRestrictionsFilterInput
   sorting?: AdvertSorting
-  paging?: AdvertPaging
+  paging?: AdvertPagingInput
+}
+
+export interface Paging {
+  totalCount: number
+  nextCursor?: string
 }
 
 export interface AdvertList {
   adverts: Advert[]
-  nextCursor?: string
+  paging: Paging
 }
 
 export interface ReservationFilter {

@@ -194,8 +194,13 @@ export const advertsGqlSchema = /* GraphQL */ `
     contact: AdvertContact
   }
 
+  type Paging {
+    totalCount: Int
+    nextCursor: String
+  }
+
   type AdvertList {
     adverts: [Advert]
-    nextCursor: String
+    paging: Paging
   }
 `
