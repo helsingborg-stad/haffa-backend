@@ -33,6 +33,10 @@ export interface AdvertUserFields {
   contact: AdvertContact
 }
 
+export interface AdvertMetaClaim extends AdvertClaim {
+  canCancel: boolean
+  canConvert: boolean
+}
 export interface AdvertMeta {
   reservableQuantity: number
   collectableQuantity: number
@@ -45,10 +49,10 @@ export interface AdvertMeta {
   canReserve: boolean
   canCancelReservation: boolean
   canCollect: boolean
-  canCancelClaim: boolean
+  canManageClaims: boolean
   reservedyMe: number
   collectedByMe: number
-  claims: AdvertClaim[]
+  claims: AdvertMetaClaim[]
 }
 
 export interface AdvertMutationStatus {
@@ -200,6 +204,13 @@ export interface AdvertMutations {
     id: string,
     by: string,
     type: AdvertClaimType
+  ) => Promise<AdvertMutationResult>
+  convertAdvertClaim: (
+    user: HaffaUser,
+    id: string,
+    by: string,
+    type: AdvertClaimType,
+    newType: AdvertClaimType
   ) => Promise<AdvertMutationResult>
 }
 

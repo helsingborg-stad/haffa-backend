@@ -18,6 +18,12 @@ export const advertsGqlSchema = /* GraphQL */ `
       by: String!
       type: AdvertClaimType!
     ): AdvertMutationResult
+    convertAdvertClaim(
+      id: ID!
+      by: String!
+      type: AdvertClaimType!
+      newType: AdvertClaimType!
+    ): AdvertMutationResult
   }
 
   type AdvertMutationStatus {
@@ -119,6 +125,8 @@ export const advertsGqlSchema = /* GraphQL */ `
     by: String
     at: String
     type: AdvertClaimType
+    canCancel: Boolean
+    canConvert: Boolean
   }
 
   type AdvertMeta {
@@ -133,7 +141,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     canReserve: Boolean!
     canCancelReservation: Boolean!
     canCollect: Boolean!
-    canCancelClaim: Boolean!
+    canManageClaims: Boolean!
     reservedyMe: Int!
     collectedByMe: Int!
     claims: [AdvertClaim]!

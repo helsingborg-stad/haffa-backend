@@ -49,13 +49,17 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
         isNotArchived &&
         (myReservationCount > 0 || quantity > claimCount) &&
         canCollectAdverts,
-      canCancelClaim:
+      canManageClaims:
         canManageOwnAdvertsHistory && (mine || canManageAllAdverts),
       reservedyMe: myReservationCount,
       collectedByMe: myCollectedCount,
       claims:
         canManageOwnAdvertsHistory && (mine || canManageAllAdverts)
-          ? advert.claims
+          ? advert.claims.map(c => ({
+              ...c,
+              canCancel: true,
+              canConvert: true,
+            }))
           : [],
     }
   }
@@ -73,7 +77,7 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
     canReserve: false,
     canCancelReservation: false,
     canCollect: false,
-    canCancelClaim: false,
+    canManageClaims: false,
     reservedyMe: myReservationCount,
     collectedByMe: myCollectedCount,
     claims: [],

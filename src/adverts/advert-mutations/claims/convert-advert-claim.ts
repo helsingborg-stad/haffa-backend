@@ -11,15 +11,15 @@ import {
   verifyTypeIsReservation,
 } from '../verifiers'
 
-export const createCancelAdvertClaim =
+export const createConvertAdvertClaim =
   ({
     adverts,
     notifications,
   }: Pick<
     Services,
     'adverts' | 'notifications'
-  >): AdvertMutations['cancelAdvertClaim'] =>
-  (user, id, by, type) =>
+  >): AdvertMutations['convertAdvertClaim'] =>
+  (user, id, by, type, newType) =>
     txBuilder<Advert>()
       .load(() => adverts.getAdvert(user, id))
       .validate(async (advert, { throwIf }) =>
@@ -29,27 +29,35 @@ export const createCancelAdvertClaim =
         )
       )
       .patch((advert, { actions }) => {
-        const matchClaim = (c: AdvertClaim) => c.by === by && c.type === type
+        const matchClaim = (c: AdvertClaim) =>
+          c.by === by && c.type === type && c.type !== newType
         const claims = advert.claims.filter(matchClaim)
         if (claims.length === 0) {
           return null
         }
 
-        claims
-          .filter(claim => claim.type === AdvertClaimType.reserved)
-          .forEach(claim =>
-            actions(patched =>
-              notifications.advertReservationWasCancelled(
-                { id: by },
-                claim.quantity,
-                patched
-              )
-            )
+        claims.forEach(claim =>
+          actions(patched =>
+            newType === AdvertClaimType.collected
+              ? notifications.advertWasCollected(
+                  { id: by },
+                  claim.quantity,
+                  patched
+                )
+              : Promise.resolve()
           )
+        )
         return {
           ...advert,
           claims: advert.claims
             .filter(c => !matchClaim(c))
+            .concat(
+              claims.map(c => ({
+                ...c,
+                at: new Date().toISOString(),
+                type: newType,
+              }))
+            )
             .filter(({ quantity }) => quantity > 0),
         }
       })

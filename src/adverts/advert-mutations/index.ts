@@ -12,6 +12,7 @@ import {
   createRemoveAdvert,
   createUpdateAdvert,
 } from './crud'
+import { createConvertAdvertClaim } from './claims/convert-advert-claim'
 
 export const createAdvertMutations = (
   services: Pick<Services, 'adverts' | 'files' | 'notifications'>
@@ -25,4 +26,5 @@ export const createAdvertMutations = (
   archiveAdvert: createArchiveAdvert(services),
   unarchiveAdvert: createUnarchiveAdvert(services),
   cancelAdvertClaim: createCancelAdvertClaim(services),
+  convertAdvertClaim: createConvertAdvertClaim(services),
 })
