@@ -2,7 +2,10 @@ import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { getAdvertMeta } from '../../advert-meta'
 import { AdvertClaimType, type Advert, type AdvertMutations } from '../../types'
-import { mapTxResultToAdvertMutationResult } from '../mappers'
+import {
+  mapTxResultToAdvertMutationResult,
+  normalizeAdvertClaims,
+} from '../mappers'
 import {
   verifyAll,
   verifyReservationLimits,
@@ -47,7 +50,7 @@ export const createCollectAdvert =
             .reduce((s, v) => s + v, 0)
           return {
             ...advert,
-            claims: [
+            claims: normalizeAdvertClaims([
               ...advert.claims.filter(({ by }) => by !== user.id), // all except mine
               {
                 by: user.id,
@@ -61,7 +64,7 @@ export const createCollectAdvert =
                 quantity: collectedByMeCount + quantity,
                 type: AdvertClaimType.collected,
               },
-            ].filter(({ quantity }) => quantity > 0),
+            ]),
           }
         }
         return advert

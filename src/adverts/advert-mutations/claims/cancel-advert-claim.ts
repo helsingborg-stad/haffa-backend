@@ -3,7 +3,10 @@ import type { Services } from '../../../types'
 import { getAdvertMeta } from '../../advert-meta'
 import { AdvertClaimType } from '../../types'
 import type { AdvertClaim, Advert, AdvertMutations } from '../../types'
-import { mapTxResultToAdvertMutationResult } from '../mappers'
+import {
+  mapTxResultToAdvertMutationResult,
+  normalizeAdvertClaims,
+} from '../mappers'
 import {
   verifyAll,
   verifyReservationLimits,
@@ -48,9 +51,11 @@ export const createCancelAdvertClaim =
           )
         return {
           ...advert,
-          claims: advert.claims
-            .filter(c => !matchClaim(c))
-            .filter(({ quantity }) => quantity > 0),
+          claims: normalizeAdvertClaims(
+            advert.claims
+              .filter(c => !matchClaim(c))
+              .filter(({ quantity }) => quantity > 0)
+          ),
         }
       })
       .verify((_, ctx) =>

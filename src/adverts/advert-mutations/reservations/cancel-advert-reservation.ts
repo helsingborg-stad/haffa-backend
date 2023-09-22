@@ -1,7 +1,10 @@
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { AdvertClaimType, type Advert, type AdvertMutations } from '../../types'
-import { mapTxResultToAdvertMutationResult } from '../mappers'
+import {
+  mapTxResultToAdvertMutationResult,
+  normalizeAdvertClaims,
+} from '../mappers'
 
 export const createCancelAdvertReservation =
   ({
@@ -30,11 +33,13 @@ export const createCancelAdvertReservation =
         )
         return {
           ...advert,
-          claims: advert.claims // remove all reservations for user
-            .filter(
-              ({ by, type }) =>
-                !(by === user.id && type === AdvertClaimType.reserved)
-            ),
+          claims: normalizeAdvertClaims(
+            advert.claims // remove all reservations for user
+              .filter(
+                ({ by, type }) =>
+                  !(by === user.id && type === AdvertClaimType.reserved)
+              )
+          ),
         }
       })
       .verify(update => update)

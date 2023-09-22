@@ -2,7 +2,10 @@ import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import type { Advert, AdvertClaim, AdvertMutations } from '../../types'
 import { AdvertClaimType } from '../../types'
-import { mapTxResultToAdvertMutationResult } from '../mappers'
+import {
+  mapTxResultToAdvertMutationResult,
+  normalizeAdvertClaims,
+} from '../mappers'
 import {
   verifyAll,
   verifyReservationLimits,
@@ -36,7 +39,7 @@ export const createReserveAdvert =
 
           return {
             ...advert,
-            claims: [
+            claims: normalizeAdvertClaims([
               ...advert.claims.filter(a => !isReservedByMe(a)),
               {
                 by: user.id,
@@ -44,7 +47,7 @@ export const createReserveAdvert =
                 quantity: reservedByMeCount + quantity,
                 type: AdvertClaimType.reserved,
               },
-            ],
+            ]),
           }
         }
         return advert
