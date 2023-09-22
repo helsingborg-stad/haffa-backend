@@ -55,7 +55,7 @@ export const createAdvertClaimNotifier =
             ...advert.claims.map((claim, index) => ({
               ...claim,
               events: [
-                ...claim.events,
+                ...(claim.events ?? []),
                 ...(index === claimIndex ? newEvent : []),
               ],
             })),

@@ -9,6 +9,7 @@ export const jobsGqlSchema = /* GraphQL */ `
   }
   type JobParameters {
     maxReservationDays: Int
+    reminderFrequency: Int
   }
 
   type JobDefinition {

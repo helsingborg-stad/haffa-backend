@@ -1,5 +1,6 @@
 import { createAdvertMutations } from '../../adverts/advert-mutations'
 import { AdvertClaimType } from '../../adverts/types'
+import type { AdvertMutationResult } from '../../adverts/types'
 import type { Services } from '../../types'
 import type { JobExecutionResult, Task } from '../types'
 
@@ -17,21 +18,24 @@ export const sendReservationReminder: Task = async (
     type: AdvertClaimType.reserved,
   })
 
+  const result: Promise<AdvertMutationResult>[] = []
   documents?.forEach(async document => {
     document.advert.claims.forEach(async reservation => {
-      await mutations.notifyAdvertClaim(
-        {
-          id: reservation.by,
-          roles: [],
-        },
-        document.id,
-        AdvertClaimType.reserved,
-        reminderFrequency
+      result.push(
+        mutations.notifyAdvertClaim(
+          {
+            id: reservation.by,
+            roles: [],
+          },
+          document.id,
+          AdvertClaimType.reserved,
+          reminderFrequency
+        )
       )
     })
   })
   return {
     action: 'Send reservation reminders',
-    message: JSON.stringify(documents),
+    message: JSON.stringify(await Promise.all(result)),
   }
 }
