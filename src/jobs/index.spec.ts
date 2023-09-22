@@ -4,6 +4,7 @@ import type { JobParameters, Task } from './types'
 
 const parameters: JobParameters = {
   maxReservationDays: 10,
+  reminderFrequency: 5,
 }
 
 const successfulJob: Task = async () => {

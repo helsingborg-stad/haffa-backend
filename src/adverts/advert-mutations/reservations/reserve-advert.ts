@@ -46,6 +46,7 @@ export const createReserveAdvert =
                 at: new Date().toISOString(),
                 quantity: reservedByMeCount + quantity,
                 type: AdvertClaimType.reserved,
+                events: [],
               },
             ]),
           }

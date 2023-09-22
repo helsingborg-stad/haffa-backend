@@ -121,6 +121,7 @@ describe('createAdvertFilterPredicate', () => {
             at: new Date().toISOString(),
             quantity: 1,
             type: AdvertClaimType.reserved,
+            events: [],
           },
         ],
       },
@@ -156,6 +157,7 @@ describe('createAdvertFilterPredicate', () => {
                 at: new Date().toISOString(),
                 quantity: advert.quantity,
                 type: AdvertClaimType.reserved,
+                events: [],
               },
             ],
           }

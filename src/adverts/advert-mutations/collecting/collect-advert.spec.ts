@@ -68,6 +68,7 @@ describe('collectAdvert', () => {
               by: user.id,
               quantity: 1,
               type: AdvertClaimType.collected,
+              events: [],
             },
           ])
         )

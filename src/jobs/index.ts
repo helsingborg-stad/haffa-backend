@@ -1,12 +1,12 @@
-import {
+import { randomUUID } from 'crypto'
+import { getEnv } from '@helsingborg-stad/gdi-api-node'
+import type {
   JobDefinition,
   JobExcecutorService,
   JobParameters,
   Task,
 } from './types'
-import { randomUUID } from 'crypto'
 import { tasks } from './tasks'
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
 
 export const createJobExecutorService = (
   taskRepository: Map<string, Task[]>,
@@ -48,7 +48,9 @@ export const createJobExecutorService = (
     },
     list: () => Array.from(tasks.keys()),
     find: jobId => pendingJobs.filter(job => job.jobId === jobId || !jobId),
-    prune: () => (pendingJobs.length = 0),
+    prune: () => {
+      pendingJobs.length = 0
+    },
   }
 }
 
@@ -56,6 +58,9 @@ export const createJobExecutorServiceFromEnv = (): JobExcecutorService => {
   const parameters: JobParameters = {
     maxReservationDays: Number(
       getEnv('MAX_RESERVATION_DAYS', { fallback: '10' })
+    ),
+    reminderFrequency: Number(
+      getEnv('REMINDER_FREQUENCY_DAYS', { fallback: '3' })
     ),
   }
   return createJobExecutorService(tasks, parameters)

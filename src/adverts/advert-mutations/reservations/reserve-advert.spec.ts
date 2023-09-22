@@ -67,6 +67,7 @@ describe('reserveAdvert', () => {
               by: user.id,
               quantity: 1,
               type: AdvertClaimType.reserved,
+              events: [],
             },
           ])
         )

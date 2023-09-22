@@ -57,12 +57,14 @@ export const createCollectAdvert =
                 at,
                 quantity: reservedByMeCount - quantity,
                 type: AdvertClaimType.reserved,
+                events: [],
               },
               {
                 by: user.id,
                 at,
                 quantity: collectedByMeCount + quantity,
                 type: AdvertClaimType.collected,
+                events: [],
               },
             ]),
           }

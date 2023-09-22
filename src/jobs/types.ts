@@ -1,20 +1,21 @@
-import { HaffaUser } from '../login/types'
-import { Services } from '../types'
+import type { HaffaUser } from '../login/types'
+import type { Services } from '../types'
 
 export interface JobExecutionResult {
   action: string
   message: string
 }
-export type JOB_STATUS = 'Failed' | 'Succeeded' | 'Pending'
+export type JobStatus = 'Failed' | 'Succeeded' | 'Pending'
 
 export interface JobParameters {
   maxReservationDays: number
+  reminderFrequency: number
 }
 export interface JobDefinition {
   jobId: string
   jobName: string
   owner: string
-  status: JOB_STATUS
+  status: JobStatus
   startDate: string
   endDate: string | null
   parameters: JobParameters
@@ -34,5 +35,5 @@ export interface JobExcecutorService {
   ) => JobDefinition[]
   list: () => string[]
   find: (jobId?: string) => JobDefinition[]
-  prune: () => number
+  prune: () => void
 }

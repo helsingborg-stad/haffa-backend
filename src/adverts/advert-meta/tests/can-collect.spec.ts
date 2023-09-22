@@ -15,6 +15,7 @@ describe('getAdvertMeta::canCollect', () => {
     at: new Date().toISOString(),
     quantity: 1,
     type: AdvertClaimType.reserved,
+    events: [],
     ...defaults,
   })
   const createReservation = (defaults?: Partial<AdvertClaim>): AdvertClaim =>

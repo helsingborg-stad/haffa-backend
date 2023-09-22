@@ -3,12 +3,12 @@ import { AdvertClaimType } from '../../adverts/types'
 import type { Services } from '../../types'
 import type { JobExecutionResult, Task } from '../types'
 
-export const clearExpiredReservations: Task = async (
+export const sendReservationReminder: Task = async (
   services,
-  { maxReservationDays }
+  { reminderFrequency }
 ): Promise<JobExecutionResult> => {
   const before = new Date()
-  before.setDate(before.getDate() - maxReservationDays)
+  before.setDate(before.getDate() - reminderFrequency)
 
   const mutations = createAdvertMutations(services as Services)
 
@@ -19,16 +19,19 @@ export const clearExpiredReservations: Task = async (
 
   documents?.forEach(async document => {
     document.advert.claims.forEach(async reservation => {
-      await mutations.cancelAdvertReservation(
+      await mutations.notifyAdvertClaim(
         {
           id: reservation.by,
+          roles: [],
         },
-        document.id
+        document.id,
+        AdvertClaimType.reserved,
+        reminderFrequency
       )
     })
   })
   return {
-    action: 'Clear expired reservations',
+    action: 'Send reservation reminders',
     message: JSON.stringify(documents),
   }
 }
