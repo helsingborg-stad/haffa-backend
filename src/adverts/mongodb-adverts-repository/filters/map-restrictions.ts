@@ -30,11 +30,20 @@ export const mapRestrictions = (
         },
       },
     },
-    (restrictions?.isArchived || restrictions?.createdByMe === true) && {
+    (restrictions?.isArchived ||
+      restrictions?.hasReservations ||
+      restrictions?.hasCollects ||
+      restrictions?.createdByMe === true) && {
       'advert.createdBy': user.id,
     },
     restrictions?.createdByMe === false && {
       'advert.createdBy': { $ne: user.id },
     },
-    restrictions?.isArchived ? { 'meta.archived': true } : regularAdvertsFilter
+    restrictions?.isArchived ? { 'meta.archived': true } : regularAdvertsFilter,
+    restrictions?.hasReservations === true && {
+      'meta.reservedCount': { $gt: 0 },
+    },
+    restrictions?.hasReservations === false && { 'meta.reservedCount': 0 },
+    restrictions?.hasCollects === true && { 'meta.collectedCount': { $gt: 0 } },
+    restrictions?.hasCollects === false && { 'meta.collectedCount': 0 }
   )

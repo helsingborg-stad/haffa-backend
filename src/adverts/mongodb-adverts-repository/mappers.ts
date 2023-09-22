@@ -1,5 +1,5 @@
 import type { Filter, Sort } from 'mongodb'
-import { AdvertType } from '../types'
+import { AdvertClaimType, AdvertType } from '../types'
 import type { Advert, AdvertFilterInput } from '../types'
 import type { MongoAdvert } from './types'
 import type { HaffaUser } from '../../login/types'
@@ -12,10 +12,19 @@ export const mapAdvertToMongoAdvert = (advert: Advert): MongoAdvert => {
   const isRecycle = advert.type === AdvertType.recycle
   const reservedCount = isRecycle
     ? advert.claims
+        .filter(({ type }) => type === AdvertClaimType.reserved)
         .map(({ quantity }) => quantity)
         .reduce((sum, q) => sum + q, 0)
     : 0
-  const unreservedCount = isRecycle ? advert.quantity - reservedCount : 0
+  const collectedCount = isRecycle
+    ? advert.claims
+        .filter(({ type }) => type === AdvertClaimType.collected)
+        .map(({ quantity }) => quantity)
+        .reduce((sum, q) => sum + q, 0)
+    : 0
+  const unreservedCount = isRecycle
+    ? advert.quantity - reservedCount - collectedCount
+    : 0
 
   return {
     id: advert.id,
@@ -24,6 +33,7 @@ export const mapAdvertToMongoAdvert = (advert: Advert): MongoAdvert => {
     meta: {
       reservedCount,
       unreservedCount,
+      collectedCount,
       archived: !!advert.archivedAt,
     },
   }

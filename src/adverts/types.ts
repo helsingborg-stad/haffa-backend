@@ -129,6 +129,8 @@ export interface AdvertRestrictionsFilterInput {
   reservedByMe?: boolean
   createdByMe?: boolean
   isArchived?: boolean
+  hasReservations?: boolean
+  hasCollects?: boolean
 }
 
 export interface AdvertSorting {

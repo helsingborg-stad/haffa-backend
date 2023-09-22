@@ -3,6 +3,7 @@ import type { Advert } from '../types'
 export interface MongoAdvertMeta {
   unreservedCount: number
   reservedCount: number
+  collectedCount: number
   archived: boolean
 }
 

@@ -78,6 +78,8 @@ export const advertsGqlSchema = /* GraphQL */ `
     reservedByMe: Boolean
     createdByMe: Boolean
     isArchived: Boolean
+    hasReservations: Boolean
+    hasCollects: Boolean
   }
 
   input AdvertSortingInput {

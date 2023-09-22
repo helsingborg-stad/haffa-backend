@@ -38,10 +38,15 @@ const createRestrictionsPredicate = (
 ): Predicate<Advert> => {
   const makeMatcher = (
     test: boolean | undefined,
-    p: Predicate<Advert>
+    testTrue: Predicate<Advert>,
+    testFalse?: Predicate<Advert>
   ): Predicate<Advert> | null =>
     // eslint-disable-next-line no-nested-ternary
-    test === true ? p : test === false ? advert => !p(advert) : null
+    test === true
+      ? testTrue
+      : test === false
+      ? advert => (testFalse ? testFalse(advert) : !testTrue(advert))
+      : null
 
   const matchers: Predicate<Advert>[] = [
     makeMatcher(
@@ -58,10 +63,17 @@ const createRestrictionsPredicate = (
       advert => getAdvertMeta(advert, user).canReserve
     ),
     makeMatcher(
-      restrictions?.isArchived === true,
-      ({ archivedAt, createdBy }) => !!archivedAt && createdBy === user.id
+      restrictions?.isArchived,
+      ({ archivedAt, createdBy }) => !!archivedAt && createdBy === user.id,
+      ({ archivedAt }) => !archivedAt
     ),
     makeMatcher(!restrictions?.isArchived, ({ archivedAt }) => !archivedAt),
+    makeMatcher(restrictions?.hasReservations, ({ claims }) =>
+      claims.some(({ type }) => type === AdvertClaimType.reserved)
+    ),
+    makeMatcher(restrictions?.hasCollects, ({ claims }) =>
+      claims.some(({ type }) => type === AdvertClaimType.collected)
+    ),
   ].filter(p => p) as Predicate<Advert>[]
 
   return matchers.length > 0
