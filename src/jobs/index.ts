@@ -3,6 +3,7 @@ import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import type {
   JobDefinition,
   JobExcecutorService,
+  JobExecutionResult,
   JobParameters,
   Task,
 } from './types'
@@ -17,34 +18,42 @@ export const createJobExecutorService = (
   return {
     runAs: (user, jobName, services = {}) => {
       const jobId = randomUUID()
-      const jobList =
-        taskRepository.get(jobName)?.map(task => {
-          const job: JobDefinition = {
-            jobId,
-            jobName,
-            owner: user.id,
-            startDate: new Date().toISOString(),
-            endDate: null,
-            status: 'Pending',
-            parameters,
-            result: null,
-          }
-          task(services, parameters)
+      const taskList = taskRepository.get(jobName) ?? []
+
+      const jobs: JobDefinition[] = new Array(taskList?.length).fill({
+        jobId,
+        jobName,
+        owner: user.id,
+        startDate: new Date().toISOString(),
+        endDate: null,
+        status: 'Pending',
+        parameters,
+        result: null,
+      })
+      // Run synchronously to avoid race conditions
+      void taskList.reduce<Promise<JobExecutionResult>>(
+        async (acc, task, i) =>
+          acc
             .then(result => {
-              job.status = 'Succeeded'
-              job.result = result
+              jobs[i].status = 'Succeeded'
+              jobs[i].result = result
+              return task(services, parameters)
             })
             .catch(ex => {
-              job.status = 'Failed'
-              job.result = { action: 'Exception caught', message: ex.message }
+              jobs[i].status = 'Failed'
+              jobs[i].result = {
+                action: 'Exception caught',
+                message: ex.message,
+              }
+              return task(services, parameters)
             })
             .finally(() => {
-              job.endDate = new Date().toISOString()
-            })
-          return job
-        }) ?? []
-      pendingJobs.push(...jobList)
-      return jobList
+              jobs[i].endDate = new Date().toISOString()
+            }),
+        taskList[0](services, parameters)
+      )
+      pendingJobs.push(...jobs)
+      return jobs
     },
     list: () => Array.from(tasks.keys()),
     find: jobId => pendingJobs.filter(job => job.jobId === jobId || !jobId),
