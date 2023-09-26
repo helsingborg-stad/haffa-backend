@@ -4,10 +4,15 @@ import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
 import type {
   AdvertClaim,
   AdvertReservations,
+  Advert,
   AdvertsRepository,
 } from '../types'
 import { createAdvertFilterPredicate } from '../filters/advert-filter-predicate'
-import { createEmptyAdvert, mapCreateAdvertInputToAdvert } from '../mappers'
+import {
+  createEmptyAdvert,
+  createPagedAdvertList,
+  mapCreateAdvertInputToAdvert,
+} from '../mappers'
 import { createAdvertFilterComparer } from '../filters/advert-filter-sorter'
 import { mapValues, toLookup } from '../../lib'
 
@@ -37,7 +42,7 @@ export const createFsAdvertsRepository = (
         )
       )
       .then(texts =>
-        texts.map(text => ({
+        texts.map<Advert>(text => ({
           ...createEmptyAdvert(),
           ...JSON.parse(text),
         }))
@@ -48,9 +53,10 @@ export const createFsAdvertsRepository = (
       .then(adverts =>
         [...adverts].sort(createAdvertFilterComparer(user, filter))
       )
+      .then(adverts => createPagedAdvertList(adverts, filter))
       .catch(e => {
         if (e?.code === 'ENOENT') {
-          return []
+          return { adverts: [], paging: { totalCount: 0 } }
         }
         throw e
       })
@@ -91,9 +97,9 @@ export const createFsAdvertsRepository = (
   }
 
   const countBy: AdvertsRepository['countBy'] = async (user, by) =>
-    list(user).then(adverts =>
+    list(user).then(advertList =>
       mapValues(
-        toLookup(adverts, advert => advert[by]),
+        toLookup(advertList.adverts, advert => advert[by]),
         l => l.length
       )
     )
