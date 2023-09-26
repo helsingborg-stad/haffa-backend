@@ -44,7 +44,7 @@ const service = createJobExecutorService(tasks, parameters)
 const user = { id: 'admin@haffa.se' }
 
 describe('JobsService', () => {
-  it('should run asynchronously successfully', async () => {
+  it('should run synchronously successfully', async () => {
     const [job] = await service.runAs(user, 'SUCCESSFUL_JOB', {})
     expect(job.owner).toBe('admin@haffa.se')
     expect(job.status).toBe('Succeeded')
