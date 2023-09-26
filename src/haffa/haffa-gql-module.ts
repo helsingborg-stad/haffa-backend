@@ -8,6 +8,7 @@ import { createLoginPoliciesGqlModule } from '../login-policies'
 import { createCategoriesGqlModule } from '../categories'
 import { createStatsGqlModule } from '../stats'
 import { createJobsGqlModule } from '../jobs/jobs-gql-module'
+import { createApiKeysGqlModule } from '../api-keys/api-keys-gql-module'
 
 export const createHaffaGqlModule = ({
   adverts,
@@ -26,6 +27,7 @@ export const createHaffaGqlModule = ({
     createTermsGqlModule(),
     createCategoriesGqlModule({ adverts, settings }),
     createLoginPoliciesGqlModule({ settings }),
+    createApiKeysGqlModule({ settings }),
     createStatsGqlModule({ adverts }),
     createJobsGqlModule({ adverts, jobs, profiles, files, notifications })
   )

@@ -7,6 +7,7 @@ import { mapFields } from './filters/map-fields'
 import { mapSearch } from './filters/map-search'
 import { mapRestrictions } from './filters/map-restrictions'
 import { combineAnd } from './filters/filter-utils'
+import { echo } from '../../lib'
 
 export const mapAdvertToMongoAdvert = (advert: Advert): MongoAdvert => {
   const isRecycle = advert.type === AdvertType.recycle

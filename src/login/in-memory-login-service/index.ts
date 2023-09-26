@@ -1,5 +1,5 @@
 import { getEnv } from '@helsingborg-stad/gdi-api-node'
-import { createIssuePincode } from '..'
+import { createIssuePincode } from '../issue-pincode'
 import type { StartupLog } from '../../types'
 import type { UserMapper } from '../../users/types'
 import type { LoginService } from '../types'
