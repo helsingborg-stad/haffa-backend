@@ -24,7 +24,7 @@ describe('user access validation', () => {
         givenApiKeys: [{ email: 'test@user.com', secret: 'test-api-key' }],
         givenLoginPolicies: [
           {
-            emailPattern: '.*@user.com',
+            emailPattern: '*@user.com',
             roles: ['canReserveAdverts', 'canCollectAdverts'],
           },
         ],
@@ -47,7 +47,7 @@ describe('user access validation', () => {
         ],
         givenLoginPolicies: [
           {
-            emailPattern: '.*@user.com',
+            emailPattern: '*@user.com',
             roles: ['canReserveAdverts', 'canCollectAdverts'],
           },
         ],
@@ -70,7 +70,7 @@ describe('user access validation', () => {
         ],
         givenLoginPolicies: [
           {
-            emailPattern: '.*@user.com',
+            emailPattern: '*@user.com',
             roles: ['canReserveAdverts', 'canCollectAdverts'],
           },
         ],
@@ -86,7 +86,7 @@ describe('user access validation', () => {
         givenApiKeys: [{ email: 'test@user.com', secret: 'test-api-key' }],
         givenLoginPolicies: [
           {
-            emailPattern: '.*@noone.ever',
+            emailPattern: '*@noone.ever',
             roles: [],
           },
         ],

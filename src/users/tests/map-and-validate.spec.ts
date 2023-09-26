@@ -37,7 +37,7 @@ describe('inMemoryUserMapper::mapAndValidate*', () => {
     const settings = createInMemorySettingsService()
     await loginPolicyAdapter(settings).updateLoginPolicies([
       {
-        emailPattern: '.*@user.com',
+        emailPattern: '*@user.com',
         roles: ['canEditOwnAdverts'],
       },
     ])
@@ -55,12 +55,12 @@ describe('inMemoryUserMapper::mapAndValidate*', () => {
       createInMemorySettingsService({
         'login-policies': [
           {
-            emailPattern: '.*@user.com',
+            emailPattern: '*@user.com',
             roles: ['a', 'b'],
             deny: true,
           },
           {
-            emailPattern: '.*',
+            emailPattern: '*',
             roles: ['a', 'b'],
             deny: false,
           },
@@ -77,7 +77,7 @@ describe('inMemoryUserMapper::mapAndValidate*', () => {
       createInMemorySettingsService({
         'login-policies': [
           {
-            emailPattern: '.*@others.com',
+            emailPattern: '*@others.com',
             roles: ['a', 'b'],
             deny: true,
           },

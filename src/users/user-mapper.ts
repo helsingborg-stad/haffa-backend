@@ -6,6 +6,8 @@ import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import type { LoginPolicy } from '../login-policies/types'
 import { makeAdmin, normalizeRoles, rolesArrayToRoles } from '../login'
 
+const nanomatch = require('nanomatch')
+
 const isString = (v: any) => typeof v === 'string'
 const isObject = (v: any) => v && typeof v === 'object' && !isArray(v)
 const isArray = (v: any) => Array.isArray(v)
@@ -18,8 +20,12 @@ const validateHaffaUser = (user: HaffaUser | null): HaffaUser | null =>
     ? { id: user.id.toString(), roles: normalizeRoles(user.roles) }
     : null
 
+export const tryMatchEmail = (email: string, emailPattern: string): boolean =>
+  nanomatch.isMatch(email, emailPattern)
+
 const tryMatchUserPolicy = (email: string, { emailPattern }: LoginPolicy) =>
-  new RegExp(`^${emailPattern}$`).test(email)
+  tryMatchEmail(email, emailPattern)
+
 const matchLoginPolicies = (email: string, policies: LoginPolicy[]) =>
   policies.filter(policy => tryMatchUserPolicy(email, policy))
 

@@ -34,7 +34,7 @@ describe('user access validation', () => {
         givenUser: 'test@user.com',
         givenLoginPolicies: [
           {
-            emailPattern: '.*@user.com',
+            emailPattern: '*@user.com',
             roles: ['canReserveAdverts', 'canCollectAdverts'],
           },
         ],
@@ -55,7 +55,7 @@ describe('user access validation', () => {
       'user is denied when denied by pattern in login policy',
       {
         givenUser: 'test@user.com',
-        givenLoginPolicies: [{ emailPattern: '.*@user.com', deny: true }],
+        givenLoginPolicies: [{ emailPattern: '*@user.com', deny: true }],
         expectResponse: {
           status: HttpStatusCodes.UNAUTHORIZED,
         },
