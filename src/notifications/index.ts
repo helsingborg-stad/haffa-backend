@@ -21,4 +21,5 @@ export const createNullNotificationService = (): NotificationService => ({
   advertWasReserved: async () => undefined,
   advertReservationWasCancelled: async () => undefined,
   advertWasCollected: async () => undefined,
+  advertNotCollected: async () => undefined,
 })

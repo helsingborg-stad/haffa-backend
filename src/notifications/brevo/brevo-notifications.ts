@@ -49,6 +49,12 @@ export const createBrevoNotifications = (
         quantity,
         advert: stripAdvert(advert),
       }),
+
+    advertNotCollected: (by, quantity, advert) =>
+      client.send({ name: by.id, email: by.id }, 'advert-not-collected', {
+        quantity,
+        advert: stripAdvert(advert),
+      }),
   }
 }
 
