@@ -11,6 +11,15 @@ import { mapTxResultToAdvertMutationResult } from '../mappers'
 
 const daysToMilliseconds = (days: number) => days * 24 * 60 * 60 * 1000
 
+const getLastEventDate = (events?: AdvertClaimEvent[]): string | null => {
+  const e = (a: AdvertClaimEvent, b: AdvertClaimEvent) =>
+    b.at.localeCompare(a.at)
+
+  if (events && events.length > 0) {
+    return [...events].sort(e)[0].at
+  }
+  return null
+}
 export const createAdvertClaimNotifier =
   ({
     adverts,
@@ -26,24 +35,15 @@ export const createAdvertClaimNotifier =
       .patch((advert, { actions }) => {
         const matchClaim = (c: AdvertClaim) =>
           c.by === user.id && c.type === type
-        const claimIndex = advert.claims.findIndex(matchClaim)
+        const claim = advert.claims.find(matchClaim)
 
-        if (claimIndex === -1) {
+        if (!claim) {
           return null
         }
-
-        const lastEventDate = ((claim: AdvertClaim) => {
-          let lastDate = claim.at
-          if (claim.events && claim.events.length > 0) {
-            const e = (a: AdvertClaimEvent, b: AdvertClaimEvent) =>
-              b.at.localeCompare(a.at)
-            const eventList = [...claim.events].sort(e)
-            lastDate = eventList[0].at
-          }
-          return new Date(lastDate)
-        })(advert.claims[claimIndex])
-
-        const newEvent: AdvertClaimEvent[] =
+        const lastEventDate = new Date(
+          getLastEventDate(claim.events) ?? claim.at
+        )
+        const event: AdvertClaimEvent[] =
           now.getTime() - lastEventDate.getTime() >= daysToMilliseconds(delay)
             ? [
                 {
@@ -52,11 +52,11 @@ export const createAdvertClaimNotifier =
                 },
               ]
             : []
-        if (newEvent.length > 0) {
+        if (event.length > 0) {
           actions(() =>
             notifications.advertNotCollected(
-              { id: advert.claims[claimIndex].by, roles: [] },
-              1,
+              { id: claim.by, roles: [] },
+              claim.quantity,
               advert
             )
           )
@@ -64,11 +64,11 @@ export const createAdvertClaimNotifier =
         return {
           ...advert,
           claims: [
-            ...advert.claims.map((claim, index) => ({
-              ...claim,
+            ...advert.claims.map((c, i) => ({
+              ...c,
               events: [
-                ...(claim.events ?? []),
-                ...(index === claimIndex ? newEvent : []),
+                ...(c.events ?? []),
+                ...(i === advert.claims.findIndex(matchClaim) ? event : []),
               ],
             })),
           ],
