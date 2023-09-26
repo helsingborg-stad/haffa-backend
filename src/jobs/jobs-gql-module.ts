@@ -25,12 +25,12 @@ export const createJobsGqlModule = ({
         }
         return jobs.list()
       },
-      jobFind: async ({ ctx, args: { JobId } }) => {
+      jobFind: async ({ ctx, args: { taskId } }) => {
         const { user } = ctx
         if (normalizeRoles(user?.roles).canRunSystemJobs) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        return jobs.find(JobId)
+        return jobs.find(taskId)
       },
     },
     Mutation: {

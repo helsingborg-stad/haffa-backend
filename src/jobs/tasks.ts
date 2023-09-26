@@ -1,10 +1,16 @@
-import { clearExpiredReservations } from './clear-expired-reservations'
-import { sendReservationReminder } from './send-reservation-reminder'
-import type { Task } from './types'
+import { clearExpiredReservations } from './runners/clear-expired-reservations'
+import { sendReservationReminder } from './runners/send-reservation-reminder'
+import type { TaskList } from './types'
 
-export const tasks = new Map<string, Task[]>([
-  [
-    'TASK_DAILY_MAINTENANCE',
-    [clearExpiredReservations, sendReservationReminder],
+export const tasks: TaskList = {
+  TASK_DAILY_MAINTENANCE: [
+    {
+      taskId: 'CLEAR_EXPIRED_RESERVATIONS',
+      runner: clearExpiredReservations,
+    },
+    {
+      taskId: 'SEND_RESERVATION_REMINDER',
+      runner: sendReservationReminder,
+    },
   ],
-])
+}

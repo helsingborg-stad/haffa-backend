@@ -1,12 +1,12 @@
 import { createAdvertMutations } from '../../adverts/advert-mutations'
 import { AdvertClaimType } from '../../adverts/types'
 import type { Services } from '../../types'
-import type { JobExecutionResult, Task } from '../types'
+import type { TaskRunnerSignature } from '../types'
 
-export const clearExpiredReservations: Task = async (
+export const clearExpiredReservations: TaskRunnerSignature = async (
   services,
   { maxReservationDays }
-): Promise<JobExecutionResult> => {
+): Promise<string> => {
   const before = new Date()
   before.setDate(before.getDate() - maxReservationDays)
 
@@ -27,8 +27,5 @@ export const clearExpiredReservations: Task = async (
       )
     })
   })
-  return {
-    action: 'Clear expired reservations',
-    message: JSON.stringify(documents),
-  }
+  return JSON.stringify(documents)
 }

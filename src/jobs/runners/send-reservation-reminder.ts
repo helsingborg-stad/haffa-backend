@@ -2,12 +2,12 @@ import { createAdvertMutations } from '../../adverts/advert-mutations'
 import { AdvertClaimType } from '../../adverts/types'
 import type { AdvertMutationResult } from '../../adverts/types'
 import type { Services } from '../../types'
-import type { JobExecutionResult, Task } from '../types'
+import type { TaskRunnerSignature } from '../types'
 
-export const sendReservationReminder: Task = async (
+export const sendReservationReminder: TaskRunnerSignature = async (
   services,
   { reminderFrequency }
-): Promise<JobExecutionResult> => {
+): Promise<string> => {
   const before = new Date()
   before.setDate(before.getDate() - reminderFrequency)
 
@@ -34,8 +34,5 @@ export const sendReservationReminder: Task = async (
       )
     })
   })
-  return {
-    action: 'Send reservation reminders',
-    message: JSON.stringify(await Promise.all(result)),
-  }
+  return JSON.stringify(await Promise.all(result))
 }

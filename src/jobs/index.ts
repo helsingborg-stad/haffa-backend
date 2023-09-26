@@ -1,64 +1,54 @@
-import { randomUUID } from 'crypto'
 import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import type {
-  JobDefinition,
   JobExcecutorService,
-  JobExecutionResult,
   JobParameters,
+  TaskList,
   Task,
 } from './types'
 import { tasks } from './tasks'
 
 export const createJobExecutorService = (
-  taskRepository: Map<string, Task[]>,
+  taskRepository: TaskList,
   parameters: JobParameters
 ): JobExcecutorService => {
-  const pendingJobs: JobDefinition[] = []
+  const history: Task[] = []
 
   return {
-    runAs: (user, jobName, services = {}) => {
-      const jobId = randomUUID()
-      const taskList = taskRepository.get(jobName) ?? []
+    runAs: async (user, jobName, services = {}) => {
+      const taskList = taskRepository[jobName] ?? []
 
-      const jobs: JobDefinition[] = new Array(taskList?.length).fill({
-        jobId,
-        jobName,
-        owner: user.id,
-        startDate: new Date().toISOString(),
-        endDate: null,
-        status: 'Pending',
-        parameters,
-        result: null,
-      })
+      const jobs: Task[] = []
       // Run synchronously to avoid race conditions
-      void taskList.reduce<Promise<JobExecutionResult>>(
-        async (acc, task, i) =>
-          acc
-            .then(result => {
-              jobs[i].status = 'Succeeded'
-              jobs[i].result = result
-              return task(services, parameters)
-            })
-            .catch(ex => {
-              jobs[i].status = 'Failed'
-              jobs[i].result = {
-                action: 'Exception caught',
-                message: ex.message,
-              }
-              return task(services, parameters)
-            })
-            .finally(() => {
-              jobs[i].endDate = new Date().toISOString()
-            }),
-        taskList[0](services, parameters)
-      )
-      pendingJobs.push(...jobs)
+      // eslint-disable-next-line no-restricted-syntax
+      for (const task of taskList) {
+        const job: Task = {
+          jobName,
+          taskId: task.taskId,
+          owner: user.id,
+          parameters,
+          status: 'Succeeded',
+          startDate: new Date().toISOString(),
+          endDate: null,
+          result: null,
+        }
+        jobs.push(job)
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          job.result = await task.runner(services, parameters)
+        } catch (ex) {
+          job.status = 'Failed'
+          job.result = (ex as Error).message
+        } finally {
+          job.endDate = new Date().toISOString()
+        }
+      }
+      history.push(...jobs)
       return jobs
     },
-    list: () => Array.from(tasks.keys()),
-    find: jobId => pendingJobs.filter(job => job.jobId === jobId || !jobId),
+    list: () => Array.from(Object.keys(taskRepository)),
+    find: taskId => history.filter(job => job.taskId === taskId || !taskId),
     prune: () => {
-      pendingJobs.length = 0
+      history.length = 0
     },
   }
 }

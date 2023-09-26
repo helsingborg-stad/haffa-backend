@@ -1,10 +1,11 @@
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
-import type {
-  AdvertClaimEvent,
-  Advert,
-  AdvertMutations,
-  AdvertClaim,
+import {
+  type AdvertClaimEvent,
+  type Advert,
+  type AdvertMutations,
+  type AdvertClaim,
+  AdvertClaimEventType,
 } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 
@@ -45,6 +46,7 @@ export const createAdvertClaimNotifier =
           now.getTime() - lastEventDate.getTime() >= daysToMilliseconds(delay)
             ? [
                 {
+                  type: AdvertClaimEventType.reminder,
                   at: now.toISOString(),
                 },
               ]

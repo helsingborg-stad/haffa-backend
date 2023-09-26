@@ -81,7 +81,11 @@ export enum AdvertClaimType {
   reserved = 'reserved',
   collected = 'collected',
 }
+export enum AdvertClaimEventType {
+  reminder = 'reminder',
+}
 export interface AdvertClaimEvent {
+  type: AdvertClaimEventType
   at: string
 }
 export interface AdvertClaim {

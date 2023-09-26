@@ -1,7 +1,7 @@
 import { createAdvertClaimNotifier } from '.'
 import { end2endTest } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
-import { AdvertClaimType } from '../../types'
+import { AdvertClaimEventType, AdvertClaimType } from '../../types'
 
 describe('notifyAdvertClaim', () => {
   it('should add an event when no prior event exists using datecomparison with the claim creation date)', () =>
@@ -33,6 +33,7 @@ describe('notifyAdvertClaim', () => {
       )
       expect(adverts['advert-123'].claims[0].events).toMatchObject([
         {
+          type: AdvertClaimEventType.reminder,
           at: '2023-06-01T00:00:00.000Z',
         },
       ])
@@ -53,6 +54,7 @@ describe('notifyAdvertClaim', () => {
             type: AdvertClaimType.reserved,
             events: [
               {
+                type: AdvertClaimEventType.reminder,
                 at: '2023-05-10T00:00:00.000Z',
               },
             ],
