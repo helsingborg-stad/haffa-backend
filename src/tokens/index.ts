@@ -31,7 +31,7 @@ export const createTokenServiceFromEnv = (
     {
       name: 'token',
       config: {
-        secret: '****',
+        secret,
         expiresIn,
         jwtDefaultUser,
       },

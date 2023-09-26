@@ -8,13 +8,14 @@ import { createNotificationServiceFromEnv } from './notifications'
 import { createUserMapperFromEnv } from './users'
 import { createSettingsServiceFromEnv } from './settings'
 import { createJobExecutorServiceFromEnv } from './jobs'
+import { obfuscate } from './lib'
 
 const createStartupLog = (): StartupLog => ({
   echo: (service, { name, config }) => {
     // eslint-disable-next-line no-console
     console.log(
       config
-        ? `[startup] ${name} ${JSON.stringify(config)}`
+        ? `[startup] ${name} ${JSON.stringify(obfuscate(config))}`
         : `[startup] ${name}`
     )
     return service
