@@ -25,52 +25,52 @@ export const createMongoAdvertsRepository = (
       .then(envelope => envelope?.advert || null)
       .then(advert => (advert ? { ...createEmptyAdvert(), ...advert } : null))
 
-  const list: AdvertsRepository['list'] = (user, filter) =>
-    getCollection().then(async collection => {
-      const query = mapAdvertFilterInputToMongoQuery(user, filter)
-      const totalCount = await collection.countDocuments(query)
+  const list: AdvertsRepository['list'] = async (user, filter) => {
+    const collection = await getCollection()
+    const query = mapAdvertFilterInputToMongoQuery(user, filter)
+    const totalCount = await collection.countDocuments(query)
 
-      const limit = filter?.paging?.limit ?? totalCount
+    const limit = filter?.paging?.limit ?? totalCount
 
-      const skipCount = (() => {
-        try {
-          const skipFromCursor = Math.max(
-            0,
-            parseInt(filter?.paging?.cursor ?? '0', 10)
-          )
-          return skipFromCursor < totalCount ? skipFromCursor : 0
-        } catch (_) {
-          return 0
-        }
-      })()
-
-      const fetchedAdverts = await collection
-        .find(query)
-        .collation(collation)
-        .sort(mapAdvertFilterInputToMongoSort(filter))
-        .limit(limit + 1)
-        .skip(skipCount)
-        .toArray()
-        .then(envelopes => envelopes.map(envelope => envelope.advert))
-        .then(mongoAdvert =>
-          mongoAdvert.map<Advert>(advert => ({
-            ...createEmptyAdvert(),
-            ...advert,
-          }))
+    const skipCount = (() => {
+      try {
+        const skipFromCursor = Math.max(
+          0,
+          parseInt(filter?.paging?.cursor ?? '0', 10)
         )
-
-      const queryHasMoreAdverts = fetchedAdverts.length > limit
-      const nextCursor = queryHasMoreAdverts ? skipCount + limit : undefined
-
-      const adverts = queryHasMoreAdverts
-        ? fetchedAdverts.slice(0, -1)
-        : fetchedAdverts
-
-      return <AdvertList>{
-        adverts,
-        paging: { totalCount, nextCursor },
+        return skipFromCursor < totalCount ? skipFromCursor : 0
+      } catch (_) {
+        return 0
       }
-    })
+    })()
+
+    const fetchedAdverts = await collection
+      .find(query)
+      .collation(collation)
+      .sort(mapAdvertFilterInputToMongoSort(filter))
+      .limit(limit + 1)
+      .skip(skipCount)
+      .toArray()
+      .then(envelopes => envelopes.map(envelope => envelope.advert))
+      .then(mongoAdvert =>
+        mongoAdvert.map<Advert>(advert => ({
+          ...createEmptyAdvert(),
+          ...advert,
+        }))
+      )
+
+    const queryHasMoreAdverts = fetchedAdverts.length > limit
+    const nextCursor = queryHasMoreAdverts ? skipCount + limit : undefined
+
+    const adverts = queryHasMoreAdverts
+      ? fetchedAdverts.slice(0, -1)
+      : fetchedAdverts
+
+    return <AdvertList>{
+      adverts,
+      paging: { totalCount, nextCursor },
+    }
+  }
 
   const create: AdvertsRepository['create'] = async (user, advert) =>
     getCollection()
