@@ -14,6 +14,7 @@ const daysToMilliseconds = (days: number) => days * 24 * 60 * 60 * 1000
 export const createAdvertClaimNotifier =
   ({
     adverts,
+    notifications,
   }: Pick<
     Services,
     'adverts' | 'notifications'
@@ -51,6 +52,15 @@ export const createAdvertClaimNotifier =
                 },
               ]
             : []
+        if (newEvent.length > 0) {
+          actions(() =>
+            notifications.advertNotCollected(
+              { id: advert.claims[claimIndex].by, roles: [] },
+              1,
+              advert
+            )
+          )
+        }
         return {
           ...advert,
           claims: [

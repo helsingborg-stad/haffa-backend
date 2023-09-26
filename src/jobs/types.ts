@@ -6,7 +6,7 @@ export type TaskRunnerSignature = (
   parameters: JobParameters
 ) => Promise<string>
 
-export type Status = 'Failed' | 'Succeeded' | 'Pending'
+export type Status = 'Failed' | 'Succeeded'
 
 export interface JobParameters {
   maxReservationDays: number
