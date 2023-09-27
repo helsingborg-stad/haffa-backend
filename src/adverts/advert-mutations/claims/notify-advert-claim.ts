@@ -55,7 +55,7 @@ export const createAdvertClaimNotifier =
         if (event.length > 0) {
           actions(() =>
             notifications.advertNotCollected(
-              { id: claim.by, roles: [] },
+              { id: claim.by, roles: {} },
               claim.quantity,
               advert
             )

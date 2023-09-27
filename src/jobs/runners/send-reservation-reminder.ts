@@ -25,7 +25,7 @@ export const sendReservationReminder: TaskRunnerSignature = async (
         mutations.notifyAdvertClaim(
           {
             id: reservation.by,
-            roles: [],
+            roles: {},
           },
           document.id,
           AdvertClaimType.reserved,
