@@ -1,5 +1,6 @@
 import { Client } from 'minio'
 import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
+import mime from 'mime-types'
 import type { FilesService } from '../types'
 import { generateFileId, tryConvertDataUriToImageBuffer } from '../utils'
 
@@ -91,6 +92,7 @@ class MinioFilesService implements FilesService {
         try {
           const client = this.createMinioClient()
           const stream = await client.getObject(this.config.bucket, fileId)
+          ctx.type = mime.lookup(fileId) || 'application/octet-stream'
           ctx.body = stream
         } catch {
           // unfortunately, send() exposes to much info on errors
