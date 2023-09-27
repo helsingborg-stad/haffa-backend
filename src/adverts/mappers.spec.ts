@@ -46,6 +46,7 @@ describe('normalizeAdvertsClaims', () => {
     at: new Date().toDateString(),
     type: AdvertClaimType.reserved,
     quantity: 1,
+    events: [],
     ...claim,
   })
   const collect = (claim: Partial<AdvertClaim>): AdvertClaim => ({
@@ -53,6 +54,7 @@ describe('normalizeAdvertsClaims', () => {
     at: new Date().toDateString(),
     type: AdvertClaimType.collected,
     quantity: 1,
+    events: [],
     ...claim,
   })
 

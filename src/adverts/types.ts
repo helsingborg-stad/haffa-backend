@@ -81,11 +81,19 @@ export enum AdvertClaimType {
   reserved = 'reserved',
   collected = 'collected',
 }
+export enum AdvertClaimEventType {
+  reminder = 'reminder',
+}
+export interface AdvertClaimEvent {
+  type: AdvertClaimEventType
+  at: string
+}
 export interface AdvertClaim {
   quantity: number
   by: string
   at: string
   type: AdvertClaimType
+  events: AdvertClaimEvent[]
 }
 export interface AdvertReservations {
   id: string
@@ -161,8 +169,9 @@ export interface AdvertList {
   paging: Paging
 }
 
-export interface ReservationFilter {
-  olderThan?: Date
+export interface AdvertsClaimFilter {
+  before: Date
+  type: AdvertClaimType
 }
 
 export interface AdvertsRepository {
@@ -183,8 +192,8 @@ export interface AdvertsRepository {
     by: keyof Only<Advert, string>
     // by: keyof Extract<Advert, string>
   ) => Promise<Record<string, number>>
-  getReservationList: (
-    filter: ReservationFilter
+  getAggregatedClaims: (
+    filter: AdvertsClaimFilter
   ) => Promise<AdvertReservations[]>
 }
 
@@ -230,6 +239,13 @@ export interface AdvertMutations {
     by: string,
     type: AdvertClaimType,
     newType: AdvertClaimType
+  ) => Promise<AdvertMutationResult>
+  notifyAdvertClaim: (
+    user: HaffaUser,
+    id: string,
+    type: AdvertClaimType,
+    delay: number,
+    now?: Date
   ) => Promise<AdvertMutationResult>
 }
 

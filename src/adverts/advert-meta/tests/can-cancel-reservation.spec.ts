@@ -15,6 +15,7 @@ describe('getAdvertMeta::canCancelReservation', () => {
     at: new Date().toISOString(),
     quantity: 1,
     type: AdvertClaimType.reserved,
+    events: [],
     ...defaults,
   })
 

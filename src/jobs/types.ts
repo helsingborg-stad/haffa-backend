@@ -1,38 +1,42 @@
-import { HaffaUser } from '../login/types'
-import { Services } from '../types'
+import type { HaffaUser } from '../login/types'
+import type { Services } from '../types'
 
-export interface JobExecutionResult {
-  action: string
-  message: string
-}
-export type JOB_STATUS = 'Failed' | 'Succeeded' | 'Pending'
+export type TaskRunnerSignature = (
+  services: Partial<Services>,
+  parameters: JobParameters
+) => Promise<string>
+
+export type Status = 'Failed' | 'Succeeded'
 
 export interface JobParameters {
   maxReservationDays: number
+  reminderFrequency: number
 }
-export interface JobDefinition {
-  jobId: string
+export interface Task {
+  taskId: string
   jobName: string
   owner: string
-  status: JOB_STATUS
+  parameters: JobParameters
+  status: Status
   startDate: string
   endDate: string | null
-  parameters: JobParameters
-  result: JobExecutionResult | null
+  result: string | null
 }
 
-export type Task = (
-  services: Partial<Services>,
-  parameters: JobParameters
-) => Promise<JobExecutionResult>
+export type TaskList = { [key: string]: TaskListItem[] }
+
+export type TaskListItem = {
+  taskId: string
+  runner: TaskRunnerSignature
+}
 
 export interface JobExcecutorService {
   runAs: (
     user: HaffaUser,
     jobName: string,
     services: Partial<Services>
-  ) => JobDefinition[]
+  ) => Promise<Task[]>
   list: () => string[]
-  find: (jobId?: string) => JobDefinition[]
-  prune: () => number
+  find: (jobId?: string) => Task[]
+  prune: () => void
 }

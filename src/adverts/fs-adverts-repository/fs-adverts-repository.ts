@@ -122,10 +122,10 @@ export const createFsAdvertsRepository = (
         })
     },
   }
-  const getReservationList: AdvertsRepository['getReservationList'] =
+  const getAggregatedClaims: AdvertsRepository['getAggregatedClaims'] =
     async filter => {
       const dateCompare = (claim: AdvertClaim): boolean =>
-        new Date(claim.at) <= (filter.olderThan ?? new Date())
+        new Date(claim.at) <= filter.before && claim.type === filter.type
 
       return readdir(dataFolder)
         .then(names => names.filter(name => /.*\.json$/.test(name)))
@@ -133,9 +133,9 @@ export const createFsAdvertsRepository = (
         .then(paths =>
           Promise.all(paths.map(path => stat(path).then(s => ({ s, path }))))
         )
-        .then(stats =>
+        .then(fileStat =>
           Promise.all(
-            stats
+            fileStat
               .filter(({ s }) => s.isFile())
               .map(({ path }) => readFile(path, { encoding: 'utf8' }))
           )
@@ -173,6 +173,6 @@ export const createFsAdvertsRepository = (
     create,
     remove,
     countBy,
-    getReservationList,
+    getAggregatedClaims,
   }
 }

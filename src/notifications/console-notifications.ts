@@ -1,12 +1,11 @@
+/* eslint-disable no-console */
 import type { NotificationService } from './types'
 
 export const createConsoleNotificationService = (): NotificationService => ({
-  // eslint-disable-next-line no-console
   pincodeRequested: async (email, pincode) =>
     console.log({
       pincodeRequested: { email, pincode },
     }),
-  // eslint-disable-next-line no-console
   advertWasReserved: async (by, quantity, advert) =>
     console.log({
       advertWasReserved: {
@@ -15,7 +14,6 @@ export const createConsoleNotificationService = (): NotificationService => ({
         advert,
       },
     }),
-  // eslint-disable-next-line no-console
   advertReservationWasCancelled: async (by, quantity, advert) =>
     console.log({
       advertReservationWasCancelled: {
@@ -24,10 +22,17 @@ export const createConsoleNotificationService = (): NotificationService => ({
         advert,
       },
     }),
-  // eslint-disable-next-line no-console
   advertWasCollected: async (by, quantity, advert) =>
     console.log({
       advertWasCollected: {
+        by,
+        quantity,
+        advert,
+      },
+    }),
+  advertNotCollected: async (by, quantity, advert) =>
+    console.log({
+      advertNotCollected: {
         by,
         quantity,
         advert,

@@ -43,6 +43,9 @@ export const createTestNotificationServices = (
   advertWasCollected: unexpectedInvocation(
     'NotificationService::advertWasCollected'
   ),
+  advertNotCollected: unexpectedInvocation(
+    'NotificationService::advertNotCollected'
+  ),
   ...notifications,
 })
 

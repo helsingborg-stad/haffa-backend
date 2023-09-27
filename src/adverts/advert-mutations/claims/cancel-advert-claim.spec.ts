@@ -49,18 +49,21 @@ describe('cancelAdvertClaim', () => {
               at: '',
               quantity: 2,
               type: AdvertClaimType.reserved,
+              events: [],
             },
             {
               by: user.id,
               at: '',
               quantity: 1,
               type: AdvertClaimType.reserved,
+              events: [],
             },
             {
               by: 'someone else',
               at: '',
               quantity: 1,
               type: AdvertClaimType.reserved,
+              events: [],
             },
           ],
         }
@@ -83,12 +86,14 @@ describe('cancelAdvertClaim', () => {
               at: '',
               quantity: 2,
               type: 'reserved',
+              events: [],
             },
             {
               by: 'someone else',
               at: '',
               quantity: 1,
               type: 'reserved',
+              events: [],
             },
           ])
         )

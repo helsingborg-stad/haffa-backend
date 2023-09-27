@@ -57,10 +57,9 @@ export const createInMemoryAdvertsRepository = (
       s[v] = (s[v] || 0) + 1
       return s
     }, {}),
-  getReservationList: async filter => {
+  getAggregatedClaims: async filter => {
     const dateCompare = (claim: AdvertClaim): boolean =>
-      new Date(claim.at) <= (filter.olderThan ?? new Date()) &&
-      claim.type === 'reserved'
+      new Date(claim.at) <= filter.before && claim.type === filter.type
 
     return Object.values(db)
       .filter(advert => advert.claims.some(dateCompare))

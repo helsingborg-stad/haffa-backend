@@ -1,54 +1,55 @@
-import {
-  JobDefinition,
+import { getEnv } from '@helsingborg-stad/gdi-api-node'
+import type {
   JobExcecutorService,
   JobParameters,
+  TaskList,
   Task,
 } from './types'
-import { randomUUID } from 'crypto'
 import { tasks } from './tasks'
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
 
 export const createJobExecutorService = (
-  taskRepository: Map<string, Task[]>,
+  taskRepository: TaskList,
   parameters: JobParameters
 ): JobExcecutorService => {
-  const pendingJobs: JobDefinition[] = []
+  const history: Task[] = []
 
   return {
-    runAs: (user, jobName, services = {}) => {
-      const jobId = randomUUID()
-      const jobList =
-        taskRepository.get(jobName)?.map(task => {
-          const job: JobDefinition = {
-            jobId,
-            jobName,
-            owner: user.id,
-            startDate: new Date().toISOString(),
-            endDate: null,
-            status: 'Pending',
-            parameters,
-            result: null,
-          }
-          task(services, parameters)
-            .then(result => {
-              job.status = 'Succeeded'
-              job.result = result
-            })
-            .catch(ex => {
-              job.status = 'Failed'
-              job.result = { action: 'Exception caught', message: ex.message }
-            })
-            .finally(() => {
-              job.endDate = new Date().toISOString()
-            })
-          return job
-        }) ?? []
-      pendingJobs.push(...jobList)
-      return jobList
+    runAs: async (user, jobName, services = {}) => {
+      const taskList = taskRepository[jobName] ?? []
+
+      const jobs: Task[] = []
+      // Run synchronously to avoid race conditions
+      // eslint-disable-next-line no-restricted-syntax
+      for (const task of taskList) {
+        const job: Task = {
+          jobName,
+          taskId: task.taskId,
+          owner: user.id,
+          parameters,
+          status: 'Succeeded',
+          startDate: new Date().toISOString(),
+          endDate: null,
+          result: null,
+        }
+        jobs.push(job)
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          job.result = await task.runner(services, parameters)
+        } catch (ex) {
+          job.status = 'Failed'
+          job.result = (ex as Error).message
+        } finally {
+          job.endDate = new Date().toISOString()
+        }
+      }
+      history.push(...jobs)
+      return jobs
     },
-    list: () => Array.from(tasks.keys()),
-    find: jobId => pendingJobs.filter(job => job.jobId === jobId || !jobId),
-    prune: () => (pendingJobs.length = 0),
+    list: () => Array.from(Object.keys(taskRepository)),
+    find: taskId => history.filter(job => job.taskId === taskId || !taskId),
+    prune: () => {
+      history.length = 0
+    },
   }
 }
 
@@ -56,6 +57,9 @@ export const createJobExecutorServiceFromEnv = (): JobExcecutorService => {
   const parameters: JobParameters = {
     maxReservationDays: Number(
       getEnv('MAX_RESERVATION_DAYS', { fallback: '10' })
+    ),
+    reminderFrequency: Number(
+      getEnv('REMINDER_FREQUENCY_DAYS', { fallback: '3' })
     ),
   }
   return createJobExecutorService(tasks, parameters)

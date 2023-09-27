@@ -135,17 +135,15 @@ export const createMongoAdvertsRepository = (
     },
   }
 
-  const getReservationList: AdvertsRepository['getReservationList'] =
+  const getAggregatedClaims: AdvertsRepository['getAggregatedClaims'] =
     async filter => {
-      const date = (filter.olderThan ?? new Date()).toISOString()
-
       const cursor = (await getCollection()).aggregate<AdvertReservations>([
         {
           $match: {
             'advert.claims': {
               $elemMatch: {
-                at: { $lte: date },
-                type: 'reserved',
+                at: { $lte: filter.before.toISOString() },
+                type: filter.type,
               },
             },
           },
@@ -160,8 +158,8 @@ export const createMongoAdvertsRepository = (
                 as: 'claim',
                 cond: {
                   $and: [
-                    { $lte: ['$$claim.at', date] },
-                    { $eq: ['$$claim.type', 'reserved'] },
+                    { $lte: ['$$claim.at', filter.before.toISOString()] },
+                    { $eq: ['$$claim.type', filter.type] },
                   ],
                 },
               },
@@ -180,6 +178,6 @@ export const createMongoAdvertsRepository = (
     remove,
     saveAdvertVersion,
     countBy,
-    getReservationList,
+    getAggregatedClaims,
   }
 }
