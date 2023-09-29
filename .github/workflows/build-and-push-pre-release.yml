@@ -1,0 +1,28 @@
+name: Build and push docker image to github registry and deploy on release environment.
+
+on:
+  release:
+    types: [prereleased]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: helsingborg-stad/gdi-deploy/v1@main
+        with:
+          update-openapi-version: false
+          update-package-version: true
+          release-tag-name: ${{github.event.release.tag_name}}
+
+          gdi-gitops-config-repo: ${{ secrets.GDI_GITOPS_CONFIG_REPO }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+          gdi-gitops-token: ${{ secrets.GDI_GITOPS_TOKEN }}
+          gdi-gitops-app: ${{ secrets.GDI_GITOPS_APP }}
+          gdi-gitops-env: release
+
+          docker-username: ${{ github.repository_owner }}
+          docker-password: ${{ secrets.GITHUB_TOKEN }}
