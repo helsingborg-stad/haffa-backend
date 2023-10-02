@@ -76,6 +76,7 @@ export const advertsGqlSchema = /* GraphQL */ `
   input AdvertRestrictionsInput {
     canBeReserved: Boolean
     reservedByMe: Boolean
+    collectedByMe: Boolean
     createdByMe: Boolean
     isArchived: Boolean
     hasReservations: Boolean

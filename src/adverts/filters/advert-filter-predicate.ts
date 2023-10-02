@@ -58,6 +58,11 @@ const createRestrictionsPredicate = (
         ({ by, type }) => by === user.id && type === AdvertClaimType.reserved
       )
     ),
+    makeMatcher(restrictions?.collectedByMe, ({ claims }) =>
+      claims.some(
+        ({ by, type }) => by === user.id && type === AdvertClaimType.collected
+      )
+    ),
     makeMatcher(
       restrictions?.canBeReserved,
       advert => getAdvertMeta(advert, user).canReserve

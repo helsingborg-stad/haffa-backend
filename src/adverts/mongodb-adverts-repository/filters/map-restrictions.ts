@@ -30,6 +30,18 @@ export const mapRestrictions = (
         },
       },
     },
+    restrictions?.collectedByMe === true && {
+      'advert.claims': {
+        $elemMatch: { by: user.id, type: AdvertClaimType.collected },
+      },
+    },
+    restrictions?.collectedByMe === false && {
+      $not: {
+        'advert.claims': {
+          $elemMatch: { by: user.id, type: AdvertClaimType.collected },
+        },
+      },
+    },
     (restrictions?.isArchived ||
       restrictions?.hasReservations ||
       restrictions?.hasCollects ||

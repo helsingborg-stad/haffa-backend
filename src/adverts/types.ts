@@ -135,6 +135,7 @@ export type AdvertFieldsFilterInput = {
 export interface AdvertRestrictionsFilterInput {
   canBeReserved?: boolean
   reservedByMe?: boolean
+  collectedByMe?: boolean
   createdByMe?: boolean
   isArchived?: boolean
   hasReservations?: boolean
