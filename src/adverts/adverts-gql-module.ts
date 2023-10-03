@@ -14,6 +14,10 @@ export const createAdvertsGqlModule = (
 ): GraphQLModule => ({
   schema: advertsGqlSchema,
   resolvers: {
+    AdvertMutationResult: {
+      // categories is present in GQL model but not in internal model
+      categories: () => categoryAdapter(services.settings).getCategories(),
+    },
     AdvertList: {
       // categories is present in GQL model but not in internal model
       categories: () => categoryAdapter(services.settings).getCategories(),

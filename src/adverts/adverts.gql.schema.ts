@@ -35,6 +35,7 @@ export const advertsGqlSchema = /* GraphQL */ `
   type AdvertMutationResult {
     status: AdvertMutationStatus
     advert: Advert!
+    categories: [Category]
   }
 
   input StringFilterInput {
