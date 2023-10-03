@@ -22,7 +22,7 @@ export const createHaffaGqlModule = ({
   'adverts' | 'files' | 'profiles' | 'notifications' | 'settings' | 'jobs'
 >): GraphQLModule =>
   mergeModules(
-    createAdvertsGqlModule({ adverts, files, notifications }),
+    createAdvertsGqlModule({ adverts, files, notifications, settings }),
     createProfileGqlModule(profiles),
     createTermsGqlModule(),
     createCategoriesGqlModule({ adverts, settings }),

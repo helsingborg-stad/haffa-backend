@@ -202,6 +202,7 @@ export const advertsGqlSchema = /* GraphQL */ `
 
   type AdvertList {
     adverts: [Advert]
+    categories: [Category]
     paging: Paging
   }
 `

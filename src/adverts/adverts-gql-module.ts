@@ -7,17 +7,25 @@ import {
 } from './mappers'
 import { createAdvertMutations } from './advert-mutations'
 import type { Services } from '../types'
+import { categoryAdapter } from '../categories/category-adapter'
 
 export const createAdvertsGqlModule = (
-  services: Pick<Services, 'adverts' | 'files' | 'notifications'>
+  services: Pick<Services, 'adverts' | 'files' | 'notifications' | 'settings'>
 ): GraphQLModule => ({
   schema: advertsGqlSchema,
   resolvers: {
+    AdvertList: {
+      // categories is present in GQL model but not in internal model
+      categories: () => categoryAdapter(services.settings).getCategories(),
+    },
     Query: {
       // https://www.graphql-tools.com/docs/resolvers
       adverts: async ({ ctx: { user }, args: { filter } }) => {
         const l = await services.adverts.list(user, filter)
-        return { ...l, adverts: mapAdvertsToAdvertsWithMeta(user, l.adverts) }
+        return {
+          ...l,
+          adverts: mapAdvertsToAdvertsWithMeta(user, l.adverts),
+        }
       },
       getAdvert: async ({ ctx: { user }, args: { id } }) => {
         const advert = await services.adverts.getAdvert(user, id)
