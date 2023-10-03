@@ -3,7 +3,7 @@ name: Build and push docker image to github registry and deploy on dev environme
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   deploy:
