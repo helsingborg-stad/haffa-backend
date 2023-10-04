@@ -37,6 +37,7 @@ export const normalizeRoles = (
   canEditSystemCategories: !!roles?.canEditSystemCategories,
   canEditSystemLoginPolicies: !!roles?.canEditSystemLoginPolicies,
   canEditApiKeys: !!roles?.canEditApiKeys,
+  canEditTerms: !!roles?.canEditTerms,
   canRunSystemJobs: !!roles?.canRunSystemJobs,
 })
 
@@ -60,6 +61,7 @@ export const makeRoles = (
   canEditSystemCategories: defaultEnabled,
   canEditSystemLoginPolicies: defaultEnabled,
   canEditApiKeys: defaultEnabled,
+  canEditTerms: defaultEnabled,
   canRunSystemJobs: defaultEnabled,
 })
 
@@ -81,6 +83,7 @@ export const combineRoles = (
     canEditSystemLoginPolicies:
       a.canEditSystemLoginPolicies || b.canEditSystemLoginPolicies,
     canEditApiKeys: a.canEditApiKeys || b.canEditApiKeys,
+    canEditTerms: a.canEditTerms || b.canEditTerms,
     canRunSystemJobs: a.canRunSystemJobs || b.canRunSystemJobs,
   })
 

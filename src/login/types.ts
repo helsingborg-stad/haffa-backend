@@ -28,6 +28,7 @@ export interface HaffaUserRoles {
   canEditSystemCategories?: boolean
   canEditSystemLoginPolicies?: boolean
   canEditApiKeys?: boolean
+  canEditTerms?: boolean
   canRunSystemJobs?: boolean
 }
 
