@@ -20,6 +20,7 @@ describe('createAdvert', () => {
         title: 't',
         description: 'd',
         images: [],
+        organization: 'o',
         unit: 'u',
         material: 'm',
         condition: 'c',

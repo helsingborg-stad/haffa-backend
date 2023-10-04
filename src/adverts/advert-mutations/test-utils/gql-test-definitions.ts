@@ -6,6 +6,7 @@ export const advertProps = `
 		url
 	}
 	quantity
+	organization
 	unit
 	material
 	condition
