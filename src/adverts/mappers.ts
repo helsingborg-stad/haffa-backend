@@ -27,6 +27,7 @@ export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
   quantity: 1,
   images: [],
 
+  organization: '',
   unit: '',
   material: '',
   condition: '',
@@ -58,7 +59,7 @@ export const createEmptyAdvertInput = (): AdvertInput => ({
   description: '',
   quantity: 1,
   images: [],
-
+  organization: '',
   unit: '',
   material: '',
   condition: '',

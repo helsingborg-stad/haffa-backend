@@ -63,6 +63,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     id: StringFilterInput
     title: StringFilterInput
     description: StringFilterInput
+    organization: StringFilterInput
     unit: StringFilterInput
     material: StringFilterInput
     condition: StringFilterInput
@@ -119,6 +120,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     description: String
     images: [ImageInput]
     quantity: Int
+    organization: String
     unit: String
     material: String
     condition: String
@@ -186,6 +188,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     description: String
     quantity: Int
     images: [Image]
+    organization: String
     unit: String
     material: String
     condition: String

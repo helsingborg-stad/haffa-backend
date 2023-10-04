@@ -23,6 +23,7 @@ export interface AdvertUserFields {
   description: string
   quantity: number
   images: AdvertImage[]
+  organization: string
   unit: string
   material: string
   condition: string
