@@ -7,6 +7,7 @@ export const createEmptyProfile = (): Profile => ({
   zipCode: '',
   city: '',
   country: 'Sverige',
+  organization: '',
 })
 
 export const createEmptyProfileInput = (): ProfileInput => ({
@@ -15,4 +16,5 @@ export const createEmptyProfileInput = (): ProfileInput => ({
   zipCode: '',
   city: '',
   country: 'Sverige',
+  organization: '',
 })

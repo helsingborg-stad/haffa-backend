@@ -21,6 +21,7 @@ describe('getProfile', () => {
               country
               phone
               zipCode
+              organization
             }
           }
         `,

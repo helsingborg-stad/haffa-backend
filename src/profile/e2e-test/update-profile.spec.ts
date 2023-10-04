@@ -11,6 +11,7 @@ describe('getProfile', () => {
         zipCode: '25221',
         city: 'Helsingborg',
         country: 'Sverige',
+        organization: 'SLF',
       }
       const { status, body } = await gqlRequest(
         /* GraphQL */ `
@@ -22,6 +23,7 @@ describe('getProfile', () => {
               country
               phone
               zipCode
+              organization
             }
           }
         `,

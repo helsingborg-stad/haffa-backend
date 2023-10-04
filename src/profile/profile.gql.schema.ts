@@ -14,6 +14,7 @@ export const profileGqlSchema = /* GraphQL */ `
     zipCode: String
     city: String
     country: String
+    organization: String
   }
 
   input ProfileInput {
@@ -22,5 +23,6 @@ export const profileGqlSchema = /* GraphQL */ `
     zipCode: String
     city: String
     country: String
+    organization: String
   }
 `
