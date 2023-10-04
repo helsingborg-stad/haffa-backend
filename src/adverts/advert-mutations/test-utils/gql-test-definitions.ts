@@ -6,7 +6,6 @@ export const advertProps = `
 		url
 	}
 	quantity
-	organization
 	unit
 	material
 	condition
@@ -16,6 +15,7 @@ export const advertProps = `
 	contact {
 		email
 		phone
+		organization
 	}
 	location {
 		adress

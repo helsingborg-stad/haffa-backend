@@ -16,6 +16,7 @@ export interface AdvertLocation {
 export interface AdvertContact {
   phone: string
   email: string
+  organization: string
 }
 // User editable fields in an advert
 export interface AdvertUserFields {
@@ -23,7 +24,6 @@ export interface AdvertUserFields {
   description: string
   quantity: number
   images: AdvertImage[]
-  organization: string
   unit: string
   material: string
   condition: string
