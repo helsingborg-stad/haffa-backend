@@ -17,6 +17,7 @@ jobs:
           update-openapi-version: true
           openapi-spec-file: openapi.yml
           release-tag-name: sha-${{github.sha}}
+          git-checkout-branch: dev
 
           gdi-gitops-config-repo: ${{ secrets.GDI_GITOPS_CONFIG_REPO }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
