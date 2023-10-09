@@ -63,6 +63,20 @@ export function createClient(config: BrevoConfig): BrevoClient {
       templateId,
       params,
       replyTo,
+    }).catch(e => {
+      console.error(
+        JSON.stringify(
+          {
+            templateCommonName,
+            to,
+            params,
+            e,
+          },
+          null,
+          2
+        )
+      )
+      throw e
     })
   }
 

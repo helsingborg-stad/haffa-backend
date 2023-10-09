@@ -30,6 +30,14 @@ export const createConsoleNotificationService = (): NotificationService => ({
         advert,
       },
     }),
+  advertCollectWasCancelled: async (by, quantity, advert) =>
+    console.log({
+      advertCollectWasCancelled: {
+        by,
+        quantity,
+        advert,
+      },
+    }),
   advertNotCollected: async (by, quantity, advert) =>
     console.log({
       advertNotCollected: {

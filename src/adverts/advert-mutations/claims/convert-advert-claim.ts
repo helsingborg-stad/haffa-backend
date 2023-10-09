@@ -39,6 +39,29 @@ export const createConvertAdvertClaim =
           return null
         }
 
+        if (newType === AdvertClaimType.reserved) {
+          claims.forEach(claim =>
+            actions(patched =>
+              notifications.advertWasReserved(
+                { id: by },
+                claim.quantity,
+                patched
+              )
+            )
+          )
+        }
+        if (newType === AdvertClaimType.collected) {
+          claims.forEach(claim =>
+            actions(patched =>
+              notifications.advertWasCollected(
+                { id: by },
+                claim.quantity,
+                patched
+              )
+            )
+          )
+        }
+        /*
         claims.forEach(claim =>
           actions(patched =>
             newType === AdvertClaimType.collected
@@ -49,7 +72,7 @@ export const createConvertAdvertClaim =
                 )
               : Promise.resolve()
           )
-        )
+        ) */
         return {
           ...advert,
           claims: normalizeAdvertClaims(

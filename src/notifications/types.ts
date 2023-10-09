@@ -18,6 +18,11 @@ export interface NotificationService {
     quantity: number,
     advert: Advert
   ) => Promise<void>
+  advertCollectWasCancelled: (
+    by: HaffaUser,
+    quantity: number,
+    advert: Advert
+  ) => Promise<void>
   advertNotCollected: (
     by: HaffaUser,
     quantity: number,

@@ -49,6 +49,17 @@ export const createCancelAdvertClaim =
               )
             )
           )
+        claims
+          .filter(claim => claim.type === AdvertClaimType.collected)
+          .forEach(claim =>
+            actions(patched =>
+              notifications.advertCollectWasCancelled(
+                { id: by },
+                claim.quantity,
+                patched
+              )
+            )
+          )
         return {
           ...advert,
           claims: normalizeAdvertClaims(
