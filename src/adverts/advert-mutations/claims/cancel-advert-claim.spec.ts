@@ -1,3 +1,4 @@
+import { makeUser } from '../../../login'
 import {
   T,
   createTestNotificationServices,
@@ -19,7 +20,7 @@ mutation Mutation(
 	}
 }
 `
-describe('cancelAdvertClaim', () => {
+describe('cancelAdvertClaim - reserved', () => {
   it('removes all reservations (by user) from database', () => {
     const advertReservationWasCancelled = jest.fn(async () => void 0)
     const notifications = createTestNotificationServices({
@@ -100,7 +101,98 @@ describe('cancelAdvertClaim', () => {
 
         T('should have notified about the interesting event', () =>
           expect(advertReservationWasCancelled).toHaveBeenCalledWith(
-            user,
+            makeUser({ id: user.id }),
+            1,
+            adverts['advert-123']
+          )
+        )
+      }
+    )
+  })
+})
+
+describe('cancelAdvertClaim - collected', () => {
+  it('removes all reservations (by user) from database', () => {
+    const advertCollectWasCancelled = jest.fn(async () => void 0)
+    const notifications = createTestNotificationServices({
+      advertCollectWasCancelled,
+    })
+    return end2endTest(
+      {
+        services: { notifications },
+      },
+      async ({ mappedGqlRequest, adverts, user, loginPolicies }) => {
+        // give us rights to handle claims
+        await loginPolicies.updateLoginPolicies([
+          {
+            emailPattern: user.id,
+            roles: ['canManageOwnAdvertsHistory'],
+          },
+        ])
+        // eslint-disable-next-line no-param-reassign
+        adverts['advert-123'] = {
+          ...createEmptyAdvert(),
+          id: 'advert-123',
+          createdBy: user.id,
+          quantity: 50,
+          claims: [
+            {
+              by: 'someone I used to know',
+              at: '',
+              quantity: 2,
+              type: AdvertClaimType.collected,
+              events: [],
+            },
+            {
+              by: user.id,
+              at: '',
+              quantity: 1,
+              type: AdvertClaimType.collected,
+              events: [],
+            },
+            {
+              by: 'someone else',
+              at: '',
+              quantity: 1,
+              type: AdvertClaimType.collected,
+              events: [],
+            },
+          ],
+        }
+
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'cancelAdvertClaim',
+          cancelAdvertClaimMutation,
+          {
+            id: 'advert-123',
+            by: user.id,
+            type: AdvertClaimType.collected,
+          }
+        )
+        expect(result.status).toBeNull()
+
+        T('collects by user should be removed from database', () =>
+          expect(adverts['advert-123'].claims).toMatchObject([
+            {
+              by: 'someone I used to know',
+              at: '',
+              quantity: 2,
+              type: 'collected',
+              events: [],
+            },
+            {
+              by: 'someone else',
+              at: '',
+              quantity: 1,
+              type: 'collected',
+              events: [],
+            },
+          ])
+        )
+
+        T('should have notified about the interesting event', () =>
+          expect(advertCollectWasCancelled).toHaveBeenCalledWith(
+            makeUser({ id: user.id }),
             1,
             adverts['advert-123']
           )

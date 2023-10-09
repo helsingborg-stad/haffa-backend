@@ -33,6 +33,8 @@ export const createSendGridNotifications = (
       send(by.id, 'advert-reservation-was-cancelled', { by, quantity, advert }),
     advertWasCollected: (by, quantity, advert) =>
       send(by.id, 'advert-was-collected', { by, quantity, advert }),
+    advertCollectWasCancelled: (by, quantity, advert) =>
+      send(by.id, 'advert-collect-was-cancelled', { by, quantity, advert }),
     advertNotCollected: (by, quantity, advert) =>
       send(by.id, 'advert-not-collected', { by, quantity, advert }),
   }

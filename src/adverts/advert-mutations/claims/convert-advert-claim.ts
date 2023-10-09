@@ -1,7 +1,7 @@
+import { makeUser } from '../../../login'
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { getAdvertMeta } from '../../advert-meta'
-import { AdvertClaimType } from '../../types'
 import type { AdvertClaim, Advert, AdvertMutations } from '../../types'
 import {
   mapTxResultToAdvertMutationResult,
@@ -13,6 +13,7 @@ import {
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
 } from '../verifiers'
+import { notifyClaimsWas } from './notify-claims'
 
 export const createConvertAdvertClaim =
   ({
@@ -34,34 +35,30 @@ export const createConvertAdvertClaim =
       .patch((advert, { actions }) => {
         const matchClaim = (c: AdvertClaim) =>
           c.by === by && c.type === type && c.type !== newType
+
         const claims = advert.claims.filter(matchClaim)
         if (claims.length === 0) {
           return null
         }
 
-        claims.forEach(claim =>
-          actions(patched =>
-            newType === AdvertClaimType.collected
-              ? notifications.advertWasCollected(
-                  { id: by },
-                  claim.quantity,
-                  patched
-                )
-              : Promise.resolve()
+        const updatedClaims = claims.map(c => ({
+          ...c,
+          at: new Date().toISOString(),
+          type: newType,
+        }))
+
+        actions(patched =>
+          notifyClaimsWas(
+            notifications,
+            makeUser({ id: by }),
+            patched,
+            updatedClaims
           )
         )
         return {
           ...advert,
           claims: normalizeAdvertClaims(
-            advert.claims
-              .filter(c => !matchClaim(c))
-              .concat(
-                claims.map(c => ({
-                  ...c,
-                  at: new Date().toISOString(),
-                  type: newType,
-                }))
-              )
+            advert.claims.filter(c => !matchClaim(c)).concat(updatedClaims)
           ),
         }
       })
