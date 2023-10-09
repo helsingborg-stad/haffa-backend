@@ -1,3 +1,4 @@
+import { makeUser } from '../../../login'
 import {
   T,
   createTestNotificationServices,
@@ -104,13 +105,13 @@ describe('convertAdvertClaim', () => {
           ])
         )
 
-        T('should have notified about the interesting event', () =>
+        T('should have notified about the interesting event', () => {
           expect(advertWasCollected).toHaveBeenCalledWith(
-            user,
+            makeUser({ id: user.id }),
             1,
             adverts['advert-123']
           )
-        )
+        })
       }
     )
   })

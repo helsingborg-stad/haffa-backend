@@ -1,6 +1,8 @@
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
-import { AdvertClaimType, type Advert, type AdvertMutations } from '../../types'
+import { AdvertClaimType } from '../../types'
+import type { AdvertClaim, Advert, AdvertMutations } from '../../types'
+import { notifyClaimsWasCancelled } from '../claims/notify-claims'
 import {
   mapTxResultToAdvertMutationResult,
   normalizeAdvertClaims,
@@ -19,6 +21,19 @@ export const createCancelAdvertReservation =
       .load(() => adverts.getAdvert(user, id))
       .validate(() => undefined)
       .patch((advert, { actions }) => {
+        const matchClaim = (c: AdvertClaim) =>
+          c.by === user.id && c.type === AdvertClaimType.reserved
+        const claims = advert.claims.filter(matchClaim)
+
+        if (claims.length === 0) {
+          return null
+        }
+
+        actions(patched =>
+          notifyClaimsWasCancelled(notifications, user, patched, claims)
+        )
+
+        /*
         actions((patched, original) =>
           notifications.advertReservationWasCancelled(
             user,
@@ -31,14 +46,12 @@ export const createCancelAdvertReservation =
             patched
           )
         )
+*/
         return {
           ...advert,
           claims: normalizeAdvertClaims(
             advert.claims // remove all reservations for user
-              .filter(
-                ({ by, type }) =>
-                  !(by === user.id && type === AdvertClaimType.reserved)
-              )
+              .filter(claim => !matchClaim(claim))
           ),
         }
       })

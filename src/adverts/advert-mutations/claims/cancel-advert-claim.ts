@@ -1,3 +1,6 @@
+import { makeUser } from '../../../login'
+import { HaffaUser } from '../../../login/types'
+import { NotificationService } from '../../../notifications/types'
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { getAdvertMeta } from '../../advert-meta'
@@ -13,6 +16,7 @@ import {
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
 } from '../verifiers'
+import { notifyClaimsWasCancelled } from './notify-claims'
 
 export const createCancelAdvertClaim =
   ({
@@ -38,28 +42,15 @@ export const createCancelAdvertClaim =
           return null
         }
 
-        claims
-          .filter(claim => claim.type === AdvertClaimType.reserved)
-          .forEach(claim =>
-            actions(patched =>
-              notifications.advertReservationWasCancelled(
-                { id: by },
-                claim.quantity,
-                patched
-              )
-            )
+        actions(patched =>
+          notifyClaimsWasCancelled(
+            notifications,
+            makeUser({ id: by }),
+            patched,
+            claims
           )
-        claims
-          .filter(claim => claim.type === AdvertClaimType.collected)
-          .forEach(claim =>
-            actions(patched =>
-              notifications.advertCollectWasCancelled(
-                { id: by },
-                claim.quantity,
-                patched
-              )
-            )
-          )
+        )
+
         return {
           ...advert,
           claims: normalizeAdvertClaims(

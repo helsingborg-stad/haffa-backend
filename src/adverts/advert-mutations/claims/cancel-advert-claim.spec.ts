@@ -1,3 +1,4 @@
+import { makeUser } from '../../../login'
 import {
   T,
   createTestNotificationServices,
@@ -100,7 +101,7 @@ describe('cancelAdvertClaim - reserved', () => {
 
         T('should have notified about the interesting event', () =>
           expect(advertReservationWasCancelled).toHaveBeenCalledWith(
-            user,
+            makeUser({ id: user.id }),
             1,
             adverts['advert-123']
           )
@@ -191,7 +192,7 @@ describe('cancelAdvertClaim - collected', () => {
 
         T('should have notified about the interesting event', () =>
           expect(advertCollectWasCancelled).toHaveBeenCalledWith(
-            user,
+            makeUser({ id: user.id }),
             1,
             adverts['advert-123']
           )
