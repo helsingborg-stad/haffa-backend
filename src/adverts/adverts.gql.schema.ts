@@ -68,6 +68,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     condition: StringFilterInput
     usage: StringFilterInput
     category: StringFilterInput
+    reference: StringFilterInput
     externalId: StringFilterInput
     and: [AdvertFieldsFilterInput]
     or: [AdvertFieldsFilterInput]
@@ -125,6 +126,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     condition: String
     usage: String
     category: String
+    reference: String
     externalId: String
 
     location: AdvertLocationInput
@@ -193,6 +195,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     condition: String
     usage: String
     category: String
+    reference: String
     externalId: String
     location: AdvertLocation
     contact: AdvertContact

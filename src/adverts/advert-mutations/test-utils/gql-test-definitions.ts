@@ -11,6 +11,7 @@ export const advertProps = `
 	condition
 	usage
 	category
+	reference
 	externalId
 	contact {
 		email
