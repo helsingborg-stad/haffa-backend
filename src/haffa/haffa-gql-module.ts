@@ -9,6 +9,7 @@ import { createCategoriesGqlModule } from '../categories'
 import { createStatsGqlModule } from '../stats'
 import { createJobsGqlModule } from '../jobs/jobs-gql-module'
 import { createApiKeysGqlModule } from '../api-keys/api-keys-gql-module'
+import { createBrandingGqlModule } from '../branding/branding-gql-module'
 
 export const createHaffaGqlModule = ({
   adverts,
@@ -36,7 +37,8 @@ export const createHaffaGqlModule = ({
     createLoginPoliciesGqlModule({ settings }),
     createApiKeysGqlModule({ settings }),
     createStatsGqlModule({ adverts }),
-    createJobsGqlModule({ adverts, jobs, profiles, files, notifications })
+    createJobsGqlModule({ adverts, jobs, profiles, files, notifications }),
+    createBrandingGqlModule({ settings })
   )
 
 const mergeModules = (...modules: GraphQLModule[]): GraphQLModule => ({
