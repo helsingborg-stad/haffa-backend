@@ -33,7 +33,7 @@ export const createMongoAdvertsRepository = (
     const getInt = (v: any, d: number, max: number) =>
       v > 0 && v <= max ? Math.ceil(v) : d
 
-    const pageSize = getInt(filter?.paging?.pageIndex, 25, 100)
+    const pageSize = getInt(filter?.paging?.pageSize, 25, 100)
     const pageCount = Math.ceil(totalCount / pageSize)
     const pageIndex = getInt(
       filter?.paging?.pageIndex,
