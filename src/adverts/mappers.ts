@@ -126,33 +126,48 @@ export const mapAdvertMutationResultToAdvertWithMetaMutationResult = (
 
 export const createPagedAdvertList = (
   adverts: Advert[],
-  filter?: AdvertFilterInput
+  filter?: AdvertFilterInput,
+  { defaultPageSize, maxCount } = { defaultPageSize: 25, maxCount: 100 }
+  // defaultPageSize: number = 25,
+  // maxCount: number = 1000
 ): AdvertList => {
-  if (!filter?.paging) {
-    return { adverts, paging: { totalCount: adverts.length } }
-  }
+  const totalCount = adverts.length
+  const getInt = (v: any, d: number, max: number) =>
+    v > 0 && v <= max ? Math.ceil(v) : d
 
-  const { cursor, limit } = filter.paging
-  const cursorIndex = Math.max(
+  const pageSize = getInt(filter?.paging?.pageIndex, defaultPageSize, maxCount)
+  const pageCount = Math.ceil(totalCount / pageSize)
+  const pageIndex = getInt(
+    filter?.paging?.pageIndex,
     0,
-    adverts.findIndex(advert => advert.id === cursor)
+    Math.max(pageCount - 1, 0)
   )
 
-  const sliced = adverts.slice(
-    cursorIndex,
-    limit > 0 ? cursorIndex + limit + 1 : undefined
-  )
-
-  const nextCursor =
-    limit > 0 && sliced.length > limit ? sliced.at(-1)?.id : undefined
-  const finalSlice =
-    limit > 0 && sliced.length > limit ? sliced.slice(0, -1) : sliced
+  const useCursor = (filter?.paging?.limit || 0) > 0
+  const { skip, take } = useCursor
+    ? {
+        // skip:  Math.max(0, parseInt(filter?.paging?.cursor || '0', 10) || 0),
+        skip: Math.max(
+          0,
+          adverts.findIndex(({ id }) => id === filter?.paging?.cursor)
+        ),
+        take: Math.min(filter?.paging?.limit || 0, maxCount),
+      }
+    : {
+        skip: pageIndex * pageSize,
+        take: pageSize,
+      }
 
   return {
-    adverts: finalSlice,
+    adverts: adverts.slice(skip, skip + take),
     paging: {
       totalCount: adverts.length,
-      nextCursor,
+      pageCount,
+      pageSize,
+      pageIndex,
+
+      nextCursor: adverts[skip + take]?.id,
+      // totalCount > skip + take ? (skip + take).toString() : undefined,
     },
   }
 }

@@ -86,23 +86,21 @@ describe('normalizeAdvertsClaims', () => {
 })
 
 describe('createPagedAdvertList', () => {
-  const adverts: Advert[] = [
-    { id: '0' } as Advert,
-    { id: '10' } as Advert,
-    { id: '20' } as Advert,
-    { id: '30' } as Advert,
-    { id: '40' } as Advert,
-    { id: '50' } as Advert,
-    { id: '60' } as Advert,
-    { id: '70' } as Advert,
-    { id: '80' } as Advert,
-    { id: '90' } as Advert,
-  ]
+  const adverts: Advert[] = [...Array(12)].map(
+    (_, index) =>
+      ({
+        id: (index * 10).toString(),
+      } as Advert)
+  )
 
-  it('returns all if no CURSOR or limit', () => {
-    const result = createPagedAdvertList(adverts)
+  it('returns upper bound if no CURSOR or limit', () => {
+    const upperBound = 5
+    const result = createPagedAdvertList(adverts, undefined, {
+      defaultPageSize: upperBound,
+      maxCount: 100,
+    })
 
-    expect(result.adverts).toEqual(adverts)
+    expect(result.adverts).toEqual(adverts.slice(0, upperBound))
     expect(result.paging.totalCount).toBe(adverts.length)
   })
 
@@ -116,13 +114,18 @@ describe('createPagedAdvertList', () => {
     expect(result.paging.totalCount).toBe(adverts.length)
   })
 
-  it('returns less than LIMIT when at end', () => {
-    const result = createPagedAdvertList(adverts, {
-      paging: { limit: 15 },
-    })
+  it('has upper bound on LIMIT', () => {
+    const hardLimit = 10
+    const result = createPagedAdvertList(
+      adverts,
+      {
+        paging: { limit: 15 },
+      },
+      { defaultPageSize: 1, maxCount: hardLimit }
+    )
 
     expect(result.adverts).toHaveLength(10)
-    expect(result.adverts).toEqual(adverts)
+    expect(result.adverts).toEqual(adverts.slice(0, hardLimit))
     expect(result.paging.totalCount).toBe(adverts.length)
   })
 
@@ -179,7 +182,7 @@ describe('createPagedAdvertList', () => {
       paging: { cursor: firstResult.paging.nextCursor, limit: 5 },
     })
 
-    expect(result.adverts).toEqual(modifiedAdverts.slice(6))
+    expect(result.adverts).toEqual(modifiedAdverts.slice(6, 11))
     expect(result.paging.totalCount).toBe(modifiedAdverts.length)
   })
 
@@ -210,7 +213,7 @@ describe('createPagedAdvertList', () => {
       paging: { cursor: firstResult.paging.nextCursor, limit: 5 },
     })
 
-    expect(result.adverts).toEqual(modifiedAdverts.slice(4))
+    expect(result.adverts).toEqual(modifiedAdverts.slice(4, 9))
     expect(result.paging.totalCount).toBe(modifiedAdverts.length)
   })
 
@@ -225,7 +228,7 @@ describe('createPagedAdvertList', () => {
       paging: { cursor: firstResult.paging.nextCursor, limit: 5 },
     })
 
-    expect(result.adverts).toEqual(modifiedAdverts.slice(5))
+    expect(result.adverts).toEqual(modifiedAdverts.slice(5, 10))
     expect(result.paging.totalCount).toBe(modifiedAdverts.length)
   })
 })

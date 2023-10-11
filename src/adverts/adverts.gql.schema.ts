@@ -91,8 +91,11 @@ export const advertsGqlSchema = /* GraphQL */ `
   }
 
   input AdvertPagingInput {
-    cursor: String
+    pageIndex: Int
+    pageSize: Int
+
     limit: Int
+    cursor: String
   }
 
   input AdvertFilterInput {
@@ -201,14 +204,17 @@ export const advertsGqlSchema = /* GraphQL */ `
     contact: AdvertContact
   }
 
-  type Paging {
-    totalCount: Int
+  type AdvertListPaging {
+    totalCount: Int!
+    pageCount: Int!
+    pageIndex: Int!
+    pageSize: Int!
     nextCursor: String
   }
 
   type AdvertList {
     adverts: [Advert]
     categories: [Category]
-    paging: Paging
+    paging: AdvertListPaging!
   }
 `
