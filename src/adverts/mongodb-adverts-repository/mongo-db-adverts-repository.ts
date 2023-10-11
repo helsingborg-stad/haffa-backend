@@ -30,26 +30,34 @@ export const createMongoAdvertsRepository = (
     const query = mapAdvertFilterInputToMongoQuery(user, filter)
     const totalCount = await collection.countDocuments(query)
 
-    const limit = filter?.paging?.limit ?? totalCount
+    const getInt = (v: any, d: number, max: number) =>
+      v > 0 && v <= max ? Math.ceil(v) : d
 
-    const skipCount = (() => {
-      try {
-        const skipFromCursor = Math.max(
-          0,
-          parseInt(filter?.paging?.cursor ?? '0', 10)
-        )
-        return skipFromCursor < totalCount ? skipFromCursor : 0
-      } catch (_) {
-        return 0
-      }
-    })()
+    const pageSize = getInt(filter?.paging?.pageSize, 25, 100)
+    const pageCount = Math.ceil(totalCount / pageSize)
+    const pageIndex = getInt(
+      filter?.paging?.pageIndex,
+      0,
+      Math.max(pageCount - 1, 0)
+    )
 
-    const fetchedAdverts = await collection
+    const useCursor = (filter?.paging?.limit || 0) > 0
+    const { skip, take } = useCursor
+      ? {
+          skip: Math.max(0, parseInt(filter?.paging?.cursor || '0', 10) || 0),
+          take: filter?.paging?.limit || 0 + 1,
+        }
+      : {
+          skip: pageIndex * pageSize,
+          take: pageSize,
+        }
+
+    const adverts = await collection
       .find(query)
       .collation(collation)
       .sort(mapAdvertFilterInputToMongoSort(filter))
-      .limit(limit + 1)
-      .skip(skipCount)
+      .limit(take)
+      .skip(skip)
       .toArray()
       .then(envelopes => envelopes.map(envelope => envelope.advert))
       .then(mongoAdvert =>
@@ -59,16 +67,16 @@ export const createMongoAdvertsRepository = (
         }))
       )
 
-    const queryHasMoreAdverts = fetchedAdverts.length > limit
-    const nextCursor = queryHasMoreAdverts ? skipCount + limit : undefined
-
-    const adverts = queryHasMoreAdverts
-      ? fetchedAdverts.slice(0, -1)
-      : fetchedAdverts
-
     return <AdvertList>{
       adverts,
-      paging: { totalCount, nextCursor },
+      paging: {
+        totalCount,
+        pageCount,
+        pageIndex,
+        pageSize,
+        nextCursor:
+          totalCount > skip + take ? (skip + take).toString() : undefined,
+      },
     }
   }
 

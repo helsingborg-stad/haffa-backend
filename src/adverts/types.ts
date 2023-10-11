@@ -150,8 +150,11 @@ export interface AdvertSorting {
 }
 
 export interface AdvertPagingInput {
+  pageIndex?: number
+  pageSize?: number
+
+  limit?: number
   cursor?: string
-  limit: number
 }
 
 export interface AdvertFilterInput {
@@ -162,14 +165,17 @@ export interface AdvertFilterInput {
   paging?: AdvertPagingInput
 }
 
-export interface Paging {
+export interface AdvertListPaging {
   totalCount: number
+  pageCount: number
+  pageIndex: number
+  pageSize: number
   nextCursor?: string
 }
 
 export interface AdvertList {
   adverts: Advert[]
-  paging: Paging
+  paging: AdvertListPaging
 }
 
 export interface AdvertsClaimFilter {
