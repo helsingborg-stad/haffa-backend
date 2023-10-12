@@ -3,6 +3,10 @@ import type { HaffaUser } from '../login/types'
 
 export interface NotificationService {
   pincodeRequested: (email: string, pincode: string) => Promise<void>
+  advertWasCreated: (by: HaffaUser, advert: Advert) => Promise<void>
+  advertWasRemoved: (by: HaffaUser, advert: Advert) => Promise<void>
+  advertWasArchived: (by: HaffaUser, advert: Advert) => Promise<void>
+  advertWasUnarchived: (by: HaffaUser, advert: Advert) => Promise<void>
   advertWasReserved: (
     by: HaffaUser,
     quantity: number,

@@ -18,10 +18,10 @@ mutation Mutation(
 `
 
 describe('archiveAdvert', () => {
-  it('updates an advert in the database', () => {
-    const advertWasReserved = jest.fn(async () => void 0)
+  it('updates an advert in the database and notifies', () => {
+    const advertWasArchived = jest.fn(async () => void 0)
     const notifications = createTestNotificationServices({
-      advertWasReserved,
+      advertWasArchived,
     })
 
     return end2endTest(
@@ -54,6 +54,13 @@ describe('archiveAdvert', () => {
 
         T('should have archive data logged in database', () =>
           expect(adverts['advert-123'].archivedAt).toMatch(/^\d{4}-\d{2}-\d{2}/)
+        )
+
+        T('should have notified about the interesting event', () =>
+          expect(advertWasArchived).toHaveBeenCalledWith(
+            expect.objectContaining(user),
+            expect.objectContaining(adverts['advert-123'])
+          )
         )
       }
     )

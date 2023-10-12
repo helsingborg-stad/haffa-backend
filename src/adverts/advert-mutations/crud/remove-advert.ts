@@ -8,22 +8,25 @@ export const createRemoveAdvert =
   ({
     adverts,
     files,
-  }: Pick<Services, 'adverts' | 'files'>): AdvertMutations['removeAdvert'] =>
+    notifications,
+  }: Pick<
+    Services,
+    'adverts' | 'files' | 'notifications'
+  >): AdvertMutations['removeAdvert'] =>
   async (user, id) =>
     txBuilder<Advert>()
       .load(() => adverts.getAdvert(user, id))
       .validate(async (advert, { throwIf }) =>
         throwIf(!getAdvertMeta(advert, user).canRemove, TxErrors.Unauthorized)
       )
-      .patch(async data => data)
+      .patch(async (advert, { actions }) => {
+        actions(() => notifications.advertWasRemoved(user, advert))
+        advert.images.forEach(({ url }) =>
+          actions(() => files.tryCleanupUrl(url))
+        )
+        return advert
+      })
       .verify(async update => update)
       .saveVersion(async () => adverts.remove(user, id))
       .run()
-      .then(async txResult => {
-        const images = (txResult?.data.images ?? [])
-          .map(({ url }) => url)
-          .filter(v => v)
-
-        await Promise.all(images.map(image => files.tryCleanupUrl(image)))
-        return mapTxResultToAdvertMutationResult(txResult)
-      })
+      .then(mapTxResultToAdvertMutationResult)

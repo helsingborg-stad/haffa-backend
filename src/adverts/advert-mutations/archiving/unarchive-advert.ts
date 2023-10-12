@@ -7,7 +7,11 @@ import { mapTxResultToAdvertMutationResult } from '../mappers'
 export const createUnarchiveAdvert =
   ({
     adverts,
-  }: Pick<Services, 'adverts'>): AdvertMutations['unarchiveAdvert'] =>
+    notifications,
+  }: Pick<
+    Services,
+    'adverts' | 'notifications'
+  >): AdvertMutations['unarchiveAdvert'] =>
   (user, id) =>
     txBuilder<Advert>()
       .load(() => adverts.getAdvert(user, id))
@@ -17,10 +21,13 @@ export const createUnarchiveAdvert =
           TxErrors.Unauthorized
         )
       )
-      .patch(async advert => ({
-        ...advert,
-        archivedAt: '',
-      }))
+      .patch(async (advert, { actions }) => {
+        actions(patched => notifications.advertWasUnarchived(user, patched))
+        return {
+          ...advert,
+          archivedAt: '',
+        }
+      })
       .verify(advert => advert)
       .saveVersion((versionId, advert) =>
         adverts.saveAdvertVersion(user, versionId, advert)

@@ -29,13 +29,7 @@ describe('collectAdvert', () => {
 
     return end2endTest(
       { services: { notifications } },
-      async ({
-        mappedGqlRequest,
-        adverts,
-        user,
-        loginPolicies,
-        services: { userMapper },
-      }) => {
+      async ({ mappedGqlRequest, adverts, user, loginPolicies }) => {
         // give us rights to collect
         await loginPolicies.updateLoginPolicies([
           {
@@ -73,11 +67,9 @@ describe('collectAdvert', () => {
           ])
         )
 
-        // determine effective user when notifications where sent
-        const mappedUser = await userMapper.mapAndValidateUser(user)
         T('should have notified about the interesting event', () =>
           expect(advertWasCollected).toHaveBeenCalledWith(
-            mappedUser,
+            expect.objectContaining(user),
             1,
             adverts['advert-123']
           )

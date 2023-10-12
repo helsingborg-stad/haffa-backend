@@ -19,9 +19,9 @@ mutation Mutation(
 
 describe('archiveAdvert', () => {
   it('updates an advert in the database', () => {
-    const advertWasReserved = jest.fn(async () => void 0)
+    const advertWasUnarchived = jest.fn(async () => void 0)
     const notifications = createTestNotificationServices({
-      advertWasReserved,
+      advertWasUnarchived,
     })
 
     return end2endTest(
@@ -55,6 +55,13 @@ describe('archiveAdvert', () => {
 
         T('should have archive data logged in database', () =>
           expect(adverts['advert-123'].archivedAt).toHaveLength(0)
+        )
+
+        T('should have notified about the interesting event', () =>
+          expect(advertWasUnarchived).toHaveBeenCalledWith(
+            expect.objectContaining(user),
+            expect.objectContaining(adverts['advert-123'])
+          )
         )
       }
     )

@@ -7,10 +7,18 @@ export const createCreateAdvert =
   ({
     adverts,
     files,
-  }: Pick<Services, 'adverts' | 'files'>): AdvertMutations['createAdvert'] =>
+    notifications,
+  }: Pick<
+    Services,
+    'adverts' | 'files' | 'notifications'
+  >): AdvertMutations['createAdvert'] =>
   (user, input) =>
     processAdvertInput(input, files)
       .then(convertedInput =>
         adverts.create(user, mapCreateAdvertInputToAdvert(convertedInput, user))
       )
+      .then(async advert => {
+        await notifications.advertWasCreated(user, advert)
+        return advert
+      })
       .then(advert => ({ advert, status: null }))

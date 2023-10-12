@@ -1,5 +1,9 @@
 import type { FilesService } from '../../../files/types'
-import { T, end2endTest } from '../../../test-utils'
+import {
+  T,
+  createTestNotificationServices,
+  end2endTest,
+} from '../../../test-utils'
 import { TxErrors } from '../../../transactions'
 import { createEmptyAdvert } from '../../mappers'
 import type { AdvertMutationResult, Advert } from '../../types'
@@ -16,9 +20,16 @@ mutation Mutation(
 `
 
 describe('removeAdvert', () => {
-  it('removes advert', () =>
-    end2endTest(
-      null,
+  it('removes advert and notifies', () => {
+    const advertWasRemoved = jest.fn(async () => void 0)
+    const notifications = createTestNotificationServices({
+      advertWasRemoved,
+    })
+
+    return end2endTest(
+      {
+        services: { notifications },
+      },
       async ({ mappedGqlRequest, adverts, user, loginPolicies }) => {
         await loginPolicies.updateLoginPolicies([
           {
@@ -48,8 +59,16 @@ describe('removeAdvert', () => {
         T('advert has been removed', () =>
           expect(adverts['remove-advert-test-1']).toBeUndefined()
         )
+
+        T('should have notified about the interesting event', () =>
+          expect(advertWasRemoved).toHaveBeenCalledWith(
+            expect.objectContaining(user),
+            mockAdvert
+          )
+        )
       }
-    ))
+    )
+  })
 
   it('denies unauthorized attempts', () =>
     end2endTest(null, async ({ mappedGqlRequest, adverts }) => {
