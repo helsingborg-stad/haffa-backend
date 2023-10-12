@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 paths:
   /api/v1/haffa/branding:
-    get:
+    post:
       operationId: branding
       summary: Get Branding values
       responses:
