@@ -34,7 +34,7 @@ const createServicesFromEnv = (): Services => {
     adverts: createAdvertsRepositoryFromEnv(startupLog),
     profiles: createProfileRepositoryFromEnv(startupLog),
     files: createFilesServiceFromEnv(startupLog),
-    notifications: createNotificationServiceFromEnv(startupLog),
+    notifications: createNotificationServiceFromEnv(startupLog, settings),
     jobs: createJobExecutorServiceFromEnv(),
   }
 }

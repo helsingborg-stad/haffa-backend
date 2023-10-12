@@ -36,7 +36,10 @@ export const createBrevoNotifications = (
           pincode,
         }
       ),
-
+    advertWasCreated: async () => undefined,
+    advertWasRemoved: async () => undefined,
+    advertWasArchived: async () => undefined,
+    advertWasUnarchived: async () => undefined,
     advertWasReserved: (by, quantity, advert) =>
       all(
         send(

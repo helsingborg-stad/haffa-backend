@@ -27,6 +27,10 @@ export const createSendGridNotifications = (
   return {
     pincodeRequested: (email, pincode) =>
       send(email, 'pincode-requested', { email, pincode }),
+    advertWasCreated: async () => undefined,
+    advertWasRemoved: async () => undefined,
+    advertWasArchived: async () => undefined,
+    advertWasUnarchived: async () => undefined,
     advertWasReserved: (by, quantity, advert) =>
       send(by.id, 'advert-was-reserved', { by, quantity, advert }),
     advertReservationWasCancelled: (by, quantity, advert) =>

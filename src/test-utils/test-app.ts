@@ -34,6 +34,18 @@ export const createTestNotificationServices = (
   pincodeRequested: unexpectedInvocation(
     'NotificationService::pincodeRequested'
   ),
+  advertWasCreated: unexpectedInvocation(
+    'NotificationService::advertWasCreated'
+  ),
+  advertWasRemoved: unexpectedInvocation(
+    'NotificationService::advertWasRemoved'
+  ),
+  advertWasArchived: unexpectedInvocation(
+    'NotificationService::advertWasArchived'
+  ),
+  advertWasUnarchived: unexpectedInvocation(
+    'NotificationService::advertWasUnarchived'
+  ),
   advertWasReserved: unexpectedInvocation(
     'NotificationService::advertWasReserved'
   ),
