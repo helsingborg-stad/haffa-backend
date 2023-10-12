@@ -28,13 +28,7 @@ describe('cancelAdvertReservation', () => {
       {
         services: { notifications },
       },
-      async ({
-        mappedGqlRequest,
-        adverts,
-        user,
-        loginPolicies,
-        services: { userMapper },
-      }) => {
+      async ({ mappedGqlRequest, adverts, user, loginPolicies }) => {
         // give us rights to handle reservations
         await loginPolicies.updateLoginPolicies([
           {
@@ -102,11 +96,9 @@ describe('cancelAdvertReservation', () => {
           ])
         )
 
-        // determine effective user when notifications where sent
-        const mappedUser = await userMapper.mapAndValidateUser(user)
         T('should have notified about the interesting event', () =>
           expect(advertReservationWasCancelled).toHaveBeenCalledWith(
-            mappedUser,
+            expect.objectContaining(user),
             3,
             adverts['advert-123']
           )
