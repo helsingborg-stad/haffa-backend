@@ -1,4 +1,8 @@
-import { T, end2endTest } from '../../../test-utils'
+import {
+  T,
+  createTestNotificationServices,
+  end2endTest,
+} from '../../../test-utils'
 import { createEmptyAdvertInput } from '../../mappers'
 import type { AdvertMutationResult, AdvertInput } from '../../types'
 import { mutationProps } from '../test-utils/gql-test-definitions'
@@ -13,30 +17,46 @@ mutation Mutation(
 }
 `
 describe('createAdvert', () => {
-  it('creates an advert in the database', () =>
-    end2endTest(null, async ({ mappedGqlRequest, adverts }) => {
-      const input: AdvertInput = {
-        ...createEmptyAdvertInput(),
-        title: 't',
-        description: 'd',
-        images: [],
-        unit: 'u',
-        material: 'm',
-        condition: 'c',
-        usage: 'u',
-        category: 'c',
-        externalId: 'eid',
-      }
-      const result = await mappedGqlRequest<AdvertMutationResult>(
-        'createAdvert',
-        createAdvertMutation,
-        { input }
-      )
-      expect(result.status).toBeNull()
-      expect(result.advert).toMatchObject(input)
+  it('creates an advert in the database and notifies', () => {
+    const advertWasCreated = jest.fn(async () => void 0)
+    const notifications = createTestNotificationServices({
+      advertWasCreated,
+    })
 
-      T('database should be updated with input', () =>
-        expect(adverts[result?.advert?.id as string]).toMatchObject(input)
-      )
-    }))
+    return end2endTest(
+      { services: { notifications } },
+      async ({ mappedGqlRequest, user, adverts }) => {
+        const input: AdvertInput = {
+          ...createEmptyAdvertInput(),
+          title: 't',
+          description: 'd',
+          images: [],
+          unit: 'u',
+          material: 'm',
+          condition: 'c',
+          usage: 'u',
+          category: 'c',
+          externalId: 'eid',
+        }
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'createAdvert',
+          createAdvertMutation,
+          { input }
+        )
+        expect(result.status).toBeNull()
+        expect(result.advert).toMatchObject(input)
+
+        T('database should be updated with input', () =>
+          expect(adverts[result?.advert?.id as string]).toMatchObject(input)
+        )
+
+        T('should have notified about the interesting event', () =>
+          expect(advertWasCreated).toHaveBeenCalledWith(
+            expect.objectContaining(user),
+            expect.objectContaining(input)
+          )
+        )
+      }
+    )
+  })
 })

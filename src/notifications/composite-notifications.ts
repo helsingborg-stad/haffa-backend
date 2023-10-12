@@ -16,7 +16,7 @@ export const createCompositeNotifications = (
     advertWasArchived: (...args) =>
       all(inner => inner.advertWasArchived(...args)),
     advertWasUnarchived: (...args) =>
-      all(inner => inner.advertWasArchived(...args)),
+      all(inner => inner.advertWasUnarchived(...args)),
 
     advertWasReserved: (...args) =>
       all(inner => inner.advertWasReserved(...args)),
