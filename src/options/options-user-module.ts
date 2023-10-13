@@ -1,12 +1,14 @@
 import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
 import type { SettingsService } from '../settings/types'
-import { brandingAdapter } from './branding-adapter'
+import { optionsAdapter } from './options-adapter'
 
-export const brandingUserModule =
+export const optionsUserModule =
   (settings: SettingsService): ApplicationModule =>
   ({ registerKoaApi }) =>
     registerKoaApi({
-      branding: async ctx => {
-        ctx.response.body = await brandingAdapter(settings).getBrandingOptions()
+      options: async ctx => {
+        ctx.response.body = await optionsAdapter(settings).getOptions(
+          ctx.params.collection
+        )
       },
     })

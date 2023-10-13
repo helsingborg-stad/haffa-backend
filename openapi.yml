@@ -4,17 +4,24 @@ info:
   description: Haffa
   version: 1.0.0
 paths:
-  /api/v1/haffa/branding:
+  /api/v1/haffa/options/{collection}:
+    parameters:
+      - in: path
+        name: collection
+        schema:
+          type: string
+        required: true
+        description: Name of collection
     post:
-      operationId: branding
-      summary: Get Branding values
+      operationId: options
+      summary: Get key/value pairs
       responses:
         '200':
           description: Successful processing of request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BrandingOptions'
+                $ref: '#/components/schemas/Options'
 
   /api/v1/haffa/auth/verify-token:
     post:
@@ -203,15 +210,15 @@ components:
           type: array
           items:
             type: string
-    BrandingOptions:
+    Options:
       type: array
       items:
         type: object
         required:
-          - name
+          - key
           - value
         properties:
-          name:
+          key:
             type: string
           value:
             type: string

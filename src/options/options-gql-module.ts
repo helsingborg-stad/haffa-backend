@@ -1,32 +1,32 @@
 import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import HttpStatusCodes from 'http-status-codes'
 import type { Services } from '../types'
-import { brandingGqlSchema } from './branding.gql.schema'
+import { optionsGqlSchema } from './options.gql.schema'
 import { normalizeRoles } from '../login'
-import { brandingAdapter } from './branding-adapter'
+import { optionsAdapter } from './options-adapter'
 
-export const createBrandingGqlModule = ({
+export const createOptionsGqlModule = ({
   settings,
 }: Pick<Services, 'settings'>): GraphQLModule => ({
-  schema: brandingGqlSchema,
+  schema: optionsGqlSchema,
   resolvers: {
     Query: {
       // https://www.graphql-tools.com/docs/resolvers
-      brandingOptions: async ({ ctx }) => {
+      options: async ({ ctx, args: { name } }) => {
         const { user } = ctx
         if (!normalizeRoles(user?.roles).canEditTerms) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        return brandingAdapter(settings).getBrandingOptions()
+        return optionsAdapter(settings).getOptions(name)
       },
     },
     Mutation: {
-      updateBrandingOptions: async ({ ctx, args: { input } }) => {
+      updateOptions: async ({ ctx, args: { input, name } }) => {
         const { user } = ctx
         if (!normalizeRoles(user?.roles).canEditTerms) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        return brandingAdapter(settings).updateBrandingOptions(input)
+        return optionsAdapter(settings).updateOptions(name, input)
       },
     },
   },

@@ -15,6 +15,7 @@ import { apiKeyUserModule } from './api-keys'
 import { downloadEventsModule } from './events'
 import { cookieUserModule } from './login/cookies/cookie-user-module'
 import { brandingUserModule } from './branding/branding-user-module'
+import { optionsUserModule } from './options/options-user-module'
 
 /** Create fully packaged web application, given dependencies */
 export const createApp = ({
@@ -33,7 +34,7 @@ export const createApp = ({
     .use(({ app }) => app.use(cors()))
     .use(({ app }) => app.use(bodyparser({ jsonLimit: '50mb' })))
     .use(swaggerModule({ routePrefix: '/api/v1/haffa/swagger' }))
-    .use(brandingUserModule(services.settings))
+    .use(optionsUserModule(services.settings))
     .use(apiKeyUserModule(services.settings))
     .use(jwtUserModule(services.tokens))
     .use(cookieUserModule(services.cookies, services.tokens))
