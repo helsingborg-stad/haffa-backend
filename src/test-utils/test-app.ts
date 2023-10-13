@@ -14,6 +14,7 @@ import { createUserMapper } from '../users'
 import { createInMemorySettingsService } from '../settings'
 import { createJobExecutorServiceFromEnv } from '../jobs'
 import { createIssuePincode } from '../login'
+import { categoryAdapter } from '../categories/category-adapter'
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
 
@@ -67,8 +68,10 @@ export const createTestNotificationServices = (
 export const createTestServices = (services: Partial<Services>): Services => {
   const settings = services.settings || createInMemorySettingsService()
   const userMapper = services.userMapper || createUserMapper(null, settings)
+  const categories = services.categories || categoryAdapter(settings)
   return {
     userMapper,
+    categories,
     settings,
     login: createInMemoryLoginService(userMapper, createIssuePincode('123456')),
     tokens: createTokenService(userMapper, { secret: TEST_SHARED_SECRET }),

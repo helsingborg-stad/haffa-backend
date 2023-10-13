@@ -1,7 +1,9 @@
 import type { SettingsService } from '../settings/types'
-import type { Category } from './types'
+import type { Category, CategoryRepository } from './types'
 
-export const categoryAdapter = (settings: SettingsService) => ({
+export const categoryAdapter = (
+  settings: SettingsService
+): CategoryRepository => ({
   getCategories: () =>
     settings.getSetting<Category[]>('categories').then(normalizeCategories),
   updateCategories: (categories: Category[]) =>
