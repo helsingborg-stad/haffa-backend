@@ -12,6 +12,7 @@ import { createApiKeysGqlModule } from '../api-keys/api-keys-gql-module'
 
 export const createHaffaGqlModule = ({
   adverts,
+  categories,
   files,
   profiles,
   notifications,
@@ -19,13 +20,19 @@ export const createHaffaGqlModule = ({
   jobs,
 }: Pick<
   Services,
-  'adverts' | 'files' | 'profiles' | 'notifications' | 'settings' | 'jobs'
+  | 'adverts'
+  | 'categories'
+  | 'files'
+  | 'profiles'
+  | 'notifications'
+  | 'settings'
+  | 'jobs'
 >): GraphQLModule =>
   mergeModules(
-    createAdvertsGqlModule({ adverts, files, notifications, settings }),
+    createAdvertsGqlModule({ adverts, files, notifications, categories }),
     createProfileGqlModule(profiles),
     createTermsGqlModule({ settings }),
-    createCategoriesGqlModule({ adverts, settings }),
+    createCategoriesGqlModule({ adverts, categories }),
     createLoginPoliciesGqlModule({ settings }),
     createApiKeysGqlModule({ settings }),
     createStatsGqlModule({ adverts }),

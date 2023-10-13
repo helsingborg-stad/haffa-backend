@@ -13,6 +13,7 @@ export const graphQLModule =
       Services,
       | 'userMapper'
       | 'adverts'
+      | 'categories'
       | 'files'
       | 'profiles'
       | 'notifications'

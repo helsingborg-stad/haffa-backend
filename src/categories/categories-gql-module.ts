@@ -2,13 +2,12 @@ import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import HttpStatusCodes from 'http-status-codes'
 import type { Services } from '../types'
 import { categoriesGqlSchema } from './categories.gql.schema'
-import { categoryAdapter } from './category-adapter'
 import { normalizeRoles } from '../login'
 
 export const createCategoriesGqlModule = ({
   adverts,
-  settings,
-}: Pick<Services, 'adverts' | 'settings'>): GraphQLModule => ({
+  categories,
+}: Pick<Services, 'adverts' | 'categories'>): GraphQLModule => ({
   schema: categoriesGqlSchema,
   resolvers: {
     Category: {
@@ -23,7 +22,7 @@ export const createCategoriesGqlModule = ({
     },
     Query: {
       // https://www.graphql-tools.com/docs/resolvers
-      categories: async () => categoryAdapter(settings).getCategories(),
+      categories: async () => categories.getCategories(),
     },
     Mutation: {
       updateCategories: async ({ ctx, args: { input } }) => {
@@ -31,7 +30,7 @@ export const createCategoriesGqlModule = ({
         if (!normalizeRoles(user?.roles).canEditSystemCategories) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        return categoryAdapter(settings).updateCategories(input)
+        return categories.updateCategories(input)
       },
     },
   },

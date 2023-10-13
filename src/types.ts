@@ -7,6 +7,7 @@ import type { NotificationService } from './notifications/types'
 import type { UserMapper } from './users/types'
 import type { SettingsService } from './settings/types'
 import type { JobExcecutorService } from './jobs/types'
+import type { CategoryRepository } from './categories/types'
 
 export interface StartupLog {
   echo: <TService>(
@@ -20,6 +21,7 @@ export interface StartupLog {
 
 export interface Services {
   userMapper: UserMapper
+  categories: CategoryRepository
   settings: SettingsService
   login: LoginService
   tokens: TokenService

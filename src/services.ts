@@ -9,6 +9,7 @@ import { createUserMapperFromEnv } from './users'
 import { createSettingsServiceFromEnv } from './settings'
 import { createJobExecutorServiceFromEnv } from './jobs'
 import { obfuscate } from './lib'
+import { categoryAdapter } from './categories/category-adapter'
 
 const createStartupLog = (): StartupLog => ({
   echo: (service, { name, config }) => {
@@ -26,15 +27,17 @@ const createServicesFromEnv = (): Services => {
   const startupLog = createStartupLog()
   const settings = createSettingsServiceFromEnv(startupLog)
   const userMapper = createUserMapperFromEnv(startupLog, settings)
+  const categories = categoryAdapter(settings)
   return {
     userMapper,
+    categories,
     settings,
     login: createLoginServiceFromEnv(startupLog, userMapper),
     tokens: createTokenServiceFromEnv(startupLog, userMapper),
     adverts: createAdvertsRepositoryFromEnv(startupLog),
     profiles: createProfileRepositoryFromEnv(startupLog),
     files: createFilesServiceFromEnv(startupLog),
-    notifications: createNotificationServiceFromEnv(startupLog, settings),
+    notifications: createNotificationServiceFromEnv(startupLog, categories),
     jobs: createJobExecutorServiceFromEnv(),
   }
 }
