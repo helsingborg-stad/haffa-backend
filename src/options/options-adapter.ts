@@ -6,7 +6,7 @@ const normalizeOptions = (options: Option[] | null): Option[] =>
 
 export const optionsAdapter = (settings: SettingsService) => ({
   getOptions: (name: string) =>
-    settings.getSetting<Option[]>(name).then(normalizeOptions),
+    settings.getSetting<Option[]>(`options-${name}`).then(normalizeOptions),
   updateOptions: (name: string, options: Option[]) =>
-    settings.updateSetting(name, options).then(normalizeOptions),
+    settings.updateSetting(`options-${name}`, options).then(normalizeOptions),
 })

@@ -1,1 +1,1 @@
-export const allowedCollections = ['branding-options']
+export const allowedCollections = ['branding']
