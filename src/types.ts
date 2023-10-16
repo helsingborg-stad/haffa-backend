@@ -8,6 +8,7 @@ import type { UserMapper } from './users/types'
 import type { SettingsService } from './settings/types'
 import type { JobExcecutorService } from './jobs/types'
 import type { CategoryRepository } from './categories/types'
+import type { EventLogService } from './events/types'
 
 export interface StartupLog {
   echo: <TService>(
@@ -30,4 +31,5 @@ export interface Services {
   files: FilesService
   notifications: NotificationService
   jobs: JobExcecutorService
+  eventLog: EventLogService
 }

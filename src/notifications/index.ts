@@ -1,8 +1,5 @@
-import type { GetCategories } from '../categories/types'
 import { createEventLoggingNotifications } from '../events'
-import { tryCreateMongoEventLogFromEnv } from '../events/mongo-event-log'
-import type { SettingsService } from '../settings/types'
-import type { StartupLog } from '../types'
+import type { Services, StartupLog } from '../types'
 import { tryCreateBrevoNotificationsFromEnv } from './brevo/brevo-notifications'
 import { createCompositeNotifications } from './composite-notifications'
 import { createConsoleNotificationService } from './console-notifications'
@@ -11,14 +8,14 @@ import type { NotificationService } from './types'
 
 export const createNotificationServiceFromEnv = (
   startupLog: StartupLog,
-  categories: GetCategories
+  { categories, eventLog }: Pick<Services, 'categories' | 'eventLog'>
 ): NotificationService =>
   createCompositeNotifications(
     // notify by email if configured, console otherwise
     tryCreateMailNotificationsFromEnv(startupLog) ||
       createConsoleNotificationsFromEnv(startupLog),
     // log events
-    tryCreateLoggingNotificationsFromEnv(startupLog, categories)
+    createEventLoggingNotifications(categories, eventLog)
   )
 
 export const createNullNotificationService = (): NotificationService => ({
@@ -38,13 +35,6 @@ const tryCreateMailNotificationsFromEnv = (startupLog: StartupLog) =>
   tryCreateSendGridNofificationsFromEnv(startupLog) ||
   tryCreateBrevoNotificationsFromEnv(startupLog)
 
-const tryCreateLoggingNotificationsFromEnv = (
-  startupLog: StartupLog,
-  categories: GetCategories
-) => {
-  const log = tryCreateMongoEventLogFromEnv(startupLog)
-  return log ? createEventLoggingNotifications(categories, log) : null
-}
 const createConsoleNotificationsFromEnv = (startupLog: StartupLog) =>
   startupLog.echo(createConsoleNotificationService(), {
     name: 'notifications',

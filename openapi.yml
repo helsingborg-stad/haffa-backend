@@ -102,6 +102,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GraphQLResponse'
+
+  /api/v1/haffa/events.xlsx:
+    get:
+      operationId: eventsAsXlsx
+      summary: 'Download event log as Excel document'
+      parameters:
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Excel document'
+          content:
+            application/vnd.ms-excel:
+              schema:
+                type: string
+                format: binary
+
   /api/v1/{namespace}/healthcheck:
     get:
       operationId: healthCheck

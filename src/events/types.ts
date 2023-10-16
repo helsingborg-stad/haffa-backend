@@ -3,6 +3,10 @@ import type { HaffaUser } from '../login/types'
 
 export interface EventLogService {
   logEvent: (event: LogEvent) => Promise<void>
+  enumerate: (
+    { from, to }: { from: Date; to: Date },
+    inspect: (event: LogEvent) => Promise<boolean>
+  ) => Promise<any>
 }
 
 export interface LogEvent {

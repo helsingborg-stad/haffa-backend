@@ -12,6 +12,7 @@ import { graphQLModule } from './haffa/haffa-module'
 import { loginModule } from './login/login-module'
 import { gitRevisionModule } from './git-revision-module'
 import { apiKeyUserModule } from './api-keys'
+import { downloadEventsModule } from './events'
 
 /** Create fully packaged web application, given dependencies */
 export const createApp = ({
@@ -35,4 +36,5 @@ export const createApp = ({
     .use(healthCheckModule())
     .use(graphQLModule(services))
     .use(loginModule(services.login, services.tokens, services.notifications))
+    .use(downloadEventsModule(services))
     .use(services.files.tryCreateApplicationModule() || (() => 0))

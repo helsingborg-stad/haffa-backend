@@ -10,6 +10,7 @@ import { createSettingsServiceFromEnv } from './settings'
 import { createJobExecutorServiceFromEnv } from './jobs'
 import { obfuscate } from './lib'
 import { categoryAdapter } from './categories/category-adapter'
+import { createEventLogServiceFromEnv } from './events'
 
 const createStartupLog = (): StartupLog => ({
   echo: (service, { name, config }) => {
@@ -27,6 +28,7 @@ const createServicesFromEnv = (): Services => {
   const startupLog = createStartupLog()
   const settings = createSettingsServiceFromEnv(startupLog)
   const userMapper = createUserMapperFromEnv(startupLog, settings)
+  const eventLog = createEventLogServiceFromEnv(startupLog)
   const categories = categoryAdapter(settings)
   return {
     userMapper,
@@ -37,8 +39,12 @@ const createServicesFromEnv = (): Services => {
     adverts: createAdvertsRepositoryFromEnv(startupLog),
     profiles: createProfileRepositoryFromEnv(startupLog),
     files: createFilesServiceFromEnv(startupLog),
-    notifications: createNotificationServiceFromEnv(startupLog, categories),
+    notifications: createNotificationServiceFromEnv(startupLog, {
+      categories,
+      eventLog,
+    }),
     jobs: createJobExecutorServiceFromEnv(),
+    eventLog,
   }
 }
 

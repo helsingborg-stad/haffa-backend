@@ -13,4 +13,22 @@ export const createMongoEventLogService = ({
       event,
     })
   },
+  enumerate: async ({ from, to }, inspect) => {
+    const collection = await getCollection()
+    const cursor = collection.find({})
+
+    const wrapInspect = async (e: MongoEvent | null) =>
+      e && e.event ? inspect(e.event) : true
+
+    // eslint-disable-next-line no-await-in-loop
+    while (
+      // eslint-disable-next-line no-await-in-loop
+      (await cursor.hasNext()) &&
+      // eslint-disable-next-line no-await-in-loop
+      (await wrapInspect(await cursor.next()))
+    ) {
+      /* empty */
+    }
+    await cursor.close()
+  },
 })

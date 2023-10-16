@@ -15,6 +15,7 @@ import { createInMemorySettingsService } from '../settings'
 import { createJobExecutorServiceFromEnv } from '../jobs'
 import { createIssuePincode } from '../login'
 import { categoryAdapter } from '../categories/category-adapter'
+import { createNullEventLogService } from '../events'
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
 
@@ -80,6 +81,7 @@ export const createTestServices = (services: Partial<Services>): Services => {
     files: createNullFileService(),
     notifications: createNullNotificationService(),
     jobs: createJobExecutorServiceFromEnv(),
+    eventLog: createNullEventLogService(),
     ...services,
   }
 }
