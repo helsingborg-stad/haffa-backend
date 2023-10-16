@@ -7,6 +7,7 @@ import type { TaskRunnerSignature } from '../types'
 interface ReservationReminderResult {
   id: string
   advert?: {
+    title?: string
     claims?: AdvertClaim[]
   }
   status: AdvertMutationStatus | null
@@ -44,6 +45,7 @@ export const sendReservationReminder: TaskRunnerSignature = async (
       result.push({
         id: doc.id,
         advert: {
+          title: ver.advert?.title,
           claims: ver.advert?.claims,
         },
         status: ver.status,
