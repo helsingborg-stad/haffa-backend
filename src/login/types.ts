@@ -1,17 +1,5 @@
-/* export enum HaffaRole  {
-  admin = 'admin', // can do everything
+import type Koa from 'koa'
 
-
-  canCreateAdvert='can-create-advert',
-  canArchive='can-archive',
-  canRemove='can-remove',
-  canBook='can-book',
-  canReserve='can-reserve',
-  canCollect='can-collect',
-
-
-  advertAdmin='advert-admin',
-} */
 export interface HaffaUser {
   id: string
   roles?: HaffaUserRoles
@@ -53,4 +41,9 @@ export interface LoginService {
     pincode: string,
     origin: string
   ) => Promise<HaffaUser | null>
+}
+
+export interface CookieService {
+  getTokenFromCookie: (ctx: Koa.Context) => string
+  setCookieToken: (ctx: Koa.Context, token: string) => any
 }

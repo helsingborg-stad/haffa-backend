@@ -13,6 +13,7 @@ import { loginModule } from './login/login-module'
 import { gitRevisionModule } from './git-revision-module'
 import { apiKeyUserModule } from './api-keys'
 import { downloadEventsModule } from './events'
+import { cookieUserModule } from './login/cookies/cookie-user-module'
 
 /** Create fully packaged web application, given dependencies */
 export const createApp = ({
@@ -33,8 +34,16 @@ export const createApp = ({
     .use(swaggerModule({ routePrefix: '/api/v1/haffa/swagger' }))
     .use(apiKeyUserModule(services.settings))
     .use(jwtUserModule(services.tokens))
+    .use(cookieUserModule(services.cookies, services.tokens))
     .use(healthCheckModule())
     .use(graphQLModule(services))
-    .use(loginModule(services.login, services.tokens, services.notifications))
+    .use(
+      loginModule(
+        services.login,
+        services.tokens,
+        services.cookies,
+        services.notifications
+      )
+    )
     .use(downloadEventsModule(services))
     .use(services.files.tryCreateApplicationModule() || (() => 0))

@@ -1,6 +1,6 @@
 import type { Services, StartupLog } from './types'
 import { createAdvertsRepositoryFromEnv } from './adverts'
-import { createLoginServiceFromEnv } from './login'
+import { createCookieServiceFromEnv, createLoginServiceFromEnv } from './login'
 import { createFilesServiceFromEnv } from './files'
 import { createTokenServiceFromEnv } from './tokens'
 import { createProfileRepositoryFromEnv } from './profile'
@@ -36,6 +36,7 @@ const createServicesFromEnv = (): Services => {
     settings,
     login: createLoginServiceFromEnv(startupLog, userMapper),
     tokens: createTokenServiceFromEnv(startupLog, userMapper),
+    cookies: createCookieServiceFromEnv(startupLog),
     adverts: createAdvertsRepositoryFromEnv(startupLog),
     profiles: createProfileRepositoryFromEnv(startupLog),
     files: createFilesServiceFromEnv(startupLog),

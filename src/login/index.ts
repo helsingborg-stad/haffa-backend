@@ -5,8 +5,10 @@ import { createInMemoryLoginServiceFromEnv } from './in-memory-login-service'
 import { tryCreateMongoLoginServiceFromEnv } from './mongo-login-service'
 import type { HaffaUser, HaffaUserRoles, LoginService } from './types'
 import { createIssuePincode } from './issue-pincode'
+import { createCookieService, createCookieServiceFromEnv } from './cookies'
 
 export { createIssuePincode }
+export { createCookieService, createCookieServiceFromEnv }
 
 export const rolesToRolesArray = (roles?: HaffaUserRoles) =>
   Object.entries(normalizeRoles(roles))

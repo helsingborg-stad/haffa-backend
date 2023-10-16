@@ -1,5 +1,5 @@
 import type { AdvertsRepository } from './adverts/types'
-import type { LoginService } from './login/types'
+import type { CookieService, LoginService } from './login/types'
 import type { FilesService } from './files/types'
 import type { TokenService } from './tokens/types'
 import type { ProfileRepository } from './profile/types'
@@ -26,6 +26,7 @@ export interface Services {
   settings: SettingsService
   login: LoginService
   tokens: TokenService
+  cookies: CookieService
   adverts: AdvertsRepository
   profiles: ProfileRepository
   files: FilesService

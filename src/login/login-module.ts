@@ -5,7 +5,8 @@ import type {
 } from '@helsingborg-stad/gdi-api-node'
 import HttpStatusCodes from 'http-status-codes'
 import EmailValidator from 'email-validator'
-import { RequestPincodeStatus, type LoginService } from './types'
+import { RequestPincodeStatus } from './types'
+import type { CookieService, LoginService } from './types'
 import type { TokenService } from '../tokens/types'
 import type { NotificationService } from '../notifications/types'
 import { rolesToRolesArray } from '.'
@@ -14,6 +15,7 @@ export const loginModule =
   (
     loginService: LoginService,
     tokenService: TokenService,
+    cookies: CookieService,
     notifications: NotificationService
   ): ApplicationModule =>
   ({ registerKoaApi }: ApplicationContext) => {
@@ -23,7 +25,9 @@ export const loginModule =
           body: { token },
         },
       } = ctx as any
-      const user = await tokenService.decode(token)
+      const user = await tokenService.decode(
+        token || cookies.getTokenFromCookie(ctx)
+      )
       ctx.body = user
         ? {
             token,
@@ -57,15 +61,26 @@ export const loginModule =
       }
 
       const user = await loginService.tryLogin(email, pincode, ctx.ip)
+      const token = user ? tokenService.sign(user) : ''
+      const roles = rolesToRolesArray(user?.roles)
+
+      cookies.setCookieToken(ctx, token)
+
       ctx.body = {
-        token: user ? tokenService.sign(user) : '',
-        roles: rolesToRolesArray(user?.roles),
+        token,
+        roles,
       }
+    }
+
+    const signout: Koa.Middleware = async (ctx: any) => {
+      cookies.setCookieToken(ctx, '')
+      ctx.body = {}
     }
 
     registerKoaApi({
       verifyToken,
       requestPincode,
       login,
+      signout,
     })
   }
