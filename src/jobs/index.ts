@@ -56,7 +56,7 @@ export const createJobExecutorService = (
 export const createJobExecutorServiceFromEnv = (): JobExcecutorService => {
   const parameters: JobParameters = {
     maxReservationDays: Number(
-      getEnv('MAX_RESERVATION_DAYS', { fallback: '10' })
+      getEnv('MAX_RESERVATION_DAYS', { fallback: '14' })
     ),
     reminderFrequency: Number(
       getEnv('REMINDER_FREQUENCY_DAYS', { fallback: '3' })
