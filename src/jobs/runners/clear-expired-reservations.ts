@@ -1,7 +1,17 @@
 import { createAdvertMutations } from '../../adverts/advert-mutations'
+import type { AdvertClaim, AdvertMutationStatus } from '../../adverts/types'
 import { AdvertClaimType } from '../../adverts/types'
 import type { Services } from '../../types'
 import type { TaskRunnerSignature } from '../types'
+
+interface ExpireReservationsResult {
+  id: string
+  advert?: {
+    title?: string
+    claims?: AdvertClaim[]
+  }
+  status: AdvertMutationStatus | null
+}
 
 export const clearExpiredReservations: TaskRunnerSignature = async (
   services,
@@ -12,20 +22,31 @@ export const clearExpiredReservations: TaskRunnerSignature = async (
 
   const mutations = createAdvertMutations(services as Services)
 
-  const documents = await services.adverts?.getAggregatedClaims({
+  const docs = await services.adverts?.getAggregatedClaims({
     before,
     type: AdvertClaimType.reserved,
   })
+  const result: ExpireReservationsResult[] = []
 
-  documents?.forEach(async document => {
-    document.advert.claims.forEach(async reservation => {
-      await mutations.cancelAdvertReservation(
+  docs?.forEach(async doc => {
+    const { claims } = doc.advert
+    claims.forEach(async reservation => {
+      // Cancel reservation
+      const ver = await mutations.cancelAdvertReservation(
         {
           id: reservation.by,
         },
-        document.id
+        doc.id
       )
+      result.push({
+        id: doc.id,
+        advert: {
+          title: ver.advert?.title,
+          claims: ver.advert?.claims,
+        },
+        status: ver.status,
+      })
     })
   })
-  return JSON.stringify(documents)
+  return JSON.stringify(result)
 }
