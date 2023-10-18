@@ -4,6 +4,25 @@ info:
   description: Haffa
   version: 1.0.0
 paths:
+  /api/v1/haffa/options/{collection}:
+    parameters:
+      - in: path
+        name: collection
+        schema:
+          type: string
+        required: true
+        description: Name of collection
+    post:
+      operationId: options
+      summary: Get key/value pairs
+      responses:
+        '200':
+          description: Successful processing of request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Options'
+
   /api/v1/haffa/auth/verify-token:
     post:
       operationId: verifyToken
@@ -190,4 +209,16 @@ components:
         roles:
           type: array
           items:
+            type: string
+    Options:
+      type: array
+      items:
+        type: object
+        required:
+          - key
+          - value
+        properties:
+          key:
+            type: string
+          value:
             type: string
