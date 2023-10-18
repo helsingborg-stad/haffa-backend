@@ -4,7 +4,6 @@ import type { Services } from '../types'
 import { optionsGqlSchema } from './options.gql.schema'
 import { normalizeRoles } from '../login'
 import { optionsAdapter } from './options-adapter'
-import { allowedCollections } from './options-whitelist'
 
 export const createOptionsGqlModule = ({
   settings,
@@ -15,10 +14,7 @@ export const createOptionsGqlModule = ({
       // https://www.graphql-tools.com/docs/resolvers
       options: async ({ ctx, args: { name } }) => {
         const { user } = ctx
-        if (
-          !normalizeRoles(user?.roles).canEditTerms ||
-          !allowedCollections.includes(name)
-        ) {
+        if (!normalizeRoles(user?.roles).canEditTerms) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return optionsAdapter(settings).getOptions(name)
@@ -27,10 +23,7 @@ export const createOptionsGqlModule = ({
     Mutation: {
       updateOptions: async ({ ctx, args: { input, name } }) => {
         const { user } = ctx
-        if (
-          !normalizeRoles(user?.roles).canEditTerms ||
-          !allowedCollections.includes(name)
-        ) {
+        if (!normalizeRoles(user?.roles).canEditTerms) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return optionsAdapter(settings).updateOptions(name, input)
