@@ -16,9 +16,8 @@ const createFreeTextPredicate = (search: string): Predicate<Advert> => {
   // extract individual words from search
 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Character_classes#looking_for_a_word_from_unicode_characters
-  const matchers = (
-    (search || '').match(/([\u0000-\u0019\u0021-\uFFFF]+)/gm) || []
-  )
+  const matchers = // eslint-disable-next-line no-control-regex
+  ((search || '').match(/([\u0000-\u0019\u0021-\uFFFF]+)/gm) || [])
     .filter(v => v)
     .filter(v => v.length >= 3)
     .map(regexpEscape)
@@ -27,7 +26,10 @@ const createFreeTextPredicate = (search: string): Predicate<Advert> => {
   return matchers.length > 0
     ? advert =>
         matchers.some(
-          re => re.test(advert.title) || re.test(advert.description)
+          re =>
+            re.test(advert.title) ||
+            re.test(advert.description) ||
+            re.test(advert.reference)
         )
     : () => true
 }

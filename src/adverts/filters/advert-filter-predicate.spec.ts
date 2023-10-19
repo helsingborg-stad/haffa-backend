@@ -181,4 +181,19 @@ describe('createAdvertFilterPredicate', () => {
       'advert-20',
     ])
   })
+  it('should search reference field', () => {
+    const p = createAdvertFilterPredicate(createTestUser(), {
+      search: '#123456abc',
+    })
+
+    const adverts = createSampleAdverts(100, {
+      'advert-10': {
+        title: 'I enjoy using a reference id!',
+        reference: '#123456abc',
+      },
+      'advert-20': { title: 'I dont fancy it!' },
+    })
+
+    expect(adverts.filter(p).map(({ id }) => id)).toMatchObject(['advert-10'])
+  })
 })

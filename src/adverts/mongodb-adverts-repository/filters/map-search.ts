@@ -12,5 +12,6 @@ export const mapSearch = (
       $or: [
         { 'advert.title': { $regex: escapeRegExp(s), $options: 'i' } },
         { 'advert.description': { $regex: escapeRegExp(s), $options: 'i' } },
+        { 'advert.reference': { $regex: escapeRegExp(s), $options: 'i' } },
       ],
     }))[0] || null
