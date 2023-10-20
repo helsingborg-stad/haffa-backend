@@ -28,6 +28,9 @@ export const loginModule =
       const user = await tokenService.decode(
         token || cookies.getTokenFromCookie(ctx)
       )
+
+      cookies.setCookieToken(ctx, token)
+
       ctx.body = user
         ? {
             token,
