@@ -43,6 +43,7 @@ export const createApp = ({
       loginModule(
         services.login,
         services.tokens,
+        services.userMapper,
         services.cookies,
         services.notifications
       )

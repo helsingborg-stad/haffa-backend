@@ -116,6 +116,42 @@ paths:
             application/json:
               schema:
                 type: object
+
+  /api/v1/haffa/auth/effective-permissions:
+    post:
+      operationId: effectivePermissions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Successful processing of request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - email
+                  - canLogin
+                  - roles
+                properties:
+                  email:
+                    type: string
+                  canLogin:
+                    type: boolean
+                  roles:
+                    type: array
+                    items:
+                      type: string
+
   /api/v1/haffa/graphql:
     post:
       operationId: haffaGQL

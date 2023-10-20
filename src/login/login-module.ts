@@ -10,11 +10,14 @@ import type { CookieService, LoginService } from './types'
 import type { TokenService } from '../tokens/types'
 import type { NotificationService } from '../notifications/types'
 import { rolesToRolesArray } from '.'
+import { requireHaffaUserRole } from './require-haffa-user'
+import type { UserMapper } from '../users/types'
 
 export const loginModule =
   (
     loginService: LoginService,
     tokenService: TokenService,
+    userMapper: UserMapper,
     cookies: CookieService,
     notifications: NotificationService
   ): ApplicationModule =>
@@ -56,7 +59,10 @@ export const loginModule =
     }
 
     const login: Koa.Middleware = async (ctx: any) => {
-      const email = (ctx?.request?.body?.email || '').toString().toLowerCase()
+      const email = (ctx?.request?.body?.email || '')
+        .toString()
+        .toLowerCase()
+        .trim()
       const pincode = (ctx?.request?.body?.pincode || '').toString()
 
       if (!EmailValidator.validate(email)) {
@@ -80,10 +86,28 @@ export const loginModule =
       ctx.body = {}
     }
 
+    const effectivePermissions: Koa.Middleware = requireHaffaUserRole(
+      userMapper,
+      u => u.roles?.canEditSystemLoginPolicies || false,
+      async (ctx: any) => {
+        const email = (ctx?.request?.body?.email || '')
+          .toString()
+          .toLowerCase()
+          .trim()
+        const effectiveUser = await userMapper.mapAndValidateEmail(email)
+        ctx.body = {
+          email,
+          canLogin: !!effectiveUser,
+          roles: rolesToRolesArray(effectiveUser?.roles),
+        }
+      }
+    )
+
     registerKoaApi({
       verifyToken,
       requestPincode,
       login,
       signout,
+      effectivePermissions,
     })
   }
