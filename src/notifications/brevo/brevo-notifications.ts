@@ -46,6 +46,7 @@ export const createBrevoNotifications = (
           'advert-was-reserved',
           { name: by.id, email: by.id },
           {
+            by,
             quantity,
             advert: stripAdvert(advert),
           },
@@ -55,6 +56,7 @@ export const createBrevoNotifications = (
           'advert-was-reserved-owner',
           { email: advert.createdBy, name: advert.createdBy },
           {
+            by,
             quantity,
             advert: stripAdvert(advert),
           }
@@ -67,6 +69,7 @@ export const createBrevoNotifications = (
           'advert-reservation-was-cancelled',
           { name: by.id, email: by.id },
           {
+            by,
             quantity,
             advert: stripAdvert(advert),
           }
@@ -75,6 +78,7 @@ export const createBrevoNotifications = (
           'advert-reservation-was-cancelled-owner',
           { name: advert.createdBy, email: advert.createdBy },
           {
+            by,
             quantity,
             advert: stripAdvert(advert),
           }
@@ -87,6 +91,7 @@ export const createBrevoNotifications = (
           'advert-was-collected',
           { name: by.id, email: by.id },
           {
+            by,
             quantity,
             advert: stripAdvert(advert),
           }
@@ -95,6 +100,7 @@ export const createBrevoNotifications = (
           'advert-was-collected-owner',
           { name: advert.createdBy, email: advert.createdBy },
           {
+            by,
             quantity,
             advert: stripAdvert(advert),
           }
@@ -106,6 +112,7 @@ export const createBrevoNotifications = (
           'advert-collect-was-cancelled',
           { name: by.id, email: by.id },
           {
+            by,
             quantity,
             advert: stripAdvert(advert),
           }
@@ -114,6 +121,7 @@ export const createBrevoNotifications = (
           'advert-collect-was-cancelled-owner',
           { name: advert.createdBy, email: advert.createdBy },
           {
+            by,
             quantity,
             advert: stripAdvert(advert),
           }
@@ -125,6 +133,7 @@ export const createBrevoNotifications = (
         'advert-not-collected',
         { name: by.id, email: by.id },
         {
+          by,
           quantity,
           advert: stripAdvert(advert),
         }
