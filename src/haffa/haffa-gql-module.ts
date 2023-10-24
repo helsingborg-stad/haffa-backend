@@ -10,6 +10,7 @@ import { createStatsGqlModule } from '../stats'
 import { createJobsGqlModule } from '../jobs/jobs-gql-module'
 import { createApiKeysGqlModule } from '../api-keys/api-keys-gql-module'
 import { createOptionsGqlModule } from '../options/options-gql-module'
+import { createEventsGqlModule } from '../events/events-gql-module'
 
 export const createHaffaGqlModule = ({
   adverts,
@@ -19,6 +20,7 @@ export const createHaffaGqlModule = ({
   notifications,
   settings,
   jobs,
+  eventLog,
 }: Pick<
   Services,
   | 'adverts'
@@ -28,6 +30,7 @@ export const createHaffaGqlModule = ({
   | 'notifications'
   | 'settings'
   | 'jobs'
+  | 'eventLog'
 >): GraphQLModule =>
   mergeModules(
     createAdvertsGqlModule({ adverts, files, notifications, categories }),
@@ -38,7 +41,8 @@ export const createHaffaGqlModule = ({
     createApiKeysGqlModule({ settings }),
     createStatsGqlModule({ adverts }),
     createJobsGqlModule({ adverts, jobs, profiles, files, notifications }),
-    createOptionsGqlModule({ settings })
+    createOptionsGqlModule({ settings }),
+    createEventsGqlModule({ eventLog })
   )
 
 const mergeModules = (...modules: GraphQLModule[]): GraphQLModule => ({

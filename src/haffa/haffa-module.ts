@@ -19,6 +19,7 @@ export const graphQLModule =
       | 'notifications'
       | 'settings'
       | 'jobs'
+      | 'eventLog'
     >
   ) =>
   ({ registerKoaApi }: ApplicationContext): void =>
