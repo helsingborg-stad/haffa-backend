@@ -14,12 +14,12 @@ export const createSubscriptionsGqlModule = ({
         subscriptions.getAdvertSubscriptions(user),
     },
     Mutation: {
-      addAdvertSubscription: async ({ ctx, args: { input } }) => {
+      addAdvertSubscription: async ({ ctx, args: { filter } }) => {
         const { user } = ctx
         if (!normalizeRoles(user?.roles).canSubscribe) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        return subscriptions.addAdvertSubscription(user, input)
+        return subscriptions.addAdvertSubscription(user, filter)
       },
       removeAdvertSubscription: async ({ ctx, args: { subscriptionId } }) => {
         const { user } = ctx

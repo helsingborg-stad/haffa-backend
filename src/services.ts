@@ -47,7 +47,7 @@ const createServicesFromEnv = (): Services => {
     }),
     jobs: createJobExecutorServiceFromEnv(),
     eventLog,
-    subscriptions: createSubscriptionsRepositoryFromEnv(),
+    subscriptions: createSubscriptionsRepositoryFromEnv(startupLog),
   }
 }
 
