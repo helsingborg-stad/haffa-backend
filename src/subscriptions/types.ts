@@ -7,6 +7,7 @@ export interface AdvertSubscriptionFilter {
 
 export interface AdvertSubscription {
   subscriptionId: string
+  createdAt: string
   lastNotifiedAt?: string
   filter: AdvertSubscriptionFilter
 }

@@ -12,6 +12,7 @@ export const subscriptionsGqlSchema = /* GraphQL */ `
 
   type AdvertSubscription {
     subscriptionId: String!
+    createdAt: String!
     lastNotifiedAt: String
     filter: AdvertSubscriptionFilter!
   }

@@ -54,6 +54,7 @@ export const createMongoSubscriptionsRepository = ({
       by: user.id,
       subscription: {
         subscriptionId: id,
+        createdAt: new Date().toISOString(),
         filter,
       },
     }
