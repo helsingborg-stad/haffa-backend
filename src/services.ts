@@ -11,6 +11,7 @@ import { createJobExecutorServiceFromEnv } from './jobs'
 import { obfuscate } from './lib'
 import { categoryAdapter } from './categories/category-adapter'
 import { createEventLogServiceFromEnv } from './events'
+import { createSubscriptionsRepositoryFromEnv } from './subscriptions'
 
 const createStartupLog = (): StartupLog => ({
   echo: (service, { name, config }) => {
@@ -46,6 +47,7 @@ const createServicesFromEnv = (): Services => {
     }),
     jobs: createJobExecutorServiceFromEnv(),
     eventLog,
+    subscriptions: createSubscriptionsRepositoryFromEnv(startupLog),
   }
 }
 
