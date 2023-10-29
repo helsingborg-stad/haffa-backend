@@ -26,13 +26,13 @@ export const sendReservationReminder: TaskRunnerSignature = async (
     before,
     type: AdvertClaimType.reserved,
   })
-
   const result: ReservationReminderResult[] = []
 
-  docs?.forEach(async doc => {
-    const { claims } = doc.advert
-    claims.forEach(async reservation => {
-      // Send notification
+  // eslint-disable-next-line no-restricted-syntax
+  for (const doc of docs ?? []) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const reservation of doc.advert.claims ?? []) {
+      // eslint-disable-next-line no-await-in-loop
       const ver = await mutations.notifyAdvertClaim(
         {
           id: reservation.by,
@@ -50,7 +50,7 @@ export const sendReservationReminder: TaskRunnerSignature = async (
         },
         status: ver.status,
       })
-    })
-  })
+    }
+  }
   return JSON.stringify(result)
 }
