@@ -19,6 +19,7 @@ export const createNotificationServiceFromEnv = (
   )
 
 export const createNullNotificationService = (): NotificationService => ({
+  subscriptionsHasNewAdverts: async () => undefined,
   pincodeRequested: async () => undefined,
   advertWasCreated: async () => undefined,
   advertWasRemoved: async () => undefined,

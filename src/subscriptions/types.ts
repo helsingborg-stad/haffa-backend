@@ -22,4 +22,5 @@ export interface SubscriptionsRepository {
     user: HaffaUser,
     subscriptionId: string
   ) => Promise<any>
+  notifyAllSubscriptions: () => Promise<void>
 }

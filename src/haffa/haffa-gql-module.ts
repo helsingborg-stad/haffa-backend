@@ -13,40 +13,19 @@ import { createOptionsGqlModule } from '../options/options-gql-module'
 import { createEventsGqlModule } from '../events/events-gql-module'
 import { createSubscriptionsGqlModule } from '../subscriptions/subscriptions-gql-module'
 
-export const createHaffaGqlModule = ({
-  adverts,
-  categories,
-  files,
-  profiles,
-  notifications,
-  settings,
-  jobs,
-  eventLog,
-  subscriptions,
-}: Pick<
-  Services,
-  | 'adverts'
-  | 'categories'
-  | 'files'
-  | 'profiles'
-  | 'notifications'
-  | 'settings'
-  | 'jobs'
-  | 'eventLog'
-  | 'subscriptions'
->): GraphQLModule =>
+export const createHaffaGqlModule = (services: Services): GraphQLModule =>
   mergeModules(
-    createAdvertsGqlModule({ adverts, files, notifications, categories }),
-    createProfileGqlModule(profiles),
-    createTermsGqlModule({ settings }),
-    createCategoriesGqlModule({ adverts, categories }),
-    createLoginPoliciesGqlModule({ settings }),
-    createApiKeysGqlModule({ settings }),
-    createStatsGqlModule({ adverts }),
-    createJobsGqlModule({ adverts, jobs, profiles, files, notifications }),
-    createOptionsGqlModule({ settings }),
-    createEventsGqlModule({ eventLog }),
-    createSubscriptionsGqlModule({ subscriptions })
+    createAdvertsGqlModule(services),
+    createProfileGqlModule(services),
+    createTermsGqlModule(services),
+    createCategoriesGqlModule(services),
+    createLoginPoliciesGqlModule(services),
+    createApiKeysGqlModule(services),
+    createStatsGqlModule(services),
+    createJobsGqlModule(services),
+    createOptionsGqlModule(services),
+    createEventsGqlModule(services),
+    createSubscriptionsGqlModule(services)
   )
 
 const mergeModules = (...modules: GraphQLModule[]): GraphQLModule => ({

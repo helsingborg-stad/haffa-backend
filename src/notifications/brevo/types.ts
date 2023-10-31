@@ -1,4 +1,5 @@
 export type TemplateName =
+  | 'subscriptions-has-new-adverts'
   | 'pincode-requested'
   | 'advert-was-reserved'
   | 'advert-reservation-was-cancelled'

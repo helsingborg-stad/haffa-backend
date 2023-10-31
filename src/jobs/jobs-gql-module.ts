@@ -4,16 +4,7 @@ import type { Services } from '../types'
 import { jobsGqlSchema } from './jobs.gql.schema'
 import { normalizeRoles } from '../login'
 
-export const createJobsGqlModule = ({
-  jobs,
-  adverts,
-  profiles,
-  files,
-  notifications,
-}: Pick<
-  Services,
-  'adverts' | 'jobs' | 'profiles' | 'files' | 'notifications'
->): GraphQLModule => ({
+export const createJobsGqlModule = (services: Services): GraphQLModule => ({
   schema: jobsGqlSchema,
   resolvers: {
     Query: {
@@ -23,14 +14,14 @@ export const createJobsGqlModule = ({
         if (!normalizeRoles(user?.roles).canRunSystemJobs) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        return jobs.list()
+        return services.jobs.list()
       },
       jobFind: async ({ ctx, args: { taskId } }) => {
         const { user } = ctx
         if (!normalizeRoles(user?.roles).canRunSystemJobs) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        return jobs.find(taskId)
+        return services.jobs.find(taskId)
       },
     },
     Mutation: {
@@ -39,12 +30,7 @@ export const createJobsGqlModule = ({
         if (!normalizeRoles(user?.roles).canRunSystemJobs) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        return jobs.runAs(user, jobName, {
-          adverts,
-          profiles,
-          files,
-          notifications,
-        })
+        return services.jobs.runAs(user, jobName, services)
       },
     },
   },

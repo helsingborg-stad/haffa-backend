@@ -2,7 +2,7 @@ import type { HaffaUser } from '../login/types'
 import type { Services } from '../types'
 
 export type TaskRunnerSignature = (
-  services: Partial<Services>,
+  services: Services,
   parameters: JobParameters
 ) => Promise<string>
 
@@ -34,7 +34,7 @@ export interface JobExcecutorService {
   runAs: (
     user: HaffaUser,
     jobName: string,
-    services: Partial<Services>
+    services: Services
   ) => Promise<Task[]>
   list: () => string[]
   find: (jobId?: string) => Task[]

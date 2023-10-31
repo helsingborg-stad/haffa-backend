@@ -1,10 +1,10 @@
 import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
-import type { ProfileRepository } from './types'
 import { profileGqlSchema } from './profile.gql.schema'
+import type { Services } from '../types'
 
-export const createProfileGqlModule = (
-  profiles: ProfileRepository
-): GraphQLModule => ({
+export const createProfileGqlModule = ({
+  profiles,
+}: Pick<Services, 'profiles'>): GraphQLModule => ({
   schema: profileGqlSchema,
   resolvers: {
     Query: {

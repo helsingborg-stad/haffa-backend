@@ -1,6 +1,7 @@
 import { setTimeout } from 'timers/promises'
 import { createJobExecutorService } from '.'
 import type { JobParameters, TaskRunnerSignature } from './types'
+import { createTestServices } from '../test-utils'
 
 const parameters: JobParameters = {
   maxReservationDays: 10,
@@ -45,21 +46,33 @@ const user = { id: 'admin@haffa.se' }
 
 describe('JobsService', () => {
   it('should run synchronously successfully', async () => {
-    const [job] = await service.runAs(user, 'SUCCESSFUL_JOB', {})
+    const [job] = await service.runAs(
+      user,
+      'SUCCESSFUL_JOB',
+      createTestServices({})
+    )
     expect(job.owner).toBe('admin@haffa.se')
     expect(job.status).toBe('Succeeded')
     expect(job.endDate).toBeDefined()
     expect(job.result).toBe('test-result')
   })
   it('should handle errors gracefully', async () => {
-    const [job] = await service.runAs(user, 'FAILING_JOB', {})
+    const [job] = await service.runAs(
+      user,
+      'FAILING_JOB',
+      createTestServices({})
+    )
     expect(job.owner).toBe('admin@haffa.se')
     expect(job.status).toBe('Failed')
     expect(job.endDate).toBeDefined()
     expect(job.result).toBe('error-occured')
   })
   it('should run multiple tasks', async () => {
-    const jobs = await service.runAs(user, 'MULTIPLE_TASKS', {})
+    const jobs = await service.runAs(
+      user,
+      'MULTIPLE_TASKS',
+      createTestServices({})
+    )
     expect(jobs).toHaveLength(2)
     expect(jobs[0].taskId).toBe('0')
   })
@@ -76,7 +89,7 @@ describe('JobsService', () => {
     expect(service.find()).toHaveLength(0)
   })
   it('should handle invalid job name gracefully', async () => {
-    const jobs = await service.runAs(user, 'DUMMY', {})
+    const jobs = await service.runAs(user, 'DUMMY', createTestServices({}))
     expect(jobs).toHaveLength(0)
   })
 })

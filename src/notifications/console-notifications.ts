@@ -2,6 +2,13 @@
 import type { NotificationService } from './types'
 
 export const createConsoleNotificationService = (): NotificationService => ({
+  subscriptionsHasNewAdverts: async (by, adverts) =>
+    console.log({
+      subscriptionsHasNewAdverts: {
+        by,
+        adverts,
+      },
+    }),
   pincodeRequested: async (email, pincode) =>
     console.log({
       pincodeRequested: { email, pincode },

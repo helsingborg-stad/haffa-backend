@@ -128,6 +128,11 @@ export type FilterInput<T> = {
 
 export type AdvertFieldsFilterInput = {
   id?: FilterInput<string>
+  // for internal searched
+  createdBy?: FilterInput<string>
+  createdAt?: FilterInput<string>
+  modifiedAt?: FilterInput<string>
+  archivedAt?: FilterInput<string>
 } & {
   [Property in keyof Omit<AdvertUserFields, 'images'>]?: FilterInput<
     AdvertUserFields[Property]

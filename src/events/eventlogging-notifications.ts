@@ -11,6 +11,7 @@ export const createEventLoggingNotifications = (
     eventLog.logEvent(await createLogEvent(event, categories, ctx))
 
   return {
+    subscriptionsHasNewAdverts: async () => undefined,
     pincodeRequested: async () => undefined,
     advertWasCreated: (by, advert) => log('advert-was-created', { by, advert }),
     advertWasRemoved: (by, advert) => log('advert-was-removed', { by, advert }),

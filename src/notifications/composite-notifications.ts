@@ -7,6 +7,8 @@ export const createCompositeNotifications = (
   const all = (map: (inner: NotificationService) => Promise<void>) =>
     Promise.all(inners.map(map)).then(() => undefined)
   return {
+    subscriptionsHasNewAdverts: (...args) =>
+      all(inner => inner.subscriptionsHasNewAdverts(...args)),
     pincodeRequested: (...args) =>
       all(inner => inner.pincodeRequested(...args)),
     advertWasCreated: (...args) =>

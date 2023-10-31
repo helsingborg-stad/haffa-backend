@@ -14,7 +14,7 @@ export const createJobExecutorService = (
   const history: Task[] = []
 
   return {
-    runAs: async (user, jobName, services = {}) => {
+    runAs: async (user, jobName, services) => {
       const taskList = taskRepository[jobName] ?? []
 
       const jobs: Task[] = []

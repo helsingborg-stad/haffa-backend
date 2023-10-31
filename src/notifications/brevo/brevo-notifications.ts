@@ -27,6 +27,12 @@ export const createBrevoNotifications = (
     Promise.all(promises).then(() => undefined)
 
   return {
+    subscriptionsHasNewAdverts: (by, adverts) =>
+      send(
+        'subscriptions-has-new-adverts',
+        { name: by.id, email: by.id },
+        { by, adverts }
+      ),
     pincodeRequested: (email, pincode) =>
       send(
         'pincode-requested',

@@ -34,6 +34,9 @@ const unexpectedInvocation = (message: string) => () => {
 export const createTestNotificationServices = (
   notifications: Partial<NotificationService>
 ): NotificationService => ({
+  subscriptionsHasNewAdverts: unexpectedInvocation(
+    'NotificationService::subscriptionsHasNewAdverts'
+  ),
   pincodeRequested: unexpectedInvocation(
     'NotificationService::pincodeRequested'
   ),

@@ -8,21 +8,7 @@ import type { Services } from '../types'
 import { createHaffaGqlModule } from './haffa-gql-module'
 
 export const graphQLModule =
-  (
-    services: Pick<
-      Services,
-      | 'userMapper'
-      | 'adverts'
-      | 'categories'
-      | 'files'
-      | 'profiles'
-      | 'notifications'
-      | 'settings'
-      | 'jobs'
-      | 'eventLog'
-      | 'subscriptions'
-    >
-  ) =>
+  (services: Services) =>
   ({ registerKoaApi }: ApplicationContext): void =>
     registerKoaApi({
       haffaGQL: requireHaffaUser(

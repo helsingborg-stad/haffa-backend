@@ -25,6 +25,8 @@ export const createSendGridNotifications = (
 ): NotificationService => {
   const send = createSendGridMailSender(config)
   return {
+    subscriptionsHasNewAdverts: (by, adverts) =>
+      send(by.id, 'subscriptions-has-new-adverts', { by, adverts }),
     pincodeRequested: (email, pincode) =>
       send(email, 'pincode-requested', { email, pincode }),
     advertWasCreated: async () => undefined,

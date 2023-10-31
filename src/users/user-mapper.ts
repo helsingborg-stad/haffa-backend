@@ -1,10 +1,11 @@
 import EmailValidator from 'email-validator'
-import type { HaffaUser, HaffaUserRoles } from '../login/types'
-import type * as types from './types'
+import type { HaffaUser } from '../login/types'
 import type { SettingsService } from '../settings/types'
 import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import type { LoginPolicy } from '../login-policies/types'
 import { makeAdmin, normalizeRoles, rolesArrayToRoles } from '../login'
+import type { UserMapper } from './types'
+import { AsyncFunc } from '../lib/types'
 
 const nanomatch = require('nanomatch')
 
@@ -32,47 +33,68 @@ const matchLoginPolicies = (email: string, policies: LoginPolicy[]) =>
 export const createUserMapper = (
   superUser: string | null,
   settings: SettingsService
-): types.UserMapper => {
+): UserMapper => {
   const su = superUser?.toLowerCase()
-  const mapAndValidateUser: types.UserMapper['mapAndValidateUser'] =
-    async u => {
-      const user = validateHaffaUser(u)
-      if (!user) {
-        return null
-      }
-      const { id } = user
-      if (id === su) {
-        return makeAdmin({
-          id,
-        })
+
+  const mapAndValidateUsers: UserMapper['mapAndValidateUsers'] =
+    async users => {
+      const effectiveUsers = users.filter(u => u && u.id).map(u => u!)
+      if (effectiveUsers.length === 0) {
+        return []
       }
       const loginPolicies = await loginPolicyAdapter(
         settings
       ).getLoginPolicies()
-      const matchings = matchLoginPolicies(id, loginPolicies)
-      if (matchings.some(({ deny }) => deny)) {
-        return null
-      }
+      return effectiveUsers
+        .map(u => {
+          const user = validateHaffaUser(u)
+          if (!user) {
+            return null
+          }
+          const { id } = user
+          if (id === su) {
+            return makeAdmin({
+              id,
+            })
+          }
+          const matchings = matchLoginPolicies(id, loginPolicies)
+          if (matchings.some(({ deny }) => deny)) {
+            return null
+          }
 
-      if (matchings.length === 0 && loginPolicies.length > 0) {
-        return null
-      }
+          if (matchings.length === 0 && loginPolicies.length > 0) {
+            return null
+          }
 
-      const roles = rolesArrayToRoles(
-        matchings.reduce<string[]>(
-          (combinedRoles, policy) => combinedRoles.concat(policy.roles),
-          []
-        )
-      )
-      return {
-        id,
-        roles,
-      }
+          const roles = rolesArrayToRoles(
+            matchings.reduce<string[]>(
+              (combinedRoles, policy) => combinedRoles.concat(policy.roles),
+              []
+            )
+          )
+          return {
+            id,
+            roles,
+          }
+        })
+        .filter(u => u)
+        .map(u => u!)
     }
-  const mapAndValidateEmail: types.UserMapper['mapAndValidateEmail'] =
-    async email => mapAndValidateUser({ id: email || '' })
+
+  const mapAndValidateEmails: UserMapper['mapAndValidateEmails'] =
+    async emails =>
+      mapAndValidateUsers(emails.map(email => ({ id: email || '' })))
+
+  const mapAndValidateUser: UserMapper['mapAndValidateUser'] = async u => {
+    const [mapped] = await mapAndValidateUsers([u])
+    return mapped || null
+  }
+  const mapAndValidateEmail: UserMapper['mapAndValidateEmail'] = async email =>
+    mapAndValidateUser({ id: email || '' })
 
   return {
+    mapAndValidateUsers,
+    mapAndValidateEmails,
     mapAndValidateEmail,
     mapAndValidateUser,
   }

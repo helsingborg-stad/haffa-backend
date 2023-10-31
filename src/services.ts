@@ -31,6 +31,11 @@ const createServicesFromEnv = (): Services => {
   const userMapper = createUserMapperFromEnv(startupLog, settings)
   const eventLog = createEventLogServiceFromEnv(startupLog)
   const categories = categoryAdapter(settings)
+  const adverts = createAdvertsRepositoryFromEnv(startupLog)
+  const notifications = createNotificationServiceFromEnv(startupLog, {
+    categories,
+    eventLog,
+  })
   return {
     userMapper,
     categories,
@@ -38,16 +43,17 @@ const createServicesFromEnv = (): Services => {
     login: createLoginServiceFromEnv(startupLog, userMapper),
     tokens: createTokenServiceFromEnv(startupLog, userMapper),
     cookies: createCookieServiceFromEnv(startupLog),
-    adverts: createAdvertsRepositoryFromEnv(startupLog),
+    adverts,
     profiles: createProfileRepositoryFromEnv(startupLog),
     files: createFilesServiceFromEnv(startupLog),
-    notifications: createNotificationServiceFromEnv(startupLog, {
-      categories,
-      eventLog,
-    }),
+    notifications,
     jobs: createJobExecutorServiceFromEnv(),
     eventLog,
-    subscriptions: createSubscriptionsRepositoryFromEnv(startupLog),
+    subscriptions: createSubscriptionsRepositoryFromEnv(startupLog, {
+      adverts,
+      notifications,
+      userMapper,
+    }),
   }
 }
 
