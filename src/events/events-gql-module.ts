@@ -13,7 +13,7 @@ export const createEventsGqlModule = ({
       // https://www.graphql-tools.com/docs/resolvers
       events: async ({ ctx, args: { from, to } }) => {
         const { user } = ctx
-        if (!normalizeRoles(user?.roles).canRunSystemJobs) {
+        if (!normalizeRoles(user?.roles).canSeeSystemStatistics) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return eventLog.getEvents({

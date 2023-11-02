@@ -42,6 +42,7 @@ export const normalizeRoles = (
   canEditApiKeys: !!roles?.canEditApiKeys,
   canEditTerms: !!roles?.canEditTerms,
   canRunSystemJobs: !!roles?.canRunSystemJobs,
+  canSeeSystemStatistics: !!roles?.canSeeSystemStatistics,
 })
 
 export const createLoginServiceFromEnv = (
@@ -67,6 +68,7 @@ export const makeRoles = (
   canEditApiKeys: defaultEnabled,
   canEditTerms: defaultEnabled,
   canRunSystemJobs: defaultEnabled,
+  canSeeSystemStatistics: defaultEnabled,
 })
 
 export const combineRoles = (

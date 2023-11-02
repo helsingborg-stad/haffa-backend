@@ -19,6 +19,7 @@ export interface HaffaUserRoles {
   canEditApiKeys?: boolean
   canEditTerms?: boolean
   canRunSystemJobs?: boolean
+  canSeeSystemStatistics?: boolean
 }
 
 export interface RequestPincodeResult {
