@@ -49,6 +49,11 @@ export const advertsGqlSchema = /* GraphQL */ `
     in: [String]
   }
 
+  enum AdvertType {
+    recycle
+    borrow
+  }
+
   enum AdvertClaimType {
     reserved
     collected
@@ -186,6 +191,7 @@ export const advertsGqlSchema = /* GraphQL */ `
 
   type Advert {
     id: ID!
+    type: AdvertType
     createdAt: String
     archivedAt: String
     meta: AdvertMeta
