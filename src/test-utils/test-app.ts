@@ -27,9 +27,16 @@ export const createAuthorizationHeadersFor = (
   authorization: `Bearer ${jwt.sign(user, secret)}`,
 })
 
-const unexpectedInvocation = (message: string) => () => {
-  throw new Error(message)
-}
+const unexpectedInvocation =
+  (message: string): (() => Promise<void>) =>
+  () =>
+    Promise.resolve().then(() =>
+      Promise.reject(
+        Object.assign(new Error(message), {
+          wasUnexpectedNotification: true,
+        })
+      )
+    )
 
 export const createTestNotificationServices = (
   notifications: Partial<NotificationService>

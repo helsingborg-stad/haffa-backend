@@ -5,7 +5,6 @@ import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import type { LoginPolicy } from '../login-policies/types'
 import { makeAdmin, normalizeRoles, rolesArrayToRoles } from '../login'
 import type { UserMapper } from './types'
-import { AsyncFunc } from '../lib/types'
 
 const nanomatch = require('nanomatch')
 
@@ -14,12 +13,11 @@ const isObject = (v: any) => v && typeof v === 'object' && !isArray(v)
 const isArray = (v: any) => Array.isArray(v)
 
 const validateHaffaUser = (user: HaffaUser | null): HaffaUser | null =>
-  user &&
-  isObject(user) &&
-  isString(user.id) &&
-  EmailValidator.validate(user.id)
+  user && isObject(user) && isString(user.id) && isValidEmail(user.id)
     ? { id: user.id.toString(), roles: normalizeRoles(user.roles) }
     : null
+
+export const isValidEmail = (email: string) => EmailValidator.validate(email)
 
 export const tryMatchEmail = (email: string, emailPattern: string): boolean =>
   nanomatch.isMatch(email, emailPattern)

@@ -4,7 +4,6 @@ import type {
   ApplicationModule,
 } from '@helsingborg-stad/gdi-api-node'
 import HttpStatusCodes from 'http-status-codes'
-import EmailValidator from 'email-validator'
 import { RequestPincodeStatus } from './types'
 import type { CookieService, LoginService } from './types'
 import type { TokenService } from '../tokens/types'
@@ -12,6 +11,7 @@ import type { NotificationService } from '../notifications/types'
 import { rolesToRolesArray } from '.'
 import { requireHaffaUserRole } from './require-haffa-user'
 import type { UserMapper } from '../users/types'
+import { isValidEmail } from '../users'
 
 export const loginModule =
   (
@@ -47,7 +47,7 @@ export const loginModule =
 
     const requestPincode: Koa.Middleware = async (ctx: any) => {
       const email = (ctx?.request?.body?.email || '').toString().toLowerCase()
-      const isValid = EmailValidator.validate(email)
+      const isValid = isValidEmail(email)
       const { status, pincode } = isValid
         ? await loginService.requestPincode(email, ctx.ip)
         : { status: RequestPincodeStatus.invalid, pincode: '' }
@@ -65,7 +65,7 @@ export const loginModule =
         .trim()
       const pincode = (ctx?.request?.body?.pincode || '').toString()
 
-      if (!EmailValidator.validate(email)) {
+      if (!isValidEmail(email)) {
         ctx.throw(HttpStatusCodes.BAD_REQUEST)
       }
 

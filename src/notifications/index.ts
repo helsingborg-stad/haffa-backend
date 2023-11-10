@@ -3,6 +3,7 @@ import type { Services, StartupLog } from '../types'
 import { tryCreateBrevoNotificationsFromEnv } from './brevo/brevo-notifications'
 import { createCompositeNotifications } from './composite-notifications'
 import { createConsoleNotificationService } from './console-notifications'
+import { tryCreateEmailUserNotifications } from './filtered-user-notifications'
 import { tryCreateSendGridNofificationsFromEnv } from './sendgrid'
 import type { NotificationService } from './types'
 
@@ -33,8 +34,9 @@ export const createNullNotificationService = (): NotificationService => ({
 })
 
 const tryCreateMailNotificationsFromEnv = (startupLog: StartupLog) =>
-  tryCreateSendGridNofificationsFromEnv(startupLog) ||
-  tryCreateBrevoNotificationsFromEnv(startupLog)
+  tryCreateEmailUserNotifications(
+    tryCreateSendGridNofificationsFromEnv(startupLog)
+  ) || tryCreateBrevoNotificationsFromEnv(startupLog)
 
 const createConsoleNotificationsFromEnv = (startupLog: StartupLog) =>
   startupLog.echo(createConsoleNotificationService(), {

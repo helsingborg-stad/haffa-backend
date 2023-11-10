@@ -1,10 +1,10 @@
 import { getEnv } from '@helsingborg-stad/gdi-api-node'
-import { createUserMapper } from './user-mapper'
+import { createUserMapper, isValidEmail } from './user-mapper'
 import type { SettingsService } from '../settings/types'
 import type { StartupLog } from '../types'
 import type { UserMapper } from './types'
 
-export { createUserMapper }
+export { createUserMapper, isValidEmail }
 
 export const createUserMapperFromEnv = (
   startupLog: StartupLog,
