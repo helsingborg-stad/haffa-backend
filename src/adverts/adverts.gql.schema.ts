@@ -130,6 +130,10 @@ export const advertsGqlSchema = /* GraphQL */ `
     images: [ImageInput]
     quantity: Int
     unit: String
+    width: String
+    height: String
+    depth: String
+    weight: String
     material: String
     condition: String
     usage: String
@@ -200,6 +204,10 @@ export const advertsGqlSchema = /* GraphQL */ `
     quantity: Int
     images: [Image]
     unit: String
+    width: String
+    height: String
+    depth: String
+    weight: String
     material: String
     condition: String
     usage: String

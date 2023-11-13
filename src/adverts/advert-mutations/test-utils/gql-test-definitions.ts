@@ -7,6 +7,10 @@ export const advertProps = `
 	}
 	quantity
 	unit
+	width
+	height
+	depth
+	weight
 	material
 	condition
 	usage
