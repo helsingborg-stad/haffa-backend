@@ -77,7 +77,7 @@ As such, it includes
 
 ## Integrations
 
-haffa-baclkend works with different storage and service providers including in memory, disk and MongoDB.
+haffa-backend works with different storage and service providers including in memory, disk and MongoDB.
 
 Check out our [integration guide](./integrations/readme.md) for more info.
 
