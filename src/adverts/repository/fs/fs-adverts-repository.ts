@@ -6,15 +6,15 @@ import type {
   AdvertReservations,
   Advert,
   AdvertsRepository,
-} from '../types'
-import { createAdvertFilterPredicate } from '../filters/advert-filter-predicate'
+} from '../../types'
+import { createAdvertFilterPredicate } from '../../filters/advert-filter-predicate'
 import {
   createEmptyAdvert,
   createPagedAdvertList,
   mapCreateAdvertInputToAdvert,
-} from '../mappers'
-import { createAdvertFilterComparer } from '../filters/advert-filter-sorter'
-import { mapValues, toLookup } from '../../lib'
+} from '../../mappers'
+import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
+import { mapValues, toLookup } from '../../../lib'
 
 export const createFsAdvertsRepository = (
   dataFolder: string

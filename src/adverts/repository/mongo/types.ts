@@ -1,4 +1,4 @@
-import type { Advert } from '../types'
+import type { Advert } from '../../types'
 
 export interface MongoAdvertMeta {
   unreservedCount: number

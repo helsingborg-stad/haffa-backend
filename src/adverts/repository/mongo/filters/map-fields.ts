@@ -1,5 +1,5 @@
 import type { Filter } from 'mongodb'
-import type { AdvertFieldsFilterInput } from '../../types'
+import type { AdvertFieldsFilterInput } from '../../../types'
 import type { MongoAdvert } from '../types'
 import { combineAnd, escapeRegExp } from './filter-utils'
 

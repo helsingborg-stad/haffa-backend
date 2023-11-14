@@ -1,5 +1,5 @@
 import type { Filter } from 'mongodb'
-import type { HaffaUser } from '../../../login/types'
+import type { HaffaUser } from '../../../../login/types'
 import type { MongoAdvert } from '../types'
 import { combineAnd } from './filter-utils'
 import { mapRestrictions, regularAdvertsFilter } from './map-restrictions'

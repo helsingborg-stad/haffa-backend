@@ -4,16 +4,16 @@ import type {
   AdvertList,
   AdvertReservations,
   AdvertsRepository,
-} from '../types'
+} from '../../types'
 import type { MongoAdvert } from './types'
 import {
   mapAdvertFilterInputToMongoQuery,
   mapAdvertFilterInputToMongoSort,
   mapAdvertToMongoAdvert,
 } from './mappers'
-import { createEmptyAdvert } from '../mappers'
-import type { MongoConnection } from '../../mongodb-utils/types'
-import { toMap } from '../../lib'
+import { createEmptyAdvert } from '../../mappers'
+import type { MongoConnection } from '../../../mongodb-utils/types'
+import { toMap } from '../../../lib'
 
 export const createMongoAdvertsRepository = (
   { getCollection }: MongoConnection<MongoAdvert>,

@@ -1,8 +1,8 @@
 import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import { join } from 'path'
-import type { AdvertsRepository } from '../types'
+import type { AdvertsRepository } from '../../types'
 import { createFsAdvertsRepository } from './fs-adverts-repository'
-import type { StartupLog } from '../../types'
+import type { StartupLog } from '../../../types'
 
 export const tryCreateFsAdvertsRepositoryFromEnv = (
   startupLog: StartupLog
