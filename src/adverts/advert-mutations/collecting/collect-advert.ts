@@ -29,7 +29,7 @@ export const createCollectAdvert =
       )
       .patch((advert, { actions }) => {
         if (quantity > 0) {
-          const at = new Date().toDateString()
+          const at = new Date().toISOString()
           actions(patched =>
             notifications.advertWasCollected(user, quantity, patched)
           )
