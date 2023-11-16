@@ -43,7 +43,7 @@ describe('mapCreateAdvertInputToAdvert', () => {
 describe('normalizeAdvertsClaims', () => {
   const reserve = (claim: Partial<AdvertClaim>): AdvertClaim => ({
     by: '',
-    at: new Date().toDateString(),
+    at: new Date().toISOString(),
     type: AdvertClaimType.reserved,
     quantity: 1,
     events: [],
@@ -51,7 +51,7 @@ describe('normalizeAdvertsClaims', () => {
   })
   const collect = (claim: Partial<AdvertClaim>): AdvertClaim => ({
     by: '',
-    at: new Date().toDateString(),
+    at: new Date().toISOString(),
     type: AdvertClaimType.collected,
     quantity: 1,
     events: [],
