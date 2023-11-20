@@ -59,29 +59,34 @@ describe('normalizeAdvertsClaims', () => {
   })
 
   it('merges entries by owner and type', () => {
+    const at = new Date().toISOString()
     expect(
       normalizeAdvertClaims([
-        reserve({ by: 'a', quantity: 2 }),
-        collect({ by: 'a' }),
-        reserve({ by: 'b' }),
-        reserve({ by: 'a', quantity: 3 }),
+        reserve({ by: 'a', quantity: 2, at }),
+        collect({ by: 'a', at }),
+        reserve({ by: 'b', at }),
+        reserve({ by: 'a', quantity: 3, at }),
       ])
     ).toMatchObject([
-      reserve({ by: 'a', quantity: 5 }),
-      collect({ by: 'a' }),
-      reserve({ by: 'b' }),
+      reserve({ by: 'a', quantity: 5, at }),
+      collect({ by: 'a', at }),
+      reserve({ by: 'b', at }),
     ])
   })
 
   it('removes entries with 0 quantity', () => {
+    const at = new Date().toISOString()
     expect(
       normalizeAdvertClaims([
-        reserve({ by: 'a', quantity: 0 }),
-        collect({ by: 'a' }),
-        reserve({ by: 'b', quantity: 0 }),
-        reserve({ by: 'a', quantity: 3 }),
+        reserve({ by: 'a', quantity: 0, at }),
+        collect({ by: 'a', at }),
+        reserve({ by: 'b', quantity: 0, at }),
+        reserve({ by: 'a', quantity: 3, at }),
       ])
-    ).toMatchObject([collect({ by: 'a' }), reserve({ by: 'a', quantity: 3 })])
+    ).toMatchObject([
+      collect({ by: 'a', at }),
+      reserve({ by: 'a', quantity: 3, at }),
+    ])
   })
 })
 

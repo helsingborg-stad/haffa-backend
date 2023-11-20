@@ -242,6 +242,8 @@ components:
       properties:
         token:
           type: string
+        guest:
+          type: boolean
         roles:
           type: array
           items:

@@ -23,14 +23,15 @@ export const loginModule =
   ): ApplicationModule =>
   ({ registerKoaApi }: ApplicationContext) => {
     const verifyToken: Koa.Middleware = async ctx => {
-      const {
-        request: {
-          body: { token },
-        },
-      } = ctx as any
-      const user = await tokenService.decode(
-        token || cookies.getTokenFromCookie(ctx)
-      )
+      const test = (t: any) => (typeof t === 'string' ? t.trim() : null)
+
+      const token =
+        test((ctx as any).request?.body?.token) ||
+        test(cookies.getTokenFromCookie(ctx)) ||
+        test(userMapper.tryCreateGuestToken(tokenService)) ||
+        ''
+
+      const user = await tokenService.decode(token)
 
       cookies.setCookieToken(ctx, token)
 
@@ -38,6 +39,7 @@ export const loginModule =
         ? {
             token,
             roles: rolesToRolesArray(user.roles),
+            guest: !!user.guest,
           }
         : {
             token: '',
@@ -78,6 +80,7 @@ export const loginModule =
       ctx.body = {
         token,
         roles,
+        guest: user ? !!user.guest : true,
       }
     }
 

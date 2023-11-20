@@ -5,6 +5,9 @@ import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import type { LoginPolicy } from '../login-policies/types'
 import { makeAdmin, normalizeRoles, rolesArrayToRoles } from '../login'
 import type { UserMapper } from './types'
+import { userMapperConfigAdapter } from './user-mapper-config-adapter'
+
+export const GUEST_USER_ID = 'guest'
 
 const nanomatch = require('nanomatch')
 
@@ -12,9 +15,13 @@ const isString = (v: any) => typeof v === 'string'
 const isObject = (v: any) => v && typeof v === 'object' && !isArray(v)
 const isArray = (v: any) => Array.isArray(v)
 
+const isGuest = (id: string) => id === GUEST_USER_ID
+
+const isValidUserId = (id: string) => isGuest(id) || isValidEmail(id)
+
 const validateHaffaUser = (user: HaffaUser | null): HaffaUser | null =>
-  user && isObject(user) && isString(user.id) && isValidEmail(user.id)
-    ? { id: user.id.toString(), roles: normalizeRoles(user.roles) }
+  user && isObject(user) && isString(user.id) && isValidUserId(user.id)
+    ? { id: user.id, roles: normalizeRoles(user.roles) }
     : null
 
 export const isValidEmail = (email: string) => EmailValidator.validate(email)
@@ -34,6 +41,27 @@ export const createUserMapper = (
 ): UserMapper => {
   const su = superUser?.toLowerCase()
 
+  const canHaveGuests = async () =>
+    userMapperConfigAdapter(settings)
+      .getUserMapperConfig()
+      .then(({ allowGuestUsers }) => !!allowGuestUsers)
+  /*
+  const tryCreateGuestUser: UserMapper['tryCreateGuestUser'] = async () => ({
+    id: 'guest',
+    roles: {},
+  })
+*/
+  const makeGuestUser = (): HaffaUser => ({
+    id: GUEST_USER_ID,
+    roles: normalizeRoles({}),
+    guest: true,
+  })
+
+  const tryCreateGuestToken: UserMapper['tryCreateGuestToken'] = tokenService =>
+    tokenService.sign({ id: GUEST_USER_ID })
+  const tryCreateGuestUser: UserMapper['tryCreateGuestUser'] = async () =>
+    canHaveGuests().then(allow => (allow ? makeGuestUser() : null))
+
   const mapAndValidateUsers: UserMapper['mapAndValidateUsers'] =
     async users => {
       const effectiveUsers = users.filter(u => u && u.id).map(u => u!)
@@ -43,6 +71,7 @@ export const createUserMapper = (
       const loginPolicies = await loginPolicyAdapter(
         settings
       ).getLoginPolicies()
+      const allowGuest = await canHaveGuests()
       return effectiveUsers
         .map(u => {
           const user = validateHaffaUser(u)
@@ -50,11 +79,17 @@ export const createUserMapper = (
             return null
           }
           const { id } = user
+
+          if (id === GUEST_USER_ID && allowGuest) {
+            return makeGuestUser()
+          }
+
           if (id === su) {
             return makeAdmin({
               id,
             })
           }
+
           const matchings = matchLoginPolicies(id, loginPolicies)
           if (matchings.some(({ deny }) => deny)) {
             return null
@@ -91,6 +126,8 @@ export const createUserMapper = (
     mapAndValidateUser({ id: email || '' })
 
   return {
+    tryCreateGuestToken,
+    tryCreateGuestUser,
     mapAndValidateUsers,
     mapAndValidateEmails,
     mapAndValidateEmail,

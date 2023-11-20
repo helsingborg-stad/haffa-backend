@@ -15,6 +15,7 @@ import { apiKeyUserModule } from './api-keys'
 import { downloadEventsModule } from './events'
 import { cookieUserModule } from './login/cookies/cookie-user-module'
 import { optionsUserModule } from './options/options-user-module'
+import { guestUserModule } from './guest'
 
 /** Create fully packaged web application, given dependencies */
 export const createApp = ({
@@ -36,8 +37,15 @@ export const createApp = ({
     .use(optionsUserModule(services.settings))
     .use(apiKeyUserModule(services.settings))
     .use(jwtUserModule(services.tokens))
+    .use(guestUserModule(services.userMapper))
     .use(cookieUserModule(services.cookies, services.tokens))
     .use(healthCheckModule())
+    /* .use(({ app }) =>
+      app.use((ctx, next) => {
+        console.log({ id: ctx?.user?.id, path: ctx.request.path })
+        return next()
+      })
+    ) */
     .use(graphQLModule(services))
     .use(
       loginModule(

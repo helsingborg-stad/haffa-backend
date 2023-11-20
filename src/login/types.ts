@@ -3,6 +3,7 @@ import type Koa from 'koa'
 export interface HaffaUser {
   id: string
   roles?: HaffaUserRoles
+  guest?: boolean
 }
 
 export interface HaffaUserRoles {
