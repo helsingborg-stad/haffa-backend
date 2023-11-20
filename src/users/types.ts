@@ -1,6 +1,10 @@
 import type { HaffaUser } from '../login/types'
 import type { TokenService } from '../tokens/types'
 
+export interface UserMapperConfig {
+  allowGuestUsers?: boolean
+}
+
 export interface UserMapper {
   tryCreateGuestUser: () => Promise<HaffaUser | null>
   tryCreateGuestToken: (tokenService: TokenService) => string | null

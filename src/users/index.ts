@@ -3,8 +3,9 @@ import { createUserMapper, isValidEmail } from './user-mapper'
 import type { SettingsService } from '../settings/types'
 import type { StartupLog } from '../types'
 import type { UserMapper } from './types'
+import { userMapperConfigAdapter } from './user-mapper-config-adapter'
 
-export { createUserMapper, isValidEmail }
+export { createUserMapper, isValidEmail, userMapperConfigAdapter }
 
 export const createUserMapperFromEnv = (
   startupLog: StartupLog,

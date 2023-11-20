@@ -1,13 +1,13 @@
 import EmailValidator from 'email-validator'
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import type { HaffaUser } from '../login/types'
 import type { SettingsService } from '../settings/types'
 import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import type { LoginPolicy } from '../login-policies/types'
 import { makeAdmin, normalizeRoles, rolesArrayToRoles } from '../login'
 import type { UserMapper } from './types'
+import { userMapperConfigAdapter } from './user-mapper-config-adapter'
 
-const GUEST_USER_ID = 'guest'
+export const GUEST_USER_ID = 'guest'
 
 const nanomatch = require('nanomatch')
 
@@ -41,8 +41,10 @@ export const createUserMapper = (
 ): UserMapper => {
   const su = superUser?.toLowerCase()
 
-  const allowGuestUsers = async () =>
-    getEnv('ALLOW_GUEST', { fallback: '' }) === 'yes'
+  const canHaveGuests = async () =>
+    userMapperConfigAdapter(settings)
+      .getUserMapperConfig()
+      .then(({ allowGuestUsers }) => !!allowGuestUsers)
   /*
   const tryCreateGuestUser: UserMapper['tryCreateGuestUser'] = async () => ({
     id: 'guest',
@@ -58,7 +60,7 @@ export const createUserMapper = (
   const tryCreateGuestToken: UserMapper['tryCreateGuestToken'] = tokenService =>
     tokenService.sign({ id: GUEST_USER_ID })
   const tryCreateGuestUser: UserMapper['tryCreateGuestUser'] = async () =>
-    allowGuestUsers().then(allow => (allow ? makeGuestUser() : null))
+    canHaveGuests().then(allow => (allow ? makeGuestUser() : null))
 
   const mapAndValidateUsers: UserMapper['mapAndValidateUsers'] =
     async users => {
@@ -69,7 +71,7 @@ export const createUserMapper = (
       const loginPolicies = await loginPolicyAdapter(
         settings
       ).getLoginPolicies()
-      const allowGuest = await allowGuestUsers()
+      const allowGuest = await canHaveGuests()
       return effectiveUsers
         .map(u => {
           const user = validateHaffaUser(u)
