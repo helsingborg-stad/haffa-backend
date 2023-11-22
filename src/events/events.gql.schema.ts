@@ -10,5 +10,6 @@ export const eventsGqlSchema = /* GraphQL */ `
     organization: String
     category: String
     co2kg: Int
+    valueByUnit: Int
   }
 `

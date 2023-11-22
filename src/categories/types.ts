@@ -3,6 +3,7 @@ export interface Category {
   parentId: string
   label: string
   co2kg: number
+  valueByUnit: number
 }
 
 export interface CategoryRepository {

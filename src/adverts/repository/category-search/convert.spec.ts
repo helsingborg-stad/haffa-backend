@@ -21,7 +21,13 @@ describe('convertFilterToCategoryMatchingFilter', () => {
     expect(
       await convertFilterToCategoryMatchingFilter(f, {
         getCategories: async () => [
-          { id: 'c1', label: 'CheezBurgers', parentId: '', co2kg: 0 },
+          {
+            id: 'c1',
+            label: 'CheezBurgers',
+            parentId: '',
+            co2kg: 0,
+            valueByUnit: 0,
+          },
         ],
       })
     ).toMatchObject({

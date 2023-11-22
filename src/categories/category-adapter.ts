@@ -12,14 +12,17 @@ export const categoryAdapter = (
 
 const trim = (v: any): string => (typeof v === 'string' ? v.trim() : '')
 
-const normalizeCategories = (categories: Category[] | null): Category[] =>
+export const normalizeCategories = (
+  categories: Category[] | null
+): Category[] =>
   Array.isArray(categories)
     ? categories
-        .map(({ id, parentId, label, co2kg }) => ({
+        .map(({ id, parentId, label, co2kg, valueByUnit }) => ({
           id: trim(id),
           parentId: trim(parentId),
           label: trim(label),
           co2kg: co2kg || 0,
+          valueByUnit: valueByUnit ?? 0,
         }))
         .filter(({ id }) => id)
     : []

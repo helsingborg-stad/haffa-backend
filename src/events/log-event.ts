@@ -1,4 +1,4 @@
-import type { CategoryRepository, GetCategories } from '../categories/types'
+import type { GetCategories } from '../categories/types'
 import type { LogEvent, LogEventContext } from './types'
 
 export const createLogEvent = async (
@@ -24,7 +24,7 @@ export const createLogEvent = async (
 const createCategoryEvent = async (
   category: string,
   { getCategories }: GetCategories
-): Promise<Pick<LogEvent, 'category' | 'co2kg'>> => {
+): Promise<Pick<LogEvent, 'category' | 'co2kg' | 'valueByUnit'>> => {
   if (!category) {
     return {}
   }
@@ -34,6 +34,7 @@ const createCategoryEvent = async (
     ? {
         category: found.label,
         co2kg: found.co2kg,
+        valueByUnit: found.valueByUnit,
       }
     : {}
 }

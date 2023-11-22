@@ -3,11 +3,7 @@ import type {
   ApplicationModule,
 } from '@helsingborg-stad/gdi-api-node'
 import xlsx from 'xlsx'
-import type { EventLogService } from '../types'
-import {
-  requireHaffaUser,
-  requireHaffaUserRole,
-} from '../../login/require-haffa-user'
+import { requireHaffaUserRole } from '../../login/require-haffa-user'
 import type { Services } from '../../types'
 
 export const downloadEventsModule =
@@ -28,7 +24,15 @@ export const downloadEventsModule =
           const makeDate = (d: any): Date => new Date((d || '').toString())
 
           const rows: any[][] = [
-            ['Tid', 'Händelse', 'Antal', 'Organisation', 'Kategori', 'CO2'],
+            [
+              'Tid',
+              'Händelse',
+              'Antal',
+              'Organisation',
+              'Kategori',
+              'CO2',
+              'Värde',
+            ],
           ]
           await eventLog.enumerate(
             {
@@ -43,6 +47,7 @@ export const downloadEventsModule =
                 e.organization,
                 e.category,
                 e.co2kg,
+                e.valueByUnit,
               ])
               return true
             }

@@ -24,6 +24,7 @@ export interface LogEvent {
   organization?: string
   category?: string
   co2kg?: number
+  valueByUnit?: number
 }
 
 export interface LogEventContext {

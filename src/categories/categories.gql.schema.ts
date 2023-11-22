@@ -12,6 +12,7 @@ export const categoriesGqlSchema = /* GraphQL */ `
     parentId: String!
     label: String!
     co2kg: Int
+    valueByUnit: Int
     advertCount: Int!
   }
 
@@ -20,5 +21,6 @@ export const categoriesGqlSchema = /* GraphQL */ `
     parentId: String!
     label: String!
     co2kg: Int
+    valueByUnit: Int
   }
 `
