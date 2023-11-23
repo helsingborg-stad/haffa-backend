@@ -14,3 +14,13 @@ export const combineAnd = (
     ? { $and: [first, second, ...(tail as Filter<MongoAdvert>[])] }
     : first || null
 }
+
+// Combine many filters with logical and handling edge cases of 0, 1 or many
+export const combineOr = (
+  ...queries: (Filter<MongoAdvert> | null | undefined | false)[]
+): Filter<MongoAdvert> | null => {
+  const [first, second, ...tail] = queries.filter(v => v)
+  return first && second
+    ? { $or: [first, second, ...(tail as Filter<MongoAdvert>[])] }
+    : first || null
+}

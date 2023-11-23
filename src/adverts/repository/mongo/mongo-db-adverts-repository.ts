@@ -29,7 +29,6 @@ export const createMongoAdvertsRepository = (
     const collection = await getCollection()
     const query = mapAdvertFilterInputToMongoQuery(user, filter)
     const totalCount = await collection.countDocuments(query)
-
     const getInt = (v: any, d: number, max: number) =>
       v > 0 && v <= max ? Math.ceil(v) : d
 

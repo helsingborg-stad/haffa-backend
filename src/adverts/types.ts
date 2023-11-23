@@ -172,6 +172,11 @@ export interface AdvertFilterInput {
   restrictions?: AdvertRestrictionsFilterInput
   sorting?: AdvertSorting
   paging?: AdvertPagingInput
+
+  // decorators/pipelines can attach additional criterias
+  pipelineOr?: {
+    fields: AdvertFieldsFilterInput
+  }[]
 }
 
 export interface AdvertListPaging {

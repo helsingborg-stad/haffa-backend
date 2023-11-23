@@ -31,7 +31,7 @@ const createServicesFromEnv = (): Services => {
   const userMapper = createUserMapperFromEnv(startupLog, settings)
   const eventLog = createEventLogServiceFromEnv(startupLog)
   const categories = categoryAdapter(settings)
-  const adverts = createAdvertsRepositoryFromEnv(startupLog)
+  const adverts = createAdvertsRepositoryFromEnv(startupLog, settings)
   const notifications = createNotificationServiceFromEnv(startupLog, {
     categories,
     eventLog,
