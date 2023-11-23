@@ -13,7 +13,7 @@ describe('convertFilterToCategoryMatchingFilter', () => {
     ).toBe(f)
   })
 
-  it('replaces search terms with category matchers', async () => {
+  it('annotates pipeline with category matchers', async () => {
     const f = {
       search: 'I can haz cheezburger',
     }
@@ -31,12 +31,16 @@ describe('convertFilterToCategoryMatchingFilter', () => {
         ],
       })
     ).toMatchObject({
-      search: 'I can haz',
-      fields: {
-        category: {
-          in: ['c1'],
+      search: 'I can haz cheezburger',
+      pipelineOr: [
+        {
+          fields: {
+            category: {
+              in: ['c1'],
+            },
+          },
         },
-      },
+      ],
     })
   })
 })

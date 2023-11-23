@@ -1,4 +1,5 @@
 import type { Category } from '../../../categories/types'
+import { mapTree } from '../../../lib'
 import type { AdvertFilterInput, FilterInput } from '../../types'
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#escaping
@@ -54,20 +55,24 @@ export const convertFilterToCategoryMatchingFilter = async (
     return filter
   }
 
-  // every term that matches on category should be removed form free text search
-  const modifiedSearch = terms
-    .filter(t => t.categoryIds.length === 0)
-    .map(t => t.term)
-    .join(' ')
+  const { getChildrenRec } = mapTree(
+    categories,
+    c => c.id,
+    c => c.parentId
+  )
+  const allCategoryIds = [...getChildrenRec(...categoryIds)].map(({ id }) => id)
 
   return {
     ...filter,
-    search: modifiedSearch,
-    fields: {
-      ...filter.fields,
-      category: {
-        in: [...new Set(categoryIds)],
+    pipelineOr: [
+      ...(filter.pipelineOr || []),
+      {
+        fields: {
+          category: {
+            in: allCategoryIds,
+          },
+        },
       },
-    },
+    ],
   }
 }

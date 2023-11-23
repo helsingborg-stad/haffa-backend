@@ -6,7 +6,7 @@ import type { HaffaUser } from '../../../login/types'
 import { mapFields } from './filters/map-fields'
 import { mapSearch } from './filters/map-search'
 import { mapRestrictions } from './filters/map-restrictions'
-import { combineAnd } from './filters/filter-utils'
+import { combineAnd, combineOr } from './filters/filter-utils'
 
 export const mapAdvertToMongoAdvert = (advert: Advert): MongoAdvert => {
   const isRecycle = advert.type === AdvertType.recycle
@@ -57,7 +57,9 @@ export const mapAdvertFilterInputToMongoQuery = (
   filter?: AdvertFilterInput
 ): Filter<MongoAdvert> =>
   combineAnd(
-    mapSearch(filter?.search),
-    mapFields(filter?.fields),
+    combineOr(
+      combineAnd(mapSearch(filter?.search), mapFields(filter?.fields)),
+      ...(filter?.pipelineOr?.map(({ fields }) => mapFields(fields)) || [])
+    ),
     mapRestrictions(user, filter?.restrictions)
   ) || {}

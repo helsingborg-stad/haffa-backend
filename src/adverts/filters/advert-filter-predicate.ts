@@ -17,11 +17,11 @@ const createFreeTextPredicate = (search: string): Predicate<Advert> => {
 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Character_classes#looking_for_a_word_from_unicode_characters
   const matchers = // eslint-disable-next-line no-control-regex
-  ((search || '').match(/([\u0000-\u0019\u0021-\uFFFF]+)/gm) || [])
-    .filter(v => v)
-    .filter(v => v.length >= 3)
-    .map(regexpEscape)
-    .map(re => new RegExp(re, 'ig'))
+    ((search || '').match(/([\u0000-\u0019\u0021-\uFFFF]+)/gm) || [])
+      .filter(v => v)
+      .filter(v => v.length >= 3)
+      .map(regexpEscape)
+      .map(re => new RegExp(re, 'ig'))
 
   return matchers.length > 0
     ? advert =>
@@ -88,15 +88,29 @@ const createRestrictionsPredicate = (
     : () => true
 }
 
+const combineAnd =
+  (...matchers: Predicate<Advert>[]): Predicate<Advert> =>
+  advert =>
+    matchers.every(matcher => matcher(advert))
+
+const combineOr =
+  (...matchers: Predicate<Advert>[]): Predicate<Advert> =>
+  advert =>
+    matchers.some(matcher => matcher(advert))
+
 export const createAdvertFilterPredicate = (
   user: HaffaUser,
   input?: AdvertFilterInput
-): Predicate<Advert> => {
-  const matchers = [
-    createFreeTextPredicate(input?.search || ''),
-    createFieldFilterPredicate(input?.fields),
-    createRestrictionsPredicate(user, input?.restrictions || {}),
-  ]
-  // logical AND on all matchers
-  return advert => matchers.every(matcher => matcher(advert))
-}
+): Predicate<Advert> =>
+  combineAnd(
+    combineOr(
+      combineAnd(
+        createFreeTextPredicate(input?.search || ''),
+        createFieldFilterPredicate(input?.fields)
+      ),
+      ...(input?.pipelineOr?.map(({ fields }) =>
+        createFieldFilterPredicate(fields)
+      ) || [])
+    ),
+    createRestrictionsPredicate(user, input?.restrictions || {})
+  )
