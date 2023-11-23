@@ -1,9 +1,11 @@
 import { Client } from 'minio'
 import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
 import mime from 'mime-types'
+import ms from 'ms'
 import type { FilesService } from '../types'
 import { generateFileId, tryConvertDataUriToImageBuffer } from '../utils'
 
+const SEND_MAX_AGE = ms('30 days')
 interface MinioConfig {
   endpoint: string
   port: number
@@ -93,6 +95,7 @@ class MinioFilesService implements FilesService {
           const client = this.createMinioClient()
           const stream = await client.getObject(this.config.bucket, fileId)
           ctx.type = mime.lookup(fileId) || 'application/octet-stream'
+          ctx.set('cache-control', `max-age=${SEND_MAX_AGE}`)
           ctx.body = stream
         } catch {
           // unfortunately, send() exposes to much info on errors
