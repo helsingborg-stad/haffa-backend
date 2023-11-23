@@ -17,6 +17,7 @@ export const advertProps = `
 	category
 	reference
 	externalId
+	tags
 	contact {
 		email
 		phone

@@ -37,6 +37,7 @@ describe('createAdvert', () => {
           usage: 'u',
           category: 'c',
           externalId: 'eid',
+          tags: ['t'],
         }
         const result = await mappedGqlRequest<AdvertMutationResult>(
           'createAdvert',

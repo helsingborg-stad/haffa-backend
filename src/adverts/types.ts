@@ -35,6 +35,7 @@ export interface AdvertUserFields {
   category: string
   reference: string
   externalId: string
+  tags: string[]
   location: AdvertLocation
   contact: AdvertContact
 }
