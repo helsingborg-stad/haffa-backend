@@ -11,13 +11,13 @@ export const processAdvertInput = async (
   ...input,
   images: await Promise.all(
     input.images
-      .filter(v => v)
+      ?.filter(v => v)
       .filter(({ url }) => url)
       .map(image =>
         files.tryConvertDataUrlToUrl(image.url).then(url => ({
           ...image,
           url: url || image.url,
         }))
-      )
+      ) ?? []
   ),
 })

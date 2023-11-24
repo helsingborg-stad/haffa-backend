@@ -140,7 +140,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     category: String
     reference: String
     externalId: String
-
+    tags: [String]
     location: AdvertLocationInput
     contact: AdvertContactInput
   }
@@ -214,6 +214,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     category: String
     reference: String
     externalId: String
+    tags: [String]
     location: AdvertLocation
     contact: AdvertContact
   }

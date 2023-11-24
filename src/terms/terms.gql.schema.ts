@@ -13,6 +13,7 @@ export const termsGqlSchema = /* GraphQL */ `
     material: [String]
     condition: [String]
     usage: [String]
+    tags: [String]
   }
 
   type Terms {
@@ -21,5 +22,6 @@ export const termsGqlSchema = /* GraphQL */ `
     material: [String]
     condition: [String]
     usage: [String]
+    tags: [String]
   }
 `
