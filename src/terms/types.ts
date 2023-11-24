@@ -4,4 +4,5 @@ export interface Terms {
   material: string[]
   condition: string[]
   usage: string[]
+  tags: string[]
 }
