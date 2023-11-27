@@ -33,7 +33,7 @@ export const loginModule =
 
       const user = await tokenService.decode(token)
 
-      cookies.setCookieToken(ctx, token)
+      cookies.setCookieToken(ctx, user ? token : '')
 
       ctx.body = user
         ? {
@@ -44,6 +44,7 @@ export const loginModule =
         : {
             token: '',
             roles: [],
+            guest: false,
           }
     }
 
