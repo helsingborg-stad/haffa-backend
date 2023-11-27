@@ -83,8 +83,8 @@ export const createUserMapper = (
           }
           const { id } = user
 
-          if (id === GUEST_USER_ID && allowGuest) {
-            return makeGuestUser()
+          if (id === GUEST_USER_ID) {
+            return allowGuest ? makeGuestUser() : null
           }
 
           if (id === su) {

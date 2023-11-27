@@ -97,4 +97,59 @@ describe('verify-token', () => {
         roles: ['canEditTerms'],
       })
     }))
+
+  it('verify-token denies guest after reconfiguration', () =>
+    end2endTest(
+      {},
+      async ({ server, services: { settings, userMapper, tokens } }) => {
+        // turn on guest access
+        await userMapperConfigAdapter(settings).updateUserMapperConfig({
+          allowGuestUsers: true,
+        })
+        // get valid guest token
+        const guestToken = await userMapper.tryCreateGuestToken(tokens)
+        // turn off guest access
+        await userMapperConfigAdapter(settings).updateUserMapperConfig({
+          allowGuestUsers: false,
+        })
+
+        const { status, body } = await request(server)
+          .post('/api/v1/haffa/auth/verify-token')
+          .send({ token: guestToken })
+
+        expect(status).toBe(HttpStatusCodes.OK)
+        expect(body).toMatchObject({
+          guest: false,
+          token: '',
+          roles: [],
+        })
+      }
+    ))
+
+  it('verify-token denies user after reconfiguration', () =>
+    end2endTest({}, async ({ server, services: { tokens, settings } }) => {
+      await loginPolicyAdapter(settings).updateLoginPolicies([
+        {
+          emailPattern: 'test@user.com',
+          roles: [],
+          deny: true,
+        },
+      ])
+
+      // get test user token
+      // note that test user is not a described valid login
+      const token = tokens.sign(makeUser({ id: 'test@user.com' }))
+      expect(token).toBeTruthy()
+
+      const { status, body } = await request(server)
+        .post('/api/v1/haffa/auth/verify-token')
+        .send({ token })
+
+      expect(status).toBe(HttpStatusCodes.OK)
+      expect(body).toMatchObject({
+        guest: false,
+        token: '',
+        roles: [],
+      })
+    }))
 })
