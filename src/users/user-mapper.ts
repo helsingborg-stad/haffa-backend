@@ -58,7 +58,10 @@ export const createUserMapper = (
   })
 
   const tryCreateGuestToken: UserMapper['tryCreateGuestToken'] = tokenService =>
-    tokenService.sign({ id: GUEST_USER_ID })
+    canHaveGuests().then(allow =>
+      allow ? tokenService.sign({ id: GUEST_USER_ID }) : Promise.resolve(null)
+    )
+
   const tryCreateGuestUser: UserMapper['tryCreateGuestUser'] = async () =>
     canHaveGuests().then(allow => (allow ? makeGuestUser() : null))
 

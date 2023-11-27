@@ -28,7 +28,7 @@ export const loginModule =
       const token =
         test((ctx as any).request?.body?.token) ||
         test(cookies.getTokenFromCookie(ctx)) ||
-        test(userMapper.tryCreateGuestToken(tokenService)) ||
+        test(await userMapper.tryCreateGuestToken(tokenService)) ||
         ''
 
       const user = await tokenService.decode(token)

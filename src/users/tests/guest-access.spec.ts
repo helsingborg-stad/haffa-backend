@@ -48,9 +48,15 @@ describe('guest access', () => {
       }
     ))
 
-  it('is disabled by default', () =>
+  it('verify-token denies by default', () =>
     end2endTest(createTestConfig(), async ({ server }) => {
-      const { status } = await request(server).get('/echo-user')
-      expect(status).toBe(HttpStatusCodes.UNAUTHORIZED)
+      const { status, body } = await request(server).post(
+        '/api/v1/haffa/auth/verify-token'
+      )
+      expect(status).toBe(HttpStatusCodes.OK)
+      expect(body).toMatchObject({
+        token: '',
+        roles: [],
+      })
     }))
 })
