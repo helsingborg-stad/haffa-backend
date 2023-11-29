@@ -26,4 +26,8 @@ export const createInMemoryProfileRepository = (
     }
     return db[id]
   },
+  deleteProfile: async ({ id }) => {
+    // eslint-disable-next-line no-param-reassign
+    delete db[id]
+  },
 })

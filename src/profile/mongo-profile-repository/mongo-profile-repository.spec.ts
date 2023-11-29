@@ -4,7 +4,7 @@ import { createMongoProfileRepository } from './mongo-profile-repository'
 import { createEmptyProfile, createEmptyProfileInput } from '../mappers'
 import type { HaffaUser } from '../../login/types'
 import type { ProfileInput, ProfileRepository } from '../types'
-import { createMongoProfileConnection } from './mongio-profile-connection'
+import { createMongoProfileConnection } from './mongo-profile-connection'
 import { makeUser } from '../../login'
 
 const mongoMock = require('mongo-mock')

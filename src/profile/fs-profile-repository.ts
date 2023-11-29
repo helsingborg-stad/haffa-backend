@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'fs/promises'
+import { readFile, writeFile, unlink, rm } from 'fs/promises'
 import { join } from 'path'
 import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import { mkdirp } from 'mkdirp'
@@ -33,7 +33,6 @@ export const createFsProfileRepository = (
     mkdirp(dataFolder).then(() =>
       writeFile(getProfilePath(id), JSON.stringify(profile, null, 2), 'utf-8')
     )
-
   return {
     getProfile: ({ id }) => readProfile(id),
     updateProfile: ({ id }, input) =>
@@ -42,6 +41,7 @@ export const createFsProfileRepository = (
         ...input,
         email: id,
       }).then(() => readProfile(id)),
+    deleteProfile: ({ id }) => rm(getProfilePath(id), { force: true }),
   }
 }
 

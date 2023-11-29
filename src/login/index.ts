@@ -105,3 +105,14 @@ export const makeAdmin = (u: Partial<HaffaUser>): HaffaUser => ({
   ...u,
   roles: makeRoles(true),
 })
+
+export const elevateUser = (
+  u: HaffaUser,
+  elevation: Partial<HaffaUserRoles>
+): HaffaUser => ({
+  ...u,
+  roles: {
+    ...u.roles,
+    ...elevation,
+  },
+})

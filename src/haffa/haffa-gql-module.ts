@@ -12,9 +12,16 @@ import { createApiKeysGqlModule } from '../api-keys/api-keys-gql-module'
 import { createOptionsGqlModule } from '../options/options-gql-module'
 import { createEventsGqlModule } from '../events/events-gql-module'
 import { createSubscriptionsGqlModule } from '../subscriptions/subscriptions-gql-module'
+import { haffaGqlSchema } from './haffa.gql.schema'
+
+export const createStandardGqlModule = (): GraphQLModule => ({
+  schema: haffaGqlSchema,
+  resolvers: {},
+})
 
 export const createHaffaGqlModule = (services: Services): GraphQLModule =>
   mergeModules(
+    createStandardGqlModule(),
     createAdvertsGqlModule(services),
     createProfileGqlModule(services),
     createTermsGqlModule(services),

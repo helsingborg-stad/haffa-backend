@@ -2,10 +2,15 @@ import HttpStatusCodes from 'http-status-codes'
 import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import { profileGqlSchema } from './profile.gql.schema'
 import type { Services } from '../types'
+import { elevateUser, makeUser } from '../login'
+import { waitForAll } from '../lib'
+import { waitRepeat } from '../lib/wait'
+import type { RemoveProfileInput } from './types'
 
 export const createProfileGqlModule = ({
   profiles,
-}: Pick<Services, 'profiles'>): GraphQLModule => ({
+  adverts,
+}: Pick<Services, 'profiles' | 'adverts'>): GraphQLModule => ({
   schema: profileGqlSchema,
   resolvers: {
     Query: {
@@ -24,6 +29,32 @@ export const createProfileGqlModule = ({
           return ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return profiles.updateProfile(user, input)
+      },
+
+      removeProfile: async ({ ctx, args: { input } }) => {
+        const { user } = ctx
+        const p = input as unknown as RemoveProfileInput
+        if (user.guest) {
+          return ctx.throw(HttpStatusCodes.UNAUTHORIZED)
+        }
+        const effectiveUser = elevateUser(user, { canRemoveOwnAdverts: true })
+
+        if (p?.removeAdverts) {
+          await waitRepeat(async () => {
+            const batch = await adverts.list(user, {
+              restrictions: { createdByMe: true },
+            })
+            const ids = batch.adverts.map(({ id }) => id)
+            if (ids.length === 0) {
+              return null
+            }
+            return () =>
+              waitForAll(ids, id => adverts.remove(effectiveUser, id))
+          })
+        }
+
+        await profiles.deleteProfile(user)
+        return { success: true }
       },
     },
   },

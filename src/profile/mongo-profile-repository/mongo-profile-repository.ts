@@ -15,6 +15,7 @@ export const createMongoProfileRepository = (
       ...envelope?.profile,
     }
   }
+
   const updateProfile: ProfileRepository['updateProfile'] = async (
     user,
     input
@@ -39,5 +40,14 @@ export const createMongoProfileRepository = (
     )
     return getProfile(user)
   }
-  return { getProfile, updateProfile }
+
+  const deleteProfile: ProfileRepository['deleteProfile'] = async user => {
+    const collection = await connection.getCollection()
+    const id = user.id.toLowerCase()
+    await collection.deleteOne({
+      id,
+    })
+  }
+
+  return { getProfile, updateProfile, deleteProfile }
 }

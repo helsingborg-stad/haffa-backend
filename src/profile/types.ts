@@ -21,7 +21,12 @@ export interface ProfileInput {
   organization: string
 }
 
+export interface RemoveProfileInput {
+  removeAdverts: boolean
+}
+
 export interface ProfileRepository {
   getProfile: (user: HaffaUser) => Promise<Profile>
   updateProfile: (user: HaffaUser, input: ProfileInput) => Promise<Profile>
+  deleteProfile: (user: HaffaUser) => Promise<void>
 }

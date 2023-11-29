@@ -5,6 +5,7 @@ export const profileGqlSchema = /* GraphQL */ `
 
   type Mutation {
     updateProfile(input: ProfileInput!): Profile!
+    removeProfile(input: RemoveProfileInput!): OperationResult!
   }
 
   type Profile {
@@ -24,5 +25,9 @@ export const profileGqlSchema = /* GraphQL */ `
     city: String
     country: String
     organization: String
+  }
+
+  input RemoveProfileInput {
+    removeAdverts: Boolean
   }
 `
