@@ -75,6 +75,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     category: StringFilterInput
     reference: StringFilterInput
     externalId: StringFilterInput
+    tags: StringFilterInput
     and: [AdvertFieldsFilterInput]
     or: [AdvertFieldsFilterInput]
     not: AdvertFieldsFilterInput

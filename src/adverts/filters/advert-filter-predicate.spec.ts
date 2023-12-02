@@ -1,6 +1,6 @@
 import { createAdvertFilterPredicate } from './advert-filter-predicate'
 import { createEmptyAdvert } from '../mappers'
-import { AdvertClaimType, type Advert } from '../types'
+import { AdvertClaimType, type Advert, type FilterInput } from '../types'
 import type { HaffaUser } from '../../login/types'
 
 describe('createAdvertFilterPredicate', () => {
@@ -15,7 +15,10 @@ describe('createAdvertFilterPredicate', () => {
   ): Advert[] =>
     [...Array(count)]
       .map(createEmptyAdvert)
-      .map((advert, index) => ({ ...advert, id: `advert-${index}` }))
+      .map((advert, index) => ({
+        ...advert,
+        id: `advert-${index}`,
+      }))
       .map(advert => ({
         ...advert,
         ...patches?.[advert.id],
@@ -44,6 +47,30 @@ describe('createAdvertFilterPredicate', () => {
     ])
   })
 
+  it('find tagged adverts', () => {
+    const p = createAdvertFilterPredicate(createTestUser(), {
+      fields: {
+        tags: {
+          in: ['banana', 'orange', 'melon'],
+        },
+      },
+    })
+
+    const adverts = createSampleAdverts(100, {
+      'advert-10': { tags: ['banana', 'apple', 'orange', 'melon', 'pear'] },
+      'advert-20': { tags: ['apple', 'orange', 'melon', 'pear'] },
+      'advert-30': { tags: ['orange', 'melon', 'pear'] },
+      'advert-40': { tags: ['melon', 'pear'] },
+      'advert-50': { tags: ['pear'] },
+    })
+
+    expect(adverts.filter(p).map(({ id }) => id)).toMatchObject([
+      'advert-10',
+      'advert-20',
+      'advert-30',
+      'advert-40',
+    ])
+  })
   it('treats search text as a list of separate words combined with or to match {title, description}', () => {
     const p = createAdvertFilterPredicate(createTestUser(), {
       search: 'unicorn orange banana',

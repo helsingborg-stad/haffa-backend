@@ -26,11 +26,15 @@ describe('mapFieldsFilter', () => {
           eq: 'a',
         },
         category: { eq: 'c' },
+        tags: {
+          in: ['a', 'b'],
+        },
       })
     ).toMatchObject({
       $and: [
         { 'advert.id': { $eq: 'a' } },
         { 'advert.category': { $eq: 'c' } },
+        { 'advert.tags': { $in: ['a', 'b'] } },
       ],
     })
   })
