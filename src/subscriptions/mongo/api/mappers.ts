@@ -7,13 +7,19 @@ export const sanitizeAdvertSubscriptionFilter = (
 ): AdvertSubscriptionFilter => ({
   search: filter.search?.trim(),
   categories: filter.categories?.map(c => c.trim()).filter(c => c),
+  tags: filter.tags?.map(c => c.trim()).filter(c => c),
 })
 
 export const tryCreateSubscriptionHash = (
   user: HaffaUser,
   filter: AdvertSubscriptionFilter
 ): string | null => {
-  const keyParts = [user.id, filter.search, ...(filter.categories || [])]
+  const keyParts = [
+    user.id,
+    filter.search,
+    ...(filter.categories || []),
+    ...(filter.tags || []),
+  ]
     .map(v => v?.trim() || '')
     .filter(v => v)
     // eslint-disable-next-line no-nested-ternary

@@ -3,6 +3,7 @@ import type { HaffaUser } from '../login/types'
 export interface AdvertSubscriptionFilter {
   search?: string
   categories?: string[]
+  tags?: string[]
 }
 
 export interface AdvertSubscription {
