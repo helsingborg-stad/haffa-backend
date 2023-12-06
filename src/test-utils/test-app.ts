@@ -17,6 +17,7 @@ import { createCookieService, createIssuePincode } from '../login'
 import { categoryAdapter } from '../categories/category-adapter'
 import { createNullEventLogService } from '../events'
 import { createNullSubscriptionsRepository } from '../subscriptions'
+import { createNullContentRepository } from '../content'
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
 
@@ -96,6 +97,7 @@ export const createTestServices = (services: Partial<Services>): Services => {
     jobs: createJobExecutorServiceFromEnv(),
     eventLog: createNullEventLogService(),
     subscriptions: createNullSubscriptionsRepository(),
+    content: createNullContentRepository(),
     ...services,
   }
 }
