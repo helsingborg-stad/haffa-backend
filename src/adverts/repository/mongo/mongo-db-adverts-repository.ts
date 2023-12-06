@@ -123,7 +123,9 @@ export const createMongoAdvertsRepository = (
         $group: {
           _id: `$advert.${by}`,
           c: {
-            $count: {},
+            // NOTE: $count operator doesnt work on Mongo 4.*. $sum: 1 i equivalent
+            // https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/#mongodb-group-grp.-count
+            $sum: 1,
           },
         },
       },
