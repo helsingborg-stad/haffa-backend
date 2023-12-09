@@ -14,11 +14,15 @@ export const createUpdateComposition =
     const cPage = await collection.findOne({ id: 'HOME' })
     const nPage = normalizeComposition(input)
 
+    // Add new images
     const nImageList = await Promise.all(
       extractImages(nPage).map(
         async img => (await files.tryConvertDataUrlToUrl(img)) || img
       )
     )
+    const composition = applyImages(nPage, nImageList)
+
+    // Delete removed images
     const cImageList = cPage ? extractImages(cPage.composition) : []
 
     const deletableFiles = cImageList
@@ -29,8 +33,7 @@ export const createUpdateComposition =
       .filter(v => v) as string[]
     await Promise.all(deletableFiles.map(img => files.tryCleanupUrl(img)))
 
-    const composition = applyImages(nPage, nImageList)
-
+    // Update document
     await collection.updateOne(
       {
         id: 'HOME',
