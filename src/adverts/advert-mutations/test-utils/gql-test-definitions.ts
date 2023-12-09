@@ -11,6 +11,7 @@ export const advertProps = `
 	height
 	depth
 	weight
+	size
 	material
 	condition
 	usage

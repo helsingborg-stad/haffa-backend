@@ -135,6 +135,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     height: String
     depth: String
     weight: String
+    size: String
     material: String
     condition: String
     usage: String
@@ -209,6 +210,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     height: String
     depth: String
     weight: String
+    size: String
     material: String
     condition: String
     usage: String
