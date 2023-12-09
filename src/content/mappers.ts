@@ -13,30 +13,27 @@ export const createEmptyComposition = (): ViewComposition => ({
   rows: [],
 })
 
-export const convertImages = async (
-  composition: ViewComposition,
-  files: FilesService
-): Promise<ViewComposition> => {
-  const images = composition.rows.reduce<string[]>(
-    (p, n) => [...p, ...n.columns.map(c => c.module.image)],
-    []
-  )
-  const fileset = await Promise.all(
-    images.map(image => files.tryConvertDataUrlToUrl(image))
-  )
-  fileset.reverse()
+export const extractImages = (composition: ViewComposition) =>
+  composition.rows
+    .reduce<string[]>(
+      (p, n) => [...p, ...n.columns.map(c => c.module.image)],
+      []
+    )
+    .reverse()
 
-  return {
-    rows: composition.rows.map(row => ({
-      columns: row.columns.map(column => ({
-        module: {
-          ...column.module,
-          image: fileset.pop() || column.module.image,
-        },
-      })),
+export const applyImages = (
+  composition: ViewComposition,
+  images: Array<string | null>
+): ViewComposition => ({
+  rows: composition.rows.map(row => ({
+    columns: row.columns.map(column => ({
+      module: {
+        ...column.module,
+        image: images.pop() || column.module.image,
+      },
     })),
-  }
-}
+  })),
+})
 
 export const normalizeComposition = (
   composition?: ViewComposition
