@@ -11,16 +11,15 @@ export const createUpdateComposition =
   ): ContentRepository['updateComposition'] =>
   async input => {
     const collection = await getCollection()
-    const cPage = await collection.findOne({ id: 'HOME' })
     const nPage = normalizeComposition(input)
+    const cPage = await collection.findOne({ id: 'HOME' })
 
-    // Add new images
+    // Create new images
     const nImageList = await Promise.all(
       extractImages(nPage).map(
         async img => (await files.tryConvertDataUrlToUrl(img)) || img
       )
     )
-    const composition = applyImages(nPage, nImageList)
 
     // Delete removed images
     const cImageList = cPage ? extractImages(cPage.composition) : []
@@ -34,6 +33,8 @@ export const createUpdateComposition =
     await Promise.all(deletableFiles.map(img => files.tryCleanupUrl(img)))
 
     // Update document
+    const composition = applyImages(nPage, nImageList)
+
     await collection.updateOne(
       {
         id: 'HOME',
