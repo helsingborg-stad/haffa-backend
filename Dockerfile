@@ -18,6 +18,8 @@ COPY . ./
 COPY deploy.npmrc .npmrc
 RUN yarn install --production --ignore-optional --platform=linux --arch=x64
 
+RUN crontab -l | { cat; echo "0 23 * * * /usr/src/app/data/jobs/daily.sh>/tmp/daily.log"; } | crontab -
+
 #FROM gcr.io/distroless/nodejs18-debian11
 FROM node:18-alpine
 EXPOSE 3000
