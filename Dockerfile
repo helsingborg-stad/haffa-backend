@@ -18,8 +18,6 @@ COPY . ./
 COPY deploy.npmrc .npmrc
 RUN yarn install --production --ignore-optional --platform=linux --arch=x64
 
-RUN crontab -l | { cat; echo "0 23 * * * /usr/src/app/data/jobs/daily.sh>/tmp/daily.log"; } | crontab -
-
 #FROM gcr.io/distroless/nodejs18-debian11
 FROM node:18-alpine
 EXPOSE 3000
@@ -33,5 +31,7 @@ COPY --from=compiler /work/dist ./dist
 COPY --from=compiler /work/index.js ./
 COPY --from=compiler /work/openapi.yml ./
 COPY --from=git-rev /work/git_revision.txt ./
+COPY --from=optimizer /work/docker-cmd-with-crond.sh ./
 
-CMD ["index.js"]
+CMD ["sh", "docker-cmd-with-crond.sh"]
+
