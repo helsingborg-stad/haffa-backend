@@ -14,6 +14,7 @@ import { createEventsGqlModule } from '../events/events-gql-module'
 import { createSubscriptionsGqlModule } from '../subscriptions/subscriptions-gql-module'
 import { haffaGqlSchema } from './haffa.gql.schema'
 import { createContentGqlModule } from '../content/content-gql-module'
+import { createAdvertFieldConfigGqlModule } from '../advert-field-config'
 
 export const createStandardGqlModule = (): GraphQLModule => ({
   schema: haffaGqlSchema,
@@ -34,7 +35,8 @@ export const createHaffaGqlModule = (services: Services): GraphQLModule =>
     createOptionsGqlModule(services),
     createEventsGqlModule(services),
     createSubscriptionsGqlModule(services),
-    createContentGqlModule(services)
+    createContentGqlModule(services),
+    createAdvertFieldConfigGqlModule(services)
   )
 
 const mergeModules = (...modules: GraphQLModule[]): GraphQLModule => ({

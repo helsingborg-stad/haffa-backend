@@ -1,4 +1,3 @@
-import type { FilesService } from '../files/types'
 import type { ContentModule, ViewComposition } from './types'
 
 export const createEmptyModule = (): ContentModule => ({
