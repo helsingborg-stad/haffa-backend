@@ -1,25 +1,20 @@
-import type { Advert, AdvertContact } from '../adverts/types'
+import type {
+  AdvertContact,
+  AdvertInput,
+  AdvertLocation,
+} from '../adverts/types'
 
-export type Fields = Pick<
-  Advert & AdvertContact,
-  | 'description'
-  | 'unit'
-  | 'width'
-  | 'height'
-  | 'depth'
-  | 'weight'
-  | 'size'
-  | 'material'
-  | 'condition'
-  | 'usage'
-  | 'category'
-  | 'reference'
-  | 'organization'
-  | 'tags'
->
+type Fields = keyof (Omit<
+  AdvertInput,
+  'images' | 'externalId' | 'location' | 'contact'
+> &
+  AdvertContact &
+  AdvertLocation)
 
-export const ConfigurableFields: Array<keyof Fields> = [
+export const ConfigurableFields: Array<Fields> = [
+  'title',
   'description',
+  'quantity',
   'unit',
   'width',
   'height',
@@ -31,12 +26,17 @@ export const ConfigurableFields: Array<keyof Fields> = [
   'usage',
   'category',
   'reference',
-  'organization',
   'tags',
+  'organization',
+  'adress',
+  'zipCode',
+  'city',
+  'email',
+  'phone',
 ]
 
 export interface FieldConfig {
-  name: keyof Fields
+  name: Fields
   visible: boolean
   mandatory: boolean
 }
