@@ -48,6 +48,7 @@ export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
 })
 
 export const createEmptyAdvertLocation = (): AdvertLocation => ({
+  name: '',
   adress: '',
   zipCode: '',
   city: '',
@@ -113,6 +114,10 @@ export const mapAdvertToAdvertWithMeta = (
     ? {
         ...createEmptyAdvert(),
         ...advert,
+        location: {
+          ...createEmptyAdvertLocation(),
+          ...advert.location,
+        },
         ...{
           get meta() {
             return getAdvertMeta(advert, user)

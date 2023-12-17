@@ -15,6 +15,7 @@ describe('getProfile', () => {
         /* GraphQL */ `
           query Query {
             profile {
+              name
               city
               email
               adress

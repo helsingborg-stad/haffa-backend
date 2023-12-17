@@ -11,7 +11,7 @@ import {
   mapAdvertFilterInputToMongoSort,
   mapAdvertToMongoAdvert,
 } from './mappers'
-import { createEmptyAdvert } from '../../mappers'
+import { createEmptyAdvert, createEmptyAdvertLocation } from '../../mappers'
 import type { MongoConnection } from '../../../mongodb-utils/types'
 import { toMap } from '../../../lib'
 
@@ -23,7 +23,18 @@ export const createMongoAdvertsRepository = (
     getCollection()
       .then(collection => collection.findOne({ id }))
       .then(envelope => envelope?.advert || null)
-      .then(advert => (advert ? { ...createEmptyAdvert(), ...advert } : null))
+      .then(advert =>
+        advert
+          ? {
+              ...createEmptyAdvert(),
+              ...advert,
+              location: {
+                ...createEmptyAdvertLocation(),
+                ...advert.location,
+              },
+            }
+          : null
+      )
 
   const list: AdvertsRepository['list'] = async (user, filter) => {
     const collection = await getCollection()

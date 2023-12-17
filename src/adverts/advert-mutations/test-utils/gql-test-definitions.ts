@@ -25,6 +25,7 @@ export const advertProps = `
 		organization
 	}
 	location {
+		name
 		adress
 		zipCode
 		city

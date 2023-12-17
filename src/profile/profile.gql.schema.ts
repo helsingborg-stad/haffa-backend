@@ -10,6 +10,7 @@ export const profileGqlSchema = /* GraphQL */ `
 
   type Profile {
     email: String!
+    name: String
     phone: String
     adress: String
     zipCode: String
@@ -19,6 +20,7 @@ export const profileGqlSchema = /* GraphQL */ `
   }
 
   input ProfileInput {
+    name: String
     phone: String
     adress: String
     zipCode: String

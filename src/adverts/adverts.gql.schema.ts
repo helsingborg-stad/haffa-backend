@@ -113,6 +113,7 @@ export const advertsGqlSchema = /* GraphQL */ `
   }
 
   input AdvertLocationInput {
+    name: String
     adress: String
     zipCode: String
     city: String
@@ -175,6 +176,7 @@ export const advertsGqlSchema = /* GraphQL */ `
   }
 
   type AdvertLocation {
+    name: String
     adress: String
     zipCode: String
     city: String
