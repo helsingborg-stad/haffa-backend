@@ -7,6 +7,7 @@ const createEmptyConfiguration = (): AdvertFieldConfig =>
     name,
     visible: true,
     mandatory: false,
+    initial: '',
   }))
 
 export const normalizeFieldConfig = (fieldConfig: AdvertFieldConfig | null) => {

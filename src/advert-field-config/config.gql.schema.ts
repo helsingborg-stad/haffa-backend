@@ -11,10 +11,12 @@ export const advertFieldConfigGqlSchema = /* GraphQL */ `
     name: String
     visible: Boolean
     mandatory: Boolean
+    initial: String
   }
   input FieldConfigInput {
     name: String
     visible: Boolean
     mandatory: Boolean
+    initial: String
   }
 `
