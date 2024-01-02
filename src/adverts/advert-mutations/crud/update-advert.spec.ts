@@ -65,6 +65,7 @@ describe('updateAdvert', () => {
           height: 'h',
           depth: 'd',
           weight: 'w',
+          size: 's',
           material: 'm',
           condition: 'c',
           usage: 'u',

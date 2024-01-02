@@ -20,10 +20,12 @@ export const subscriptionsGqlSchema = /* GraphQL */ `
   type AdvertSubscriptionFilter {
     search: String
     categories: [String]
+    tags: [String]
   }
 
   input AdvertSubscriptionFilterInput {
     search: String
     categories: [String]
+    tags: [String]
   }
 `

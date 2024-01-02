@@ -6,6 +6,7 @@ describe('getProfile', () => {
   it('returns repository content with email set to calling user', () =>
     end2endTest(null, async ({ user, profiles, gqlRequest }) => {
       const input: ProfileInput = {
+        name: 'Foo',
         phone: '123-45678',
         adress: 'Drottninggatan 14',
         zipCode: '25221',
@@ -17,6 +18,7 @@ describe('getProfile', () => {
         /* GraphQL */ `
           mutation Mutation($input: ProfileInput!) {
             updateProfile(input: $input) {
+              name
               city
               email
               adress

@@ -11,7 +11,7 @@ import {
   mapAdvertFilterInputToMongoSort,
   mapAdvertToMongoAdvert,
 } from './mappers'
-import { createEmptyAdvert } from '../../mappers'
+import { createEmptyAdvert, createEmptyAdvertLocation } from '../../mappers'
 import type { MongoConnection } from '../../../mongodb-utils/types'
 import { toMap } from '../../../lib'
 
@@ -23,7 +23,18 @@ export const createMongoAdvertsRepository = (
     getCollection()
       .then(collection => collection.findOne({ id }))
       .then(envelope => envelope?.advert || null)
-      .then(advert => (advert ? { ...createEmptyAdvert(), ...advert } : null))
+      .then(advert =>
+        advert
+          ? {
+              ...createEmptyAdvert(),
+              ...advert,
+              location: {
+                ...createEmptyAdvertLocation(),
+                ...advert.location,
+              },
+            }
+          : null
+      )
 
   const list: AdvertsRepository['list'] = async (user, filter) => {
     const collection = await getCollection()
@@ -123,7 +134,9 @@ export const createMongoAdvertsRepository = (
         $group: {
           _id: `$advert.${by}`,
           c: {
-            $count: {},
+            // NOTE: $count operator doesnt work on Mongo 4.*. $sum: 1 i equivalent
+            // https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/#mongodb-group-grp.-count
+            $sum: 1,
           },
         },
       },

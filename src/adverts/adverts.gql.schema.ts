@@ -75,6 +75,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     category: StringFilterInput
     reference: StringFilterInput
     externalId: StringFilterInput
+    tags: StringFilterInput
     and: [AdvertFieldsFilterInput]
     or: [AdvertFieldsFilterInput]
     not: AdvertFieldsFilterInput
@@ -112,6 +113,7 @@ export const advertsGqlSchema = /* GraphQL */ `
   }
 
   input AdvertLocationInput {
+    name: String
     adress: String
     zipCode: String
     city: String
@@ -134,6 +136,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     height: String
     depth: String
     weight: String
+    size: String
     material: String
     condition: String
     usage: String
@@ -173,6 +176,7 @@ export const advertsGqlSchema = /* GraphQL */ `
   }
 
   type AdvertLocation {
+    name: String
     adress: String
     zipCode: String
     city: String
@@ -208,6 +212,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     height: String
     depth: String
     weight: String
+    size: String
     material: String
     condition: String
     usage: String

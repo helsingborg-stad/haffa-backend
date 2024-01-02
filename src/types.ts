@@ -10,6 +10,7 @@ import type { JobExcecutorService } from './jobs/types'
 import type { CategoryRepository } from './categories/types'
 import type { EventLogService } from './events/types'
 import type { SubscriptionsRepository } from './subscriptions/types'
+import type { ContentRepository } from './content/types'
 
 export interface StartupLog {
   echo: <TService>(
@@ -35,4 +36,5 @@ export interface Services {
   jobs: JobExcecutorService
   eventLog: EventLogService
   subscriptions: SubscriptionsRepository
+  content: ContentRepository
 }

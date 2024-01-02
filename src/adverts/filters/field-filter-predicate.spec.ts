@@ -8,12 +8,14 @@ describe('createFieldFilterPredicate', () => {
     title: `title ${i}`,
     description: `description ${i}`,
     idx2: i * 2,
+    tags: [String(i), String(i * 2)],
   }))
 
   const filteredData = (filter: any): any[] =>
     data.filter(createFieldFilterPredicate(filter))
 
   it.each([
+    ['in ["3", "0"]', { tags: { in: ['3', '0'] } }, [data[0], data[3]]],
     ['eq 1', { title: { eq: 'title 3' } }, [data[3]]],
     ['eq 2', { id: { eq: 3 } }, [data[3]]],
     ['eq 3', { id: { eq: 3 }, idx2: { eq: 6 } }, [data[3]]],

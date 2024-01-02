@@ -11,6 +11,7 @@ export const advertProps = `
 	height
 	depth
 	weight
+	size
 	material
 	condition
 	usage
@@ -24,6 +25,7 @@ export const advertProps = `
 		organization
 	}
 	location {
+		name
 		adress
 		zipCode
 		city

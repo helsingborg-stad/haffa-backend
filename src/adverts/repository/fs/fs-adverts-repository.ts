@@ -10,6 +10,7 @@ import type {
 import { createAdvertFilterPredicate } from '../../filters/advert-filter-predicate'
 import {
   createEmptyAdvert,
+  createEmptyAdvertLocation,
   createPagedAdvertList,
   mapCreateAdvertInputToAdvert,
 } from '../../mappers'
@@ -21,9 +22,14 @@ export const createFsAdvertsRepository = (
 ): AdvertsRepository => {
   const getAdvert: AdvertsRepository['getAdvert'] = async (user, id) =>
     readFile(join(dataFolder, `${id}.json`), { encoding: 'utf8' })
-      .then(text => ({
+      .then(text => JSON.parse(text))
+      .then(json => ({
         ...createEmptyAdvert(),
-        ...JSON.parse(text),
+        ...json,
+        location: {
+          ...createEmptyAdvertLocation(),
+          ...json.location,
+        },
       }))
       .catch(() => null)
 
@@ -42,10 +48,17 @@ export const createFsAdvertsRepository = (
         )
       )
       .then(texts =>
-        texts.map<Advert>(text => ({
-          ...createEmptyAdvert(),
-          ...JSON.parse(text),
-        }))
+        texts.map<Advert>(text => {
+          const json = JSON.parse(text)
+          return {
+            ...createEmptyAdvert(),
+            ...json,
+            location: {
+              ...createEmptyAdvertLocation(),
+              ...json.location,
+            },
+          }
+        })
       )
       .then(adverts =>
         adverts.filter(createAdvertFilterPredicate(user, filter))
@@ -149,10 +162,17 @@ export const createFsAdvertsRepository = (
           )
         )
         .then(texts =>
-          texts.map(text => ({
-            ...createEmptyAdvert(),
-            ...JSON.parse(text),
-          }))
+          texts.map<Advert>(text => {
+            const json = JSON.parse(text)
+            return {
+              ...createEmptyAdvert(),
+              ...json,
+              location: {
+                ...createEmptyAdvertLocation(),
+                ...json.location,
+              },
+            }
+          })
         )
         .then(adverts =>
           adverts.filter(advert => advert.claims.some(dateCompare))

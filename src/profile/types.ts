@@ -1,6 +1,7 @@
 import type { HaffaUser } from '../login/types'
 
 export interface ProfileUserFields {
+  name: string
   phone: string
   adress: string
   zipCode: string
@@ -13,6 +14,7 @@ export interface Profile extends ProfileUserFields {
 }
 
 export interface ProfileInput {
+  name: string
   phone: string
   adress: string
   zipCode: string

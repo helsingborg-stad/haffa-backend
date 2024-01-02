@@ -26,12 +26,12 @@ export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
   description: '',
   quantity: 1,
   images: [],
-
   unit: '',
   width: '',
   height: '',
   depth: '',
   weight: '',
+  size: '',
   material: '',
   condition: '',
   usage: '',
@@ -48,6 +48,7 @@ export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
 })
 
 export const createEmptyAdvertLocation = (): AdvertLocation => ({
+  name: '',
   adress: '',
   zipCode: '',
   city: '',
@@ -70,6 +71,7 @@ export const createEmptyAdvertInput = (): AdvertInput => ({
   height: '',
   depth: '',
   weight: '',
+  size: '',
   material: '',
   condition: '',
   usage: '',
@@ -112,6 +114,10 @@ export const mapAdvertToAdvertWithMeta = (
     ? {
         ...createEmptyAdvert(),
         ...advert,
+        location: {
+          ...createEmptyAdvertLocation(),
+          ...advert.location,
+        },
         ...{
           get meta() {
             return getAdvertMeta(advert, user)

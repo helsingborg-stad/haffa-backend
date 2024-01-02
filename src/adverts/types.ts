@@ -7,6 +7,7 @@ export enum AdvertType {
 }
 
 export interface AdvertLocation {
+  name: string
   adress: string
   zipCode: string
   city: string
@@ -29,6 +30,7 @@ export interface AdvertUserFields {
   height: string
   depth: string
   weight: string
+  size: string
   material: string
   condition: string
   usage: string
@@ -131,6 +133,8 @@ export type FilterInput<T> = {
   in?: T[]
 } & (T extends string ? { contains?: string } : Record<string, never>)
 
+type Flatten<Type> = Type extends Array<infer Item> ? Item : Type
+
 export type AdvertFieldsFilterInput = {
   id?: FilterInput<string>
   // for internal searched
@@ -140,7 +144,7 @@ export type AdvertFieldsFilterInput = {
   archivedAt?: FilterInput<string>
 } & {
   [Property in keyof Omit<AdvertUserFields, 'images'>]?: FilterInput<
-    AdvertUserFields[Property]
+    Flatten<AdvertUserFields[Property]>
   >
 }
 

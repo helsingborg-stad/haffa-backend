@@ -31,5 +31,7 @@ COPY --from=compiler /work/dist ./dist
 COPY --from=compiler /work/index.js ./
 COPY --from=compiler /work/openapi.yml ./
 COPY --from=git-rev /work/git_revision.txt ./
+COPY --from=optimizer /work/docker-cmd-with-crond.sh ./
 
-CMD ["index.js"]
+CMD ["sh", "docker-cmd-with-crond.sh"]
+

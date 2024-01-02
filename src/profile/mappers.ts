@@ -2,6 +2,7 @@ import type { Profile, ProfileInput } from './types'
 
 export const createEmptyProfile = (): Profile => ({
   email: '',
+  name: '',
   phone: '',
   adress: '',
   zipCode: '',
@@ -11,6 +12,7 @@ export const createEmptyProfile = (): Profile => ({
 })
 
 export const createEmptyProfileInput = (): ProfileInput => ({
+  name: '',
   phone: '',
   adress: '',
   zipCode: '',
