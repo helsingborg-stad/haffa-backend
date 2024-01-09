@@ -45,6 +45,7 @@ const normalizeTerms = (terms: Terms | null): Terms => ({
   ]),
   usage: normalizeStringList(terms?.usage, ['Inomhus', 'Utomhus']),
   tags: normalizeStringList(terms?.tags, []),
+  sizes: normalizeStringList(terms?.sizes, []),
 })
 
 export const termsAdapter = (settings: SettingsService) => ({

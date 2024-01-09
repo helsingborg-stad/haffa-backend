@@ -5,4 +5,5 @@ export interface Terms {
   condition: string[]
   usage: string[]
   tags: string[]
+  sizes: string[]
 }

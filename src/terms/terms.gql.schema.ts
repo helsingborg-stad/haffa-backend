@@ -14,6 +14,7 @@ export const termsGqlSchema = /* GraphQL */ `
     condition: [String]
     usage: [String]
     tags: [String]
+    sizes: [String]
   }
 
   type Terms {
@@ -23,5 +24,6 @@ export const termsGqlSchema = /* GraphQL */ `
     condition: [String]
     usage: [String]
     tags: [String]
+    sizes: [String]
   }
 `
