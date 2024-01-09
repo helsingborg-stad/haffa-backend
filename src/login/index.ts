@@ -44,6 +44,7 @@ export const normalizeRoles = (
   canRunSystemJobs: !!roles?.canRunSystemJobs,
   canSeeSystemStatistics: !!roles?.canSeeSystemStatistics,
   canManageContent: !!roles?.canManageContent,
+  canManageLocations: !!roles?.canManageLocations,
 })
 
 export const createLoginServiceFromEnv = (
@@ -71,6 +72,7 @@ export const makeRoles = (
   canRunSystemJobs: defaultEnabled,
   canSeeSystemStatistics: defaultEnabled,
   canManageContent: defaultEnabled,
+  canManageLocations: defaultEnabled,
 })
 
 export const combineRoles = (
@@ -94,6 +96,7 @@ export const combineRoles = (
     canEditTerms: a.canEditTerms || b.canEditTerms,
     canRunSystemJobs: a.canRunSystemJobs || b.canRunSystemJobs,
     canManageContent: a.canManageContent || b.canManageContent,
+    canManageLocations: a.canManageLocations || b.canManageLocations,
   })
 
 export const makeUser = (

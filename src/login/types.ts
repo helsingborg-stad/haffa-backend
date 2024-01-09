@@ -22,6 +22,7 @@ export interface HaffaUserRoles {
   canRunSystemJobs?: boolean
   canSeeSystemStatistics?: boolean
   canManageContent?: boolean
+  canManageLocations?: boolean
 }
 
 export interface RequestPincodeResult {

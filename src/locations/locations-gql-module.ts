@@ -17,7 +17,7 @@ export const createLocationsGqlModule = ({
     Mutation: {
       updateLocations: async ({ ctx, args: { input } }) => {
         const { user } = ctx
-        if (!normalizeRoles(user?.roles).canEditTerms) {
+        if (!normalizeRoles(user?.roles).canManageLocations) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return locationsAdapter(settings).updateLocations(input)
