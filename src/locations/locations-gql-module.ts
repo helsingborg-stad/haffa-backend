@@ -12,13 +12,7 @@ export const createLocationsGqlModule = ({
   resolvers: {
     Query: {
       // https://www.graphql-tools.com/docs/resolvers
-      locations: async ({ ctx }) => {
-        const { user } = ctx
-        if (!normalizeRoles(user?.roles).canEditTerms) {
-          ctx.throw(HttpStatusCodes.UNAUTHORIZED)
-        }
-        return locationsAdapter(settings).getLocations()
-      },
+      locations: async () => locationsAdapter(settings).getLocations(),
     },
     Mutation: {
       updateLocations: async ({ ctx, args: { input } }) => {
