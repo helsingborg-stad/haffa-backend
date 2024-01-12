@@ -8,6 +8,7 @@ export const sanitizeAdvertSubscriptionFilter = (
   search: filter.search?.trim(),
   categories: filter.categories?.map(c => c.trim()).filter(c => c),
   tags: filter.tags?.map(c => c.trim()).filter(c => c),
+  size: filter.size?.map(c => c.trim()).filter(c => c),
 })
 
 export const tryCreateSubscriptionHash = (
@@ -19,6 +20,7 @@ export const tryCreateSubscriptionHash = (
     filter.search,
     ...(filter.categories || []),
     ...(filter.tags || []),
+    ...(filter.size || []),
   ]
     .map(v => v?.trim() || '')
     .filter(v => v)

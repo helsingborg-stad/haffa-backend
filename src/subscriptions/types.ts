@@ -4,6 +4,7 @@ export interface AdvertSubscriptionFilter {
   search?: string
   categories?: string[]
   tags?: string[]
+  size?: string[]
 }
 
 export interface AdvertSubscription {
