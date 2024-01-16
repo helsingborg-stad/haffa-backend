@@ -1,13 +1,15 @@
 import type { SettingsService } from '../settings/types'
 import type { AdvertFieldConfig, FieldConfig } from './types'
-import { ConfigurableFields } from './types'
+import { ConfigurableFields, FieldLabels } from './types'
 
 const createEmptyConfiguration = (): AdvertFieldConfig =>
   ConfigurableFields.map(name => ({
     name,
+    label: FieldLabels[name] ?? name,
     visible: true,
     mandatory: false,
     initial: '',
+    adornment: '',
   }))
 
 export const normalizeFieldConfig = (fieldConfig: AdvertFieldConfig | null) => {
