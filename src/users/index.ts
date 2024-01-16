@@ -4,8 +4,14 @@ import type { SettingsService } from '../settings/types'
 import type { StartupLog } from '../types'
 import type { UserMapper } from './types'
 import { userMapperConfigAdapter } from './user-mapper-config-adapter'
+import { createUserMapperGqlModule } from './user-mapper-gql-module'
 
-export { createUserMapper, isValidEmail, userMapperConfigAdapter }
+export {
+  createUserMapper,
+  isValidEmail,
+  userMapperConfigAdapter,
+  createUserMapperGqlModule,
+}
 
 export const createUserMapperFromEnv = (
   startupLog: StartupLog,
