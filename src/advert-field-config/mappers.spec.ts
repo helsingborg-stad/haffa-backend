@@ -1,68 +1,107 @@
-import { normalizeFieldConfig } from './mappers'
-
-const fieldConfig = {
-  name: '',
-  visible: true,
-  mandatory: false,
-  initial: '',
-}
+import { getFieldConfig, normalizeFieldConfig } from './mappers'
 
 it('should override default values with input', () => {
   const output = normalizeFieldConfig([
-    { ...fieldConfig, name: 'tags', visible: false, mandatory: true },
-    { ...fieldConfig, name: 'material', visible: false },
-    { ...fieldConfig, name: 'width', mandatory: true },
+    { ...getFieldConfig('tags'), visible: false, mandatory: true },
+    { ...getFieldConfig('material'), visible: false },
+    { ...getFieldConfig('width'), mandatory: true },
+    { ...getFieldConfig('weight'), label: 'dummy' }, // Retain labels
+    { ...getFieldConfig('phone'), adornment: 'dummy' }, // Retain adornment
   ])
   expect(output).toEqual([
-    { ...fieldConfig, name: 'title' },
-    { ...fieldConfig, name: 'description' },
-    { ...fieldConfig, name: 'quantity' },
-    { ...fieldConfig, name: 'unit' },
-    { ...fieldConfig, name: 'width', mandatory: true },
-    { ...fieldConfig, name: 'height' },
-    { ...fieldConfig, name: 'depth' },
-    { ...fieldConfig, name: 'weight' },
-    { ...fieldConfig, name: 'size' },
-    { ...fieldConfig, name: 'material', visible: false },
-    { ...fieldConfig, name: 'condition' },
-    { ...fieldConfig, name: 'usage' },
-    { ...fieldConfig, name: 'category' },
-    { ...fieldConfig, name: 'reference' },
-    { ...fieldConfig, name: 'tags', visible: false, mandatory: true },
-    { ...fieldConfig, name: 'organization' },
-    { ...fieldConfig, name: 'name' },
-    { ...fieldConfig, name: 'adress' },
-    { ...fieldConfig, name: 'zipCode' },
-    { ...fieldConfig, name: 'city' },
-    { ...fieldConfig, name: 'email' },
-    { ...fieldConfig, name: 'phone' },
+    { ...getFieldConfig('title') },
+    { ...getFieldConfig('description') },
+    { ...getFieldConfig('quantity') },
+    { ...getFieldConfig('unit') },
+    { ...getFieldConfig('width'), mandatory: true },
+    { ...getFieldConfig('height') },
+    { ...getFieldConfig('depth') },
+    { ...getFieldConfig('weight'), label: 'dummy' },
+    { ...getFieldConfig('size') },
+    { ...getFieldConfig('material'), visible: false },
+    { ...getFieldConfig('condition') },
+    { ...getFieldConfig('usage') },
+    { ...getFieldConfig('category') },
+    { ...getFieldConfig('reference') },
+    { ...getFieldConfig('tags'), visible: false, mandatory: true },
+    { ...getFieldConfig('organization') },
+    { ...getFieldConfig('name') },
+    { ...getFieldConfig('adress') },
+    { ...getFieldConfig('zipCode') },
+    { ...getFieldConfig('city') },
+    { ...getFieldConfig('email') },
+    { ...getFieldConfig('phone'), adornment: 'dummy' },
+    { ...getFieldConfig('country') },
   ])
 })
 
 it('should handle null document', () => {
   const output = normalizeFieldConfig(null)
   expect(output).toEqual([
-    { ...fieldConfig, name: 'title' },
-    { ...fieldConfig, name: 'description' },
-    { ...fieldConfig, name: 'quantity' },
-    { ...fieldConfig, name: 'unit' },
-    { ...fieldConfig, name: 'width' },
-    { ...fieldConfig, name: 'height' },
-    { ...fieldConfig, name: 'depth' },
-    { ...fieldConfig, name: 'weight' },
-    { ...fieldConfig, name: 'size' },
-    { ...fieldConfig, name: 'material' },
-    { ...fieldConfig, name: 'condition' },
-    { ...fieldConfig, name: 'usage' },
-    { ...fieldConfig, name: 'category' },
-    { ...fieldConfig, name: 'reference' },
-    { ...fieldConfig, name: 'tags' },
-    { ...fieldConfig, name: 'organization' },
-    { ...fieldConfig, name: 'name' },
-    { ...fieldConfig, name: 'adress' },
-    { ...fieldConfig, name: 'zipCode' },
-    { ...fieldConfig, name: 'city' },
-    { ...fieldConfig, name: 'email' },
-    { ...fieldConfig, name: 'phone' },
+    { ...getFieldConfig('title') },
+    { ...getFieldConfig('description') },
+    { ...getFieldConfig('quantity') },
+    { ...getFieldConfig('unit') },
+    { ...getFieldConfig('width') },
+    { ...getFieldConfig('height') },
+    { ...getFieldConfig('depth') },
+    { ...getFieldConfig('weight') },
+    { ...getFieldConfig('size') },
+    { ...getFieldConfig('material') },
+    { ...getFieldConfig('condition') },
+    { ...getFieldConfig('usage') },
+    { ...getFieldConfig('category') },
+    { ...getFieldConfig('reference') },
+    { ...getFieldConfig('tags') },
+    { ...getFieldConfig('organization') },
+    { ...getFieldConfig('name') },
+    { ...getFieldConfig('adress') },
+    { ...getFieldConfig('zipCode') },
+    { ...getFieldConfig('city') },
+    { ...getFieldConfig('email') },
+    { ...getFieldConfig('phone') },
+    { ...getFieldConfig('country') },
   ])
+})
+
+it('should remove duplicates (Keep last)', () => {
+  const output = normalizeFieldConfig([
+    getFieldConfig('name'),
+    { ...getFieldConfig('name'), visible: false },
+  ])
+  expect(output).toEqual([
+    { ...getFieldConfig('title') },
+    { ...getFieldConfig('description') },
+    { ...getFieldConfig('quantity') },
+    { ...getFieldConfig('unit') },
+    { ...getFieldConfig('width') },
+    { ...getFieldConfig('height') },
+    { ...getFieldConfig('depth') },
+    { ...getFieldConfig('weight') },
+    { ...getFieldConfig('size') },
+    { ...getFieldConfig('material') },
+    { ...getFieldConfig('condition') },
+    { ...getFieldConfig('usage') },
+    { ...getFieldConfig('category') },
+    { ...getFieldConfig('reference') },
+    { ...getFieldConfig('tags') },
+    { ...getFieldConfig('organization') },
+    { ...getFieldConfig('name'), visible: false },
+    { ...getFieldConfig('adress') },
+    { ...getFieldConfig('zipCode') },
+    { ...getFieldConfig('city') },
+    { ...getFieldConfig('email') },
+    { ...getFieldConfig('phone') },
+    { ...getFieldConfig('country') },
+  ])
+})
+
+it('should provide labels', () => {
+  const output = normalizeFieldConfig(null)
+
+  expect(output).toHaveLength(
+    output.filter(
+      field => typeof field.label === 'string' && field.label.length > 0
+    ).length
+  )
 })
