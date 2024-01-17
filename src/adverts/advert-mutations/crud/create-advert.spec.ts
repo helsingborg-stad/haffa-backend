@@ -18,7 +18,7 @@ mutation Mutation(
 `
 describe('createAdvert', () => {
   it('creates an advert in the database and notifies', () => {
-    const advertWasCreated = jest.fn(async () => void 0)
+    const advertWasCreated = jest.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasCreated,
     })
@@ -32,6 +32,7 @@ describe('createAdvert', () => {
           description: 'd',
           images: [],
           unit: 'u',
+          lendingPeriod: 1,
           material: 'm',
           condition: 'c',
           usage: 'u',

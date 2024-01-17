@@ -61,6 +61,7 @@ describe('updateAdvert', () => {
           description: 'd',
           images: [],
           unit: 'u',
+          lendingPeriod: 1,
           width: 'w',
           height: 'h',
           depth: 'd',

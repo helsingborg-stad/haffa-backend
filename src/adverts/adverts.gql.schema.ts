@@ -132,6 +132,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     description: String
     images: [ImageInput]
     quantity: Int
+    lendingPeriod: Int
     unit: String
     width: String
     height: String
@@ -207,6 +208,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     title: String
     description: String
     quantity: Int
+    lendingPeriod: Int
     images: [Image]
     unit: String
     width: String

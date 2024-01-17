@@ -6,6 +6,7 @@ export const advertProps = `
 		url
 	}
 	quantity
+	lendingPeriod
 	unit
 	width
 	height
