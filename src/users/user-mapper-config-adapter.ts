@@ -1,13 +1,15 @@
 import type { SettingsService } from '../settings/types'
 import type { UserMapperConfig } from './types'
 
-const normalizeConfig = (config: UserMapperConfig | null): UserMapperConfig => {
-  const { allowGuestUsers, phoneCountry } = config || {}
-  return {
-    allowGuestUsers: !!allowGuestUsers,
-    phoneCountry: phoneCountry?.toString() || '',
-  }
-}
+const normalizeConfig = (
+  config: Partial<UserMapperConfig> | null
+): UserMapperConfig => ({
+  allowGuestUsers: !!config?.allowGuestUsers,
+  phone: {
+    country: config?.phone?.country || 'SE',
+    roles: config?.phone?.roles || [],
+  },
+})
 
 export const userMapperConfigAdapter = (settings: SettingsService) => ({
   getUserMapperConfig: () =>

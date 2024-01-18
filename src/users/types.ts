@@ -2,8 +2,11 @@ import type { HaffaUser } from '../login/types'
 import type { TokenService } from '../tokens/types'
 
 export interface UserMapperConfig {
-  allowGuestUsers?: boolean
-  phoneCountry?: string
+  allowGuestUsers: boolean
+  phone: {
+    country: string
+    roles: string[]
+  }
 }
 
 export interface UserMapper {

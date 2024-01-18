@@ -68,14 +68,14 @@ export const createUserMapper = (
 
   const tryCreatePhoneUser = (
     { id }: HaffaUser,
-    phoneCountry: string
+    country: string,
+    roles: string[]
   ): HaffaUser | null => {
-    const pn = phoneCountry
-      ? parsePhoneNumber(id, phoneCountry as CountryCode)
-      : null
+    const pn = country ? parsePhoneNumber(id, country as CountryCode) : null
     if (pn?.isValid()) {
       return makeUser({
         id: pn.number,
+        roles: rolesArrayToRoles(roles),
       })
     }
     return null
@@ -91,14 +91,14 @@ export const createUserMapper = (
         settings
       ).getLoginPolicies()
 
-      const { allowGuestUsers, phoneCountry } = await userMapperConfigAdapter(
+      const { allowGuestUsers, phone } = await userMapperConfigAdapter(
         settings
       ).getUserMapperConfig()
       return effectiveUsers
         .map(u => {
           const user = validateHaffaUser(u)
           if (!user) {
-            return tryCreatePhoneUser(u, phoneCountry || '')
+            return tryCreatePhoneUser(u, phone.country, phone.roles)
           }
           const { id } = user
 

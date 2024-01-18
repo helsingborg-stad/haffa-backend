@@ -16,7 +16,7 @@ describe('user access validation', () => {
   interface TestCase {
     givenUser: string
     givenLoginPolicies?: Partial<LoginPolicy>[]
-    givenUserMapperConfig?: UserMapperConfig
+    givenUserMapperConfig?: Partial<UserMapperConfig>
     expectResponse: Partial<request.Response>
   }
   const TestCases: [string, TestCase][] = [
@@ -25,7 +25,7 @@ describe('user access validation', () => {
       {
         givenUser: '072 1234567',
         givenLoginPolicies: [],
-        givenUserMapperConfig: { phoneCountry: 'SE' },
+        givenUserMapperConfig: { phone: { country: 'SE', roles: [] } },
         expectResponse: {
           status: HttpStatusCodes.OK,
           body: { id: '+46721234567', roles: {} },
@@ -37,7 +37,7 @@ describe('user access validation', () => {
       {
         givenUser: '+46 72 12 34 567',
         givenLoginPolicies: [],
-        givenUserMapperConfig: { phoneCountry: 'SE' },
+        givenUserMapperConfig: { phone: { country: 'SE', roles: [] } },
         expectResponse: {
           status: HttpStatusCodes.OK,
           body: { id: '+46721234567', roles: {} },
@@ -220,7 +220,7 @@ describe('user access validation', () => {
   const echoTest = (
     userEmail: string,
     policies: Partial<LoginPolicy>[],
-    config: UserMapperConfig,
+    config: Partial<UserMapperConfig>,
     validate: (response: any) => any
   ) =>
     end2endTest(
@@ -233,7 +233,6 @@ describe('user access validation', () => {
           server,
           tokens
         )
-        console.log(result.body)
         return validate(result)
       }
     )

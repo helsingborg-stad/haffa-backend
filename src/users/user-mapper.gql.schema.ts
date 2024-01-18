@@ -9,8 +9,19 @@ export const userMapperGqlSchema = /* GraphQL */ `
   }
   type UserMappingConfiguration {
     allowGuestUsers: Boolean!
+    phone: UserMappingConfigurationForPhone!
   }
+  type UserMappingConfigurationForPhone {
+    country: String!
+    roles: [String]!
+  }
+
   input UserMappingConfigurationInput {
-    allowGuestUsers: Boolean!
+    allowGuestUsers: Boolean
+    phone: UserMappingConfigurationInputForPhone
+  }
+  input UserMappingConfigurationInputForPhone {
+    country: String!
+    roles: [String]!
   }
 `

@@ -28,12 +28,10 @@ const createDatatorgetSmsNotifications = ({
       return
     }
     const message = compile(template)(data)
-
     const url = new URL('/api/v1/hpb/send/sms', endpoint).toString()
-    console.log({ apiKey, endpoint, url })
     await request
       .post(url)
-      .set('X-API-Key', apiKey)
+      .set('x-api-key', apiKey)
       .set('Content-Type', 'application/json')
       .set('accept', 'application/json')
       .send({
@@ -45,10 +43,6 @@ const createDatatorgetSmsNotifications = ({
             sender_id: 'Haffa',
           },
         },
-      })
-      .catch(e => {
-        console.error(e.stack)
-        throw e
       })
   }
 
