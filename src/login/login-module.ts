@@ -3,7 +3,6 @@ import type {
   ApplicationContext,
   ApplicationModule,
 } from '@helsingborg-stad/gdi-api-node'
-import HttpStatusCodes from 'http-status-codes'
 import { RequestPincodeStatus } from './types'
 import type { CookieService, LoginService } from './types'
 import type { TokenService } from '../tokens/types'
@@ -11,7 +10,6 @@ import type { NotificationService } from '../notifications/types'
 import { rolesToRolesArray } from '.'
 import { requireHaffaUserRole } from './require-haffa-user'
 import type { UserMapper } from '../users/types'
-import { isValidEmail } from '../users'
 
 export const loginModule =
   (
@@ -58,12 +56,12 @@ export const loginModule =
         : { status: RequestPincodeStatus.invalid, pincode: '' }
       */
 
-      const { status, pincode } = await loginService.requestPincode(
+      const { status, pincode, user } = await loginService.requestPincode(
         email,
         ctx.ip
       )
       if (status === RequestPincodeStatus.accepted) {
-        await notifications.pincodeRequested(email, pincode)
+        await notifications.pincodeRequested(user?.id || email, pincode)
       }
       ctx.body = { status }
     }

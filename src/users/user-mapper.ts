@@ -71,7 +71,10 @@ export const createUserMapper = (
     country: string,
     roles: string[]
   ): HaffaUser | null => {
-    const pn = country ? parsePhoneNumber(id, country as CountryCode) : null
+    const pn =
+      country && typeof id === 'string'
+        ? parsePhoneNumber(id, country as CountryCode)
+        : null
     if (pn?.isValid()) {
       return makeUser({
         id: pn.number,

@@ -4,6 +4,7 @@ import type { TokenService } from '../tokens/types'
 export interface UserMapperConfig {
   allowGuestUsers: boolean
   phone: {
+    sender: string
     country: string
     roles: string[]
   }

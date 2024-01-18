@@ -25,7 +25,9 @@ describe('user access validation', () => {
       {
         givenUser: '072 1234567',
         givenLoginPolicies: [],
-        givenUserMapperConfig: { phone: { country: 'SE', roles: [] } },
+        givenUserMapperConfig: {
+          phone: { country: 'SE', roles: [], sender: 'Haffa' },
+        },
         expectResponse: {
           status: HttpStatusCodes.OK,
           body: { id: '+46721234567', roles: {} },
@@ -37,7 +39,9 @@ describe('user access validation', () => {
       {
         givenUser: '+46 72 12 34 567',
         givenLoginPolicies: [],
-        givenUserMapperConfig: { phone: { country: 'SE', roles: [] } },
+        givenUserMapperConfig: {
+          phone: { country: 'SE', roles: [], sender: 'Haffa' },
+        },
         expectResponse: {
           status: HttpStatusCodes.OK,
           body: { id: '+46721234567', roles: {} },

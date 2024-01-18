@@ -1,4 +1,5 @@
 import { createEventLoggingNotifications } from '../events'
+import type { SettingsService } from '../settings/types'
 import type { Services, StartupLog } from '../types'
 import { tryCreateBrevoNotificationsFromEnv } from './brevo/brevo-notifications'
 import { createCompositeNotifications } from './composite-notifications'
@@ -13,10 +14,14 @@ import type { NotificationService } from './types'
 
 export const createNotificationServiceFromEnv = (
   startupLog: StartupLog,
-  { categories, eventLog }: Pick<Services, 'categories' | 'eventLog'>
+  {
+    categories,
+    eventLog,
+    settings,
+  }: Pick<Services, 'categories' | 'eventLog' | 'settings'>
 ): NotificationService => {
   const email = tryCreateMailNotificationsFromEnv(startupLog)
-  const sms = tryCreateSmsNotificationsFromEnv(startupLog)
+  const sms = tryCreateSmsNotificationsFromEnv(startupLog, settings)
   const console =
     email || sms ? null : createConsoleNotificationsFromEnv(startupLog)
   return createCompositeNotifications(
@@ -48,9 +53,12 @@ const tryCreateMailNotificationsFromEnv = (startupLog: StartupLog) =>
       tryCreateBrevoNotificationsFromEnv(startupLog)
   )
 
-const tryCreateSmsNotificationsFromEnv = (startupLog: StartupLog) =>
+const tryCreateSmsNotificationsFromEnv = (
+  startupLog: StartupLog,
+  settings: SettingsService
+) =>
   tryCreatePhoneUserNotifications(
-    tryCreateDatatorgetSmsNotificationsFromEnv(startupLog)
+    tryCreateDatatorgetSmsNotificationsFromEnv(startupLog, settings)
   )
 
 const createConsoleNotificationsFromEnv = (startupLog: StartupLog) =>

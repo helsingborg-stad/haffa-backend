@@ -28,6 +28,7 @@ export interface HaffaUserRoles {
 export interface RequestPincodeResult {
   status: RequestPincodeStatus
   pincode: string
+  user: HaffaUser | null
 }
 
 export enum RequestPincodeStatus {

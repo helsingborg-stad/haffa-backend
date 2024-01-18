@@ -37,6 +37,7 @@ const createServicesFromEnv = (): Services => {
   const notifications = createNotificationServiceFromEnv(startupLog, {
     categories,
     eventLog,
+    settings,
   })
   return {
     userMapper,

@@ -30,6 +30,7 @@ export const createInMemoryLoginService = (
         return {
           status: RequestPincodeStatus.denied,
           pincode: '',
+          user,
         }
       }
       const pincode = issuePincode()
@@ -41,6 +42,7 @@ export const createInMemoryLoginService = (
       return {
         status: RequestPincodeStatus.accepted,
         pincode,
+        user,
       }
     },
     tryLogin: async (email, pincode) => {
