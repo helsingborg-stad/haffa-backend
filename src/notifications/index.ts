@@ -3,21 +3,30 @@ import type { Services, StartupLog } from '../types'
 import { tryCreateBrevoNotificationsFromEnv } from './brevo/brevo-notifications'
 import { createCompositeNotifications } from './composite-notifications'
 import { createConsoleNotificationService } from './console-notifications'
-import { tryCreateEmailUserNotifications } from './filtered-user-notifications'
+import { tryCreateDatatorgetSmsNotificationsFromEnv } from './datatorget-helsingborg-se'
+import {
+  tryCreateEmailUserNotifications,
+  tryCreatePhoneUserNotifications,
+} from './filtered-user-notifications'
 import { tryCreateSendGridNofificationsFromEnv } from './sendgrid'
 import type { NotificationService } from './types'
 
 export const createNotificationServiceFromEnv = (
   startupLog: StartupLog,
   { categories, eventLog }: Pick<Services, 'categories' | 'eventLog'>
-): NotificationService =>
-  createCompositeNotifications(
-    // notify by email if configured, console otherwise
-    tryCreateMailNotificationsFromEnv(startupLog) ||
-      createConsoleNotificationsFromEnv(startupLog),
+): NotificationService => {
+  const email = tryCreateMailNotificationsFromEnv(startupLog)
+  const sms = tryCreateSmsNotificationsFromEnv(startupLog)
+  const console =
+    email || sms ? null : createConsoleNotificationsFromEnv(startupLog)
+  return createCompositeNotifications(
+    email,
+    sms,
+    console,
     // log events
     createEventLoggingNotifications(categories, eventLog)
   )
+}
 
 export const createNullNotificationService = (): NotificationService => ({
   subscriptionsHasNewAdverts: async () => undefined,
@@ -35,8 +44,14 @@ export const createNullNotificationService = (): NotificationService => ({
 
 const tryCreateMailNotificationsFromEnv = (startupLog: StartupLog) =>
   tryCreateEmailUserNotifications(
-    tryCreateSendGridNofificationsFromEnv(startupLog)
-  ) || tryCreateBrevoNotificationsFromEnv(startupLog)
+    tryCreateSendGridNofificationsFromEnv(startupLog) ||
+      tryCreateBrevoNotificationsFromEnv(startupLog)
+  )
+
+const tryCreateSmsNotificationsFromEnv = (startupLog: StartupLog) =>
+  tryCreatePhoneUserNotifications(
+    tryCreateDatatorgetSmsNotificationsFromEnv(startupLog)
+  )
 
 const createConsoleNotificationsFromEnv = (startupLog: StartupLog) =>
   startupLog.echo(createConsoleNotificationService(), {

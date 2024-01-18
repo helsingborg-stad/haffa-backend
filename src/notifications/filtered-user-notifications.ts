@@ -1,3 +1,4 @@
+import { isValidPhoneNumber } from 'libphonenumber-js'
 import type { HaffaUser } from '../login/types'
 import { isValidEmail } from '../users'
 import type { NotificationService } from './types'
@@ -45,3 +46,8 @@ export const tryCreateEmailUserNotifications = (
   inner: NotificationService | undefined | null
 ): NotificationService | null =>
   tryCreateUserFilteredNotifications(inner, isValidEmail)
+
+export const tryCreatePhoneUserNotifications = (
+  inner: NotificationService | undefined | null
+): NotificationService | null =>
+  tryCreateUserFilteredNotifications(inner, isValidPhoneNumber)
