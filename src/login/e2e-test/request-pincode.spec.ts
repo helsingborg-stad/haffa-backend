@@ -42,7 +42,7 @@ describe('request', () => {
         })
 
       expect(status).toBe(StatusCodes.OK)
-      expect(body.status).toBe(RequestPincodeStatus.invalid)
+      expect(body.status).toBe(RequestPincodeStatus.denied)
       expect(Object.keys(logins)).toHaveLength(0)
     }))
 })

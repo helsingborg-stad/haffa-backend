@@ -9,14 +9,41 @@ import type { TokenService } from '../../tokens/types'
 import type { HaffaUser } from '../../login/types'
 import { makeRoles, makeUser } from '../../login'
 import type { LoginPolicy } from '../../login-policies/types'
+import type { UserMapperConfig } from '../types'
+import { userMapperConfigAdapter } from '..'
 
 describe('user access validation', () => {
   interface TestCase {
     givenUser: string
-    givenLoginPolicies: Partial<LoginPolicy>[]
+    givenLoginPolicies?: Partial<LoginPolicy>[]
+    givenUserMapperConfig?: UserMapperConfig
     expectResponse: Partial<request.Response>
   }
   const TestCases: [string, TestCase][] = [
+    [
+      'phone users is allowed when configured for',
+      {
+        givenUser: '072 1234567',
+        givenLoginPolicies: [],
+        givenUserMapperConfig: { phoneCountry: 'SE' },
+        expectResponse: {
+          status: HttpStatusCodes.OK,
+          body: { id: '+46721234567', roles: {} },
+        },
+      },
+    ],
+    [
+      'prefixed phone users is allowed when configured for',
+      {
+        givenUser: '+46 72 12 34 567',
+        givenLoginPolicies: [],
+        givenUserMapperConfig: { phoneCountry: 'SE' },
+        expectResponse: {
+          status: HttpStatusCodes.OK,
+          body: { id: '+46721234567', roles: {} },
+        },
+      },
+    ],
     [
       'user is allowed when no login policies are set',
       {
@@ -87,10 +114,18 @@ describe('user access validation', () => {
     `%s`,
     async (
       description: string,
-      { givenUser, givenLoginPolicies, expectResponse }: TestCase
+      {
+        givenUser,
+        givenLoginPolicies,
+        givenUserMapperConfig,
+        expectResponse,
+      }: TestCase
     ) =>
-      echoTest(givenUser, givenLoginPolicies, response =>
-        expect(response).toMatchObject(expectResponse)
+      echoTest(
+        givenUser,
+        givenLoginPolicies || [],
+        givenUserMapperConfig || {},
+        response => expect(response).toMatchObject(expectResponse)
       )
   )
 
@@ -185,17 +220,20 @@ describe('user access validation', () => {
   const echoTest = (
     userEmail: string,
     policies: Partial<LoginPolicy>[],
+    config: UserMapperConfig,
     validate: (response: any) => any
   ) =>
     end2endTest(
       createTestConfig(),
-      async ({ server, services: { tokens }, loginPolicies }) => {
+      async ({ server, services: { tokens, settings }, loginPolicies }) => {
+        await userMapperConfigAdapter(settings).updateUserMapperConfig(config)
         await loginPolicies.updateLoginPolicies(policies)
         const result = await makeEchoUserRequest(
           makeUser({ id: userEmail }),
           server,
           tokens
         )
+        console.log(result.body)
         return validate(result)
       }
     )

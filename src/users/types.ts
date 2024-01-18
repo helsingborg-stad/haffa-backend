@@ -3,6 +3,7 @@ import type { TokenService } from '../tokens/types'
 
 export interface UserMapperConfig {
   allowGuestUsers?: boolean
+  phoneCountry?: string
 }
 
 export interface UserMapper {

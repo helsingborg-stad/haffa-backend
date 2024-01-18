@@ -1,9 +1,16 @@
 import EmailValidator from 'email-validator'
+import type { CountryCode } from 'libphonenumber-js'
+import parsePhoneNumber from 'libphonenumber-js'
 import type { HaffaUser } from '../login/types'
 import type { SettingsService } from '../settings/types'
 import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import type { LoginPolicy } from '../login-policies/types'
-import { makeAdmin, normalizeRoles, rolesArrayToRoles } from '../login'
+import {
+  makeAdmin,
+  makeUser,
+  normalizeRoles,
+  rolesArrayToRoles,
+} from '../login'
 import type { UserMapper } from './types'
 import { userMapperConfigAdapter } from './user-mapper-config-adapter'
 
@@ -45,12 +52,6 @@ export const createUserMapper = (
     userMapperConfigAdapter(settings)
       .getUserMapperConfig()
       .then(({ allowGuestUsers }) => !!allowGuestUsers)
-  /*
-  const tryCreateGuestUser: UserMapper['tryCreateGuestUser'] = async () => ({
-    id: 'guest',
-    roles: {},
-  })
-*/
   const makeGuestUser = (): HaffaUser => ({
     id: GUEST_USER_ID,
     roles: normalizeRoles({}),
@@ -65,6 +66,21 @@ export const createUserMapper = (
   const tryCreateGuestUser: UserMapper['tryCreateGuestUser'] = async () =>
     canHaveGuests().then(allow => (allow ? makeGuestUser() : null))
 
+  const tryCreatePhoneUser = (
+    { id }: HaffaUser,
+    phoneCountry: string
+  ): HaffaUser | null => {
+    const pn = phoneCountry
+      ? parsePhoneNumber(id, phoneCountry as CountryCode)
+      : null
+    if (pn?.isValid()) {
+      return makeUser({
+        id: pn.number,
+      })
+    }
+    return null
+  }
+
   const mapAndValidateUsers: UserMapper['mapAndValidateUsers'] =
     async users => {
       const effectiveUsers = users.filter(u => u && u.id).map(u => u!)
@@ -74,17 +90,20 @@ export const createUserMapper = (
       const loginPolicies = await loginPolicyAdapter(
         settings
       ).getLoginPolicies()
-      const allowGuest = await canHaveGuests()
+
+      const { allowGuestUsers, phoneCountry } = await userMapperConfigAdapter(
+        settings
+      ).getUserMapperConfig()
       return effectiveUsers
         .map(u => {
           const user = validateHaffaUser(u)
           if (!user) {
-            return null
+            return tryCreatePhoneUser(u, phoneCountry || '')
           }
           const { id } = user
 
           if (id === GUEST_USER_ID) {
-            return allowGuest ? makeGuestUser() : null
+            return allowGuestUsers ? makeGuestUser() : null
           }
 
           if (id === su) {

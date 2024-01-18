@@ -50,11 +50,18 @@ export const loginModule =
 
     const requestPincode: Koa.Middleware = async (ctx: any) => {
       const email = (ctx?.request?.body?.email || '').toString().toLowerCase()
+
+      /*
       const isValid = isValidEmail(email)
       const { status, pincode } = isValid
         ? await loginService.requestPincode(email, ctx.ip)
         : { status: RequestPincodeStatus.invalid, pincode: '' }
+      */
 
+      const { status, pincode } = await loginService.requestPincode(
+        email,
+        ctx.ip
+      )
       if (status === RequestPincodeStatus.accepted) {
         await notifications.pincodeRequested(email, pincode)
       }
@@ -68,10 +75,11 @@ export const loginModule =
         .trim()
       const pincode = (ctx?.request?.body?.pincode || '').toString()
 
+      /*
       if (!isValidEmail(email)) {
         ctx.throw(HttpStatusCodes.BAD_REQUEST)
       }
-
+*/
       const user = await loginService.tryLogin(email, pincode, ctx.ip)
       const token = user ? tokenService.sign(user) : ''
       const roles = rolesToRolesArray(user?.roles)
