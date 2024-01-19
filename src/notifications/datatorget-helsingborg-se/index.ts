@@ -24,8 +24,6 @@ const createDatatorgetSmsNotifications = ({
     templateId: string,
     data: any
   ): Promise<any> => {
-    console.log(to, templateId, data)
-
     const template = TEMPLATES[templateId] || ''
     if (!template) {
       return
@@ -36,11 +34,6 @@ const createDatatorgetSmsNotifications = ({
     const { phone } = await userMapperConfigAdapter(
       settings
     ).getUserMapperConfig()
-
-    console.log({
-      url,
-      phone,
-    })
     await request
       .post(url)
       .set('x-api-key', apiKey)

@@ -4,29 +4,31 @@ info:
   description: Haffa
   version: 1.0.0
 paths:
-  /api/v1/haffa/options/{collection}:
-    parameters:
-      - in: path
-        name: collection
-        schema:
-          type: string
-        required: true
-        description: Name of collection
+  /api/v1/haffa/graphql:
     post:
-      operationId: options
-      summary: Get key/value pairs
+      operationId: haffaGQL
+      summary: 'GraphQL endpoint for Haffa'
+      tags:
+        - GraphQL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLQuery'
       responses:
         '200':
-          description: Successful processing of request
+          description: 'successful operation'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Options'
-
+                $ref: '#/components/schemas/GraphQLResponse'
   /api/v1/haffa/auth/verify-token:
     post:
       operationId: verifyToken
       summary: Verify authentication token
+      tags:
+        - Authentication
       requestBody:
         required: true
         content:
@@ -47,6 +49,8 @@ paths:
   /api/v1/haffa/auth/request-pincode:
     post:
       operationId: requestPincode
+      tags:
+        - Authentication
       requestBody:
         required: true
         content:
@@ -78,6 +82,8 @@ paths:
   /api/v1/haffa/auth/login:
     post:
       operationId: login
+      tags:
+        - Authentication
       requestBody:
         required: true
         content:
@@ -103,6 +109,8 @@ paths:
   /api/v1/haffa/auth/signout:
     post:
       operationId: signout
+      tags:
+        - Authentication
       requestBody:
         required: false
         content:
@@ -120,6 +128,8 @@ paths:
   /api/v1/haffa/auth/effective-permissions:
     post:
       operationId: effectivePermissions
+      tags:
+        - Authentication
       requestBody:
         required: true
         content:
@@ -152,30 +162,33 @@ paths:
                     items:
                       type: string
 
-  /api/v1/haffa/graphql:
-    post:
-      operationId: haffaGQL
-      summary: 'GraphQL endpoint for Haffa'
-      tags:
-        - Fix me
-      requestBody:
+  /api/v1/haffa/options/{collection}:
+    parameters:
+      - in: path
+        name: collection
+        schema:
+          type: string
         required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GraphQLQuery'
+        description: Name of collection
+    post:
+      operationId: options
+      tags:
+        - Configuration
+      summary: Get key/value pairs
       responses:
         '200':
-          description: 'successful operation'
+          description: Successful processing of request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GraphQLResponse'
+                $ref: '#/components/schemas/Options'
 
   /api/v1/haffa/events.xlsx:
     get:
       operationId: eventsAsXlsx
       summary: 'Download event log as Excel document'
+      tags:
+        - Usage
       parameters:
         - name: from
           in: query
