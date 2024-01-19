@@ -12,6 +12,7 @@ export const userMapperGqlSchema = /* GraphQL */ `
     phone: UserMappingConfigurationForPhone!
   }
   type UserMappingConfigurationForPhone {
+    allowPhoneUsers: Boolean!
     sender: String!
     country: String!
     roles: [String]!
@@ -22,6 +23,7 @@ export const userMapperGqlSchema = /* GraphQL */ `
     phone: UserMappingConfigurationInputForPhone
   }
   input UserMappingConfigurationInputForPhone {
+    allowPhoneUsers: Boolean!
     sender: String!
     country: String!
     roles: [String]!

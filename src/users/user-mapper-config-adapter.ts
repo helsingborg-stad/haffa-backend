@@ -6,6 +6,7 @@ const normalizeConfig = (
 ): UserMapperConfig => ({
   allowGuestUsers: !!config?.allowGuestUsers,
   phone: {
+    allowPhoneUsers: !!config?.phone?.allowPhoneUsers,
     sender: config?.phone?.sender || 'Haffa',
     country: config?.phone?.country || 'SE',
     roles: config?.phone?.roles || [],

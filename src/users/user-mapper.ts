@@ -101,8 +101,11 @@ export const createUserMapper = (
         .map(u => {
           const user = validateHaffaUser(u)
           if (!user) {
-            return tryCreatePhoneUser(u, phone.country, phone.roles)
+            return phone.allowPhoneUsers
+              ? tryCreatePhoneUser(u, phone.country, phone.roles)
+              : null
           }
+
           const { id } = user
 
           if (id === GUEST_USER_ID) {

@@ -21,12 +21,46 @@ describe('user access validation', () => {
   }
   const TestCases: [string, TestCase][] = [
     [
+      'phone users is disallowed by default',
+      {
+        givenUser: '072 1234567',
+        givenLoginPolicies: [],
+        givenUserMapperConfig: {},
+        expectResponse: {
+          status: HttpStatusCodes.UNAUTHORIZED,
+        },
+      },
+    ],
+    [
+      'phone users can be disallowed by cinfiguration',
+      {
+        givenUser: '072 1234567',
+        givenLoginPolicies: [],
+        givenUserMapperConfig: {
+          phone: {
+            allowPhoneUsers: false,
+            country: 'SE',
+            roles: [],
+            sender: 'Haffa',
+          },
+        },
+        expectResponse: {
+          status: HttpStatusCodes.UNAUTHORIZED,
+        },
+      },
+    ],
+    [
       'phone users is allowed when configured for',
       {
         givenUser: '072 1234567',
         givenLoginPolicies: [],
         givenUserMapperConfig: {
-          phone: { country: 'SE', roles: [], sender: 'Haffa' },
+          phone: {
+            allowPhoneUsers: true,
+            country: 'SE',
+            roles: [],
+            sender: 'Haffa',
+          },
         },
         expectResponse: {
           status: HttpStatusCodes.OK,
@@ -40,7 +74,12 @@ describe('user access validation', () => {
         givenUser: '+46 72 12 34 567',
         givenLoginPolicies: [],
         givenUserMapperConfig: {
-          phone: { country: 'SE', roles: [], sender: 'Haffa' },
+          phone: {
+            allowPhoneUsers: true,
+            country: 'SE',
+            roles: [],
+            sender: 'Haffa',
+          },
         },
         expectResponse: {
           status: HttpStatusCodes.OK,
