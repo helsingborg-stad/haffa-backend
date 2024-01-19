@@ -23,6 +23,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GraphQLResponse'
+
   /api/v1/haffa/auth/verify-token:
     post:
       operationId: verifyToken
@@ -183,6 +184,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/Options'
 
+  /api/v1/haffa/system-settings:
+    post:
+      operationId: systemSettings
+      tags:
+        - Configuration
+      summary: Get key/value pairs
+      responses:
+        '200':
+          description: Successful processing of request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Options'
   /api/v1/{namespace}/healthcheck:
     get:
       operationId: healthCheck
