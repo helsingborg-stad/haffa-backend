@@ -12,7 +12,6 @@ import { graphQLModule } from './haffa/haffa-module'
 import { loginModule } from './login/login-module'
 import { gitRevisionModule } from './git-revision-module'
 import { apiKeyUserModule } from './api-keys'
-import { downloadEventsModule } from './events'
 import { cookieUserModule } from './login/cookies/cookie-user-module'
 import { optionsUserModule } from './options/options-user-module'
 import { guestUserModule } from './guest'
@@ -56,5 +55,4 @@ export const createApp = ({
         services.notifications
       )
     )
-    .use(downloadEventsModule(services))
     .use(services.files.tryCreateApplicationModule() || (() => 0))
