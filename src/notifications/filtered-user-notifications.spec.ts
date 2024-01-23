@@ -20,13 +20,17 @@ describe('tryCreateEmailUserNotifications', () => {
     const inner: NotificationService = {
       pincodeRequested: jest.fn(),
       advertCollectWasCancelled: jest.fn(),
+      advertCollectWasCancelledOwner: jest.fn(),
       advertNotCollected: jest.fn(),
       advertReservationWasCancelled: jest.fn(),
+      advertReservationWasCancelledOwner: jest.fn(),
       advertWasArchived: jest.fn(),
       advertWasCollected: jest.fn(),
+      advertWasCollectedOwner: jest.fn(),
       advertWasCreated: jest.fn(),
       advertWasRemoved: jest.fn(),
       advertWasReserved: jest.fn(),
+      advertWasReservedOwner: jest.fn(),
       advertWasUnarchived: jest.fn(),
       subscriptionsHasNewAdverts: jest.fn(),
     }

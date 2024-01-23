@@ -30,12 +30,24 @@ export const tryCreateUserFilteredNotifications = (
           whenUser(args[0], () => inner.advertWasUnarchived(...args)),
         advertWasReserved: (...args) =>
           whenUser(args[0], () => inner.advertWasReserved(...args)),
+        advertWasReservedOwner: (...args) =>
+          whenUser(args[0], () => inner.advertWasReservedOwner(...args)),
         advertReservationWasCancelled: (...args) =>
           whenUser(args[0], () => inner.advertReservationWasCancelled(...args)),
+        advertReservationWasCancelledOwner: (...args) =>
+          whenUser(args[0], () =>
+            inner.advertReservationWasCancelledOwner(...args)
+          ),
         advertWasCollected: (...args) =>
           whenUser(args[0], () => inner.advertWasCollected(...args)),
+        advertWasCollectedOwner: (...args) =>
+          whenUser(args[0], () => inner.advertWasCollectedOwner(...args)),
         advertCollectWasCancelled: (...args) =>
           whenUser(args[0], () => inner.advertCollectWasCancelled(...args)),
+        advertCollectWasCancelledOwner: (...args) =>
+          whenUser(args[0], () =>
+            inner.advertCollectWasCancelledOwner(...args)
+          ),
         advertNotCollected: (...args) =>
           whenUser(args[0], () => inner.advertNotCollected(...args)),
       }

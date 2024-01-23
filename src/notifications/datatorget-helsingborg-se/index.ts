@@ -62,12 +62,28 @@ const createDatatorgetSmsNotifications = ({
     advertWasUnarchived: async () => undefined,
     advertWasReserved: (by, quantity, advert) =>
       send(by.id, 'advert-was-reserved', { by, quantity, advert }),
+    advertWasReservedOwner: (by, quantity, advert) =>
+      send(by.id, 'advert-was-reserved-owner', { by, quantity, advert }),
     advertReservationWasCancelled: (by, quantity, advert) =>
       send(by.id, 'advert-reservation-was-cancelled', { by, quantity, advert }),
+    advertReservationWasCancelledOwner: (by, quantity, advert) =>
+      send(by.id, 'advert-reservation-was-cancelled-owner', {
+        by,
+        quantity,
+        advert,
+      }),
     advertWasCollected: (by, quantity, advert) =>
       send(by.id, 'advert-was-collected', { by, quantity, advert }),
+    advertWasCollectedOwner: (by, quantity, advert) =>
+      send(by.id, 'advert-was-collected-owner', { by, quantity, advert }),
     advertCollectWasCancelled: (by, quantity, advert) =>
       send(by.id, 'advert-collect-was-cancelled', { by, quantity, advert }),
+    advertCollectWasCancelledOwner: (by, quantity, advert) =>
+      send(by.id, 'advert-collect-was-cancelled-owner', {
+        by,
+        quantity,
+        advert,
+      }),
     advertNotCollected: (by, quantity, advert) =>
       send(by.id, 'advert-not-collected', { by, quantity, advert }),
   }

@@ -47,93 +47,86 @@ export const createBrevoNotifications = (
     advertWasArchived: async () => undefined,
     advertWasUnarchived: async () => undefined,
     advertWasReserved: (by, quantity, advert) =>
-      all(
-        send(
-          'advert-was-reserved',
-          { name: by.id, email: by.id },
-          {
-            by,
-            quantity,
-            advert: stripAdvert(advert),
-          },
-          { name: advert.createdBy, email: advert.createdBy }
-        ),
-        send(
-          'advert-was-reserved-owner',
-          { email: advert.createdBy, name: advert.createdBy },
-          {
-            by,
-            quantity,
-            advert: stripAdvert(advert),
-          }
-        )
+      send(
+        'advert-was-reserved',
+        { name: by.id, email: by.id },
+        {
+          by,
+          quantity,
+          advert: stripAdvert(advert),
+        },
+        { name: advert.createdBy, email: advert.createdBy }
       ),
-
+    advertWasReservedOwner: (by, quantity, advert) =>
+      send(
+        'advert-was-reserved-owner',
+        { email: advert.createdBy, name: advert.createdBy },
+        {
+          by,
+          quantity,
+          advert: stripAdvert(advert),
+        }
+      ),
     advertReservationWasCancelled: (by, quantity, advert) =>
-      all(
-        send(
-          'advert-reservation-was-cancelled',
-          { name: by.id, email: by.id },
-          {
-            by,
-            quantity,
-            advert: stripAdvert(advert),
-          }
-        ),
-        send(
-          'advert-reservation-was-cancelled-owner',
-          { name: advert.createdBy, email: advert.createdBy },
-          {
-            by,
-            quantity,
-            advert: stripAdvert(advert),
-          }
-        )
+      send(
+        'advert-reservation-was-cancelled',
+        { name: by.id, email: by.id },
+        {
+          by,
+          quantity,
+          advert: stripAdvert(advert),
+        }
       ),
-
+    advertReservationWasCancelledOwner: (by, quantity, advert) =>
+      send(
+        'advert-reservation-was-cancelled-owner',
+        { name: advert.createdBy, email: advert.createdBy },
+        {
+          by,
+          quantity,
+          advert: stripAdvert(advert),
+        }
+      ),
     advertWasCollected: (by, quantity, advert) =>
-      all(
-        send(
-          'advert-was-collected',
-          { name: by.id, email: by.id },
-          {
-            by,
-            quantity,
-            advert: stripAdvert(advert),
-          }
-        ),
-        send(
-          'advert-was-collected-owner',
-          { name: advert.createdBy, email: advert.createdBy },
-          {
-            by,
-            quantity,
-            advert: stripAdvert(advert),
-          }
-        )
+      send(
+        'advert-was-collected',
+        { name: by.id, email: by.id },
+        {
+          by,
+          quantity,
+          advert: stripAdvert(advert),
+        }
+      ),
+    advertWasCollectedOwner: (by, quantity, advert) =>
+      send(
+        'advert-was-collected-owner',
+        { name: advert.createdBy, email: advert.createdBy },
+        {
+          by,
+          quantity,
+          advert: stripAdvert(advert),
+        }
       ),
     advertCollectWasCancelled: (by, quantity, advert) =>
-      all(
-        send(
-          'advert-collect-was-cancelled',
-          { name: by.id, email: by.id },
-          {
-            by,
-            quantity,
-            advert: stripAdvert(advert),
-          }
-        ),
-        send(
-          'advert-collect-was-cancelled-owner',
-          { name: advert.createdBy, email: advert.createdBy },
-          {
-            by,
-            quantity,
-            advert: stripAdvert(advert),
-          }
-        )
+      send(
+        'advert-collect-was-cancelled',
+        { name: by.id, email: by.id },
+        {
+          by,
+          quantity,
+          advert: stripAdvert(advert),
+        }
       ),
-
+    advertCollectWasCancelledOwner: (by, quantity, advert) =>
+      send(
+        'advert-collect-was-cancelled-owner',
+        { name: advert.createdBy, email: advert.createdBy },
+        {
+          by,
+          quantity,
+          advert: stripAdvert(advert),
+        }
+      ),
     advertNotCollected: (by, quantity, advert) =>
       send(
         'advert-not-collected',

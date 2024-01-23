@@ -27,7 +27,10 @@ export const createReserveAdvert =
       .patch((advert, { actions }) => {
         if (quantity > 0) {
           actions(patched =>
-            notifications.advertWasReserved(user, quantity, patched)
+            Promise.all([
+              notifications.advertWasReserved(user, quantity, patched),
+              notifications.advertWasReservedOwner(user, quantity, patched),
+            ])
           )
 
           const isReservedByMe = ({ by, type }: AdvertClaim) =>
