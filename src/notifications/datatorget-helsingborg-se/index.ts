@@ -70,6 +70,8 @@ const createDatatorgetSmsNotifications = ({
       send(by.id, 'advert-collect-was-cancelled', { by, quantity, advert }),
     advertNotCollected: (by, quantity, advert) =>
       send(by.id, 'advert-not-collected', { by, quantity, advert }),
+    advertNotReturned: (by, quantity, advert) =>
+      send(by.id, 'advert-not-returned', { by, quantity, advert }),
   }
 }
 
@@ -85,7 +87,7 @@ export const tryCreateDatatorgetSmsNotificationsFromEnv = (
         {
           name: 'notifications',
           config: {
-            on: 'helsingborg datatoget sms',
+            on: 'helsingborg datatorget sms',
             endpoint,
             apiKey,
           },

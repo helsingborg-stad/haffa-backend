@@ -32,5 +32,7 @@ export const createEventLoggingNotifications = (
     advertCollectWasCancelled: (by, quantity, advert) =>
       log('advert-collect-was-cancelled', { by, quantity, advert }),
     advertNotCollected: async () => undefined,
+    advertNotReturned: (by, quantity, advert) =>
+      log('advert-not-returned', { by, quantity, advert }),
   }
 }

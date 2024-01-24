@@ -81,4 +81,12 @@ export const createConsoleNotificationService = (): NotificationService => ({
         advert,
       },
     }),
+  advertNotReturned: async (by, quantity, advert) =>
+    console.log({
+      advertNotReturned: {
+        by,
+        quantity,
+        advert,
+      },
+    }),
 })

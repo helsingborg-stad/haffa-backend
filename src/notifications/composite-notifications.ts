@@ -31,5 +31,7 @@ export const createCompositeNotifications = (
       all(inner => inner.advertCollectWasCancelled(...args)),
     advertNotCollected: (...args) =>
       all(inner => inner.advertNotCollected(...args)),
+    advertNotReturned: (...args) =>
+      all(inner => inner.advertNotReturned(...args)),
   }
 }

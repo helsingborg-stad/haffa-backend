@@ -45,6 +45,7 @@ export const createNullNotificationService = (): NotificationService => ({
   advertWasCollected: async () => undefined,
   advertCollectWasCancelled: async () => undefined,
   advertNotCollected: async () => undefined,
+  advertNotReturned: async () => undefined,
 })
 
 const tryCreateMailNotificationsFromEnv = (startupLog: StartupLog) =>

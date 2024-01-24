@@ -10,6 +10,7 @@ export type TemplateName =
   | 'advert-reservation-was-cancelled-owner'
   | 'advert-was-collected-owner'
   | 'advert-collect-was-cancelled-owner'
+  | 'advert-not-returned'
 
 export interface Identity {
   name: string

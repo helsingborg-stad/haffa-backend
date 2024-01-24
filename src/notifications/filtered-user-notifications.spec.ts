@@ -1,17 +1,9 @@
 import { createEmptyAdvert } from '../adverts/mappers'
 import type { HaffaUser } from '../login/types'
-import { createTermsGqlModule } from '../terms'
 import { createTestNotificationServices } from '../test-utils'
 import { tryCreateEmailUserNotifications } from './filtered-user-notifications'
 import type { NotificationService } from './types'
 
-/*
-    const advertWasArchived = jest.fn(async () => void 0)
-    const notifications = createTestNotificationServices({
-      advertWasArchived,
-    })
-
-*/
 describe('tryCreateEmailUserNotifications', () => {
   it('doesnt wrap null', () =>
     expect(tryCreateEmailUserNotifications(null)).toBeNull())
@@ -29,6 +21,7 @@ describe('tryCreateEmailUserNotifications', () => {
       advertWasReserved: jest.fn(),
       advertWasUnarchived: jest.fn(),
       subscriptionsHasNewAdverts: jest.fn(),
+      advertNotReturned: jest.fn(),
     }
     const n = tryCreateEmailUserNotifications(inner)!
 
@@ -46,6 +39,7 @@ describe('tryCreateEmailUserNotifications', () => {
     await n.advertWasReserved(u, 1, a)
     await n.advertWasUnarchived(u, a)
     await n.subscriptionsHasNewAdverts(u, [])
+    await n.advertNotReturned(u, 1, a)
 
     expect(inner.pincodeRequested).toHaveBeenCalledWith(u.id, '123456')
     expect(inner.advertCollectWasCancelled).toHaveBeenCalledWith(u, 1, a)
@@ -58,6 +52,7 @@ describe('tryCreateEmailUserNotifications', () => {
     expect(inner.advertWasReserved).toHaveBeenCalledWith(u, 1, a)
     expect(inner.advertWasUnarchived).toHaveBeenCalledWith(u, a)
     expect(inner.subscriptionsHasNewAdverts).toHaveBeenCalledWith(u, [])
+    expect(inner.advertNotReturned).toHaveBeenCalledWith(u, 1, a)
   })
 
   it('doesnt forward calls for non-email users', async () => {
@@ -82,6 +77,7 @@ describe('tryCreateEmailUserNotifications', () => {
         await n.advertWasReserved(u, 1, a)
         await n.advertWasUnarchived(u, a)
         await n.subscriptionsHasNewAdverts(u, [])
+        await n.advertNotReturned(u, 1, a)
         return 'no notifications where forwarded'
       })()
     ).resolves.toMatch('no notifications where forwarded')

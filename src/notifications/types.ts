@@ -36,4 +36,9 @@ export interface NotificationService {
     quantity: number,
     advert: Advert
   ) => Promise<void>
+  advertNotReturned: (
+    by: HaffaUser,
+    quantity: number,
+    advert: Advert
+  ) => Promise<void>
 }
