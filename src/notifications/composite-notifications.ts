@@ -19,16 +19,22 @@ export const createCompositeNotifications = (
       all(inner => inner.advertWasArchived(...args)),
     advertWasUnarchived: (...args) =>
       all(inner => inner.advertWasUnarchived(...args)),
-
     advertWasReserved: (...args) =>
       all(inner => inner.advertWasReserved(...args)),
+    advertWasReservedOwner: (...args) =>
+      all(inner => inner.advertWasReservedOwner(...args)),
     advertReservationWasCancelled: (...args) =>
       all(inner => inner.advertReservationWasCancelled(...args)),
-
+    advertReservationWasCancelledOwner: (...args) =>
+      all(inner => inner.advertReservationWasCancelledOwner(...args)),
     advertWasCollected: (...args) =>
       all(inner => inner.advertWasCollected(...args)),
+    advertWasCollectedOwner: (...args) =>
+      all(inner => inner.advertWasCollectedOwner(...args)),
     advertCollectWasCancelled: (...args) =>
       all(inner => inner.advertCollectWasCancelled(...args)),
+    advertCollectWasCancelledOwner: (...args) =>
+      all(inner => inner.advertCollectWasCancelledOwner(...args)),
     advertNotCollected: (...args) =>
       all(inner => inner.advertNotCollected(...args)),
     advertNotReturned: (...args) =>

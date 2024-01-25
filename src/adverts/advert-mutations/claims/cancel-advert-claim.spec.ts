@@ -23,8 +23,10 @@ mutation Mutation(
 describe('cancelAdvertClaim - reserved', () => {
   it('removes all reservations (by user) from database', () => {
     const advertReservationWasCancelled = jest.fn(async () => void 0)
+    const advertReservationWasCancelledOwner = jest.fn(async () => void 0)
     const notifications = createTestNotificationServices({
       advertReservationWasCancelled,
+      advertReservationWasCancelledOwner,
     })
     return end2endTest(
       {
@@ -106,6 +108,13 @@ describe('cancelAdvertClaim - reserved', () => {
             adverts['advert-123']
           )
         )
+        T('should have notified about the interesting event', () =>
+          expect(advertReservationWasCancelledOwner).toHaveBeenCalledWith(
+            makeUser({ id: user.id }),
+            1,
+            adverts['advert-123']
+          )
+        )
       }
     )
   })
@@ -114,8 +123,10 @@ describe('cancelAdvertClaim - reserved', () => {
 describe('cancelAdvertClaim - collected', () => {
   it('removes all reservations (by user) from database', () => {
     const advertCollectWasCancelled = jest.fn(async () => void 0)
+    const advertCollectWasCancelledOwner = jest.fn(async () => void 0)
     const notifications = createTestNotificationServices({
       advertCollectWasCancelled,
+      advertCollectWasCancelledOwner,
     })
     return end2endTest(
       {
@@ -192,6 +203,13 @@ describe('cancelAdvertClaim - collected', () => {
 
         T('should have notified about the interesting event', () =>
           expect(advertCollectWasCancelled).toHaveBeenCalledWith(
+            makeUser({ id: user.id }),
+            1,
+            adverts['advert-123']
+          )
+        )
+        T('should have notified about the interesting event', () =>
+          expect(advertCollectWasCancelledOwner).toHaveBeenCalledWith(
             makeUser({ id: user.id }),
             1,
             adverts['advert-123']

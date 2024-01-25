@@ -17,14 +17,22 @@ export const notifyClaimsWas = async (
   await all(
     nc
       .filter(claim => claim.type === AdvertClaimType.reserved)
-      .map(claim => notifications.advertWasReserved(by, claim.quantity, advert))
+      .map(claim =>
+        Promise.all([
+          notifications.advertWasReserved(by, claim.quantity, advert),
+          notifications.advertWasReservedOwner(by, claim.quantity, advert),
+        ])
+      )
   )
 
   await all(
     nc
       .filter(claim => claim.type === AdvertClaimType.collected)
       .map(claim =>
-        notifications.advertWasCollected(by, claim.quantity, advert)
+        Promise.all([
+          notifications.advertWasCollected(by, claim.quantity, advert),
+          notifications.advertWasCollectedOwner(by, claim.quantity, advert),
+        ])
       )
   )
 }
@@ -40,7 +48,18 @@ export const notifyClaimsWasCancelled = async (
     nc
       .filter(claim => claim.type === AdvertClaimType.reserved)
       .map(claim =>
-        notifications.advertReservationWasCancelled(by, claim.quantity, advert)
+        Promise.all([
+          notifications.advertReservationWasCancelled(
+            by,
+            claim.quantity,
+            advert
+          ),
+          notifications.advertReservationWasCancelledOwner(
+            by,
+            claim.quantity,
+            advert
+          ),
+        ])
       )
   )
 
@@ -48,7 +67,14 @@ export const notifyClaimsWasCancelled = async (
     nc
       .filter(claim => claim.type === AdvertClaimType.collected)
       .map(claim =>
-        notifications.advertCollectWasCancelled(by, claim.quantity, advert)
+        Promise.all([
+          notifications.advertCollectWasCancelled(by, claim.quantity, advert),
+          notifications.advertCollectWasCancelledOwner(
+            by,
+            claim.quantity,
+            advert
+          ),
+        ])
       )
   )
 }

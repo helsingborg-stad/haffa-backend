@@ -1,7 +1,7 @@
 import * as uuid from 'uuid'
 
 export interface TxCommitAction<T> {
-  (value: T, originalValue: T): Promise<void>
+  (value: T, originalValue: T): Promise<any>
 }
 
 export interface TxCommitActions<T> {

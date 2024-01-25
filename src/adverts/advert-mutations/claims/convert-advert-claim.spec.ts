@@ -24,8 +24,10 @@ mutation Mutation(
 describe('convertAdvertClaim', () => {
   it('can convert reservation to collect', () => {
     const advertWasCollected = jest.fn(async () => void 0)
+    const advertWasCollectedOwner = jest.fn(async () => void 0)
     const notifications = createTestNotificationServices({
       advertWasCollected,
+      advertWasCollectedOwner,
     })
     return end2endTest(
       {
@@ -107,6 +109,13 @@ describe('convertAdvertClaim', () => {
 
         T('should have notified about the interesting event', () => {
           expect(advertWasCollected).toHaveBeenCalledWith(
+            makeUser({ id: user.id }),
+            1,
+            adverts['advert-123']
+          )
+        })
+        T('should have notified about the interesting event', () => {
+          expect(advertWasCollectedOwner).toHaveBeenCalledWith(
             makeUser({ id: user.id }),
             1,
             adverts['advert-123']

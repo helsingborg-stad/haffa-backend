@@ -3,9 +3,10 @@ import { obfuscate } from './obfuscate'
 import { toLookup } from './to-lookup'
 import { toMap } from './to-map'
 import { mapTree } from './tree'
+import { uniqueBy } from './unique-by'
 import { waitForAll } from './wait'
 
-export { mapTree, mapValues, toLookup, toMap, obfuscate, waitForAll }
+export { mapTree, mapValues, toLookup, toMap, obfuscate, waitForAll, uniqueBy }
 
 export const echo = <T>(value: T): T => {
   console.log(JSON.stringify(value, null, 2))

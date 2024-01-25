@@ -16,7 +16,17 @@ export interface NotificationService {
     quantity: number,
     advert: Advert
   ) => Promise<void>
+  advertWasReservedOwner: (
+    by: HaffaUser,
+    quantity: number,
+    advert: Advert
+  ) => Promise<void>
   advertReservationWasCancelled: (
+    by: HaffaUser,
+    quantity: number,
+    advert: Advert
+  ) => Promise<void>
+  advertReservationWasCancelledOwner: (
     by: HaffaUser,
     quantity: number,
     advert: Advert
@@ -26,7 +36,17 @@ export interface NotificationService {
     quantity: number,
     advert: Advert
   ) => Promise<void>
+  advertWasCollectedOwner: (
+    by: HaffaUser,
+    quantity: number,
+    advert: Advert
+  ) => Promise<void>
   advertCollectWasCancelled: (
+    by: HaffaUser,
+    quantity: number,
+    advert: Advert
+  ) => Promise<void>
+  advertCollectWasCancelledOwner: (
     by: HaffaUser,
     quantity: number,
     advert: Advert

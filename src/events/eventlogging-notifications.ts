@@ -21,16 +21,20 @@ export const createEventLoggingNotifications = (
       log('advert-was-unarchived', { by, advert }),
     advertWasReserved: (by, quantity, advert) =>
       log('advert-was-reserved', { by, quantity, advert }),
+    advertWasReservedOwner: async () => undefined,
     advertReservationWasCancelled: (by, quantity, advert) =>
       log('advert-reservation-was-cancelled', {
         by,
         quantity,
         advert,
       }),
+    advertReservationWasCancelledOwner: async () => undefined,
     advertWasCollected: (by, quantity, advert) =>
       log('advert-was-collected', { by, quantity, advert }),
+    advertWasCollectedOwner: async () => undefined,
     advertCollectWasCancelled: (by, quantity, advert) =>
       log('advert-collect-was-cancelled', { by, quantity, advert }),
+    advertCollectWasCancelledOwner: async () => undefined,
     advertNotCollected: async () => undefined,
     advertNotReturned: (by, quantity, advert) =>
       log('advert-not-returned', { by, quantity, advert }),

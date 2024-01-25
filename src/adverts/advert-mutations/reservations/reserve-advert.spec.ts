@@ -23,8 +23,10 @@ mutation Mutation(
 describe('reserveAdvert', () => {
   it('updates an advert in the database', () => {
     const advertWasReserved = jest.fn(async () => void 0)
+    const advertWasReservedOwner = jest.fn(async () => void 0)
     const notifications = createTestNotificationServices({
       advertWasReserved,
+      advertWasReservedOwner,
     })
 
     return end2endTest(
@@ -73,14 +75,23 @@ describe('reserveAdvert', () => {
             adverts['advert-123']
           )
         )
+        T('should have notified about the interesting event', () =>
+          expect(advertWasReservedOwner).toHaveBeenCalledWith(
+            expect.objectContaining(user),
+            1,
+            adverts['advert-123']
+          )
+        )
       }
     )
   })
 
   it('denies overresevations', () => {
     const advertWasReserved = jest.fn(async () => void 0)
+    const advertWasReservedOwner = jest.fn(async () => void 0)
     const notifications = createTestNotificationServices({
       advertWasReserved,
+      advertWasReservedOwner,
     })
 
     return end2endTest(
@@ -108,6 +119,9 @@ describe('reserveAdvert', () => {
 
         T('no notifications should be called', () =>
           expect(advertWasReserved).not.toHaveBeenCalled()
+        )
+        T('no notifications should be called', () =>
+          expect(advertWasReservedOwner).not.toHaveBeenCalled()
         )
       }
     )

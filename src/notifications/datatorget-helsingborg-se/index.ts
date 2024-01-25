@@ -1,14 +1,10 @@
 import request from 'superagent'
 import { getEnv } from '@helsingborg-stad/gdi-api-node'
-import { compile } from 'handlebars'
 import type { StartupLog } from '../../types'
 import type { NotificationService } from '../types'
 import type { SettingsService } from '../../settings/types'
 import { userMapperConfigAdapter } from '../../users'
-
-const TEMPLATES: Record<string, string> = {
-  'pincode-requested': 'Din pinkod är {{pincode}}',
-}
+import { smsTemplateMapper } from '../templates/sms-templates/sms-template-mapper'
 
 const createDatatorgetSmsNotifications = ({
   apiKey,
@@ -24,13 +20,14 @@ const createDatatorgetSmsNotifications = ({
     templateId: string,
     data: any
   ): Promise<any> => {
-    const template = TEMPLATES[templateId] || ''
-    if (!template) {
+    const message = await smsTemplateMapper(settings).renderTemplate(
+      templateId,
+      data
+    )
+    if (!message) {
       return
     }
-    const message = compile(template)(data)
     const url = new URL('/api/v1/hpb/send/sms', endpoint).toString()
-
     const { phone } = await userMapperConfigAdapter(
       settings
     ).getUserMapperConfig()
@@ -62,12 +59,28 @@ const createDatatorgetSmsNotifications = ({
     advertWasUnarchived: async () => undefined,
     advertWasReserved: (by, quantity, advert) =>
       send(by.id, 'advert-was-reserved', { by, quantity, advert }),
+    advertWasReservedOwner: (by, quantity, advert) =>
+      send(by.id, 'advert-was-reserved-owner', { by, quantity, advert }),
     advertReservationWasCancelled: (by, quantity, advert) =>
       send(by.id, 'advert-reservation-was-cancelled', { by, quantity, advert }),
+    advertReservationWasCancelledOwner: (by, quantity, advert) =>
+      send(by.id, 'advert-reservation-was-cancelled-owner', {
+        by,
+        quantity,
+        advert,
+      }),
     advertWasCollected: (by, quantity, advert) =>
       send(by.id, 'advert-was-collected', { by, quantity, advert }),
+    advertWasCollectedOwner: (by, quantity, advert) =>
+      send(by.id, 'advert-was-collected-owner', { by, quantity, advert }),
     advertCollectWasCancelled: (by, quantity, advert) =>
       send(by.id, 'advert-collect-was-cancelled', { by, quantity, advert }),
+    advertCollectWasCancelledOwner: (by, quantity, advert) =>
+      send(by.id, 'advert-collect-was-cancelled-owner', {
+        by,
+        quantity,
+        advert,
+      }),
     advertNotCollected: (by, quantity, advert) =>
       send(by.id, 'advert-not-collected', { by, quantity, advert }),
     advertNotReturned: (by, quantity, advert) =>

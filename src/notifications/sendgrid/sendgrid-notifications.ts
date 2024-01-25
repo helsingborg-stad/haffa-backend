@@ -35,12 +35,16 @@ export const createSendGridNotifications = (
     advertWasUnarchived: async () => undefined,
     advertWasReserved: (by, quantity, advert) =>
       send(by.id, 'advert-was-reserved', { by, quantity, advert }),
+    advertWasReservedOwner: async () => undefined,
     advertReservationWasCancelled: (by, quantity, advert) =>
       send(by.id, 'advert-reservation-was-cancelled', { by, quantity, advert }),
+    advertReservationWasCancelledOwner: async () => undefined,
     advertWasCollected: (by, quantity, advert) =>
       send(by.id, 'advert-was-collected', { by, quantity, advert }),
+    advertWasCollectedOwner: async () => undefined,
     advertCollectWasCancelled: (by, quantity, advert) =>
       send(by.id, 'advert-collect-was-cancelled', { by, quantity, advert }),
+    advertCollectWasCancelledOwner: async () => undefined,
     advertNotCollected: (by, quantity, advert) =>
       send(by.id, 'advert-not-collected', { by, quantity, advert }),
     advertNotReturned: (by, quantity, advert) =>

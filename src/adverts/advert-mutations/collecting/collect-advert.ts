@@ -31,7 +31,10 @@ export const createCollectAdvert =
         if (quantity > 0) {
           const at = new Date().toISOString()
           actions(patched =>
-            notifications.advertWasCollected(user, quantity, patched)
+            Promise.all([
+              notifications.advertWasCollected(user, quantity, patched),
+              notifications.advertWasCollectedOwner(user, quantity, patched),
+            ])
           )
 
           const reservedByMeCount = advert.claims

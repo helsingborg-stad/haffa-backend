@@ -49,9 +49,25 @@ export const createConsoleNotificationService = (): NotificationService => ({
         advert,
       },
     }),
+  advertWasReservedOwner: async (by, quantity, advert) =>
+    console.log({
+      advertWasReservedOwner: {
+        by,
+        quantity,
+        advert,
+      },
+    }),
   advertReservationWasCancelled: async (by, quantity, advert) =>
     console.log({
       advertReservationWasCancelled: {
+        by,
+        quantity,
+        advert,
+      },
+    }),
+  advertReservationWasCancelledOwner: async (by, quantity, advert) =>
+    console.log({
+      advertReservationWasCancelledOwner: {
         by,
         quantity,
         advert,
@@ -65,9 +81,25 @@ export const createConsoleNotificationService = (): NotificationService => ({
         advert,
       },
     }),
+  advertWasCollectedOwner: async (by, quantity, advert) =>
+    console.log({
+      advertWasCollectedOwner: {
+        by,
+        quantity,
+        advert,
+      },
+    }),
   advertCollectWasCancelled: async (by, quantity, advert) =>
     console.log({
       advertCollectWasCancelled: {
+        by,
+        quantity,
+        advert,
+      },
+    }),
+  advertCollectWasCancelledOwner: async (by, quantity, advert) =>
+    console.log({
+      advertCollectWasCancelledOwner: {
         by,
         quantity,
         advert,
