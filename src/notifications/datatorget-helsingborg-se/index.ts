@@ -1,14 +1,10 @@
 import request from 'superagent'
 import { getEnv } from '@helsingborg-stad/gdi-api-node'
-import { compile } from 'handlebars'
 import type { StartupLog } from '../../types'
 import type { NotificationService } from '../types'
 import type { SettingsService } from '../../settings/types'
 import { userMapperConfigAdapter } from '../../users'
-
-const TEMPLATES: Record<string, string> = {
-  'pincode-requested': 'Din pinkod är {{pincode}}',
-}
+import { smsTemplateMapper } from '../templates/sms-templates/sms-template-mapper'
 
 const createDatatorgetSmsNotifications = ({
   apiKey,
@@ -24,13 +20,14 @@ const createDatatorgetSmsNotifications = ({
     templateId: string,
     data: any
   ): Promise<any> => {
-    const template = TEMPLATES[templateId] || ''
-    if (!template) {
+    const message = await smsTemplateMapper(settings).renderTemplate(
+      templateId,
+      data
+    )
+    if (!message) {
       return
     }
-    const message = compile(template)(data)
     const url = new URL('/api/v1/hpb/send/sms', endpoint).toString()
-
     const { phone } = await userMapperConfigAdapter(
       settings
     ).getUserMapperConfig()
