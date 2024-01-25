@@ -1,9 +1,26 @@
 import { normalizeRoles } from '../../login'
 import type { HaffaUser } from '../../login/types'
 import { AdvertClaimType, AdvertType } from '../types'
-import type { Advert, AdvertMeta } from '../types'
+import type { Advert, AdvertClaim, AdvertMeta } from '../types'
 
-export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
+export const isClaimOverdue = (
+  claim: AdvertClaim,
+  lendingPeriod: number,
+  compareDate: Date
+) => {
+  if (lendingPeriod > 0 && claim.type === AdvertClaimType.collected) {
+    const expireDate = new Date(claim.at)
+    expireDate.setDate(expireDate.getDate() + lendingPeriod)
+    return compareDate > expireDate
+  }
+  return false
+}
+
+export const getAdvertMeta = (
+  advert: Advert,
+  user: HaffaUser,
+  now: Date = new Date()
+): AdvertMeta => {
   const { type, quantity } = advert
   const mine = advert.createdBy === user.id
 
@@ -31,6 +48,18 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
     canManageAllAdverts,
   } = normalizeRoles(user.roles)
 
+  const claims = advert.claims.map(c => {
+    const canManageClaims =
+      canManageOwnAdvertsHistory && (mine || canManageAllAdverts)
+
+    return {
+      ...c,
+      canCancel: canManageClaims,
+      canConvert: canManageClaims,
+      isOverdue: isClaimOverdue(c, advert.lendingPeriod, now),
+    }
+  })
+
   if (type === AdvertType.recycle) {
     return {
       reservableQuantity: quantity - claimCount,
@@ -53,14 +82,7 @@ export const getAdvertMeta = (advert: Advert, user: HaffaUser): AdvertMeta => {
         canManageOwnAdvertsHistory && (mine || canManageAllAdverts),
       reservedyMe: myReservationCount,
       collectedByMe: myCollectedCount,
-      claims:
-        canManageOwnAdvertsHistory && (mine || canManageAllAdverts)
-          ? advert.claims.map(c => ({
-              ...c,
-              canCancel: true,
-              canConvert: true,
-            }))
-          : [],
+      claims,
     }
   }
   return {

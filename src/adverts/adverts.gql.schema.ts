@@ -157,6 +157,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     type: AdvertClaimType
     canCancel: Boolean
     canConvert: Boolean
+    isOverdue: Boolean
   }
 
   type AdvertMeta {
