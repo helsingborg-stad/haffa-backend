@@ -5,7 +5,6 @@ import type { AdvertClaim } from '../../types'
 import { AdvertClaimType } from '../../types'
 
 describe('getAdvertMeta::isOverdue', () => {
-  const testUser: HaffaUser = { id: 'test@user' }
   const createUserWithRights = (id: string): HaffaUser => ({
     id,
     roles: {},
