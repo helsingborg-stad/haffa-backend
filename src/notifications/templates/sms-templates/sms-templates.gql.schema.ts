@@ -4,6 +4,10 @@ export const smsTemplatesGqlSchema = /* GraphQL */ `
   }
 
   type Mutation {
+    previewSmsTemplates(
+      input: [SmsTemplateInput]!
+      jsonEncodedData: String!
+    ): [SmsTemplatePreview]
     updateSmsTemplates(input: [SmsTemplateInput]!): [SmsTemplate]
   }
 
@@ -17,5 +21,11 @@ export const smsTemplatesGqlSchema = /* GraphQL */ `
     templateId: String!
     template: String!
     enabled: Boolean!
+  }
+
+  type SmsTemplatePreview {
+    templateId: String!
+    template: String!
+    preview: String!
   }
 `

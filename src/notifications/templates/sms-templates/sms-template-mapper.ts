@@ -1,6 +1,6 @@
 import { compile } from 'handlebars'
 import type { SettingsService } from '../../../settings/types'
-import type { SmsTemplate } from './types'
+import type { SmsTemplate, SmsTemplatePreview } from './types'
 import {
   isValidSmsTemplateName,
   defaultSmsTemplates,
@@ -28,6 +28,14 @@ const normalizeSmsTemplates = (
     )
     .filter(uniqueBy(t => t.templateId))
 
+const tryRenderTemplate = (template: string, data: any) => {
+  try {
+    return template ? compile(template)(data) : null
+  } catch {
+    return null
+  }
+}
+
 export const smsTemplateMapper = (settings: SettingsService) => ({
   getSmsTemplates: () =>
     settings
@@ -40,6 +48,20 @@ export const smsTemplateMapper = (settings: SettingsService) => ({
         normalizeSmsTemplates(templates)
       )
       .then(normalizeSmsTemplates),
+  previewTemplates: async (
+    templates: SmsTemplate[],
+    data: any
+  ): Promise<SmsTemplatePreview[]> =>
+    Promise.resolve(templates)
+      .then(normalizeSmsTemplates)
+      .then(Object.values)
+      .then(l =>
+        l.map(({ templateId, template }) => ({
+          templateId,
+          template,
+          preview: tryRenderTemplate(template, data) || '',
+        }))
+      ),
   renderTemplate: async (templateId: string, data: any) =>
     settings
       .getSetting<SmsTemplate[]>('sms-notification-templates')
@@ -48,11 +70,5 @@ export const smsTemplateMapper = (settings: SettingsService) => ({
         templates.find(t => t.templateId === templateId && t.enabled)
       )
       .then(template => template?.template || '')
-      .then(template => {
-        try {
-          return template ? compile(template)(data) : null
-        } catch {
-          return null
-        }
-      }),
+      .then(template => tryRenderTemplate(template, data)),
 })

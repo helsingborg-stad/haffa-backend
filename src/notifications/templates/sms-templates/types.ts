@@ -3,3 +3,9 @@ export interface SmsTemplate {
   template: string
   enabled: boolean
 }
+
+export interface SmsTemplatePreview {
+  templateId: string
+  template: string
+  preview: string
+}

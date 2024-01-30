@@ -21,6 +21,19 @@ export const createSmsTemplatesGqlModule = ({
       },
     },
     Mutation: {
+      previewSmsTemplates: async ({
+        ctx,
+        args: { input, jsonEncodedData },
+      }) => {
+        const { user } = ctx
+        if (!normalizeRoles(user?.roles).canManageNotifications) {
+          ctx.throw(HttpStatusCodes.UNAUTHORIZED)
+        }
+        return smsTemplateMapper(settings).previewTemplates(
+          input,
+          JSON.parse(jsonEncodedData)
+        )
+      },
       updateSmsTemplates: async ({ ctx, args: { input } }) => {
         const { user } = ctx
         if (!normalizeRoles(user?.roles).canManageNotifications) {
