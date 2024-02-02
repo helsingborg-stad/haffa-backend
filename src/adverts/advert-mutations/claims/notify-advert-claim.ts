@@ -8,18 +8,10 @@ import {
   AdvertClaimEventType,
 } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
+import { getLastClaimEventDate } from './mappers'
 
 const daysToMilliseconds = (days: number) => days * 24 * 60 * 60 * 1000
 
-const getLastEventDate = (events?: AdvertClaimEvent[]): string | null => {
-  const e = (a: AdvertClaimEvent, b: AdvertClaimEvent) =>
-    b.at.localeCompare(a.at)
-
-  if (events && events.length > 0) {
-    return [...events].sort(e)[0].at
-  }
-  return null
-}
 export const createAdvertClaimNotifier =
   ({
     adverts,
@@ -40,9 +32,8 @@ export const createAdvertClaimNotifier =
         if (!claim) {
           return null
         }
-        const lastEventDate = new Date(
-          getLastEventDate(claim.events) ?? claim.at
-        )
+        const lastEventDate = getLastClaimEventDate(claim)
+
         const event: AdvertClaimEvent[] =
           now.getTime() - lastEventDate.getTime() >= daysToMilliseconds(delay)
             ? [

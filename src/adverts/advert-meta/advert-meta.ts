@@ -1,20 +1,8 @@
 import { normalizeRoles } from '../../login'
 import type { HaffaUser } from '../../login/types'
+import { isClaimOverdue } from '../advert-mutations/claims/mappers'
 import { AdvertClaimType, AdvertType } from '../types'
-import type { Advert, AdvertClaim, AdvertMeta } from '../types'
-
-export const isClaimOverdue = (
-  claim: AdvertClaim,
-  lendingPeriod: number,
-  compareDate: Date
-) => {
-  if (lendingPeriod > 0 && claim.type === AdvertClaimType.collected) {
-    const expireDate = new Date(claim.at)
-    expireDate.setDate(expireDate.getDate() + lendingPeriod)
-    return compareDate > expireDate
-  }
-  return false
-}
+import type { Advert, AdvertMeta } from '../types'
 
 export const getAdvertMeta = (
   advert: Advert,
