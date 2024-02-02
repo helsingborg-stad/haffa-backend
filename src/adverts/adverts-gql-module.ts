@@ -99,6 +99,12 @@ export const createAdvertsGqlModule = (
           .then(result =>
             mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
           ),
+      returnAdvert: async ({ ctx: { user }, args: { id } }) =>
+        createAdvertMutations(services)
+          .returnAdvert(user, id)
+          .then(result =>
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+          ),
     },
   },
 })

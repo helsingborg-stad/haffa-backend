@@ -85,6 +85,10 @@ const createDatatorgetSmsNotifications = ({
       send(by.id, 'advert-not-collected', { by, quantity, advert }),
     advertNotReturned: (by, quantity, advert) =>
       send(by.id, 'advert-not-returned', { by, quantity, advert }),
+    advertWasReturned: (by, quantity, advert) =>
+      send(by.id, 'advert-was-returned', { by, quantity, advert }),
+    advertWasReturnedOwner: (by, quantity, advert) =>
+      send(by.id, 'advert-was-returned-owner', { by, quantity, advert }),
   }
 }
 

@@ -46,6 +46,7 @@ export const normalizeRoles = (
   canManageContent: !!roles?.canManageContent,
   canManageLocations: !!roles?.canManageLocations,
   canManageNotifications: !!roles?.canManageNotifications,
+  canManageReturns: !!roles?.canManageReturns,
 })
 
 export const createLoginServiceFromEnv = (
@@ -75,6 +76,7 @@ export const makeRoles = (
   canManageContent: defaultEnabled,
   canManageLocations: defaultEnabled,
   canManageNotifications: defaultEnabled,
+  canManageReturns: defaultEnabled,
 })
 
 export const combineRoles = (
@@ -101,6 +103,7 @@ export const combineRoles = (
     canManageLocations: a.canManageLocations || b.canManageLocations,
     canManageNotifications:
       a.canManageNotifications || b.canManageNotifications,
+    canManageReturns: a.canManageReturns || b.canManageReturns,
   })
 
 export const makeUser = (

@@ -52,6 +52,10 @@ export const tryCreateUserFilteredNotifications = (
           whenUser(args[0], () => inner.advertNotCollected(...args)),
         advertNotReturned: (...args) =>
           whenUser(args[0], () => inner.advertNotReturned(...args)),
+        advertWasReturned: (...args) =>
+          whenUser(args[0], () => inner.advertWasReturned(...args)),
+        advertWasReturnedOwner: (...args) =>
+          whenUser(args[0], () => inner.advertWasReturnedOwner(...args)),
       }
     : null
 }

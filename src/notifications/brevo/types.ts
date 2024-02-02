@@ -11,6 +11,8 @@ export type TemplateName =
   | 'advert-was-collected-owner'
   | 'advert-collect-was-cancelled-owner'
   | 'advert-not-returned'
+  | 'advert-was-returned'
+  | 'advert-was-returned-owner'
 
 export interface Identity {
   name: string

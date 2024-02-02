@@ -26,6 +26,8 @@ describe('tryCreateEmailUserNotifications', () => {
       advertWasUnarchived: jest.fn(),
       subscriptionsHasNewAdverts: jest.fn(),
       advertNotReturned: jest.fn(),
+      advertWasReturned: jest.fn(),
+      advertWasReturnedOwner: jest.fn(),
     }
     const n = tryCreateEmailUserNotifications(inner)!
 
@@ -44,6 +46,8 @@ describe('tryCreateEmailUserNotifications', () => {
     await n.advertWasUnarchived(u, a)
     await n.subscriptionsHasNewAdverts(u, [])
     await n.advertNotReturned(u, 1, a)
+    await n.advertWasReturned(u, 1, a)
+    await n.advertWasReturnedOwner(u, 1, a)
 
     expect(inner.pincodeRequested).toHaveBeenCalledWith(u.id, '123456')
     expect(inner.advertCollectWasCancelled).toHaveBeenCalledWith(u, 1, a)
@@ -57,6 +61,8 @@ describe('tryCreateEmailUserNotifications', () => {
     expect(inner.advertWasUnarchived).toHaveBeenCalledWith(u, a)
     expect(inner.subscriptionsHasNewAdverts).toHaveBeenCalledWith(u, [])
     expect(inner.advertNotReturned).toHaveBeenCalledWith(u, 1, a)
+    expect(inner.advertWasReturned).toHaveBeenCalledWith(u, 1, a)
+    expect(inner.advertWasReturnedOwner).toHaveBeenCalledWith(u, 1, a)
   })
 
   it('doesnt forward calls for non-email users', async () => {

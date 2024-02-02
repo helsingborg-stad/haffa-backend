@@ -61,6 +61,7 @@ export interface AdvertMeta {
   canCancelReservation: boolean
   canCollect: boolean
   canManageClaims: boolean
+  canReturn: boolean
   reservedyMe: number
   collectedByMe: number
   claims: AdvertMetaClaim[]
@@ -277,6 +278,7 @@ export interface AdvertMutations {
     delay: number,
     now?: Date
   ) => Promise<AdvertMutationResult>
+  returnAdvert: (user: HaffaUser, id: string) => Promise<AdvertMutationResult>
 }
 
 interface AdvertStats {

@@ -39,5 +39,9 @@ export const createCompositeNotifications = (
       all(inner => inner.advertNotCollected(...args)),
     advertNotReturned: (...args) =>
       all(inner => inner.advertNotReturned(...args)),
+    advertWasReturned: (...args) =>
+      all(inner => inner.advertWasReturned(...args)),
+    advertWasReturnedOwner: (...args) =>
+      all(inner => inner.advertWasReturnedOwner(...args)),
   }
 }

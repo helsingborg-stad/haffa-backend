@@ -38,5 +38,8 @@ export const createEventLoggingNotifications = (
     advertNotCollected: async () => undefined,
     advertNotReturned: (by, quantity, advert) =>
       log('advert-not-returned', { by, quantity, advert }),
+    advertWasReturned: (by, quantity, advert) =>
+      log('advert-was-returned', { by, quantity, advert }),
+    advertWasReturnedOwner: async () => undefined,
   }
 }

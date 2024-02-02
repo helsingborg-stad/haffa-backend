@@ -121,4 +121,20 @@ export const createConsoleNotificationService = (): NotificationService => ({
         advert,
       },
     }),
+  advertWasReturned: async (by, quantity, advert) =>
+    console.log({
+      advertWastReturned: {
+        by,
+        quantity,
+        advert,
+      },
+    }),
+  advertWasReturnedOwner: async (by, quantity, advert) =>
+    console.log({
+      advertWasReturnedOwner: {
+        by,
+        quantity,
+        advert,
+      },
+    }),
 })

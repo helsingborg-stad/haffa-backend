@@ -24,6 +24,7 @@ export const advertsGqlSchema = /* GraphQL */ `
       type: AdvertClaimType!
       newType: AdvertClaimType!
     ): AdvertMutationResult
+    returnAdvert(id: ID!): AdvertMutationResult
   }
 
   type AdvertMutationStatus {
@@ -173,6 +174,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     canCancelReservation: Boolean!
     canCollect: Boolean!
     canManageClaims: Boolean!
+    canReturn: Boolean!
     reservedyMe: Int!
     collectedByMe: Int!
     claims: [AdvertClaim]!

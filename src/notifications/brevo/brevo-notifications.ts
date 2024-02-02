@@ -147,6 +147,26 @@ export const createBrevoNotifications = (
           advert: stripAdvert(advert),
         }
       ),
+    advertWasReturned: (by, quantity, advert) =>
+      send(
+        'advert-was-returned',
+        { name: by.id, email: by.id },
+        {
+          by,
+          quantity,
+          advert: stripAdvert(advert),
+        }
+      ),
+    advertWasReturnedOwner: (by, quantity, advert) =>
+      send(
+        'advert-was-returned-owner',
+        { name: by.id, email: by.id },
+        {
+          by,
+          quantity,
+          advert: stripAdvert(advert),
+        }
+      ),
   }
 }
 

@@ -4,6 +4,9 @@ import { isClaimOverdue } from '../advert-mutations/claims/mappers'
 import { AdvertClaimType, AdvertType } from '../types'
 import type { Advert, AdvertMeta } from '../types'
 
+const hasSingleCollectClaim = ({ claims }: Advert) =>
+  claims.filter(({ type }) => type === AdvertClaimType.collected).length === 1
+
 export const getAdvertMeta = (
   advert: Advert,
   user: HaffaUser,
@@ -34,6 +37,7 @@ export const getAdvertMeta = (
     canCollectAdverts,
     canManageOwnAdvertsHistory,
     canManageAllAdverts,
+    canManageReturns,
   } = normalizeRoles(user.roles)
 
   const claims = advert.claims.map(c => {
@@ -68,6 +72,7 @@ export const getAdvertMeta = (
         canCollectAdverts,
       canManageClaims:
         canManageOwnAdvertsHistory && (mine || canManageAllAdverts),
+      canReturn: canManageReturns && hasSingleCollectClaim(advert),
       reservedyMe: myReservationCount,
       collectedByMe: myCollectedCount,
       claims,
@@ -88,6 +93,7 @@ export const getAdvertMeta = (
     canCancelReservation: false,
     canCollect: false,
     canManageClaims: false,
+    canReturn: false,
     reservedyMe: myReservationCount,
     collectedByMe: myCollectedCount,
     claims: [],

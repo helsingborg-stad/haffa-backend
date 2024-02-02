@@ -6,7 +6,7 @@ import {
   createCancelAdvertReservation,
   createReserveAdvert,
 } from './reservations'
-import { createCollectAdvert } from './collecting'
+import { createCollectAdvert, createReturnAdvert } from './collecting'
 import {
   createCreateAdvert,
   createRemoveAdvert,
@@ -28,4 +28,5 @@ export const createAdvertMutations = (
   cancelAdvertClaim: createCancelAdvertClaim(services),
   convertAdvertClaim: createConvertAdvertClaim(services),
   notifyAdvertClaim: createAdvertClaimNotifier(services),
+  returnAdvert: createReturnAdvert(services),
 })

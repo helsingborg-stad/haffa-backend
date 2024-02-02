@@ -90,6 +90,12 @@ export const createTestNotificationServices = (
   advertNotReturned: unexpectedInvocation(
     'NotificationService::advertNotReturned'
   ),
+  advertWasReturned: unexpectedInvocation(
+    'NotificationService::advertWasReturned'
+  ),
+  advertWasReturnedOwner: unexpectedInvocation(
+    'NotificationService::advertWasReturnedOwner'
+  ),
   ...notifications,
 })
 
