@@ -1,8 +1,4 @@
-import {
-  AdvertClaimType,
-  type AdvertClaim,
-  type AdvertClaimEvent,
-} from '../../types'
+import { type AdvertClaim, type AdvertClaimEvent } from '../../types'
 
 export const getLastClaimEventDate = (claim: AdvertClaim): Date => {
   const e = (a: AdvertClaimEvent, b: AdvertClaimEvent) =>
@@ -22,13 +18,13 @@ export const getNextClaimEventDate = (claim: AdvertClaim, interval: number) => {
 
 export const isClaimOverdue = (
   claim: AdvertClaim,
-  lendingPeriod: number,
-  compareDate: Date
+  daysValid: number,
+  now: Date
 ) => {
-  if (lendingPeriod > 0 && claim.type === AdvertClaimType.collected) {
+  if (daysValid > 0) {
     const expireDate = new Date(claim.at)
-    expireDate.setDate(expireDate.getDate() + lendingPeriod)
-    return compareDate > expireDate
+    expireDate.setDate(expireDate.getDate() + daysValid)
+    return now > expireDate
   }
   return false
 }

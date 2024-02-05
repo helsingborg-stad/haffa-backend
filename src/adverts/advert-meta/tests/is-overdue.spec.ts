@@ -31,6 +31,18 @@ describe('getAdvertMeta::isOverdue', () => {
     ...defaults,
   })
 
+  const createReserved = (
+    at: string,
+    defaults: Partial<AdvertClaim> = {}
+  ): AdvertClaim => ({
+    by: 'test@user',
+    at,
+    quantity: 1,
+    type: AdvertClaimType.reserved,
+    events: [],
+    ...defaults,
+  })
+
   const advertsWithCollectedClaims = [
     createEmptyAdvert({
       lendingPeriod: 0,
@@ -56,6 +68,23 @@ describe('getAdvertMeta::isOverdue', () => {
       lendingPeriod: 4,
       quantity: 1,
       claims: dates.map(date => createCollect(date)),
+    }),
+  ]
+  const advertsWithReservedClaims = [
+    createEmptyAdvert({
+      lendingPeriod: 0,
+      quantity: 1,
+      claims: dates.map(date => createReserved(date)),
+    }),
+    createEmptyAdvert({
+      lendingPeriod: 1,
+      quantity: 1,
+      claims: dates.map(date => createReserved(date)),
+    }),
+    createEmptyAdvert({
+      lendingPeriod: 2,
+      quantity: 1,
+      claims: dates.map(date => createReserved(date)),
     }),
   ]
 
@@ -99,5 +128,26 @@ describe('getAdvertMeta::isOverdue', () => {
       now
     )
     expect(meta.claims.filter(claim => claim.isOverdue)).toHaveLength(0)
+  })
+  it('should never have overdue claim(s) when status is reserved', () => {
+    const meta0 = getAdvertMeta(
+      advertsWithReservedClaims[0],
+      createUserWithRights('test@user'),
+      now
+    )
+    expect(meta0.claims.filter(claim => claim.isOverdue)).toHaveLength(0)
+
+    const meta1 = getAdvertMeta(
+      advertsWithReservedClaims[1],
+      createUserWithRights('test@user'),
+      now
+    )
+    expect(meta1.claims.filter(claim => claim.isOverdue)).toHaveLength(0)
+    const meta2 = getAdvertMeta(
+      advertsWithReservedClaims[2],
+      createUserWithRights('test@user'),
+      now
+    )
+    expect(meta2.claims.filter(claim => claim.isOverdue)).toHaveLength(0)
   })
 })
