@@ -40,22 +40,14 @@ export const getAdvertMeta = (
     canManageReturns,
   } = normalizeRoles(user.roles)
 
-  const claims = advert.claims.map(c => {
-    const canManageClaims =
-      canManageOwnAdvertsHistory && (mine || canManageAllAdverts)
-
-    const isOverdue =
-      c.type === AdvertClaimType.collected
-        ? isClaimOverdue(c, advert.lendingPeriod, now)
-        : false
-
-    return {
-      ...c,
-      canCancel: canManageClaims,
-      canConvert: canManageClaims,
-      isOverdue,
-    }
-  })
+  const canManageClaims =
+    canManageOwnAdvertsHistory && (mine || canManageAllAdverts)
+  const claims = advert.claims.map(c => ({
+    ...c,
+    canCancel: canManageClaims,
+    canConvert: canManageClaims,
+    isOverdue: isClaimOverdue(c, advert.lendingPeriod, now),
+  }))
 
   if (type === AdvertType.recycle) {
     return {

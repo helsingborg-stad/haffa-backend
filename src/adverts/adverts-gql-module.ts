@@ -13,6 +13,17 @@ export const createAdvertsGqlModule = (
 ): GraphQLModule => ({
   schema: advertsGqlSchema,
   resolvers: {
+    Advert: {
+      // handle advert.notes visibility
+      notes: async ({ source }) => (source.meta.canEdit ? source.notes : ''),
+    },
+
+    AdvertMeta: {
+      // handle advert.meta.claims visibility
+      claims: async ({ source }) =>
+        source.canManageClaims ? source.claims : [],
+    },
+
     AdvertMutationResult: {
       // categories is present in GQL model but not in internal model
       categories: () => services.categories.getCategories(),
