@@ -202,7 +202,6 @@ export interface AdvertList {
 }
 
 export interface AdvertsClaimFilter {
-  before: Date
   type: AdvertClaimType
 }
 
@@ -224,9 +223,7 @@ export interface AdvertsRepository {
     by: keyof Only<Advert, string>
     // by: keyof Extract<Advert, string>
   ) => Promise<Record<string, number>>
-  getAggregatedClaims: (
-    filter: AdvertsClaimFilter
-  ) => Promise<AdvertReservations[]>
+  getAdvertsByClaimStatus: (filter: AdvertsClaimFilter) => Promise<string[]>
 }
 
 export interface AdvertMutations {
@@ -272,12 +269,17 @@ export interface AdvertMutations {
     type: AdvertClaimType,
     newType: AdvertClaimType
   ) => Promise<AdvertMutationResult>
-  notifyAdvertClaim: (
+  notifyReservedClaims: (
     user: HaffaUser,
     id: string,
-    type: AdvertClaimType,
-    delay: number,
-    now?: Date
+    interval: number,
+    now: Date
+  ) => Promise<AdvertMutationResult>
+  notifyExpiredClaims: (
+    user: HaffaUser,
+    id: string,
+    interval: number,
+    now: Date
   ) => Promise<AdvertMutationResult>
   returnAdvert: (user: HaffaUser, id: string) => Promise<AdvertMutationResult>
 }

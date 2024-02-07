@@ -3,7 +3,8 @@ import type { Services } from '../types'
 
 export type TaskRunnerSignature = (
   services: Services,
-  parameters: JobParameters
+  parameters: JobParameters,
+  user: HaffaUser
 ) => Promise<string>
 
 export type Status = 'Failed' | 'Succeeded'

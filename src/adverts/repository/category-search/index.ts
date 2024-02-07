@@ -27,5 +27,5 @@ export const createAdvertsRepositoryWithCategorySearch = (
   create: (...args) => inner.create(...args),
   remove: (...args) => inner.remove(...args),
   countBy: (...args) => inner.countBy(...args),
-  getAggregatedClaims: (...args) => inner.getAggregatedClaims(...args),
+  getAdvertsByClaimStatus: (...args) => inner.getAdvertsByClaimStatus(...args),
 })

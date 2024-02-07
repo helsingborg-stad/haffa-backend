@@ -2,6 +2,7 @@ import { setTimeout } from 'timers/promises'
 import { createJobExecutorService } from '.'
 import type { JobParameters, TaskRunnerSignature } from './types'
 import { createTestServices } from '../test-utils'
+import type { HaffaUser } from '../login/types'
 
 const parameters: JobParameters = {
   maxReservationDays: 10,
@@ -16,6 +17,10 @@ const failingJob: TaskRunnerSignature = async () => {
   throw Error('error-occured')
 }
 
+const user: HaffaUser = {
+  roles: {},
+  id: 'jane@doe.se',
+}
 const tasks = {
   SUCCESSFUL_JOB: [
     {
@@ -42,8 +47,6 @@ const tasks = {
 }
 
 const service = createJobExecutorService(tasks, parameters)
-const user = { id: 'admin@haffa.se' }
-
 describe('JobsService', () => {
   it('should run synchronously successfully', async () => {
     const [job] = await service.runAs(
@@ -51,7 +54,7 @@ describe('JobsService', () => {
       'SUCCESSFUL_JOB',
       createTestServices({})
     )
-    expect(job.owner).toBe('admin@haffa.se')
+    expect(job.owner).toBe('jane@doe.se')
     expect(job.status).toBe('Succeeded')
     expect(job.endDate).toBeDefined()
     expect(job.result).toBe('test-result')
@@ -62,7 +65,7 @@ describe('JobsService', () => {
       'FAILING_JOB',
       createTestServices({})
     )
-    expect(job.owner).toBe('admin@haffa.se')
+    expect(job.owner).toBe('jane@doe.se')
     expect(job.status).toBe('Failed')
     expect(job.endDate).toBeDefined()
     expect(job.result).toBe('error-occured')

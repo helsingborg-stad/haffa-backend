@@ -1,12 +1,7 @@
 import { join } from 'path'
 import { mkdirp } from 'mkdirp'
 import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
-import type {
-  AdvertClaim,
-  AdvertReservations,
-  Advert,
-  AdvertsRepository,
-} from '../../types'
+import type { AdvertClaim, Advert, AdvertsRepository } from '../../types'
 import { createAdvertFilterPredicate } from '../../filters/advert-filter-predicate'
 import {
   createEmptyAdvert,
@@ -143,10 +138,10 @@ export const createFsAdvertsRepository = (
         })
     },
   }
-  const getAggregatedClaims: AdvertsRepository['getAggregatedClaims'] =
+  const getAdvertsByClaimStatus: AdvertsRepository['getAdvertsByClaimStatus'] =
     async filter => {
-      const dateCompare = (claim: AdvertClaim): boolean =>
-        new Date(claim.at) <= filter.before && claim.type === filter.type
+      const compare = (claim: AdvertClaim): boolean =>
+        claim.type === filter.type
 
       return readdir(dataFolder)
         .then(names => names.filter(name => /.*\.json$/.test(name)))
@@ -174,17 +169,8 @@ export const createFsAdvertsRepository = (
             }
           })
         )
-        .then(adverts =>
-          adverts.filter(advert => advert.claims.some(dateCompare))
-        )
-        .then(adverts =>
-          adverts.map<AdvertReservations>(advert => ({
-            id: advert.id,
-            advert: {
-              claims: advert.claims.filter(dateCompare),
-            },
-          }))
-        )
+        .then(adverts => adverts.filter(advert => advert.claims.some(compare)))
+        .then(adverts => adverts.map(advert => advert.id))
         .catch(e => {
           if (e?.code === 'ENOENT') {
             return []
@@ -201,6 +187,6 @@ export const createFsAdvertsRepository = (
     create,
     remove,
     countBy,
-    getAggregatedClaims,
+    getAdvertsByClaimStatus,
   }
 }

@@ -34,7 +34,7 @@ export const createJobExecutorService = (
         jobs.push(job)
         try {
           // eslint-disable-next-line no-await-in-loop
-          job.result = await task.runner(services, parameters)
+          job.result = await task.runner(services, parameters, user)
         } catch (ex) {
           job.status = 'Failed'
           job.result = (ex as Error).message

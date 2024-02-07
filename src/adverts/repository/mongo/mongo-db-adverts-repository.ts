@@ -155,40 +155,19 @@ export const createMongoAdvertsRepository = (
     },
   }
 
-  const getAggregatedClaims: AdvertsRepository['getAggregatedClaims'] =
-    async filter => {
-      const cursor = (await getCollection()).aggregate<AdvertReservations>([
-        {
-          $match: {
+  const getAdvertsByClaimStatus: AdvertsRepository['getAdvertsByClaimStatus'] =
+    async filter =>
+      getCollection()
+        .then(collection =>
+          collection.find({
             'advert.claims': {
-              $elemMatch: {
-                at: { $lte: filter.before.toISOString() },
-                type: filter.type,
-              },
+              $elemMatch: { type: filter.type },
             },
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-            id: 1,
-            'advert.claims': {
-              $filter: {
-                input: '$advert.claims',
-                as: 'claim',
-                cond: {
-                  $and: [
-                    { $lte: ['$$claim.at', filter.before.toISOString()] },
-                    { $eq: ['$$claim.type', filter.type] },
-                  ],
-                },
-              },
-            },
-          },
-        },
-      ])
-      return cursor.toArray()
-    }
+          })
+        )
+        .then(d => d.project({ _id: 0, id: 1 }))
+        .then(v => v.toArray())
+        .then(i => i.map(r => r.id))
 
   return {
     stats,
@@ -198,6 +177,6 @@ export const createMongoAdvertsRepository = (
     remove,
     saveAdvertVersion,
     countBy,
-    getAggregatedClaims,
+    getAdvertsByClaimStatus,
   }
 }

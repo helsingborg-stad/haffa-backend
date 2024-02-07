@@ -57,17 +57,11 @@ export const createInMemoryAdvertsRepository = (
       s[v] = (s[v] || 0) + 1
       return s
     }, {}),
-  getAggregatedClaims: async filter => {
-    const dateCompare = (claim: AdvertClaim): boolean =>
-      new Date(claim.at) <= filter.before && claim.type === filter.type
+  getAdvertsByClaimStatus: async filter => {
+    const compare = (claim: AdvertClaim): boolean => claim.type === filter.type
 
     return Object.values(db)
-      .filter(advert => advert.claims.some(dateCompare))
-      .map(advert => ({
-        id: advert.id,
-        advert: {
-          claims: advert.claims.filter(dateCompare),
-        },
-      }))
+      .filter(advert => advert.claims.some(compare))
+      .map(advert => advert.id)
   },
 })

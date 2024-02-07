@@ -1,4 +1,9 @@
 import { createCancelAdvertClaim } from './cancel-advert-claim'
-import { createAdvertClaimNotifier } from './notify-advert-claim'
+import { createReservedClaimsNotifier } from './notify-reserved-claims'
+import { createExpiredClaimsNotifier } from './notify-expired-claims'
 
-export { createCancelAdvertClaim, createAdvertClaimNotifier }
+export {
+  createCancelAdvertClaim,
+  createReservedClaimsNotifier,
+  createExpiredClaimsNotifier,
+}
