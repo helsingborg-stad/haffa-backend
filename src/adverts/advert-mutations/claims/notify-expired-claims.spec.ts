@@ -1,4 +1,4 @@
-import { createExpiredClaimsNotifier, createReservedClaimsNotifier } from '.'
+import { createExpiredClaimsNotifier } from '.'
 import { end2endTest } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
 import { AdvertClaimType } from '../../types'

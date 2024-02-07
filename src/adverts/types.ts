@@ -281,6 +281,12 @@ export interface AdvertMutations {
     interval: number,
     now: Date
   ) => Promise<AdvertMutationResult>
+  notifyOverdueClaims: (
+    user: HaffaUser,
+    id: string,
+    interval: number,
+    now: Date
+  ) => Promise<AdvertMutationResult>
   returnAdvert: (user: HaffaUser, id: string) => Promise<AdvertMutationResult>
 }
 

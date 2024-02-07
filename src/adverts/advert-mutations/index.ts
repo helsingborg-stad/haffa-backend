@@ -17,6 +17,7 @@ import {
   createUpdateAdvert,
 } from './crud'
 import { createConvertAdvertClaim } from './claims/convert-advert-claim'
+import { createOverdueClaimsNotifier } from './claims/notify-overdue-claims'
 
 export const createAdvertMutations = (
   services: Pick<Services, 'adverts' | 'files' | 'notifications'>
@@ -34,4 +35,5 @@ export const createAdvertMutations = (
   returnAdvert: createReturnAdvert(services),
   notifyReservedClaims: createReservedClaimsNotifier(services),
   notifyExpiredClaims: createExpiredClaimsNotifier(services),
+  notifyOverdueClaims: createOverdueClaimsNotifier(services),
 })
