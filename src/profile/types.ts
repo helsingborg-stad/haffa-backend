@@ -32,3 +32,5 @@ export interface ProfileRepository {
   updateProfile: (user: HaffaUser, input: ProfileInput) => Promise<Profile>
   deleteProfile: (user: HaffaUser) => Promise<void>
 }
+
+export type GetProfile = Pick<ProfileRepository, 'getProfile'>

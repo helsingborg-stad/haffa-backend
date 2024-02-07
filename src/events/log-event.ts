@@ -1,8 +1,11 @@
 import type { GetCategories } from '../categories/types'
+import type { HaffaUser } from '../login/types'
+import type { GetProfile } from '../profile/types'
 import type { LogEvent, LogEventContext } from './types'
 
 export const createLogEvent = async (
   event: string,
+  profiles: GetProfile,
   categories: GetCategories,
   {
     by,
@@ -15,11 +18,20 @@ export const createLogEvent = async (
 ): Promise<LogEvent> => ({
   event,
   at: new Date().toISOString(),
-  by: by.id,
   quantity,
   organization,
   ...(await createCategoryEvent(category, categories)),
+  ...(await createByEvent(by, profiles)),
 })
+
+const createByEvent = async (
+  by: HaffaUser,
+  { getProfile }: GetProfile
+): Promise<Pick<LogEvent, 'by' | 'byOrganization'>> =>
+  getProfile(by).then(profile => ({
+    by: by.id,
+    byOrganization: profile?.organization,
+  }))
 
 const createCategoryEvent = async (
   category: string,

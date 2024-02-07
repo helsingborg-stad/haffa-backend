@@ -17,8 +17,9 @@ export const createNotificationServiceFromEnv = (
   {
     categories,
     eventLog,
+    profiles,
     settings,
-  }: Pick<Services, 'categories' | 'eventLog' | 'settings'>
+  }: Pick<Services, 'categories' | 'eventLog' | 'profiles' | 'settings'>
 ): NotificationService => {
   const email = tryCreateMailNotificationsFromEnv(startupLog)
   const sms = tryCreateSmsNotificationsFromEnv(startupLog, settings)
@@ -29,7 +30,7 @@ export const createNotificationServiceFromEnv = (
     sms,
     console,
     // log events
-    createEventLoggingNotifications(categories, eventLog)
+    createEventLoggingNotifications(categories, profiles, eventLog)
   )
 }
 

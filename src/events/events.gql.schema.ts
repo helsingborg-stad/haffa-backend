@@ -8,6 +8,7 @@ export const eventsGqlSchema = /* GraphQL */ `
     at: String!
     quantity: Int
     organization: String
+    byOrganization: String
     category: String
     co2kg: Int
     valueByUnit: Int

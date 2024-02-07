@@ -1,14 +1,16 @@
 import type { GetCategories } from '../categories/types'
 import type { NotificationService } from '../notifications/types'
+import type { GetProfile } from '../profile/types'
 import { createLogEvent } from './log-event'
 import type { EventLogService, LogEventContext } from './types'
 
 export const createEventLoggingNotifications = (
   categories: GetCategories,
+  profiles: GetProfile,
   eventLog: EventLogService
 ): NotificationService => {
   const log = async (event: string, ctx: LogEventContext) =>
-    eventLog.logEvent(await createLogEvent(event, categories, ctx))
+    eventLog.logEvent(await createLogEvent(event, profiles, categories, ctx))
 
   return {
     subscriptionsHasNewAdverts: async () => undefined,
