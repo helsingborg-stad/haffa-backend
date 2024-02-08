@@ -84,4 +84,33 @@ describe('notifyOverdueClaims', () => {
       expect(result.advert?.claims[4].events).toEqual([])
       expect(result.advert?.claims[5].events).toEqual([])
     }))
+  it('should return null when no claim is overdue)', () =>
+    end2endTest({}, async ({ user, adverts, services }) => {
+      // eslint-disable-next-line no-param-reassign
+      adverts['advert-123'] = {
+        ...createEmptyAdvert(),
+        id: 'advert-123',
+        createdBy: user.id,
+        quantity: 50,
+        lendingPeriod: 1,
+        claims: [
+          {
+            by: 'jane@doe1.se',
+            at: '2023-05-03T00:00:00.000Z',
+            quantity: 2,
+            type: AdvertClaimType.collected,
+            events: [],
+          },
+        ],
+      }
+      const notifyOverdueClaims = createOverdueClaimsNotifier(services)
+
+      const result = await notifyOverdueClaims(
+        user,
+        'advert-123',
+        1,
+        new Date('2023-05-03T00:00:00.000Z')
+      )
+      expect(result.advert).toBeNull()
+    }))
 })

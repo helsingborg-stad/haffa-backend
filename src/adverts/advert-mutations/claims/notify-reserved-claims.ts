@@ -1,10 +1,8 @@
-import { TxErrors, txBuilder } from '../../../transactions'
+import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
-import { getAdvertMeta } from '../../advert-meta'
 import {
   type Advert,
   type AdvertMutations,
-  type AdvertClaim,
   AdvertClaimEventType,
   AdvertClaimType,
 } from '../../types'
@@ -27,39 +25,47 @@ export const createReservedClaimsNotifier =
       .load(() => adverts.getAdvert(user, id))
       .validate(() => undefined)
       .patch((advert, { actions }) => {
-        const claims = advert.claims.map(c => {
-          // Act on reservations only
-          if (c.type === AdvertClaimType.reserved) {
-            // Determine the next reminder date
-            if (now >= getNextClaimEventDate(c, interval)) {
-              // Queue notifications
-              actions(() =>
-                notifications.advertNotCollected(
-                  { id: c.by, roles: {} },
-                  c.quantity,
-                  advert
-                )
-              )
+        let isModified = false
 
-              // Add reminder event
-              return {
-                ...c,
-                events: [
-                  ...c.events,
-                  {
-                    type: AdvertClaimEventType.reminder,
-                    at: now.toISOString(),
-                  },
-                ],
-              }
+        const claims = advert.claims.map(c => {
+          // Check the claim reserved status
+          // =====================================
+          // A) Claim is of type "reserved"
+          // B) Determine the last time a reminder was sent
+          if (
+            c.type === AdvertClaimType.reserved &&
+            now >= getNextClaimEventDate(c, interval)
+          ) {
+            // Queue notification for Email/SMS delivery
+            actions(() =>
+              notifications.advertNotCollected(
+                { id: c.by, roles: {} },
+                c.quantity,
+                advert
+              )
+            )
+            isModified = true
+            // Add reminder event
+            return {
+              ...c,
+              events: [
+                ...c.events,
+                {
+                  type: AdvertClaimEventType.reminder,
+                  at: now.toISOString(),
+                },
+              ],
             }
           }
           return c
         })
-        return {
-          ...advert,
-          claims: normalizeAdvertClaims(claims),
-        }
+        // One or more claims has been removed
+        return isModified
+          ? {
+              ...advert,
+              claims: normalizeAdvertClaims(claims),
+            }
+          : null
       })
       .verify(update => update)
       .saveVersion((versionId, advert) =>

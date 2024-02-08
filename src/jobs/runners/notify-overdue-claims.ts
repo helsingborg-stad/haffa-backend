@@ -14,15 +14,14 @@ export const sendOverdueReminder: TaskRunnerSignature = async (
   const adverts = await services.adverts?.getAdvertsByClaimStatus({
     type: AdvertClaimType.collected,
   })
-  const result = await Promise.all(
-    adverts.map(async advert =>
-      mutations
-        .notifyOverdueClaims(user, advert, reminderFrequency, new Date())
-        .then(ver => ({
-          id: advert,
-          status: ver.status,
-        }))
-    )
+  const result = await adverts.reduce<Promise<string[]>>(
+    async (p, c) =>
+      p.then(res =>
+        mutations
+          .notifyOverdueClaims(user, c, reminderFrequency, new Date())
+          .then(ver => (ver.advert ? [...res, c] : res))
+      ),
+    Promise.resolve([])
   )
   return JSON.stringify(result)
 }

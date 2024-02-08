@@ -14,15 +14,15 @@ export const clearExpiredReservations: TaskRunnerSignature = async (
   const adverts = await services.adverts?.getAdvertsByClaimStatus({
     type: AdvertClaimType.reserved,
   })
-  const result = await Promise.all(
-    adverts.map(advert =>
-      mutations
-        .notifyExpiredClaims(user, advert, maxReservationDays, new Date())
-        .then(ver => ({
-          id: advert,
-          status: ver.status,
-        }))
-    )
+  const result = await adverts.reduce<Promise<string[]>>(
+    async (p, c) =>
+      p.then(res =>
+        mutations
+          .notifyExpiredClaims(user, c, maxReservationDays, new Date())
+          .then(ver => (ver.advert ? [...res, c] : res))
+      ),
+    Promise.resolve([])
   )
+
   return JSON.stringify(result)
 }

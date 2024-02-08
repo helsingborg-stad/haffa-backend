@@ -25,15 +25,21 @@ export const createOverdueClaimsNotifier =
       .load(() => adverts.getAdvert(user, id))
       .validate(() => undefined)
       .patch((advert, { actions }) => {
+        let isModified = false
+
         const claims = advert.claims.map(c => {
-          // Act on reservations only
           if (
+            // Check the claim collection status
+            // =====================================
+            // A) Claim is of type "collected"
+            // B) Claim modification date + lending period is larger than "now"
             c.type === AdvertClaimType.collected &&
             isClaimOverdue(c, advert.lendingPeriod, now)
           ) {
-            // Determine the next reminder date
+            // Determine the last time a reminder was sent
+            // =====================================
             if (now >= getNextClaimEventDate(c, interval)) {
-              // Queue notifications
+              // Queue notification for Email/SMS delivery
               actions(() =>
                 notifications.advertNotCollected(
                   { id: c.by, roles: {} },
@@ -41,6 +47,7 @@ export const createOverdueClaimsNotifier =
                   advert
                 )
               )
+              isModified = true
               // Add reminder event
               return {
                 ...c,
@@ -56,10 +63,13 @@ export const createOverdueClaimsNotifier =
           }
           return c
         })
-        return {
-          ...advert,
-          claims: normalizeAdvertClaims(claims),
-        }
+        // One or more claims has been modified
+        return isModified
+          ? {
+              ...advert,
+              claims: normalizeAdvertClaims(claims),
+            }
+          : null
       })
       .verify(update => update)
       .saveVersion((versionId, advert) =>
