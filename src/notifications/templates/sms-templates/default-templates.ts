@@ -9,6 +9,8 @@ export const defaultSmsTemplates: Record<string, string> = {
   'advert-was-collected-owner': 'Din annons {{advert.title}} har hämtats ut',
   'advert-collect-was-cancelled': '',
   'advert-collect-was-cancelled-owner': '',
+  'advert-not-returned': 'Då måste återlämna {{advert.title}} ',
+  'advert-was-returned': 'Äterlämningskvitto för {{advert.title}}',
 }
 
 const defaultTemplateIds = new Set<string>(Object.keys(defaultSmsTemplates))
