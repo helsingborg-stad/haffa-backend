@@ -1,59 +1,59 @@
 import { getEnv } from '@helsingborg-stad/gdi-api-node'
-import type {
-  JobExcecutorService,
-  JobParameters,
-  TaskList,
-  Task,
-} from './types'
+import type { JobExcecutorService, JobParameters, TaskList } from './types'
 import { tasks } from './tasks'
+import type { SyslogEntry, SyslogUserData } from '../syslog/types'
+import { Severity } from '../syslog/types'
+import type { Services } from '../types'
 
 export const createJobExecutorService = (
   taskRepository: TaskList,
-  parameters: JobParameters
+  parameters: JobParameters,
+  services: Pick<
+    Services,
+    'syslog' | 'notifications' | 'adverts' | 'files' | 'subscriptions'
+  >
+): JobExcecutorService => ({
+  runAs: async (user, jobName) =>
+    (taskRepository[jobName] ?? []).reduce<Promise<SyslogEntry[]>>(
+      async (p, c) =>
+        p.then(log => {
+          const job: SyslogUserData = {
+            by: user.id,
+            type: c.taskId,
+            severity: Severity.info,
+            message: '',
+            data: {
+              start: new Date().toISOString(),
+              end: null,
+              parameters,
+            },
+          }
+          return c
+            .runner(services, parameters, user)
+            .then(result => {
+              job.message = result
+            })
+            .catch(ex => {
+              job.severity = Severity.error
+              job.message = (ex as Error).message
+            })
+            .then(async () => {
+              if (job.data) {
+                job.data.end = new Date().toISOString()
+              }
+              return [...log, await services.syslog.write(job)]
+            })
+        }),
+      Promise.resolve([])
+    ),
+})
+
+export const createJobExecutorServiceFromEnv = (
+  services: Pick<
+    Services,
+    'syslog' | 'notifications' | 'adverts' | 'files' | 'subscriptions'
+  >
 ): JobExcecutorService => {
-  const history: Task[] = []
-
-  return {
-    runAs: async (user, jobName, services) => {
-      const taskList = taskRepository[jobName] ?? []
-
-      const jobs: Task[] = []
-      // Run synchronously to avoid race conditions
-      // eslint-disable-next-line no-restricted-syntax
-      for (const task of taskList) {
-        const job: Task = {
-          jobName,
-          taskId: task.taskId,
-          owner: user.id,
-          parameters,
-          status: 'Succeeded',
-          startDate: new Date().toISOString(),
-          endDate: null,
-          result: null,
-        }
-        jobs.push(job)
-        try {
-          // eslint-disable-next-line no-await-in-loop
-          job.result = await task.runner(services, parameters, user)
-        } catch (ex) {
-          job.status = 'Failed'
-          job.result = (ex as Error).message
-        } finally {
-          job.endDate = new Date().toISOString()
-        }
-      }
-      history.push(...jobs)
-      return jobs
-    },
-    list: () => Array.from(Object.keys(taskRepository)),
-    find: taskId => history.filter(job => job.taskId === taskId || !taskId),
-    prune: () => {
-      history.length = 0
-    },
-  }
-}
-
-export const createJobExecutorServiceFromEnv = (): JobExcecutorService => {
   const parameters: JobParameters = {
     maxReservationDays: Number(
       getEnv('MAX_RESERVATION_DAYS', { fallback: '14' })
@@ -62,5 +62,5 @@ export const createJobExecutorServiceFromEnv = (): JobExcecutorService => {
       getEnv('REMINDER_FREQUENCY_DAYS', { fallback: '3' })
     ),
   }
-  return createJobExecutorService(tasks, parameters)
+  return createJobExecutorService(tasks, parameters, services)
 }

@@ -11,6 +11,7 @@ import type { CategoryRepository } from './categories/types'
 import type { EventLogService } from './events/types'
 import type { SubscriptionsRepository } from './subscriptions/types'
 import type { ContentRepository } from './content/types'
+import type { SyslogService } from './syslog/types'
 
 export interface StartupLog {
   echo: <TService>(
@@ -37,4 +38,5 @@ export interface Services {
   eventLog: EventLogService
   subscriptions: SubscriptionsRepository
   content: ContentRepository
+  syslog: SyslogService
 }

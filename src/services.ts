@@ -13,6 +13,7 @@ import { categoryAdapter } from './categories/category-adapter'
 import { createEventLogServiceFromEnv } from './events'
 import { createSubscriptionsRepositoryFromEnv } from './subscriptions'
 import { createContentRepositoryFromEnv } from './content'
+import { createSyslogServiceFromEnv } from './syslog'
 
 const createStartupLog = (): StartupLog => ({
   echo: (service, { name, config }) => {
@@ -35,11 +36,17 @@ const createServicesFromEnv = (): Services => {
   const adverts = createAdvertsRepositoryFromEnv(startupLog, settings)
   const files = createFilesServiceFromEnv(startupLog)
   const profiles = createProfileRepositoryFromEnv(startupLog)
+  const syslog = createSyslogServiceFromEnv(startupLog)
   const notifications = createNotificationServiceFromEnv(startupLog, {
     categories,
     profiles,
     eventLog,
     settings,
+  })
+  const subscriptions = createSubscriptionsRepositoryFromEnv(startupLog, {
+    adverts,
+    notifications,
+    userMapper,
   })
   return {
     userMapper,
@@ -52,16 +59,19 @@ const createServicesFromEnv = (): Services => {
     adverts,
     profiles,
     notifications,
-    jobs: createJobExecutorServiceFromEnv(),
-    eventLog,
-    subscriptions: createSubscriptionsRepositoryFromEnv(startupLog, {
-      adverts,
+    jobs: createJobExecutorServiceFromEnv({
+      syslog,
       notifications,
-      userMapper,
+      adverts,
+      files,
+      subscriptions,
     }),
+    eventLog,
+    subscriptions,
     content: createContentRepositoryFromEnv(startupLog, {
       files,
     }),
+    syslog,
   }
 }
 

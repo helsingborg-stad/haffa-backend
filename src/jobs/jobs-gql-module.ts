@@ -9,20 +9,6 @@ export const createJobsGqlModule = (services: Services): GraphQLModule => ({
   resolvers: {
     Query: {
       // https://www.graphql-tools.com/docs/resolvers
-      jobList: async ({ ctx }) => {
-        const { user } = ctx
-        if (!normalizeRoles(user?.roles).canRunSystemJobs) {
-          ctx.throw(HttpStatusCodes.UNAUTHORIZED)
-        }
-        return services.jobs.list()
-      },
-      jobFind: async ({ ctx, args: { taskId } }) => {
-        const { user } = ctx
-        if (!normalizeRoles(user?.roles).canRunSystemJobs) {
-          ctx.throw(HttpStatusCodes.UNAUTHORIZED)
-        }
-        return services.jobs.find(taskId)
-      },
     },
     Mutation: {
       jobRun: async ({ ctx, args: { jobName } }) => {
@@ -30,7 +16,7 @@ export const createJobsGqlModule = (services: Services): GraphQLModule => ({
         if (!normalizeRoles(user?.roles).canRunSystemJobs) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        return services.jobs.runAs(user, jobName, services)
+        return services.jobs.runAs(user, jobName)
       },
     },
   },

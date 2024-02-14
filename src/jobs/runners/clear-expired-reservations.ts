@@ -14,7 +14,7 @@ export const clearExpiredReservations: TaskRunnerSignature = async (
   const adverts = await services.adverts?.getAdvertsByClaimStatus({
     type: AdvertClaimType.reserved,
   })
-  const result = await adverts.reduce<Promise<string[]>>(
+  const result = await adverts?.reduce<Promise<string[]>>(
     async (p, c) =>
       p.then(res =>
         mutations

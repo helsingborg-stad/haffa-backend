@@ -18,6 +18,7 @@ import { createAdvertFieldConfigGqlModule } from '../advert-field-config'
 import { createLocationsGqlModule } from '../locations/locations-gql-module'
 import { createUserMapperGqlModule } from '../users'
 import { createSmsTemplatesGqlModule } from '../notifications/templates/sms-templates/sms-templates-gql-module'
+import { createSyslogGqlModule } from '../syslog/syslog-gql-module'
 
 export const createStandardGqlModule = (): GraphQLModule => ({
   schema: haffaGqlSchema,
@@ -42,7 +43,8 @@ export const createHaffaGqlModule = (services: Services): GraphQLModule =>
     createAdvertFieldConfigGqlModule(services),
     createLocationsGqlModule(services),
     createUserMapperGqlModule(services),
-    createSmsTemplatesGqlModule(services)
+    createSmsTemplatesGqlModule(services),
+    createSyslogGqlModule(services)
   )
 
 const mergeModules = (...modules: GraphQLModule[]): GraphQLModule => ({

@@ -14,7 +14,7 @@ export const sendOverdueReminder: TaskRunnerSignature = async (
   const adverts = await services.adverts?.getAdvertsByClaimStatus({
     type: AdvertClaimType.collected,
   })
-  const result = await adverts.reduce<Promise<string[]>>(
+  const result = await adverts?.reduce<Promise<string[]>>(
     async (p, c) =>
       p.then(res =>
         mutations

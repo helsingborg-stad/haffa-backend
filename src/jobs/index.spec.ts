@@ -3,13 +3,18 @@ import { createJobExecutorService } from '.'
 import type { JobParameters, TaskRunnerSignature } from './types'
 import { createTestServices } from '../test-utils'
 import type { HaffaUser } from '../login/types'
+import { Severity } from '../syslog/types'
 
 const parameters: JobParameters = {
   maxReservationDays: 10,
   reminderFrequency: 5,
 }
 
-const successfulJob: TaskRunnerSignature = async () => {
+const successfulJob1: TaskRunnerSignature = async () => {
+  await setTimeout(1000)
+  return 'test-result'
+}
+const successfulJob2: TaskRunnerSignature = async () => {
   await setTimeout(500)
   return 'test-result'
 }
@@ -25,7 +30,7 @@ const tasks = {
   SUCCESSFUL_JOB: [
     {
       taskId: '0',
-      runner: successfulJob,
+      runner: successfulJob1,
     },
   ],
   FAILING_JOB: [
@@ -37,62 +42,47 @@ const tasks = {
   MULTIPLE_TASKS: [
     {
       taskId: '0',
-      runner: successfulJob,
+      runner: successfulJob1,
     },
     {
       taskId: '1',
       runner: failingJob,
     },
+    {
+      taskId: '2',
+      runner: successfulJob2,
+    },
   ],
 }
 
-const service = createJobExecutorService(tasks, parameters)
+const services = createTestServices({})
+
+services.jobs = createJobExecutorService(tasks, parameters, services)
+
 describe('JobsService', () => {
   it('should run synchronously successfully', async () => {
-    const [job] = await service.runAs(
-      user,
-      'SUCCESSFUL_JOB',
-      createTestServices({})
-    )
-    expect(job.owner).toBe('jane@doe.se')
-    expect(job.status).toBe('Succeeded')
-    expect(job.endDate).toBeDefined()
-    expect(job.result).toBe('test-result')
-  })
-  it('should handle errors gracefully', async () => {
-    const [job] = await service.runAs(
-      user,
-      'FAILING_JOB',
-      createTestServices({})
-    )
-    expect(job.owner).toBe('jane@doe.se')
-    expect(job.status).toBe('Failed')
-    expect(job.endDate).toBeDefined()
-    expect(job.result).toBe('error-occured')
-  })
-  it('should run multiple tasks', async () => {
-    const jobs = await service.runAs(
-      user,
-      'MULTIPLE_TASKS',
-      createTestServices({})
-    )
-    expect(jobs).toHaveLength(2)
-    expect(jobs[0].taskId).toBe('0')
-  })
-  it('should keep jobs and statuses in memory', async () => {
-    expect(service.find()).toHaveLength(4)
-  })
-  it('should return job definition when requested', async () => {
-    const [job] = service.find()
-    expect(job?.status).toBe('Succeeded')
+    const [job] = await services.jobs.runAs(user, 'SUCCESSFUL_JOB')
+    expect(job.by).toBe('jane@doe.se')
+    expect(job.severity).toBe(Severity.info)
+    expect(job.data?.end).toBeDefined()
+    expect(job.message).toBe('test-result')
   })
 
-  it('should prune list when requested', async () => {
-    service.prune()
-    expect(service.find()).toHaveLength(0)
+  it('should handle errors gracefully', async () => {
+    const [job] = await services.jobs.runAs(user, 'FAILING_JOB')
+    expect(job.by).toBe('jane@doe.se')
+    expect(job.severity).toBe(Severity.error)
+    expect(job.data?.end).toBeDefined()
+    expect(job.message).toBe('error-occured')
   })
   it('should handle invalid job name gracefully', async () => {
-    const jobs = await service.runAs(user, 'DUMMY', createTestServices({}))
+    const jobs = await services.jobs.runAs(user, 'DUMMY')
     expect(jobs).toHaveLength(0)
+  })
+
+  it('should run multiple tasks sequentially', async () => {
+    const jobs = await services.jobs.runAs(user, 'MULTIPLE_TASKS')
+    expect(jobs).toHaveLength(3)
+    expect(jobs.map(j => j.type)).toStrictEqual(['0', '1', '2'])
   })
 })

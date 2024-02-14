@@ -18,6 +18,7 @@ import { categoryAdapter } from '../categories/category-adapter'
 import { createNullEventLogService } from '../events'
 import { createNullSubscriptionsRepository } from '../subscriptions'
 import { createNullContentRepository } from '../content'
+import { createNullSyslogService } from '../syslog/null-syslog-service'
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
 
@@ -104,6 +105,12 @@ export const createTestServices = (services: Partial<Services>): Services => {
   const userMapper = services.userMapper || createUserMapper(null, settings)
   const categories = services.categories || categoryAdapter(settings)
   const cookies = services.cookies || createCookieService('haffa-token')
+  const syslog = services.syslog || createNullSyslogService()
+  const adverts = createInMemoryAdvertsRepository()
+  const notifications = createNullNotificationService()
+  const files = createNullFileService()
+  const subscriptions = createNullSubscriptionsRepository()
+
   return {
     userMapper,
     categories,
@@ -111,14 +118,21 @@ export const createTestServices = (services: Partial<Services>): Services => {
     login: createInMemoryLoginService(userMapper, createIssuePincode('123456')),
     tokens: createTokenService(userMapper, { secret: TEST_SHARED_SECRET }),
     cookies,
-    adverts: createInMemoryAdvertsRepository(),
+    adverts,
     profiles: createInMemoryProfileRepository(),
-    files: createNullFileService(),
-    notifications: createNullNotificationService(),
-    jobs: createJobExecutorServiceFromEnv(),
+    files,
+    notifications,
+    jobs: createJobExecutorServiceFromEnv({
+      syslog,
+      notifications,
+      adverts,
+      files,
+      subscriptions,
+    }),
     eventLog: createNullEventLogService(),
-    subscriptions: createNullSubscriptionsRepository(),
+    subscriptions,
     content: createNullContentRepository(),
+    syslog,
     ...services,
   }
 }

@@ -1,25 +1,12 @@
 export const jobsGqlSchema = /* GraphQL */ `
   type Mutation {
-    jobRun(jobName: String!): [Task]
+    jobRun(jobName: String!): [SyslogData!]
   }
-
-  type Query {
-    jobList: [String]
-    jobFind(taskId: String): [Task]
-  }
-  type JobParameters {
-    maxReservationDays: Int
-    reminderFrequency: Int
-  }
-
-  type Task {
-    taskId: String!
-    jobName: String!
-    owner: String!
-    status: String!
-    startDate: String!
-    endDate: String
-    parameters: JobParameters
-    result: String
+  type SyslogData {
+    at: String!
+    by: String!
+    severity: Int!
+    type: String
+    message: String
   }
 `
