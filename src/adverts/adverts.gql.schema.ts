@@ -63,6 +63,16 @@ export const advertsGqlSchema = /* GraphQL */ `
     id
     title
     createdAt
+    description
+    notes
+    unit
+    material
+    condition
+    usage
+    reference
+    externalId
+    tags
+    size
   }
 
   input AdvertFieldsFilterInput {
