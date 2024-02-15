@@ -11,7 +11,7 @@ export const createSyslogGqlModule = (services: Services): GraphQLModule => ({
       // https://www.graphql-tools.com/docs/resolvers
       syslog: async ({ ctx, args: { filter } }) => {
         const { user } = ctx
-        if (!normalizeRoles(user?.roles).canRunSystemJobs) {
+        if (!normalizeRoles(user?.roles).canSeeSystemStatistics) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return services.syslog.read(filter)
@@ -20,7 +20,7 @@ export const createSyslogGqlModule = (services: Services): GraphQLModule => ({
     Mutation: {
       pruneSyslog: async ({ ctx, args: { filter } }) => {
         const { user } = ctx
-        if (!normalizeRoles(user?.roles).canRunSystemJobs) {
+        if (!normalizeRoles(user?.roles).canSeeSystemStatistics) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return services.syslog.prune(filter)
