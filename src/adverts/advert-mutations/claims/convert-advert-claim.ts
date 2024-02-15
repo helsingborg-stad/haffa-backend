@@ -45,6 +45,7 @@ export const createConvertAdvertClaim =
           ...c,
           at: new Date().toISOString(),
           type: newType,
+          events: [],
         }))
 
         actions(patched =>

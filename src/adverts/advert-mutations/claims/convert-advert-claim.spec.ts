@@ -6,7 +6,7 @@ import {
 } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
 import type { AdvertMutationResult } from '../../types'
-import { AdvertClaimType } from '../../types'
+import { AdvertClaimEventType, AdvertClaimType } from '../../types'
 import { mutationProps } from '../test-utils/gql-test-definitions'
 
 const convertAdvertClaimMutation = /* GraphQL */ `
@@ -23,8 +23,8 @@ mutation Mutation(
 `
 describe('convertAdvertClaim', () => {
   it('can convert reservation to collect', () => {
-    const advertWasCollected = jest.fn(async () => void 0)
-    const advertWasCollectedOwner = jest.fn(async () => void 0)
+    const advertWasCollected = jest.fn(async () => undefined)
+    const advertWasCollectedOwner = jest.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasCollected,
       advertWasCollectedOwner,
@@ -60,7 +60,12 @@ describe('convertAdvertClaim', () => {
               at: '',
               quantity: 1,
               type: AdvertClaimType.reserved,
-              events: [],
+              events: [
+                {
+                  type: AdvertClaimEventType.reminder,
+                  at: '',
+                },
+              ],
             },
             {
               by: 'someone else',
@@ -91,18 +96,21 @@ describe('convertAdvertClaim', () => {
               at: '',
               quantity: 2,
               type: 'reserved',
+              events: [],
             },
             {
               by: 'someone else',
               at: '',
               quantity: 1,
               type: 'reserved',
+              events: [],
             },
             {
               by: user.id,
               // at: '',
               quantity: 1,
               type: AdvertClaimType.collected,
+              events: [],
             },
           ])
         )
