@@ -161,12 +161,21 @@ export const advertsGqlSchema = /* GraphQL */ `
     location: AdvertLocationInput
     contact: AdvertContactInput
   }
+  enum AdvertClaimEventType {
+    reminder
+  }
+
+  type AdvertClaimEvent {
+    type: AdvertClaimEventType
+    at: String
+  }
 
   type AdvertClaim {
     quantity: Int
     by: String
     at: String
     type: AdvertClaimType
+    events: [AdvertClaimEvent]
     canCancel: Boolean
     canConvert: Boolean
     isOverdue: Boolean
