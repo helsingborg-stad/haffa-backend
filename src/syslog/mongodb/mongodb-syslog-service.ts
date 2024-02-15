@@ -64,7 +64,7 @@ export const createMongoSyslogService = ({
       .then(collection =>
         collection.find(buildMongoFilter(f), {
           sort: {
-            date: -1,
+            at: -1,
           },
         })
       )
