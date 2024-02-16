@@ -26,3 +26,5 @@ jobs:
 
           docker-username: ${{ github.repository_owner }}
           docker-password: ${{ secrets.GITHUB_TOKEN }}
+          extra-image-tags: |
+            type=raw,value=${{github.event.release.tag_name}}
