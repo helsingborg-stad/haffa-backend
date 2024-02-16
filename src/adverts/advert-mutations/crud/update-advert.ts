@@ -22,10 +22,14 @@ export const createUpdateAdvert =
       .validate((advert, { throwIf }) =>
         throwIf(!getAdvertMeta(advert, user).canEdit, TxErrors.Unauthorized)
       )
-      .patch(async advert => ({
-        ...patchAdvertWithAdvertInput(advert, input),
-        ...(await processAdvertInput(input, files)),
-      }))
+      .patch(async advert => {
+        const patched = patchAdvertWithAdvertInput(advert, input)
+        const processed = {
+          ...patched,
+          ...(await processAdvertInput(patched, files)),
+        }
+        return processed
+      })
       .verify((_, ctx) =>
         verifyAll(
           ctx,
