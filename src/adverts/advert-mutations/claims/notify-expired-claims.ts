@@ -1,3 +1,4 @@
+import { Severity } from '../../../syslog/types'
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import {
@@ -16,9 +17,10 @@ export const createExpiredClaimsNotifier =
   ({
     adverts,
     notifications,
+    syslog,
   }: Pick<
     Services,
-    'adverts' | 'notifications'
+    'adverts' | 'notifications' | 'syslog'
   >): AdvertMutations['notifyExpiredClaims'] =>
   (user, id, interval, now) =>
     txBuilder<Advert>()
@@ -41,6 +43,14 @@ export const createExpiredClaimsNotifier =
                 c.quantity,
                 advert
               )
+            )
+            actions(() =>
+              syslog.write({
+                by: user.id,
+                type: 'NOTIFY_EXPIRED_CLAIM',
+                severity: Severity.info,
+                message: `Removed claim for: ${c.by} on ${advert.id}`,
+              })
             )
             // Remove claim from advert
             return [...p]

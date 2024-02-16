@@ -7,19 +7,19 @@ import type { TaskList } from './types'
 export const tasks: TaskList = {
   TASK_DAILY_MAINTENANCE: [
     {
-      taskId: 'CLEAR_EXPIRED_RESERVATIONS',
+      taskId: 'JOB_RESERVATION_EXPIRED',
       runner: clearExpiredReservations,
     },
     {
-      taskId: 'SEND_RESERVATION_REMINDER',
+      taskId: 'JOB_RESERVATION_OVERDUE',
       runner: sendReservationReminder,
     },
     {
-      taskId: 'SEND_OVERDUE_REMINDER',
+      taskId: 'JOB_COLLECTION_OVERDUE',
       runner: sendOverdueReminder,
     },
     {
-      taskId: 'NOTIFY_SUBSCRIBED_ADVERTS',
+      taskId: 'JOB_SUBSCRIBED_ADVERTS',
       runner: notifySubscribedAdverts,
     },
   ],

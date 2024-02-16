@@ -1,3 +1,4 @@
+import { Severity } from '../../../syslog/types'
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import {
@@ -16,9 +17,10 @@ export const createOverdueClaimsNotifier =
   ({
     adverts,
     notifications,
+    syslog,
   }: Pick<
     Services,
-    'adverts' | 'notifications'
+    'adverts' | 'notifications' | 'syslog'
   >): AdvertMutations['notifyOverdueClaims'] =>
   (user, id, interval, now) =>
     txBuilder<Advert>()
@@ -46,6 +48,14 @@ export const createOverdueClaimsNotifier =
                   c.quantity,
                   advert
                 )
+              )
+              actions(() =>
+                syslog.write({
+                  by: user.id,
+                  type: 'NOTIFY_OVERDUE_REMINDER',
+                  severity: Severity.info,
+                  message: `Reminder sent to: ${c.by} on ${advert.id}`,
+                })
               )
               isModified = true
               // Add reminder event

@@ -1,3 +1,4 @@
+import { Severity } from '../../../syslog/types'
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import {
@@ -16,9 +17,10 @@ export const createReservedClaimsNotifier =
   ({
     adverts,
     notifications,
+    syslog,
   }: Pick<
     Services,
-    'adverts' | 'notifications'
+    'adverts' | 'notifications' | 'syslog'
   >): AdvertMutations['notifyReservedClaims'] =>
   (user, id, interval, now) =>
     txBuilder<Advert>()
@@ -43,6 +45,14 @@ export const createReservedClaimsNotifier =
                 c.quantity,
                 advert
               )
+            )
+            actions(() =>
+              syslog.write({
+                by: user.id,
+                type: 'NOTIFY_RESERVATION_REMINDER',
+                severity: Severity.info,
+                message: `Reminder sent to: ${c.by} on ${advert.id}`,
+              })
             )
             isModified = true
             // Add reminder event

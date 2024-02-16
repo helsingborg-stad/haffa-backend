@@ -9,7 +9,10 @@ import { createAdvertMutations } from './advert-mutations'
 import type { Services } from '../types'
 
 export const createAdvertsGqlModule = (
-  services: Pick<Services, 'adverts' | 'categories' | 'files' | 'notifications'>
+  services: Pick<
+    Services,
+    'adverts' | 'categories' | 'files' | 'notifications' | 'syslog'
+  >
 ): GraphQLModule => ({
   schema: advertsGqlSchema,
   resolvers: {

@@ -20,7 +20,7 @@ import { createConvertAdvertClaim } from './claims/convert-advert-claim'
 import { createOverdueClaimsNotifier } from './claims/notify-overdue-claims'
 
 export const createAdvertMutations = (
-  services: Pick<Services, 'adverts' | 'files' | 'notifications'>
+  services: Pick<Services, 'adverts' | 'files' | 'notifications' | 'syslog'>
 ): AdvertMutations => ({
   createAdvert: createCreateAdvert(services),
   updateAdvert: createUpdateAdvert(services),
