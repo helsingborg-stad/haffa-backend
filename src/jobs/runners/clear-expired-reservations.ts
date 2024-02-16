@@ -23,6 +23,5 @@ export const clearExpiredReservations: TaskRunnerSignature = async (
       ),
     Promise.resolve([])
   )
-
   return JSON.stringify(result)
 }
