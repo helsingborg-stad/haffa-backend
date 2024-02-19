@@ -61,6 +61,9 @@ export const createJobExecutorServiceFromEnv = (
     reminderFrequency: Number(
       getEnv('REMINDER_FREQUENCY_DAYS', { fallback: '3' })
     ),
+    syslogRetentionDays: Number(
+      getEnv('SYSLOG_RETENTION_DAYS', { fallback: '10' })
+    ),
   }
   return createJobExecutorService(tasks, parameters, services)
 }

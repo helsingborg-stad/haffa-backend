@@ -8,6 +8,7 @@ import { Severity } from '../syslog/types'
 const parameters: JobParameters = {
   maxReservationDays: 10,
   reminderFrequency: 5,
+  syslogRetentionDays: 2,
 }
 
 const successfulJob1: TaskRunnerSignature = async () => {

@@ -11,6 +11,7 @@ export type TaskRunnerSignature = (
 export interface JobParameters {
   maxReservationDays: number
   reminderFrequency: number
+  syslogRetentionDays: number
 }
 export type TaskList = { [key: string]: TaskListItem[] }
 
