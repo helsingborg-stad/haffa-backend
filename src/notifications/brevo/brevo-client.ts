@@ -29,9 +29,9 @@ export function createClient(config: BrevoConfig): BrevoClient {
 
   const getTemplateId = async (commonName: string) => {
     const { templates } = await doGet<RelevantGetTemplatesResult>(
-      'smtp/templates'
+      'smtp/templates?templateStatus=true'
     )
-    const relevantTemplate = templates.find(
+    const relevantTemplate = templates?.find(
       template => template.name === commonName
     )
 
