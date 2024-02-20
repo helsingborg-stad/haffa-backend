@@ -20,11 +20,10 @@ export const mapRestrictions = (
           // can be reserved directly
           'meta.unreservedCount': { $gt: 0 },
         },
-        combineAnd(
+        {
           // can be reserved when returned
-          { 'meta.collectedCount': { $gt: 0 } },
-          { 'advert.lendingPeriod': { $gt: 0 } }
-        )
+          'advert.lendingPeriod': { $gt: 0 },
+        }
       ),
     restrictions?.canBeReserved === false && { 'meta.unreservedCount': 0 },
     restrictions?.reservedByMe === true && {

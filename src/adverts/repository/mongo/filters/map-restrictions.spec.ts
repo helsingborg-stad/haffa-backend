@@ -23,7 +23,12 @@ describe('mapRestrictions', () => {
   it('maps canBeReserved', () => {
     expect(mapRestrictions(user, { canBeReserved: true })).toMatchObject(
       makeRegularFilter({
-        'meta.unreservedCount': { $gt: 0 },
+        $or: [
+          {
+            'meta.unreservedCount': { $gt: 0 },
+          },
+          { 'advert.lendingPeriod': { $gt: 0 } },
+        ],
       })
     )
 
