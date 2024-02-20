@@ -2,7 +2,7 @@ import type { Filter } from 'mongodb'
 import type { AdvertRestrictionsFilterInput } from '../../../types'
 import { AdvertClaimType } from '../../../types'
 import type { MongoAdvert } from '../types'
-import { combineAnd } from './filter-utils'
+import { combineAnd, combineOr } from './filter-utils'
 import type { HaffaUser } from '../../../../login/types'
 
 export const regularAdvertsFilter: Filter<MongoAdvert> = {
@@ -14,9 +14,18 @@ export const mapRestrictions = (
   restrictions?: AdvertRestrictionsFilterInput
 ): Filter<MongoAdvert> | null =>
   combineAnd(
-    restrictions?.canBeReserved === true && {
-      'meta.unreservedCount': { $gt: 0 },
-    },
+    restrictions?.canBeReserved === true &&
+      combineOr(
+        {
+          // can be reserved directly
+          'meta.unreservedCount': { $gt: 0 },
+        },
+        combineAnd(
+          // can be reserved when returned
+          { 'meta.collectedCount': { $gt: 0 } },
+          { 'advert.lendingPeriod': { $gt: 0 } }
+        )
+      ),
     restrictions?.canBeReserved === false && { 'meta.unreservedCount': 0 },
     restrictions?.reservedByMe === true && {
       'advert.claims': {
