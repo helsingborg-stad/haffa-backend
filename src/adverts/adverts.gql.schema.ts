@@ -65,7 +65,12 @@ export const advertsGqlSchema = /* GraphQL */ `
     createdAt
     description
     notes
+    lendingPeriod
     unit
+    width
+    height
+    depth
+    weight
     material
     condition
     usage
@@ -80,6 +85,10 @@ export const advertsGqlSchema = /* GraphQL */ `
     title: StringFilterInput
     description: StringFilterInput
     unit: StringFilterInput
+    width: StringFilterInput
+    height: StringFilterInput
+    depth: StringFilterInput
+    weight: StringFilterInput
     material: StringFilterInput
     condition: StringFilterInput
     usage: StringFilterInput
