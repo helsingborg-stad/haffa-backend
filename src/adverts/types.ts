@@ -269,6 +269,12 @@ export interface AdvertMutations {
     type: AdvertClaimType,
     newType: AdvertClaimType
   ) => Promise<AdvertMutationResult>
+  renewAdvertClaim: (
+    user: HaffaUser,
+    id: string,
+    by: string,
+    type: AdvertClaimType
+  ) => Promise<AdvertMutationResult>
   notifyReservedClaims: (
     user: HaffaUser,
     id: string,

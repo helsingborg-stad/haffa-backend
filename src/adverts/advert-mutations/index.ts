@@ -18,6 +18,7 @@ import {
 } from './crud'
 import { createConvertAdvertClaim } from './claims/convert-advert-claim'
 import { createOverdueClaimsNotifier } from './claims/notify-overdue-claims'
+import { createRenewAdvertClaim } from './claims/renew-advert-claim'
 
 export const createAdvertMutations = (
   services: Pick<Services, 'adverts' | 'files' | 'notifications' | 'syslog'>
@@ -32,6 +33,7 @@ export const createAdvertMutations = (
   unarchiveAdvert: createUnarchiveAdvert(services),
   cancelAdvertClaim: createCancelAdvertClaim(services),
   convertAdvertClaim: createConvertAdvertClaim(services),
+  renewAdvertClaim: createRenewAdvertClaim(services),
   returnAdvert: createReturnAdvert(services),
   notifyReservedClaims: createReservedClaimsNotifier(services),
   notifyExpiredClaims: createExpiredClaimsNotifier(services),

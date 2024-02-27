@@ -24,6 +24,11 @@ export const advertsGqlSchema = /* GraphQL */ `
       type: AdvertClaimType!
       newType: AdvertClaimType!
     ): AdvertMutationResult
+    renewAdvertClaim(
+      id: ID!
+      by: String!
+      type: AdvertClaimType!
+    ): AdvertMutationResult
     returnAdvert(id: ID!): AdvertMutationResult
   }
 
