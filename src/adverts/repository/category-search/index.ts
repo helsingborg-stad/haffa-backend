@@ -28,4 +28,5 @@ export const createAdvertsRepositoryWithCategorySearch = (
   remove: (...args) => inner.remove(...args),
   countBy: (...args) => inner.countBy(...args),
   getAdvertsByClaimStatus: (...args) => inner.getAdvertsByClaimStatus(...args),
+  getSnapshot: (...args) => inner.getSnapshot(...args),
 })

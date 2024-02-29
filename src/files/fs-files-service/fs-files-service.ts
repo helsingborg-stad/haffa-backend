@@ -1,11 +1,12 @@
 import { join, relative } from 'path'
 import { mkdirp } from 'mkdirp'
-import { writeFile, unlink } from 'fs/promises'
+import { readFile, writeFile, unlink } from 'fs/promises'
 import send from 'koa-send'
 import type { ApplicationContext } from '@helsingborg-stad/gdi-api-node'
 import ms from 'ms'
 import type { FilesService } from '../types'
 import { generateFileId, tryConvertDataUriToImageBuffer } from '../utils'
+import { tryConvertUrlToDataUrlForLocalUrlsHelper } from '../utils/image-utils'
 
 // max-age in ms header for transmitted files
 const SEND_MAX_AGE = ms('30 days')
@@ -29,6 +30,15 @@ export const createFsFilesService = (
       await writeFile(path, buffer)
       return `${baseUrl}/${fileId}`
     }
+
+  const tryConvertUrlToDataUrl: FilesService['tryConvertUrlToDataUrl'] =
+    async url =>
+      tryConvertUrlToDataUrlForLocalUrlsHelper({
+        url,
+        baseUrl,
+        mimeType: 'image/webp',
+        getData: fileId => readFile(join(folder, fileId)),
+      })
 
   const tryCreateApplicationModule: FilesService['tryCreateApplicationModule'] =
 
@@ -66,6 +76,7 @@ export const createFsFilesService = (
 
   return {
     tryConvertDataUrlToUrl,
+    tryConvertUrlToDataUrl,
     tryCreateApplicationModule,
     tryCleanupUrl,
   }

@@ -1,6 +1,7 @@
 import { join } from 'path'
 import { mkdirp } from 'mkdirp'
 import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
+import { Readable } from 'stream'
 import type { AdvertClaim, Advert, AdvertsRepository } from '../../types'
 import { createAdvertFilterPredicate } from '../../filters/advert-filter-predicate'
 import {
@@ -11,6 +12,17 @@ import {
 } from '../../mappers'
 import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
 import { mapValues, toLookup } from '../../../lib'
+
+const findPaths = async (folder: string): Promise<string[]> =>
+  readdir(folder)
+    .then(names => names.filter(name => /.*\.json$/.test(name)))
+    .then(names => names.map(name => join(folder, name)))
+    .then(paths =>
+      Promise.all(paths.map(path => stat(path).then(s => ({ s, path }))))
+    )
+    .then(l =>
+      Promise.all(l.filter(({ s }) => s.isFile()).map(({ path }) => path))
+    )
 
 export const createFsAdvertsRepository = (
   dataFolder: string
@@ -179,6 +191,27 @@ export const createFsAdvertsRepository = (
         })
     }
 
+  const getSnapshot: AdvertsRepository['getSnapshot'] = () =>
+    Readable.from({
+      [Symbol.asyncIterator]: () => {
+        let paths: string[] | null = null
+        return {
+          next: async () => {
+            if (!paths) {
+              paths = await findPaths(dataFolder)
+            }
+            const path = paths.pop()
+            return path
+              ? {
+                  done: false,
+                  value: await readFile(path, { encoding: 'utf-8' }),
+                }
+              : { done: true, value: null }
+          },
+        }
+      },
+    })
+
   return {
     stats,
     getAdvert,
@@ -188,5 +221,6 @@ export const createFsAdvertsRepository = (
     remove,
     countBy,
     getAdvertsByClaimStatus,
+    getSnapshot,
   }
 }

@@ -4,6 +4,7 @@ import mime from 'mime-types'
 import ms from 'ms'
 import type { FilesService } from '../types'
 import { generateFileId, tryConvertDataUriToImageBuffer } from '../utils'
+import { tryConvertUrlToDataUrlForLocalUrlsHelper } from '../utils/image-utils'
 
 const SEND_MAX_AGE = ms('30 days')
 interface MinioConfig {
@@ -82,6 +83,16 @@ class MinioFilesService implements FilesService {
     })
 
     return `${this.config.baseUrl}/${fileId}`
+  }
+
+  async tryConvertUrlToDataUrl(url: string) {
+    const { bucket, baseUrl } = this.config
+    return tryConvertUrlToDataUrlForLocalUrlsHelper({
+      url,
+      baseUrl,
+      mimeType: 'image/webp',
+      getData: fileId => this.createMinioClient().getObject(bucket, fileId),
+    })
   }
 
   tryCreateApplicationModule() {

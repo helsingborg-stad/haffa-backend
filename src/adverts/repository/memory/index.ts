@@ -1,3 +1,4 @@
+import { Readable } from 'stream'
 import type { Advert, AdvertClaim, AdvertsRepository } from '../../types'
 import { createAdvertFilterPredicate } from '../../filters/advert-filter-predicate'
 import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
@@ -63,5 +64,20 @@ export const createInMemoryAdvertsRepository = (
     return Object.values(db)
       .filter(advert => advert.claims.some(compare))
       .map(advert => advert.id)
+  },
+  getSnapshot: () => {
+    const values = Object.values(db)
+    let cursor = 0
+    return new Readable({
+      objectMode: true,
+      read() {
+        if (cursor < values.length) {
+          this.push(values[cursor])
+          cursor += 1
+        } else {
+          this.push(null)
+        }
+      },
+    })
   },
 })
