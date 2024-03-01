@@ -229,6 +229,7 @@ export interface AdvertsRepository {
 }
 
 export interface AdvertMutations {
+  importAdvertSnapshot: (user: HaffaUser, advert: Advert) => Promise<boolean>
   createAdvert: (
     user: HaffaUser,
     input: AdvertInput

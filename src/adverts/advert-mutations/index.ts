@@ -19,10 +19,12 @@ import {
 import { createConvertAdvertClaim } from './claims/convert-advert-claim'
 import { createOverdueClaimsNotifier } from './claims/notify-overdue-claims'
 import { createRenewAdvertClaim } from './claims/renew-advert-claim'
+import { createImportAdvertSnapshot } from './crud/import-advert-snapshot'
 
 export const createAdvertMutations = (
   services: Pick<Services, 'adverts' | 'files' | 'notifications' | 'syslog'>
 ): AdvertMutations => ({
+  importAdvertSnapshot: createImportAdvertSnapshot(services),
   createAdvert: createCreateAdvert(services),
   updateAdvert: createUpdateAdvert(services),
   removeAdvert: createRemoveAdvert(services),

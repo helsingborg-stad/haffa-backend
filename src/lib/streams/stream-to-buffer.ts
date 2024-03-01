@@ -8,14 +8,11 @@ export const streamToBuffer = (stream: Readable): Promise<Buffer> =>
       new Writable({
         write(chunk, encoding, cb) {
           try {
-            if (typeof chunk === 'string') {
-              chunks.push(Buffer.from(chunk, 'utf-8'))
-            } else if (chunk instanceof Buffer) {
-              chunks.push(chunk)
-            } else {
-              const jsonData = JSON.stringify(chunk)
-              chunks.push(Buffer.from(jsonData, 'utf-8'))
-            }
+            chunks.push(
+              Buffer.isBuffer(chunk)
+                ? chunk
+                : Buffer.from(chunk.toString(), 'utf-8')
+            )
             cb()
           } catch (e) {
             cb(new Error())

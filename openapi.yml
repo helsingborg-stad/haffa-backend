@@ -245,7 +245,35 @@ paths:
             application/json:
               schema:
                 type: object
-
+    patch:
+      operationId: importSnapshot
+      summary: Update instance with data from snapshot if not already present
+      tags:
+        - DevOps
+      parameters:
+        - name: namespace
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: collection
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Operation status'
+          content:
+            application/json:
+              schema:
+                type: object
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
 components:
   schemas:
     GraphQLQuery:

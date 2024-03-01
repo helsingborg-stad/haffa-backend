@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { mkdirp } from 'mkdirp'
 import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
-import { Readable } from 'stream'
+import { PassThrough, Readable } from 'stream'
 import type { AdvertClaim, Advert, AdvertsRepository } from '../../types'
 import { createAdvertFilterPredicate } from '../../filters/advert-filter-predicate'
 import {
@@ -11,18 +11,35 @@ import {
   mapCreateAdvertInputToAdvert,
 } from '../../mappers'
 import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
-import { mapValues, toLookup } from '../../../lib'
+import { mapValues, toLookup, waitForAll } from '../../../lib'
+import { objectStream } from '../../../lib/streams'
+
+const notFundHandler =
+  <T>(errorValue: T) =>
+  (e: any) => {
+    if (e?.code === 'ENOENT') {
+      return errorValue
+    }
+    throw e
+  }
 
 const findPaths = async (folder: string): Promise<string[]> =>
   readdir(folder)
     .then(names => names.filter(name => /.*\.json$/.test(name)))
     .then(names => names.map(name => join(folder, name)))
     .then(paths =>
-      Promise.all(paths.map(path => stat(path).then(s => ({ s, path }))))
+      Promise.all(
+        paths.map(path =>
+          stat(path)
+            .catch(notFundHandler(null))
+            .then(s => ({ s, path }))
+        )
+      )
     )
     .then(l =>
-      Promise.all(l.filter(({ s }) => s.isFile()).map(({ path }) => path))
+      Promise.all(l.filter(({ s }) => s && s.isFile()).map(({ path }) => path))
     )
+    .catch(notFundHandler([]))
 
 export const createFsAdvertsRepository = (
   dataFolder: string
@@ -183,34 +200,17 @@ export const createFsAdvertsRepository = (
         )
         .then(adverts => adverts.filter(advert => advert.claims.some(compare)))
         .then(adverts => adverts.map(advert => advert.id))
-        .catch(e => {
-          if (e?.code === 'ENOENT') {
-            return []
-          }
-          throw e
-        })
+        .catch(notFundHandler([]))
     }
 
   const getSnapshot: AdvertsRepository['getSnapshot'] = () =>
-    Readable.from({
-      [Symbol.asyncIterator]: () => {
-        let paths: string[] | null = null
-        return {
-          next: async () => {
-            if (!paths) {
-              paths = await findPaths(dataFolder)
-            }
-            const path = paths.pop()
-            return path
-              ? {
-                  done: false,
-                  value: await readFile(path, { encoding: 'utf-8' }),
-                }
-              : { done: true, value: null }
-          },
-        }
-      },
-    })
+    objectStream(
+      () => findPaths(dataFolder),
+      path =>
+        readFile(path, { encoding: 'utf-8' })
+          .then(JSON.parse)
+          .catch(notFundHandler(null))
+    )
 
   return {
     stats,

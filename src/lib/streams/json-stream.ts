@@ -8,20 +8,30 @@ export const jsonStream: Func<
     terminator: string
   },
   Transform
-> = ({ prefix, separator, terminator }) =>
-  new Transform({
+> = ({ prefix, separator, terminator }) => {
+  let headerSent = false
+  const headerIfMissingOr = (or: string) => {
+    if (headerSent) {
+      return or
+    }
+    headerSent = true
+    return prefix
+  }
+
+  return new Transform({
     objectMode: true,
     transform(chunk, encoding, callback) {
       try {
-        const self = this as any
-        this.push(Buffer.from(self.json_header_emitted ? separator : prefix))
-        self.json_header_emitted = true
-        callback(null, Buffer.from(JSON.stringify(chunk)))
+        callback(
+          null,
+          headerIfMissingOr(separator) + Buffer.from(JSON.stringify(chunk))
+        )
       } catch (err) {
         callback(new Error('stringify failed'), null)
       }
     },
     flush(callback) {
-      callback(null, Buffer.from(terminator))
+      callback(null, Buffer.from(headerIfMissingOr('') + terminator))
     },
   })
+}
