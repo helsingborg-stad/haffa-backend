@@ -6,6 +6,7 @@ export const createEmptyModule = (): ContentModule => ({
   image: '',
   categories: '',
   tags: '',
+  imageRef: '',
 })
 
 export const createEmptyComposition = (): ViewComposition => ({
