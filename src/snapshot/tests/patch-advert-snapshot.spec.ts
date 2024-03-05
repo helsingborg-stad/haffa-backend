@@ -86,4 +86,31 @@ describe('/api/v1/haffa/snapshot/adverts', () => {
         ])
       }
     ))
+
+  it('rejects malformed adverts', () =>
+    end2endTest(
+      null,
+      setupTestLoginPolicyForTestUser({
+        roles: ['canRunSystemJobs', 'canEditOwnAdverts', 'canManageAllAdverts'],
+      }),
+      async ({ user, server, adverts, services: { tokens } }) => {
+        const { status } = await request(server)
+          .patch('/api/v1/haffa/snapshot/adverts')
+          .set({
+            authorization: `Bearer ${tokens.sign(user)}`,
+          })
+          .send({
+            snapshot: 'adverts',
+            adverts: [
+              {
+                id: 'a',
+                a_lot_of_properties_are_missing: {},
+              },
+            ],
+          })
+        expect(status).toBe(StatusCodes.BAD_REQUEST)
+
+        expect(Object.values(adverts)).toMatchObject([])
+      }
+    ))
 })

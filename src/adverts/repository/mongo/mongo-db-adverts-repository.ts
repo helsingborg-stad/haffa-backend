@@ -1,5 +1,5 @@
 import type { CollationOptions } from 'mongodb'
-import { PassThrough, Transform } from 'stream'
+import { PassThrough } from 'stream'
 import type { Advert, AdvertList, AdvertsRepository } from '../../types'
 import type { MongoAdvert } from './types'
 import {
@@ -11,6 +11,7 @@ import { createEmptyAdvert, createEmptyAdvertLocation } from '../../mappers'
 import type { MongoConnection } from '../../../mongodb-utils/types'
 import { toMap } from '../../../lib'
 import { convertObjectStream } from '../../../lib/streams'
+import { createValidatingAdvertsRepository } from '../validation'
 
 export const createMongoAdvertsRepository = (
   { getCollection }: MongoConnection<MongoAdvert>,
@@ -183,7 +184,7 @@ export const createMongoAdvertsRepository = (
     return result
   }
 
-  return {
+  return createValidatingAdvertsRepository({
     stats,
     getAdvert,
     list,
@@ -193,5 +194,5 @@ export const createMongoAdvertsRepository = (
     countBy,
     getAdvertsByClaimStatus,
     getSnapshot,
-  }
+  })
 }

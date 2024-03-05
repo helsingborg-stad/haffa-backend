@@ -5,6 +5,7 @@ import { convertObjectStream, jsonStream } from '../lib/streams'
 import type { ImportSnapshotFunction, SnapshotFunction } from './types'
 import { createAdvertMutations } from '../adverts/advert-mutations'
 import { waitForAll } from '../lib'
+import { validateAdvert } from '../adverts/repository/validation'
 
 const createConvertAdvertToAdvertWithInlinedImages =
   (files: FilesService) => (advert: Advert) =>
@@ -49,7 +50,7 @@ export const importAdvertsSnapshot: ImportSnapshotFunction = async (
   const mutations = createAdvertMutations(services)
   const adverts = data as Advert[]
 
-  return waitForAll(adverts, advert =>
+  return waitForAll(adverts.map(validateAdvert), advert =>
     mutations.importAdvertSnapshot(user, advert)
   )
 }

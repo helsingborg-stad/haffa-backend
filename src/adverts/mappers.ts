@@ -3,6 +3,7 @@ import type {
   Advert,
   AdvertContact,
   AdvertFilterInput,
+  AdvertImage,
   AdvertInput,
   AdvertList,
   AdvertLocation,
@@ -13,6 +14,108 @@ import type {
 import { AdvertType } from './types'
 import type { HaffaUser } from '../login/types'
 import { getAdvertMeta } from './advert-meta'
+
+const isObject = (o: any) => o === Object(o)
+const isArray = (a: any) => Array.isArray(a)
+
+export const normalizeAdvert = (
+  {
+    id,
+    versionId,
+    type,
+    createdBy,
+    createdAt,
+    modifiedAt,
+    archivedAt,
+    claims,
+    title,
+    description,
+    quantity,
+    lendingPeriod,
+    images,
+    unit,
+    width,
+    height,
+    depth,
+    weight,
+    size,
+    material,
+    condition,
+    usage,
+    category,
+    reference,
+    externalId,
+    notes,
+    tags,
+    location,
+    contact,
+  }: Advert = createEmptyAdvert()
+): Advert =>
+  createEmptyAdvert({
+    id,
+    versionId,
+    type,
+    createdBy,
+    createdAt,
+    modifiedAt,
+    archivedAt,
+    claims,
+    title,
+    description,
+    quantity,
+    lendingPeriod,
+    images: isArray(images) ? images.map(normalizeAdvertImage) : [],
+    unit,
+    width,
+    height,
+    depth,
+    weight,
+    size,
+    material,
+    condition,
+    usage,
+    category,
+    reference,
+    externalId,
+    notes,
+    tags: isArray(tags) ? normalizeAdvertTags(tags) : [],
+    location: isObject(location)
+      ? normalizeAdvertLocation(location)
+      : createEmptyAdvertLocation(),
+    contact: isObject(contact)
+      ? normalizeAdvertContact(contact)
+      : createEmptyAdvertContact(),
+  })
+
+export const normalizeAdvertImage = ({ url }: AdvertImage): AdvertImage => ({
+  url,
+})
+export const normalizeAdvertTags = (tags: string[] = []): string[] =>
+  tags.map(s => s?.trim()).filter(s => s)
+export const normalizeAdvertLocation = (
+  {
+    name,
+    adress,
+    zipCode,
+    city,
+    country,
+  }: AdvertLocation = createEmptyAdvertLocation()
+): AdvertLocation =>
+  createEmptyAdvertLocation({
+    name,
+    adress,
+    zipCode,
+    city,
+    country,
+  })
+export const normalizeAdvertContact = (
+  { phone, email, organization }: AdvertContact = createEmptyAdvertContact()
+): AdvertContact =>
+  createEmptyAdvertContact({
+    phone,
+    email,
+    organization,
+  })
 
 export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
   id: '',
@@ -49,18 +152,24 @@ export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
   ...defaults,
 })
 
-export const createEmptyAdvertLocation = (): AdvertLocation => ({
+export const createEmptyAdvertLocation = (
+  defaults?: Partial<AdvertLocation>
+): AdvertLocation => ({
   name: '',
   adress: '',
   zipCode: '',
   city: '',
   country: '',
+  ...defaults,
 })
 
-export const createEmptyAdvertContact = (): AdvertContact => ({
+export const createEmptyAdvertContact = (
+  defaults?: Partial<AdvertContact>
+): AdvertContact => ({
   email: '',
   phone: '',
   organization: '',
+  ...defaults,
 })
 
 export const createEmptyAdvertInput = (): AdvertInput => ({

@@ -1,21 +1,7 @@
 import type { Services } from '../../../types'
-import type { Advert, AdvertMutations } from '../../types'
+import { validateAdvert } from '../../repository/validation'
+import type { AdvertMutations } from '../../types'
 import { processAdvertInput } from './process-advert-input'
-
-const advertStringProps: (keyof Advert)[] = [
-  'id',
-  'title',
-  'description',
-  'category',
-]
-
-const validateAdvert = (advertSnapshot: any): Advert | null => {
-  const isValid =
-    advertStringProps.every(prop => typeof advertSnapshot[prop] === 'string') &&
-    advertSnapshot?.id?.length > 0
-
-  return isValid ? (advertSnapshot as Advert) : null
-}
 
 export const createImportAdvertSnapshot =
   ({

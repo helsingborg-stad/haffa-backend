@@ -1,7 +1,6 @@
 import { join } from 'path'
 import { mkdirp } from 'mkdirp'
 import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
-import { PassThrough, Readable } from 'stream'
 import type { AdvertClaim, Advert, AdvertsRepository } from '../../types'
 import { createAdvertFilterPredicate } from '../../filters/advert-filter-predicate'
 import {
@@ -11,8 +10,9 @@ import {
   mapCreateAdvertInputToAdvert,
 } from '../../mappers'
 import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
-import { mapValues, toLookup, waitForAll } from '../../../lib'
+import { mapValues, toLookup } from '../../../lib'
 import { objectStream } from '../../../lib/streams'
+import { createValidatingAdvertsRepository } from '../validation'
 
 const notFundHandler =
   <T>(errorValue: T) =>
@@ -212,7 +212,7 @@ export const createFsAdvertsRepository = (
           .catch(notFundHandler(null))
     )
 
-  return {
+  return createValidatingAdvertsRepository({
     stats,
     getAdvert,
     saveAdvertVersion,
@@ -222,5 +222,5 @@ export const createFsAdvertsRepository = (
     countBy,
     getAdvertsByClaimStatus,
     getSnapshot,
-  }
+  })
 }
