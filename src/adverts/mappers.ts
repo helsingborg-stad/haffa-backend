@@ -18,6 +18,15 @@ import { getAdvertMeta } from './advert-meta'
 const isObject = (o: any) => o === Object(o)
 const isArray = (a: any) => Array.isArray(a)
 
+const omitNullProperties = <T>(o?: Partial<T>): Partial<T> | undefined =>
+  (o
+    ? Object.fromEntries(
+        Object.entries(o).filter(
+          ([_, v]) => v !== null && typeof v !== 'undefined'
+        )
+      )
+    : o) as Partial<T>
+
 export const normalizeAdvert = (
   {
     id,
@@ -90,8 +99,10 @@ export const normalizeAdvert = (
 export const normalizeAdvertImage = ({ url }: AdvertImage): AdvertImage => ({
   url,
 })
+
 export const normalizeAdvertTags = (tags: string[] = []): string[] =>
   tags.map(s => s?.trim()).filter(s => s)
+
 export const normalizeAdvertLocation = (
   {
     name,
@@ -149,7 +160,7 @@ export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
 
   location: createEmptyAdvertLocation(),
   contact: createEmptyAdvertContact(),
-  ...defaults,
+  ...omitNullProperties(defaults),
 })
 
 export const createEmptyAdvertLocation = (
@@ -160,7 +171,7 @@ export const createEmptyAdvertLocation = (
   zipCode: '',
   city: '',
   country: '',
-  ...defaults,
+  ...omitNullProperties(defaults),
 })
 
 export const createEmptyAdvertContact = (
@@ -169,7 +180,7 @@ export const createEmptyAdvertContact = (
   email: '',
   phone: '',
   organization: '',
-  ...defaults,
+  ...omitNullProperties(defaults),
 })
 
 export const createEmptyAdvertInput = (): AdvertInput => ({
@@ -202,12 +213,13 @@ export const mapCreateAdvertInputToAdvert = (
   user: HaffaUser,
   when: string = new Date().toISOString()
 ): Advert => ({
-  ...createEmptyAdvert(),
-  id: uuid.v4().toString(),
-  createdBy: user.id,
-  createdAt: when,
-  modifiedAt: when,
-  ...input,
+  ...createEmptyAdvert({
+    id: uuid.v4().toString(),
+    createdBy: user.id,
+    createdAt: when,
+    modifiedAt: when,
+    ...omitNullProperties(input),
+  }),
 })
 
 export const patchAdvertWithAdvertInput = (
@@ -215,7 +227,7 @@ export const patchAdvertWithAdvertInput = (
   input: AdvertInput
 ): Advert => ({
   ...advert,
-  ...input,
+  ...omitNullProperties(input),
   modifiedAt: new Date().toISOString(),
 })
 
@@ -225,12 +237,7 @@ export const mapAdvertToAdvertWithMeta = (
 ): AdvertWithMeta | null =>
   advert
     ? {
-        ...createEmptyAdvert(),
-        ...advert,
-        location: {
-          ...createEmptyAdvertLocation(),
-          ...advert.location,
-        },
+        ...normalizeAdvert(advert),
         ...{
           get meta() {
             return getAdvertMeta(advert, user)

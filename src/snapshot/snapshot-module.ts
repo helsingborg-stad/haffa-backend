@@ -47,6 +47,7 @@ export const snapshotModule =
         if (!handler) {
           return ctx.throw(HttpStatusCodes.BAD_REQUEST)
         }
+
         await handler(user, services, data[collection])
         ctx.body = { success: true }
         return undefined
