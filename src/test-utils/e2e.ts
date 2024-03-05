@@ -21,6 +21,7 @@ import { createUserMapper } from '../users'
 import { createInMemorySettingsService } from '../settings'
 import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import { createIssuePincode } from '../login'
+import type { LoginPolicy } from '../login-policies/types'
 
 const createGqlRequest =
   (
@@ -70,12 +71,12 @@ export interface End2EndTestConfig {
 }
 
 export interface End2EndTestHandler {
-  (context: End2EndTestContext): Promise<void>
+  (context: End2EndTestContext): Promise<any>
 }
 
 export const end2endTest = (
   config: End2EndTestConfig | null,
-  handler: End2EndTestHandler
+  ...handlers: End2EndTestHandler[]
 ): Promise<void> => {
   const user: HaffaUser = config?.user || { id: 'test@user.com' }
   const adverts: Record<string, Advert> = {}
@@ -103,16 +104,26 @@ export const end2endTest = (
 
   return effectiveSetupApplication(createTestApp(services), services).run(
     async server =>
-      handler({
-        user,
-        gqlRequest: createGqlRequest(services.tokens, server, user),
-        mappedGqlRequest: createMappedGqlRequest(services.tokens, server, user),
-        server,
-        services,
-        adverts,
-        profiles,
-        logins,
-        loginPolicies: loginPolicyAdapter(services.settings),
-      })
+      handlers.reduce(
+        (prev, handler) =>
+          prev.then(() =>
+            handler({
+              user,
+              gqlRequest: createGqlRequest(services.tokens, server, user),
+              mappedGqlRequest: createMappedGqlRequest(
+                services.tokens,
+                server,
+                user
+              ),
+              server,
+              services,
+              adverts,
+              profiles,
+              logins,
+              loginPolicies: loginPolicyAdapter(services.settings),
+            })
+          ),
+        Promise.resolve()
+      )
   )
 }

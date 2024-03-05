@@ -1,10 +1,6 @@
 import type { CollationOptions } from 'mongodb'
-import type {
-  Advert,
-  AdvertList,
-  AdvertReservations,
-  AdvertsRepository,
-} from '../../types'
+import { PassThrough } from 'stream'
+import type { Advert, AdvertList, AdvertsRepository } from '../../types'
 import type { MongoAdvert } from './types'
 import {
   mapAdvertFilterInputToMongoQuery,
@@ -14,6 +10,8 @@ import {
 import { createEmptyAdvert, createEmptyAdvertLocation } from '../../mappers'
 import type { MongoConnection } from '../../../mongodb-utils/types'
 import { toMap } from '../../../lib'
+import { convertObjectStream } from '../../../lib/streams'
+import { createValidatingAdvertsRepository } from '../validation'
 
 export const createMongoAdvertsRepository = (
   { getCollection }: MongoConnection<MongoAdvert>,
@@ -169,7 +167,24 @@ export const createMongoAdvertsRepository = (
         .then(v => v.toArray())
         .then(i => i.map(r => r.id))
 
-  return {
+  const getSnapshot: AdvertsRepository['getSnapshot'] = () => {
+    const result = new PassThrough({ objectMode: true })
+    getCollection()
+      .then(collection => collection.find().stream())
+      .then(stream =>
+        stream
+          .pipe(
+            convertObjectStream<MongoAdvert, Advert>(
+              async ({ advert }) => advert
+            )
+          )
+          .pipe(result)
+      )
+      .catch(error => result.emit('error', error))
+    return result
+  }
+
+  return createValidatingAdvertsRepository({
     stats,
     getAdvert,
     list,
@@ -178,5 +193,6 @@ export const createMongoAdvertsRepository = (
     saveAdvertVersion,
     countBy,
     getAdvertsByClaimStatus,
-  }
+    getSnapshot,
+  })
 }

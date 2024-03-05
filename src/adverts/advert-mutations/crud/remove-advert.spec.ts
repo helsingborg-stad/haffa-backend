@@ -99,6 +99,7 @@ describe('removeAdvert', () => {
     const mockCleanupFunc = jest.fn()
     const files: FilesService = {
       tryCleanupUrl: mockCleanupFunc,
+      tryConvertUrlToDataUrl: async url => url,
       tryConvertDataUrlToUrl: async url => url,
       tryCreateApplicationModule: () => null,
     }

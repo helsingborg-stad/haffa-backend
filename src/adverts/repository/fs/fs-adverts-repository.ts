@@ -11,6 +11,35 @@ import {
 } from '../../mappers'
 import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
 import { mapValues, toLookup } from '../../../lib'
+import { objectStream } from '../../../lib/streams'
+import { createValidatingAdvertsRepository } from '../validation'
+
+const notFundHandler =
+  <T>(errorValue: T) =>
+  (e: any) => {
+    if (e?.code === 'ENOENT') {
+      return errorValue
+    }
+    throw e
+  }
+
+const findPaths = async (folder: string): Promise<string[]> =>
+  readdir(folder)
+    .then(names => names.filter(name => /.*\.json$/.test(name)))
+    .then(names => names.map(name => join(folder, name)))
+    .then(paths =>
+      Promise.all(
+        paths.map(path =>
+          stat(path)
+            .catch(notFundHandler(null))
+            .then(s => ({ s, path }))
+        )
+      )
+    )
+    .then(l =>
+      Promise.all(l.filter(({ s }) => s && s.isFile()).map(({ path }) => path))
+    )
+    .catch(notFundHandler([]))
 
 export const createFsAdvertsRepository = (
   dataFolder: string
@@ -171,15 +200,19 @@ export const createFsAdvertsRepository = (
         )
         .then(adverts => adverts.filter(advert => advert.claims.some(compare)))
         .then(adverts => adverts.map(advert => advert.id))
-        .catch(e => {
-          if (e?.code === 'ENOENT') {
-            return []
-          }
-          throw e
-        })
+        .catch(notFundHandler([]))
     }
 
-  return {
+  const getSnapshot: AdvertsRepository['getSnapshot'] = () =>
+    objectStream(
+      () => findPaths(dataFolder),
+      path =>
+        readFile(path, { encoding: 'utf-8' })
+          .then(JSON.parse)
+          .catch(notFundHandler(null))
+    )
+
+  return createValidatingAdvertsRepository({
     stats,
     getAdvert,
     saveAdvertVersion,
@@ -188,5 +221,6 @@ export const createFsAdvertsRepository = (
     remove,
     countBy,
     getAdvertsByClaimStatus,
-  }
+    getSnapshot,
+  })
 }

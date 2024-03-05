@@ -1,3 +1,4 @@
+import type stream from 'stream'
 import type { Only } from '../lib/types'
 import type { HaffaUser } from '../login/types'
 
@@ -224,9 +225,11 @@ export interface AdvertsRepository {
     // by: keyof Extract<Advert, string>
   ) => Promise<Record<string, number>>
   getAdvertsByClaimStatus: (filter: AdvertsClaimFilter) => Promise<string[]>
+  getSnapshot: () => stream.Readable
 }
 
 export interface AdvertMutations {
+  importAdvertSnapshot: (user: HaffaUser, advert: Advert) => Promise<boolean>
   createAdvert: (
     user: HaffaUser,
     input: AdvertInput

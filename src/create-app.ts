@@ -15,6 +15,7 @@ import { apiKeyUserModule } from './api-keys'
 import { cookieUserModule } from './login/cookies/cookie-user-module'
 import { optionsUserModule } from './options/options-user-module'
 import { guestUserModule } from './guest'
+import { snapshotModule } from './snapshot/snapshot-module'
 
 /** Create fully packaged web application, given dependencies */
 export const createApp = ({
@@ -56,3 +57,4 @@ export const createApp = ({
       )
     )
     .use(services.files.tryCreateApplicationModule() || (() => 0))
+    .use(snapshotModule(services))

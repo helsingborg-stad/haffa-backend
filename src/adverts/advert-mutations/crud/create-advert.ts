@@ -1,6 +1,6 @@
 import type { Services } from '../../../types'
 import { mapCreateAdvertInputToAdvert } from '../../mappers'
-import type { AdvertMutations } from '../../types'
+import type { Advert, AdvertMutations } from '../../types'
 import { processAdvertInput } from './process-advert-input'
 
 export const createCreateAdvert =
@@ -15,7 +15,10 @@ export const createCreateAdvert =
   (user, input) =>
     processAdvertInput(input, files)
       .then(convertedInput =>
-        adverts.create(user, mapCreateAdvertInputToAdvert(convertedInput, user))
+        adverts.create(user, {
+          x: 123,
+          ...mapCreateAdvertInputToAdvert(convertedInput, user),
+        } as Advert)
       )
       .then(async advert => {
         await notifications.advertWasCreated(user, advert)
