@@ -6,7 +6,7 @@ const normalizeOptions = (options: Option[] | null): Option[] =>
     ? options
         .filter(
           option =>
-            typeof option.key === 'string' && typeof option.value !== 'object'
+            typeof option?.key === 'string' && typeof option?.value !== 'object'
         )
         .map(option => ({
           key: option.key.trim(),
