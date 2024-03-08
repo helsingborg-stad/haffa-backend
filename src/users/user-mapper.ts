@@ -6,6 +6,7 @@ import type { SettingsService } from '../settings/types'
 import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import type { LoginPolicy } from '../login-policies/types'
 import {
+  GUEST_USER_ID,
   makeAdmin,
   makeUser,
   normalizeRoles,
@@ -13,8 +14,6 @@ import {
 } from '../login'
 import type { UserMapper } from './types'
 import { userMapperConfigAdapter } from './user-mapper-config-adapter'
-
-export const GUEST_USER_ID = 'guest'
 
 const nanomatch = require('nanomatch')
 

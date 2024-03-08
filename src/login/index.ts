@@ -10,6 +10,8 @@ import { createCookieService, createCookieServiceFromEnv } from './cookies'
 export { createIssuePincode }
 export { createCookieService, createCookieServiceFromEnv }
 
+export const GUEST_USER_ID = 'guest'
+
 export const rolesToRolesArray = (roles?: HaffaUserRoles) =>
   Object.entries(normalizeRoles(roles))
     .filter(([, enabled]) => enabled)
@@ -111,6 +113,12 @@ export const makeUser = (
 ): HaffaUser => ({
   roles: makeRoles(),
   ...u,
+})
+
+export const makeGuestUser = (): HaffaUser => ({
+  id: GUEST_USER_ID,
+  roles: makeRoles(),
+  guest: true,
 })
 
 export const makeAdmin = (u: Partial<HaffaUser>): HaffaUser => ({
