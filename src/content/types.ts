@@ -13,6 +13,7 @@ export interface ViewColumn {
 }
 export type ContentModule = {
   title: string
+  size: string
   body: string
   border: 'true' | 'false'
   image: string

@@ -28,6 +28,7 @@ it('should normalize invalid composition', () => {
           {
             module: {
               title: '',
+              size: 'h6',
               body: '',
               border: 'true',
               image: '',
