@@ -29,7 +29,10 @@ it('should normalize invalid composition', () => {
             module: {
               title: '',
               body: '',
+              border: 'true',
               image: '',
+              width: '100%',
+              position: 'top',
               imageRef: '',
               categories: '',
               tags: '',

@@ -21,7 +21,10 @@ export const contentGqlSchema = /* GraphQL */ `
   input ContentModuleInput {
     title: String
     body: String
+    border: String
     image: String
+    position: String
+    width: String
     imageRef: String
     categories: String
     tags: String
@@ -42,7 +45,10 @@ export const contentGqlSchema = /* GraphQL */ `
   type ContentModule {
     title: String
     body: String
+    border: String
     image: String
+    position: String
+    width: String
     imageRef: String
     categories: String
     tags: String
