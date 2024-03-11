@@ -31,6 +31,7 @@ it('should normalize invalid composition', () => {
               size: 'h6',
               body: '',
               border: 'true',
+              background: '',
               image: '',
               width: '100%',
               position: 'top',

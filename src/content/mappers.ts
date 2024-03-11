@@ -5,6 +5,7 @@ export const createEmptyModule = (): ContentModule => ({
   size: 'h6',
   body: '',
   border: 'true',
+  background: '',
   image: '',
   position: 'top',
   width: '100%',
