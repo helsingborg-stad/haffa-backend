@@ -21,7 +21,6 @@ export type ContentModule = {
   image: string
   position: 'top' | 'bottom' | 'left' | 'right'
   width: string
-  imageRef: string
   categories: string
   tags: string
 }

@@ -36,7 +36,6 @@ it('should normalize invalid composition', () => {
               image: '',
               width: '100%',
               position: 'top',
-              imageRef: '',
               categories: '',
               tags: '',
             },

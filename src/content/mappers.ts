@@ -12,7 +12,6 @@ export const createEmptyModule = (): ContentModule => ({
   width: '100%',
   categories: '',
   tags: '',
-  imageRef: '',
 })
 
 export const createEmptyComposition = (): ViewComposition => ({
