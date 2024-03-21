@@ -135,7 +135,8 @@ export const createBrevoNotifications = (
           by,
           quantity,
           advert: stripAdvert(advert),
-        }
+        },
+        { name: advert.createdBy, email: advert.createdBy }
       ),
     advertNotReturned: (by, quantity, advert) =>
       send(
@@ -145,7 +146,8 @@ export const createBrevoNotifications = (
           by,
           quantity,
           advert: stripAdvert(advert),
-        }
+        },
+        { name: advert.createdBy, email: advert.createdBy }
       ),
     advertWasReturned: (by, quantity, advert) =>
       send(
