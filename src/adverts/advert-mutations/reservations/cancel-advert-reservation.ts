@@ -1,12 +1,10 @@
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
+import { normalizeAdvertClaims } from '../../advert-claims'
 import { AdvertClaimType } from '../../types'
 import type { AdvertClaim, Advert, AdvertMutations } from '../../types'
 import { notifyClaimsWasCancelled } from '../claims/notify-claims'
-import {
-  mapTxResultToAdvertMutationResult,
-  normalizeAdvertClaims,
-} from '../mappers'
+import { mapTxResultToAdvertMutationResult } from '../mappers'
 
 export const createCancelAdvertReservation =
   ({

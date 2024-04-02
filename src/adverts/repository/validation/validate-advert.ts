@@ -118,6 +118,7 @@ const advertSchemaValidator = new Ajv().compile<Advert>({
           }),
         },
       }),
+      waitlist: { type: 'array', items: { type: 'string' } },
     },
   }),
 })

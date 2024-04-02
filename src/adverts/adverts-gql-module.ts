@@ -125,6 +125,19 @@ export const createAdvertsGqlModule = (
           .then(result =>
             mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
           ),
+      joinAdvertWaitlist: async ({ ctx: { user }, args: { id } }) =>
+        createAdvertMutations(services)
+          .joinAdvertWaitlist(user, id)
+          .then(result =>
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+          ),
+
+      leaveAdvertWaitlist: async ({ ctx: { user }, args: { id } }) =>
+        createAdvertMutations(services)
+          .leaveAdvertWaitlist(user, id)
+          .then(result =>
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+          ),
     },
   },
 })

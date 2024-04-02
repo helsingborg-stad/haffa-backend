@@ -30,6 +30,8 @@ export const advertsGqlSchema = /* GraphQL */ `
       type: AdvertClaimType!
     ): AdvertMutationResult
     returnAdvert(id: ID!): AdvertMutationResult
+    joinAdvertWaitlist(id: ID!): AdvertMutationResult
+    leaveAdvertWaitlist(id: ID!): AdvertMutationResult
   }
 
   type AdvertMutationStatus {
@@ -206,6 +208,8 @@ export const advertsGqlSchema = /* GraphQL */ `
     canBook: Boolean!
     canReserve: Boolean!
     canCancelReservation: Boolean!
+    canJoinWaitList: Boolean!
+    canLeaveWaitList: Boolean!
     canCollect: Boolean!
     canManageClaims: Boolean!
     canReturn: Boolean!

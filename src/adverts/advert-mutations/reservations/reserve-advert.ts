@@ -1,11 +1,9 @@
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
+import { normalizeAdvertClaims } from '../../advert-claims'
 import type { Advert, AdvertClaim, AdvertMutations } from '../../types'
 import { AdvertClaimType } from '../../types'
-import {
-  mapTxResultToAdvertMutationResult,
-  normalizeAdvertClaims,
-} from '../mappers'
+import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
   verifyAll,
   verifyReservationLimits,

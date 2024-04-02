@@ -1,16 +1,14 @@
 import { Severity } from '../../../syslog/types'
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
+import { normalizeAdvertClaims } from '../../advert-claims'
 import {
   type Advert,
   type AdvertMutations,
   AdvertClaimEventType,
   AdvertClaimType,
 } from '../../types'
-import {
-  mapTxResultToAdvertMutationResult,
-  normalizeAdvertClaims,
-} from '../mappers'
+import { mapTxResultToAdvertMutationResult } from '../mappers'
 import { getNextClaimEventDate } from './mappers'
 
 export const createReservedClaimsNotifier =

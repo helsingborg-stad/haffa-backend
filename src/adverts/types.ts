@@ -62,6 +62,8 @@ export interface AdvertMeta {
   canReserve: boolean
   canCancelReservation: boolean
   canCollect: boolean
+  canJoinWaitList: boolean
+  canLeaveWaitList: boolean
   canManageClaims: boolean
   canReturn: boolean
   reservedyMe: number
@@ -95,6 +97,7 @@ export enum AdvertClaimType {
   reserved = 'reserved',
   collected = 'collected',
 }
+
 export enum AdvertClaimEventType {
   reminder = 'reminder',
 }
@@ -124,6 +127,7 @@ export interface Advert extends AdvertUserFields {
   modifiedAt: string
   archivedAt: string
   claims: AdvertClaim[]
+  waitlist: string[]
 }
 
 export type AdvertWithMeta = Advert & { meta: AdvertMeta }
@@ -297,6 +301,14 @@ export interface AdvertMutations {
     now: Date
   ) => Promise<AdvertMutationResult>
   returnAdvert: (user: HaffaUser, id: string) => Promise<AdvertMutationResult>
+  joinAdvertWaitlist: (
+    user: HaffaUser,
+    id: string
+  ) => Promise<AdvertMutationResult>
+  leaveAdvertWaitlist: (
+    user: HaffaUser,
+    id: string
+  ) => Promise<AdvertMutationResult>
 }
 
 interface AdvertStats {

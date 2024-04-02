@@ -1,16 +1,14 @@
 import { Severity } from '../../../syslog/types'
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
+import { normalizeAdvertClaims } from '../../advert-claims'
 import {
   type Advert,
   type AdvertMutations,
   type AdvertClaim,
   AdvertClaimType,
 } from '../../types'
-import {
-  mapTxResultToAdvertMutationResult,
-  normalizeAdvertClaims,
-} from '../mappers'
+import { mapTxResultToAdvertMutationResult } from '../mappers'
 import { isClaimOverdue } from './mappers'
 
 export const createExpiredClaimsNotifier =
