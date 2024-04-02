@@ -40,7 +40,7 @@ export const getAdvertMeta = (
     canManageOwnAdvertsHistory,
     canManageAllAdverts,
     canManageReturns,
-    canSubscribe,
+    canJoinWishlist,
   } = normalizeRoles(user.roles)
 
   const canManageClaims =
@@ -74,7 +74,7 @@ export const getAdvertMeta = (
         isNotArchived &&
         (myReservationCount > 0 || quantity > claimCount) &&
         canCollectAdverts,
-      canJoinWaitList: isNotArchived && canSubscribe && !isOnMyWaitList,
+      canJoinWaitList: isNotArchived && canJoinWishlist && !isOnMyWaitList,
       canLeaveWaitList: isOnMyWaitList,
       canManageClaims:
         canManageOwnAdvertsHistory && (mine || canManageAllAdverts),
