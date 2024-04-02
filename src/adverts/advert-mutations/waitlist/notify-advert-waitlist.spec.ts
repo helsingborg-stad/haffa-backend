@@ -2,7 +2,7 @@ import { makeAdmin, makeUser } from '../../../login'
 import { createTestNotificationServices } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
 import { createInMemoryAdvertsRepository } from '../../repository/memory'
-import { AdvertClaimType, type Advert, type AdvertClaim } from '../../types'
+import { AdvertClaimType, type AdvertClaim } from '../../types'
 import { createNotifyAdvertWaitlist } from './notify-advert-waitlist'
 
 const makeClaim = (c: Partial<AdvertClaim>): AdvertClaim => ({
