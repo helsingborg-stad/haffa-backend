@@ -71,4 +71,9 @@ export interface NotificationService {
     quantity: number,
     advert: Advert
   ) => Promise<void>
+  advertWaitlistAvailable: (
+    by: HaffaUser,
+    quantity: number,
+    advert: Advert
+  ) => Promise<void>
 }

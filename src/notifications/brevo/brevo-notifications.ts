@@ -23,9 +23,6 @@ export const createBrevoNotifications = (
     replyTo?: Identity
   ) => client.send(to, template, params, replyTo)
 
-  const all = (...promises: Promise<void>[]) =>
-    Promise.all(promises).then(() => undefined)
-
   return {
     subscriptionsHasNewAdverts: (by, adverts) =>
       send(
@@ -162,6 +159,16 @@ export const createBrevoNotifications = (
     advertWasReturnedOwner: (by, quantity, advert) =>
       send(
         'advert-was-returned-owner',
+        { name: by.id, email: by.id },
+        {
+          by,
+          quantity,
+          advert: stripAdvert(advert),
+        }
+      ),
+    advertWaitlistAvailable: (by, quantity, advert) =>
+      send(
+        'advert-waitlist-available',
         { name: by.id, email: by.id },
         {
           by,

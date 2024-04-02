@@ -89,7 +89,7 @@ export const normalizeAdvert = (
     externalId,
     notes,
     tags: isArray(tags) ? normalizeStringArray(tags) : [],
-    waitlist: isArray(waitlist) ? normalizeStringArray(tags) : [],
+    waitlist: isArray(waitlist) ? normalizeStringArray(waitlist) : [],
     location: isObject(location)
       ? normalizeAdvertLocation(location)
       : createEmptyAdvertLocation(),

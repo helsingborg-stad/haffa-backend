@@ -13,6 +13,7 @@ export type TemplateName =
   | 'advert-not-returned'
   | 'advert-was-returned'
   | 'advert-was-returned-owner'
+  | 'advert-waitlist-available'
 
 export interface Identity {
   name: string

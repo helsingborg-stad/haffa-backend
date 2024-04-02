@@ -1,8 +1,6 @@
-import { TxErrors, txBuilder } from '../../../transactions'
+import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
-import { normalizeAdvertClaims } from '../../advert-claims'
-import { getAdvertMeta } from '../../advert-meta'
-import { type Advert, type AdvertMutations, AdvertClaimType } from '../../types'
+import { type Advert, type AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
   verifyAll,

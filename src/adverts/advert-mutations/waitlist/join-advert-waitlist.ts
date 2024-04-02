@@ -1,8 +1,8 @@
+import { uniqueBy } from '../../../lib'
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
-import { normalizeAdvertClaims } from '../../advert-claims'
 import { getAdvertMeta } from '../../advert-meta'
-import { type Advert, type AdvertMutations, AdvertClaimType } from '../../types'
+import { type Advert, type AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
   verifyAll,
@@ -24,10 +24,14 @@ export const createJoinAdvertWaitlist =
           TxErrors.Unauthorized
         )
       )
-      .patch(advert => ({
-        ...advert,
-        waitlist: [...new Set<string>([...advert.waitlist, user.id])],
-      }))
+      .patch(advert =>
+        advert.waitlist.includes(user.id)
+          ? null
+          : {
+              ...advert,
+              waitlist: [...advert.waitlist, user.id].filter(uniqueBy(v => v)),
+            }
+      )
       .verify((_, ctx) =>
         verifyAll(
           ctx,

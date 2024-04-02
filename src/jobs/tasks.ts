@@ -1,6 +1,7 @@
 import { clearExpiredReservations } from './runners/clear-expired-reservations'
 import { sendOverdueReminder } from './runners/notify-overdue-claims'
 import { notifySubscribedAdverts } from './runners/notify-subscribed-adverts'
+import { notifyWaitlist } from './runners/notify-waitlist'
 import { runSyslogRetention } from './runners/run-syslog-retention'
 import { sendReservationReminder } from './runners/send-reservation-reminder'
 import type { TaskList } from './types'
@@ -22,6 +23,10 @@ export const tasks: TaskList = {
     {
       taskId: 'JOB_SUBSCRIBED_ADVERTS',
       runner: notifySubscribedAdverts,
+    },
+    {
+      taskId: 'JOB_WAITLIST_AVAILABLE',
+      runner: notifyWaitlist,
     },
     {
       taskId: 'JOB_SYSLOG_RETENTION',

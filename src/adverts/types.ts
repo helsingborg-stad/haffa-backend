@@ -229,6 +229,7 @@ export interface AdvertsRepository {
     // by: keyof Extract<Advert, string>
   ) => Promise<Record<string, number>>
   getAdvertsByClaimStatus: (filter: AdvertsClaimFilter) => Promise<string[]>
+  getReservableAdvertsWithWaitlist: () => Promise<string[]>
   getSnapshot: () => stream.Readable
 }
 
@@ -306,6 +307,10 @@ export interface AdvertMutations {
     id: string
   ) => Promise<AdvertMutationResult>
   leaveAdvertWaitlist: (
+    user: HaffaUser,
+    id: string
+  ) => Promise<AdvertMutationResult>
+  notifyAdvertWaitlist: (
     user: HaffaUser,
     id: string
   ) => Promise<AdvertMutationResult>

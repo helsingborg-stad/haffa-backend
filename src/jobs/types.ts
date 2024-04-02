@@ -2,8 +2,12 @@ import type { HaffaUser } from '../login/types'
 import type { SyslogEntry } from '../syslog/types'
 import type { Services } from '../types'
 
+export type JobServices = Pick<
+  Services,
+  'syslog' | 'notifications' | 'adverts' | 'files' | 'subscriptions'
+>
 export type TaskRunnerSignature = (
-  services: Partial<Services>,
+  services: JobServices,
   parameters: JobParameters,
   user: HaffaUser
 ) => Promise<string>

@@ -184,6 +184,19 @@ export const createMongoAdvertsRepository = (
     return result
   }
 
+  const getReservableAdvertsWithWaitlist: AdvertsRepository['getReservableAdvertsWithWaitlist'] =
+    () =>
+      getCollection()
+        .then(collection =>
+          collection.find({
+            'advert.waitlist.0': { $exists: true },
+            'meta.unreservedCount': { $gt: 0 },
+          })
+        )
+        .then(d => d.project({ _id: 0, id: 1 }))
+        .then(v => v.toArray())
+        .then(i => i.map(r => r.id))
+
   return createValidatingAdvertsRepository({
     stats,
     getAdvert,
@@ -194,5 +207,6 @@ export const createMongoAdvertsRepository = (
     countBy,
     getAdvertsByClaimStatus,
     getSnapshot,
+    getReservableAdvertsWithWaitlist,
   })
 }

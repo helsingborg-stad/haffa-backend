@@ -18,8 +18,9 @@ export const createInMemoryAdvertsRepositoryFromEnv = (
 
 export const createInMemoryAdvertsRepository = (
   db: Record<string, Advert> = {}
-): AdvertsRepository =>
-  createValidatingAdvertsRepository({
+): AdvertsRepository & { getDb: () => Record<string, Advert> } => ({
+  getDb: () => db,
+  ...createValidatingAdvertsRepository({
     stats: {
       get advertCount() {
         return Object.keys(db).length
@@ -83,4 +84,13 @@ export const createInMemoryAdvertsRepository = (
         },
       })
     },
-  })
+    getReservableAdvertsWithWaitlist: async () =>
+      Object.values(db)
+        .filter(({ waitlist }) => waitlist.length > 0)
+        .filter(
+          ({ quantity, claims }) =>
+            quantity > claims.map(c => c.quantity).reduce((s, q) => s + q, 0)
+        )
+        .map(({ id }) => id),
+  }),
+})

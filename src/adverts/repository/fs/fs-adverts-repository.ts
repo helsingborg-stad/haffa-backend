@@ -44,6 +44,34 @@ const findPaths = async (folder: string): Promise<string[]> =>
 export const createFsAdvertsRepository = (
   dataFolder: string
 ): AdvertsRepository => {
+  const scan = (): Promise<Advert[]> =>
+    readdir(dataFolder)
+      .then(names => names.filter(name => /.*\.json$/.test(name)))
+      .then(names => names.map(name => join(dataFolder, name)))
+      .then(paths =>
+        Promise.all(paths.map(path => stat(path).then(s => ({ s, path }))))
+      )
+      .then(stats =>
+        Promise.all(
+          stats
+            .filter(({ s }) => s.isFile())
+            .map(({ path }) => readFile(path, { encoding: 'utf8' }))
+        )
+      )
+      .then(texts =>
+        texts.map<Advert>(text => {
+          const json = JSON.parse(text)
+          return {
+            ...createEmptyAdvert(),
+            ...json,
+            location: {
+              ...createEmptyAdvertLocation(),
+              ...json.location,
+            },
+          }
+        })
+      )
+
   const getAdvert: AdvertsRepository['getAdvert'] = async (user, id) =>
     readFile(join(dataFolder, `${id}.json`), { encoding: 'utf8' })
       .then(text => JSON.parse(text))
@@ -211,6 +239,17 @@ export const createFsAdvertsRepository = (
           .then(JSON.parse)
           .catch(notFundHandler(null))
     )
+  const getReservableAdvertsWithWaitlist: AdvertsRepository['getReservableAdvertsWithWaitlist'] =
+    () =>
+      scan().then(adverts =>
+        adverts
+          .filter(({ waitlist }) => waitlist.length > 0)
+          .filter(
+            ({ quantity, claims }) =>
+              quantity > claims.map(c => c.quantity).reduce((s, q) => s + q, 0)
+          )
+          .map(({ id }) => id)
+      )
 
   return createValidatingAdvertsRepository({
     stats,
@@ -222,5 +261,6 @@ export const createFsAdvertsRepository = (
     countBy,
     getAdvertsByClaimStatus,
     getSnapshot,
+    getReservableAdvertsWithWaitlist,
   })
 }
