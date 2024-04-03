@@ -11,7 +11,7 @@ export const sendOverdueReminder: TaskRunnerSignature = async (
   const mutations = createAdvertMutations(services as Services)
 
   // Get list of all reserved adverts
-  const adverts = await services.adverts?.getAdvertsByClaimStatus({
+  const adverts = await services.adverts.getAdvertsByClaimStatus({
     type: AdvertClaimType.collected,
   })
   const result = await adverts?.reduce<Promise<number>>(

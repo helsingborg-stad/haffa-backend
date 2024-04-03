@@ -16,18 +16,20 @@ export const getAdvertMeta = (
   const mine = advert.createdBy === user.id
 
   const claimCount = advert.claims.reduce((s, c) => s + c.quantity, 0)
-  const myCollectedCount = advert.claims
-    .filter(c => c.by === user.id && c.type === AdvertClaimType.collected)
+  const myClaims = advert.claims.filter(c => c.by === user.id)
+  const myCollectedCount = myClaims
+    .filter(c => c.type === AdvertClaimType.collected)
     .map(c => c.quantity)
     .reduce((s, v) => s + v, 0)
 
-  const myReservationCount = advert.claims
-    .filter(c => c.by === user.id && c.type === AdvertClaimType.reserved)
+  const myReservationCount = myClaims
+    .filter(c => c.type === AdvertClaimType.reserved)
     .map(c => c.quantity)
     .reduce((s, v) => s + v, 0)
 
   const isNotArchived = !advert.archivedAt
   const isArchived = !isNotArchived
+  const isOnMyWaitList = advert.waitlist.includes(user.id)
 
   const {
     canEditOwnAdverts,
@@ -38,6 +40,7 @@ export const getAdvertMeta = (
     canManageOwnAdvertsHistory,
     canManageAllAdverts,
     canManageReturns,
+    canJoinWaitlist,
   } = normalizeRoles(user.roles)
 
   const canManageClaims =
@@ -71,6 +74,13 @@ export const getAdvertMeta = (
         isNotArchived &&
         (myReservationCount > 0 || quantity > claimCount) &&
         canCollectAdverts,
+      canJoinWaitList:
+        isNotArchived &&
+        canJoinWaitlist &&
+        (canReserveAdverts || canCollectAdverts) &&
+        quantity <= claimCount &&
+        !isOnMyWaitList,
+      canLeaveWaitList: isOnMyWaitList,
       canManageClaims:
         canManageOwnAdvertsHistory && (mine || canManageAllAdverts),
       canReturn: canManageReturns && hasSingleCollectClaim(advert),
@@ -93,6 +103,8 @@ export const getAdvertMeta = (
     canReserve: false,
     canCancelReservation: false,
     canCollect: false,
+    canJoinWaitList: false,
+    canLeaveWaitList: false,
     canManageClaims: false,
     canReturn: false,
     reservedyMe: myReservationCount,

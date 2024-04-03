@@ -29,4 +29,6 @@ export const createAdvertsRepositoryWithCategorySearch = (
   countBy: (...args) => inner.countBy(...args),
   getAdvertsByClaimStatus: (...args) => inner.getAdvertsByClaimStatus(...args),
   getSnapshot: (...args) => inner.getSnapshot(...args),
+  getReservableAdvertsWithWaitlist: (...args) =>
+    inner.getReservableAdvertsWithWaitlist(...args),
 })

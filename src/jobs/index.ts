@@ -1,17 +1,18 @@
 import { getEnv } from '@helsingborg-stad/gdi-api-node'
-import type { JobExcecutorService, JobParameters, TaskList } from './types'
+import type {
+  JobExcecutorService,
+  JobParameters,
+  JobServices,
+  TaskList,
+} from './types'
 import { tasks } from './tasks'
 import type { SyslogEntry, SyslogUserData } from '../syslog/types'
 import { Severity } from '../syslog/types'
-import type { Services } from '../types'
 
 export const createJobExecutorService = (
   taskRepository: TaskList,
   parameters: JobParameters,
-  services: Pick<
-    Services,
-    'syslog' | 'notifications' | 'adverts' | 'files' | 'subscriptions'
-  >
+  services: JobServices
 ): JobExcecutorService => ({
   runAs: async (user, jobName) =>
     (taskRepository[jobName] ?? []).reduce<Promise<SyslogEntry[]>>(
@@ -49,10 +50,7 @@ export const createJobExecutorService = (
 })
 
 export const createJobExecutorServiceFromEnv = (
-  services: Pick<
-    Services,
-    'syslog' | 'notifications' | 'adverts' | 'files' | 'subscriptions'
-  >
+  services: JobServices
 ): JobExcecutorService => {
   const parameters: JobParameters = {
     maxReservationDays: Number(

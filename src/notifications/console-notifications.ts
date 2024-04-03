@@ -137,4 +137,12 @@ export const createConsoleNotificationService = (): NotificationService => ({
         advert,
       },
     }),
+  advertWaitlistAvailable: async (by, quantity, advert) =>
+    console.log({
+      advertWaitlistAvailable: {
+        by,
+        quantity,
+        advert,
+      },
+    }),
 })

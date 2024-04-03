@@ -1,8 +1,8 @@
 import type { HaffaUser } from '../../../login/types'
 import type { NotificationService } from '../../../notifications/types'
+import { normalizeAdvertClaims } from '../../advert-claims'
 import type { Advert, AdvertClaim } from '../../types'
 import { AdvertClaimType } from '../../types'
-import { normalizeAdvertClaims } from '../mappers'
 
 const all = (promises: Promise<any>[]) =>
   Promise.all(promises).then(() => undefined)

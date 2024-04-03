@@ -1,8 +1,8 @@
+import { uniqueBy } from '../../../lib'
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
-import { normalizeAdvertClaims } from '../../advert-claims'
 import { getAdvertMeta } from '../../advert-meta'
-import type { Advert, AdvertMutations } from '../../types'
+import { type Advert, type AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
   verifyAll,
@@ -11,36 +11,27 @@ import {
   verifyTypeIsReservation,
 } from '../verifiers'
 
-export const createRenewAdvertClaim =
+export const createJoinAdvertWaitlist =
   ({
     adverts,
-  }: Pick<
-    Services,
-    'adverts' | 'notifications'
-  >): AdvertMutations['renewAdvertClaim'] =>
-  (user, id, by, type) =>
+  }: Pick<Services, 'adverts'>): AdvertMutations['joinAdvertWaitlist'] =>
+  (user, id) =>
     txBuilder<Advert>()
       .load(() => adverts.getAdvert(user, id))
       .validate(async (advert, { throwIf }) =>
         throwIf(
-          !getAdvertMeta(advert, user).canManageClaims,
+          !getAdvertMeta(advert, user).canJoinWaitList,
           TxErrors.Unauthorized
         )
       )
-      .patch(advert => ({
-        ...advert,
-        claims: normalizeAdvertClaims(
-          advert.claims.map(claim =>
-            claim.by === by && claim.type === type
-              ? {
-                  ...claim,
-                  at: new Date().toISOString(),
-                  events: [],
-                }
-              : claim
-          )
-        ),
-      }))
+      .patch(advert =>
+        advert.waitlist.includes(user.id)
+          ? null
+          : {
+              ...advert,
+              waitlist: [...advert.waitlist, user.id].filter(uniqueBy(v => v)),
+            }
+      )
       .verify((_, ctx) =>
         verifyAll(
           ctx,

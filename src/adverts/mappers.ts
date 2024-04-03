@@ -58,6 +58,7 @@ export const normalizeAdvert = (
     tags,
     location,
     contact,
+    waitlist,
   }: Advert = createEmptyAdvert()
 ): Advert =>
   createEmptyAdvert({
@@ -87,7 +88,8 @@ export const normalizeAdvert = (
     reference,
     externalId,
     notes,
-    tags: isArray(tags) ? normalizeAdvertTags(tags) : [],
+    tags: isArray(tags) ? normalizeStringArray(tags) : [],
+    waitlist: isArray(waitlist) ? normalizeStringArray(waitlist) : [],
     location: isObject(location)
       ? normalizeAdvertLocation(location)
       : createEmptyAdvertLocation(),
@@ -100,8 +102,8 @@ export const normalizeAdvertImage = ({ url }: AdvertImage): AdvertImage => ({
   url,
 })
 
-export const normalizeAdvertTags = (tags: string[] = []): string[] =>
-  tags.map(s => s?.trim()).filter(s => s)
+export const normalizeStringArray = (a: string[] = []): string[] =>
+  a.map(s => s?.trim()).filter(s => s)
 
 export const normalizeAdvertLocation = (
   {
@@ -157,6 +159,7 @@ export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
   tags: [],
 
   claims: [],
+  waitlist: [],
 
   location: createEmptyAdvertLocation(),
   contact: createEmptyAdvertContact(),

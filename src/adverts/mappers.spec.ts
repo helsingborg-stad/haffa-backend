@@ -1,11 +1,9 @@
-import { normalizeAdvertClaims } from './advert-mutations/mappers'
 import {
   createEmptyAdvertInput,
   createPagedAdvertList,
   mapCreateAdvertInputToAdvert,
 } from './mappers'
-import { AdvertClaimType } from './types'
-import type { Advert, AdvertClaim } from './types'
+import type { Advert } from './types'
 
 describe('mapCreateAdvertInputToAdvert', () => {
   it('should set input field, user and timestamps', () => {
@@ -37,56 +35,6 @@ describe('mapCreateAdvertInputToAdvert', () => {
     })
 
     expect(advert.id.length).toBeGreaterThan(32)
-  })
-})
-
-describe('normalizeAdvertsClaims', () => {
-  const reserve = (claim: Partial<AdvertClaim>): AdvertClaim => ({
-    by: '',
-    at: new Date().toISOString(),
-    type: AdvertClaimType.reserved,
-    quantity: 1,
-    events: [],
-    ...claim,
-  })
-  const collect = (claim: Partial<AdvertClaim>): AdvertClaim => ({
-    by: '',
-    at: new Date().toISOString(),
-    type: AdvertClaimType.collected,
-    quantity: 1,
-    events: [],
-    ...claim,
-  })
-
-  it('merges entries by owner and type', () => {
-    const at = new Date().toISOString()
-    expect(
-      normalizeAdvertClaims([
-        reserve({ by: 'a', quantity: 2, at }),
-        collect({ by: 'a', at }),
-        reserve({ by: 'b', at }),
-        reserve({ by: 'a', quantity: 3, at }),
-      ])
-    ).toMatchObject([
-      reserve({ by: 'a', quantity: 5, at }),
-      collect({ by: 'a', at }),
-      reserve({ by: 'b', at }),
-    ])
-  })
-
-  it('removes entries with 0 quantity', () => {
-    const at = new Date().toISOString()
-    expect(
-      normalizeAdvertClaims([
-        reserve({ by: 'a', quantity: 0, at }),
-        collect({ by: 'a', at }),
-        reserve({ by: 'b', quantity: 0, at }),
-        reserve({ by: 'a', quantity: 3, at }),
-      ])
-    ).toMatchObject([
-      collect({ by: 'a', at }),
-      reserve({ by: 'a', quantity: 3, at }),
-    ])
   })
 })
 

@@ -20,6 +20,9 @@ import { createConvertAdvertClaim } from './claims/convert-advert-claim'
 import { createOverdueClaimsNotifier } from './claims/notify-overdue-claims'
 import { createRenewAdvertClaim } from './claims/renew-advert-claim'
 import { createImportAdvertSnapshot } from './crud/import-advert-snapshot'
+import { createJoinAdvertWaitlist } from './waitlist/join-advert-waitlist'
+import { createLeaveAdvertWaitlist } from './waitlist/leave-advert-waitlist'
+import { createNotifyAdvertWaitlist } from './waitlist/notify-advert-waitlist'
 
 export const createAdvertMutations = (
   services: Pick<Services, 'adverts' | 'files' | 'notifications' | 'syslog'>
@@ -40,4 +43,7 @@ export const createAdvertMutations = (
   notifyReservedClaims: createReservedClaimsNotifier(services),
   notifyExpiredClaims: createExpiredClaimsNotifier(services),
   notifyOverdueClaims: createOverdueClaimsNotifier(services),
+  joinAdvertWaitlist: createJoinAdvertWaitlist(services),
+  leaveAdvertWaitlist: createLeaveAdvertWaitlist(services),
+  notifyAdvertWaitlist: createNotifyAdvertWaitlist(services),
 })

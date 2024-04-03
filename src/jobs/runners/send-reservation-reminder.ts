@@ -11,10 +11,10 @@ export const sendReservationReminder: TaskRunnerSignature = async (
   const mutations = createAdvertMutations(services as Services)
 
   // Get list of all reserved adverts
-  const adverts = await services.adverts?.getAdvertsByClaimStatus({
+  const adverts = await services.adverts.getAdvertsByClaimStatus({
     type: AdvertClaimType.reserved,
   })
-  const result = await adverts?.reduce<Promise<number>>(
+  const result = await adverts.reduce<Promise<number>>(
     async (p, c) =>
       p.then(res =>
         mutations

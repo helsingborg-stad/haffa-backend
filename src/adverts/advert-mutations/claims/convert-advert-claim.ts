@@ -1,12 +1,10 @@
 import { makeUser } from '../../../login'
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
+import { normalizeAdvertClaims } from '../../advert-claims'
 import { getAdvertMeta } from '../../advert-meta'
 import type { AdvertClaim, Advert, AdvertMutations } from '../../types'
-import {
-  mapTxResultToAdvertMutationResult,
-  normalizeAdvertClaims,
-} from '../mappers'
+import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
   verifyAll,
   verifyReservationLimits,

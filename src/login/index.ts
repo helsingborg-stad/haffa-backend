@@ -28,6 +28,8 @@ export const rolesArrayToRoles = (roles: string[]): HaffaUserRoles =>
       )
     : {}
 
+const strict = <T>(value: Required<T>): Required<T> => value
+
 export const normalizeRoles = (
   roles?: HaffaUserRoles
 ): Required<HaffaUserRoles> => ({
@@ -38,6 +40,7 @@ export const normalizeRoles = (
   canCollectAdverts: !!roles?.canCollectAdverts,
   canManageOwnAdvertsHistory: !!roles?.canManageOwnAdvertsHistory,
   canSubscribe: !!roles?.canSubscribe,
+  canJoinWaitlist: !!roles?.canJoinWaitlist,
   canManageAllAdverts: !!roles?.canManageAllAdverts,
   canEditSystemCategories: !!roles?.canEditSystemCategories,
   canEditSystemLoginPolicies: !!roles?.canEditSystemLoginPolicies,
@@ -60,53 +63,57 @@ export const createLoginServiceFromEnv = (
 
 export const makeRoles = (
   defaultEnabled: boolean = false
-): Required<HaffaUserRoles> => ({
-  canEditOwnAdverts: defaultEnabled,
-  canArchiveOwnAdverts: defaultEnabled,
-  canRemoveOwnAdverts: defaultEnabled,
-  canReserveAdverts: defaultEnabled,
-  canCollectAdverts: defaultEnabled,
-  canManageOwnAdvertsHistory: defaultEnabled,
-  canSubscribe: defaultEnabled,
-  canManageAllAdverts: defaultEnabled,
-  canEditSystemCategories: defaultEnabled,
-  canEditSystemLoginPolicies: defaultEnabled,
-  canEditApiKeys: defaultEnabled,
-  canEditTerms: defaultEnabled,
-  canRunSystemJobs: defaultEnabled,
-  canSeeSystemStatistics: defaultEnabled,
-  canManageContent: defaultEnabled,
-  canManageLocations: defaultEnabled,
-  canManageNotifications: defaultEnabled,
-  canManageReturns: defaultEnabled,
-})
+): Required<HaffaUserRoles> =>
+  strict({
+    canEditOwnAdverts: defaultEnabled,
+    canArchiveOwnAdverts: defaultEnabled,
+    canRemoveOwnAdverts: defaultEnabled,
+    canReserveAdverts: defaultEnabled,
+    canCollectAdverts: defaultEnabled,
+    canManageOwnAdvertsHistory: defaultEnabled,
+    canSubscribe: defaultEnabled,
+    canJoinWaitlist: defaultEnabled,
+    canManageAllAdverts: defaultEnabled,
+    canEditSystemCategories: defaultEnabled,
+    canEditSystemLoginPolicies: defaultEnabled,
+    canEditApiKeys: defaultEnabled,
+    canEditTerms: defaultEnabled,
+    canRunSystemJobs: defaultEnabled,
+    canSeeSystemStatistics: defaultEnabled,
+    canManageContent: defaultEnabled,
+    canManageLocations: defaultEnabled,
+    canManageNotifications: defaultEnabled,
+    canManageReturns: defaultEnabled,
+  })
 
 export const combineRoles = (
   a: HaffaUserRoles,
   b: HaffaUserRoles
 ): Required<HaffaUserRoles> =>
-  normalizeRoles({
-    canEditOwnAdverts: a.canEditOwnAdverts || b.canEditOwnAdverts,
-    canArchiveOwnAdverts: a.canArchiveOwnAdverts || b.canArchiveOwnAdverts,
-    canRemoveOwnAdverts: a.canRemoveOwnAdverts || b.canRemoveOwnAdverts,
-    canReserveAdverts: a.canReserveAdverts || b.canReserveAdverts,
-    canCollectAdverts: a.canCollectAdverts || b.canCollectAdverts,
-    canManageOwnAdvertsHistory:
-      a.canManageOwnAdvertsHistory || b.canManageOwnAdvertsHistory,
-    canManageAllAdverts: a.canManageAllAdverts || b.canManageAllAdverts,
-    canEditSystemCategories:
-      a.canEditSystemCategories || b.canEditSystemCategories,
-    canEditSystemLoginPolicies:
-      a.canEditSystemLoginPolicies || b.canEditSystemLoginPolicies,
-    canEditApiKeys: a.canEditApiKeys || b.canEditApiKeys,
-    canEditTerms: a.canEditTerms || b.canEditTerms,
-    canRunSystemJobs: a.canRunSystemJobs || b.canRunSystemJobs,
-    canManageContent: a.canManageContent || b.canManageContent,
-    canManageLocations: a.canManageLocations || b.canManageLocations,
-    canManageNotifications:
-      a.canManageNotifications || b.canManageNotifications,
-    canManageReturns: a.canManageReturns || b.canManageReturns,
-  })
+  normalizeRoles(
+    strict({
+      canEditOwnAdverts: a.canEditOwnAdverts || b.canEditOwnAdverts,
+      canArchiveOwnAdverts: a.canArchiveOwnAdverts || b.canArchiveOwnAdverts,
+      canRemoveOwnAdverts: a.canRemoveOwnAdverts || b.canRemoveOwnAdverts,
+      canReserveAdverts: a.canReserveAdverts || b.canReserveAdverts,
+      canCollectAdverts: a.canCollectAdverts || b.canCollectAdverts,
+      canManageOwnAdvertsHistory:
+        a.canManageOwnAdvertsHistory || b.canManageOwnAdvertsHistory,
+      canManageAllAdverts: a.canManageAllAdverts || b.canManageAllAdverts,
+      canEditSystemCategories:
+        a.canEditSystemCategories || b.canEditSystemCategories,
+      canEditSystemLoginPolicies:
+        a.canEditSystemLoginPolicies || b.canEditSystemLoginPolicies,
+      canEditApiKeys: a.canEditApiKeys || b.canEditApiKeys,
+      canEditTerms: a.canEditTerms || b.canEditTerms,
+      canRunSystemJobs: a.canRunSystemJobs || b.canRunSystemJobs,
+      canManageContent: a.canManageContent || b.canManageContent,
+      canManageLocations: a.canManageLocations || b.canManageLocations,
+      canManageNotifications:
+        a.canManageNotifications || b.canManageNotifications,
+      canManageReturns: a.canManageReturns || b.canManageReturns,
+    })
+  )
 
 export const makeUser = (
   u: Partial<HaffaUser> & Pick<HaffaUser, 'id'>
