@@ -6,7 +6,7 @@ import { createJoinAdvertWaitlist } from './join-advert-waitlist'
 describe('joinAdvertWaitlist', () => {
   it('adds unique user', async () => {
     const adverts = createInMemoryAdvertsRepository({
-      'advert-1': createEmptyAdvert({ id: 'advert-1' }),
+      'advert-1': createEmptyAdvert({ id: 'advert-1', quantity: 0 }),
     })
 
     const join = createJoinAdvertWaitlist({ adverts })

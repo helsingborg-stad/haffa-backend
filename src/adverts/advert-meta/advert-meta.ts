@@ -74,7 +74,12 @@ export const getAdvertMeta = (
         isNotArchived &&
         (myReservationCount > 0 || quantity > claimCount) &&
         canCollectAdverts,
-      canJoinWaitList: isNotArchived && canJoinWaitlist && !isOnMyWaitList,
+      canJoinWaitList:
+        isNotArchived &&
+        canJoinWaitlist &&
+        (canReserveAdverts || canCollectAdverts) &&
+        quantity <= claimCount &&
+        !isOnMyWaitList,
       canLeaveWaitList: isOnMyWaitList,
       canManageClaims:
         canManageOwnAdvertsHistory && (mine || canManageAllAdverts),
