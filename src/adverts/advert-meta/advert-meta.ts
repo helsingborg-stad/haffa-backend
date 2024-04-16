@@ -1,6 +1,11 @@
 import { normalizeRoles } from '../../login'
 import type { HaffaUser } from '../../login/types'
-import { isClaimOverdue } from '../advert-mutations/claims/mappers'
+import {
+  getClaimReturnInfo,
+  hasCollects,
+  hasReservations,
+  isClaimOverdue,
+} from '../advert-mutations/claims/mappers'
 import { AdvertClaimType, AdvertType } from '../types'
 import type { Advert, AdvertMeta } from '../types'
 
@@ -30,6 +35,10 @@ export const getAdvertMeta = (
   const isNotArchived = !advert.archivedAt
   const isArchived = !isNotArchived
   const isOnMyWaitList = advert.waitlist.includes(user.id)
+  const isLendingAdvert = advert.lendingPeriod > 0
+  const canBook = isLendingAdvert && quantity - claimCount > 0
+  const isReservedBySome = hasReservations(advert.claims)
+  const isCollectedBySome = hasCollects(advert.claims)
 
   const {
     canEditOwnAdverts,
@@ -67,7 +76,7 @@ export const getAdvertMeta = (
       canUnarchive:
         isArchived && canArchiveOwnAdverts && (mine || canManageAllAdverts),
       canRemove: canRemoveOwnAdverts && (mine || canManageAllAdverts),
-      canBook: false, // type === AdvertType.borrow,
+      canBook,
       canReserve: isNotArchived && quantity > claimCount && canReserveAdverts,
       canCancelReservation: myReservationCount > 0 && canReserveAdverts,
       canCollect:
@@ -86,6 +95,10 @@ export const getAdvertMeta = (
       canReturn: canManageReturns && hasSingleCollectClaim(advert),
       reservedyMe: myReservationCount,
       collectedByMe: myCollectedCount,
+      isLendingAdvert,
+      isReservedBySome,
+      isCollectedBySome,
+      returnInfo: getClaimReturnInfo(advert.claims, advert.lendingPeriod),
       claims,
     }
   }
@@ -99,7 +112,7 @@ export const getAdvertMeta = (
     canUnarchive:
       isArchived && canArchiveOwnAdverts && (mine || canManageAllAdverts),
     canRemove: canRemoveOwnAdverts && (mine || canManageAllAdverts),
-    canBook: false, // type === AdvertType.borrow,
+    canBook,
     canReserve: false,
     canCancelReservation: false,
     canCollect: false,
@@ -109,6 +122,10 @@ export const getAdvertMeta = (
     canReturn: false,
     reservedyMe: myReservationCount,
     collectedByMe: myCollectedCount,
+    isLendingAdvert,
+    isReservedBySome,
+    isCollectedBySome,
+    returnInfo: [],
     claims: [],
   }
 }

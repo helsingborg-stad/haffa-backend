@@ -215,7 +215,16 @@ export const advertsGqlSchema = /* GraphQL */ `
     canReturn: Boolean!
     reservedyMe: Int!
     collectedByMe: Int!
+    isLendingAdvert: Boolean!
+    isReservedBySome: Boolean!
+    isCollectedBySome: Boolean!
+    returnInfo: [AdvertReturnInfo]!
     claims: [AdvertClaim]!
+  }
+
+  type AdvertReturnInfo {
+    at: String
+    quantity: Int
   }
 
   type AdvertLocation {

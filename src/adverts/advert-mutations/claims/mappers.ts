@@ -1,4 +1,9 @@
-import { type AdvertClaim, type AdvertClaimEvent } from '../../types'
+import { AdvertClaimType } from '../../types'
+import type {
+  AdvertReturnInfo,
+  AdvertClaim,
+  AdvertClaimEvent,
+} from '../../types'
 
 const sanitizeInterval = (interval: number) => (interval < 0 ? 0 : interval)
 /**
@@ -55,3 +60,28 @@ export const isClaimOverdue = (
   // No limitation on validity
   return false
 }
+
+export const getClaimReturnInfo = (claims: AdvertClaim[], daysValid: number) =>
+  claims
+    .reduce<AdvertReturnInfo[]>((p, c) => {
+      if (c.type === AdvertClaimType.collected && daysValid > 0) {
+        const at = new Date(c.at)
+        at.setDate(at.getDate() + sanitizeInterval(daysValid))
+
+        return [
+          ...p,
+          {
+            at: at.toISOString(),
+            quantity: c.quantity,
+          },
+        ]
+      }
+      return [...p]
+    }, [])
+    .sort((a, b) => a.at.localeCompare(b.at))
+
+export const hasReservations = (claims: AdvertClaim[]) =>
+  claims.filter(claim => claim.type === AdvertClaimType.reserved).length > 0
+
+export const hasCollects = (claims: AdvertClaim[]) =>
+  claims.filter(claim => claim.type === AdvertClaimType.collected).length > 0
