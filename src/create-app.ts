@@ -17,6 +17,7 @@ import { optionsUserModule } from './options/options-user-module'
 import { guestUserModule } from './guest'
 import { snapshotModule } from './snapshot/snapshot-module'
 import { socialPreviewModule } from './social-preview/social-preview-module'
+import { advertLabelModule } from './labels/advertLabelModule'
 
 /** Create fully packaged web application, given dependencies */
 export const createApp = ({
@@ -40,6 +41,7 @@ export const createApp = ({
     .use(jwtUserModule(services.tokens))
     .use(guestUserModule(services.userMapper))
     .use(cookieUserModule(services.cookies, services.tokens))
+    .use(advertLabelModule(services))
     .use(healthCheckModule())
     /* .use(({ app }) =>
       app.use((ctx, next) => {

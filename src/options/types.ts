@@ -1,4 +1,4 @@
-export interface Option {
-  key: string
+export interface Option<T = string> {
+  key: T
   value: string
 }
