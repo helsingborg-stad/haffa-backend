@@ -38,6 +38,13 @@ export const advertLabelModule =
           .getOptions('label')
           .then(options => transformLabelOptions(options))
 
+        // Set response type
+        ctx.response.type = 'application/pdf'
+        ctx.res.setHeader(
+          'Content-disposition',
+          'inline; filename="labels.pdf"'
+        )
+        ctx.status = 200
         // Create document
         const doc = new PDFDocument({
           size: [250, 250],
@@ -78,9 +85,6 @@ export const advertLabelModule =
           )
         )
         doc.end()
-
-        // Set response type
-        ctx.response.type = 'application/pdf'
         // eslint-disable-next-line no-promise-executor-return
         return new Promise(resolve => ctx.res.on('finish', resolve))
       },
