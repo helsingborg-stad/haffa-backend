@@ -1,18 +1,24 @@
+import HttpStatusCodes from 'http-status-codes'
 import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
 import PDFDocument from 'pdfkit'
 import QRCode from 'qrcode'
 import type { Services } from '../types'
-import { makeGuestUser } from '../login'
+import { makeGuestUser, normalizeRoles } from '../login'
 import type { Advert } from '../adverts/types'
 import { optionsAdapter } from '../options'
 import { createLabelFooter, transformLabelOptions } from './mappers'
+import { requireHaffaUser } from '../login/require-haffa-user'
 
 export const advertLabelModule =
-  ({ adverts, settings }: Services): ApplicationModule =>
+  ({ adverts, settings, userMapper }: Services): ApplicationModule =>
   ({ registerKoaApi }) =>
     registerKoaApi({
-      advertLabels: async (ctx, next) => {
+      advertLabels: requireHaffaUser(userMapper, async (ctx, next) => {
         const { advertIds }: { advertIds: string } = ctx.params
+
+        if (!normalizeRoles(ctx.user?.roles).canEditOwnAdverts) {
+          return ctx.throw(HttpStatusCodes.UNAUTHORIZED)
+        }
 
         // Split advert ids
         const advertIdList = advertIds
@@ -87,5 +93,5 @@ export const advertLabelModule =
         doc.end()
         // eslint-disable-next-line no-promise-executor-return
         return new Promise(resolve => ctx.res.on('finish', resolve))
-      },
+      }),
     })
