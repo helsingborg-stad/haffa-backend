@@ -48,15 +48,31 @@ export const advertLabelModule =
         ctx.response.type = 'application/pdf'
         ctx.res.setHeader(
           'Content-disposition',
-          'inline; filename="labels.pdf"'
+          'inline; filename="etiketter.pdf"'
         )
         ctx.status = 200
+
+        const labelSize = 144 // 72 points/inch
+        const margin = labelSize / 12
+        const rowHeight = labelSize / 6
+        const codeGap = 3
+        const codeHeight = rowHeight * 4 - codeGap
+        const codeCenter = labelSize / 2 - codeHeight / 2
+
+        // Text Positioning
+        const textOptions: PDFKit.Mixins.TextOptions = {
+          align: 'center',
+          width: Math.max(labelSize - margin * 2, 0),
+          height: Math.max(rowHeight - margin, 0),
+          lineBreak: false,
+        }
         // Create document
         const doc = new PDFDocument({
-          size: [250, 250],
+          size: [labelSize, labelSize],
           autoFirstPage: false,
+          margin,
         })
-        doc.fontSize(18)
+        doc.fontSize(textOptions.height ?? 0)
         doc.pipe(ctx.res)
 
         await Promise.all(
@@ -67,26 +83,21 @@ export const advertLabelModule =
               )}`,
               {
                 margin: 0,
-                width: 170,
+                width: codeHeight * 2,
               }
             ).then(qr => {
               doc
                 .addPage()
-                .text(labelOptions.headline, 10, 25, {
-                  align: 'center',
-                  height: 0,
-                  width: 230,
-                  lineBreak: false,
+                .text(labelOptions.headline, margin, margin, textOptions)
+                .image(qr, codeCenter, rowHeight, {
+                  cover: [codeHeight, codeHeight],
                 })
-                .image(qr, 40, 45, {
-                  width: 170,
-                })
-                .text(createLabelFooter(labelOptions, advert), 10, 220, {
-                  align: 'center',
-                  width: 230,
-                  height: 0,
-                  lineBreak: false,
-                })
+                .text(
+                  createLabelFooter(labelOptions, advert),
+                  margin,
+                  5 * rowHeight,
+                  textOptions
+                )
             })
           )
         )
