@@ -52,6 +52,14 @@ const createRestrictionsPredicate = (
 
   const matchers: Predicate<Advert>[] = [
     makeMatcher(
+      restrictions.editableByMe,
+      ({ createdBy }) =>
+        user.roles?.canEditOwnAdverts && user.roles.canManageAllAdverts
+          ? true
+          : createdBy === user.id,
+      () => false
+    ),
+    makeMatcher(
       restrictions?.createdByMe,
       ({ createdBy }) => createdBy === user.id
     ),

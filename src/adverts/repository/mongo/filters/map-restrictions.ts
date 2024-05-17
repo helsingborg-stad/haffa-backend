@@ -9,11 +9,41 @@ export const regularAdvertsFilter: Filter<MongoAdvert> = {
   'meta.archived': { $ne: true },
 }
 
+const ownerRestrictions = (
+  user: HaffaUser,
+  restrictions?: AdvertRestrictionsFilterInput
+) => {
+  // do we use owner/admin restrictions?
+  const requiresOwnerAccess = [
+    restrictions?.isArchived,
+    restrictions?.hasReservations,
+    restrictions?.hasCollects,
+  ].some(v => v === true || v === false)
+
+  if (requiresOwnerAccess || restrictions?.editableByMe) {
+    if (
+      restrictions?.editableByMe &&
+      user.roles?.canEditOwnAdverts &&
+      user.roles.canManageAllAdverts
+    ) {
+      // super user, no restrictions
+      return null
+    }
+    return { 'advert.createdBy': user.id }
+  }
+  return null
+}
+
 export const mapRestrictions = (
   user: HaffaUser,
   restrictions?: AdvertRestrictionsFilterInput
 ): Filter<MongoAdvert> | null =>
   combineAnd(
+    ownerRestrictions(user, restrictions),
+    restrictions?.editableByMe === false && {
+      'advert.id': -1, // dont match anything
+    },
+
     restrictions?.canBeReserved === true &&
       combineOr(
         {
@@ -50,10 +80,7 @@ export const mapRestrictions = (
         },
       },
     },
-    (restrictions?.isArchived ||
-      restrictions?.hasReservations ||
-      restrictions?.hasCollects ||
-      restrictions?.createdByMe === true) && {
+    restrictions?.createdByMe === true && {
       'advert.createdBy': user.id,
     },
     restrictions?.createdByMe === false && {

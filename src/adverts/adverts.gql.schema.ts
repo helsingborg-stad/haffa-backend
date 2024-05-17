@@ -114,6 +114,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     reservedByMe: Boolean
     collectedByMe: Boolean
     createdByMe: Boolean
+    editableByMe: Boolean
     isArchived: Boolean
     hasReservations: Boolean
     hasCollects: Boolean

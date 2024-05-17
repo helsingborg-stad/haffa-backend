@@ -3,6 +3,7 @@ import type { HaffaUser } from '../../../../login/types'
 import type { MongoAdvert } from '../types'
 import { combineAnd } from './filter-utils'
 import { mapRestrictions, regularAdvertsFilter } from './map-restrictions'
+import { makeAdmin } from '../../../../login'
 
 describe('mapRestrictions', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -11,7 +12,7 @@ describe('mapRestrictions', () => {
   }
 
   const makeRegularFilter = (
-    filter: Filter<MongoAdvert>
+    filter?: Filter<MongoAdvert>
   ): Filter<MongoAdvert> => combineAnd(filter, regularAdvertsFilter)!
 
   it('maps empty or not set to list regular (non archived) adverts', () => {
@@ -49,6 +50,21 @@ describe('mapRestrictions', () => {
       makeRegularFilter({
         'advert.createdBy': { $ne: user.id },
       })
+    )
+  })
+
+  it('maps editableByMe for regular users', () => {
+    expect(mapRestrictions(user, { editableByMe: true })).toMatchObject(
+      makeRegularFilter({
+        'advert.createdBy': user.id,
+      })
+    )
+  })
+
+  it('maps editableByMe for admin users', () => {
+    const su = makeAdmin({ id: 'super@user' })
+    expect(mapRestrictions(su, { editableByMe: true })).toMatchObject(
+      makeRegularFilter()
     )
   })
 })
