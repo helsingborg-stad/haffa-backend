@@ -25,6 +25,9 @@ const stringProps = <T = Advert>(
   ...fields: (keyof T)[]
 ): Record<keyof T, any> => props<T>({ type: 'string' }, ...fields)
 
+const boolProps = <T = Advert>(...fields: (keyof T)[]): Record<keyof T, any> =>
+  props<T>({ type: 'boolean' }, ...fields)
+
 const numberProps = <T = Advert>(
   ...fields: (keyof T)[]
 ): Record<keyof T, any> => props<T>({ type: 'number' }, ...fields)
@@ -80,6 +83,7 @@ const advertSchemaValidator = new Ajv().compile<Advert>({
         'notes',
         'tags'
       ),
+      ...boolProps('markedAsReadyForPickup'),
       ...numberProps('quantity', 'lendingPeriod'),
       images: describeObjectArray<AdvertImage>({
         required: ['url'],

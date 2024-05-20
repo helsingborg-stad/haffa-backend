@@ -1,4 +1,5 @@
 import * as uuid from 'uuid'
+import { bool } from 'sharp'
 import type {
   Advert,
   AdvertContact,
@@ -59,6 +60,7 @@ export const normalizeAdvert = (
     location,
     contact,
     waitlist,
+    markedAsReadyForPickup,
   }: Advert = createEmptyAdvert()
 ): Advert =>
   createEmptyAdvert({
@@ -90,6 +92,7 @@ export const normalizeAdvert = (
     notes,
     tags: isArray(tags) ? normalizeStringArray(tags) : [],
     waitlist: isArray(waitlist) ? normalizeStringArray(waitlist) : [],
+    markedAsReadyForPickup,
     location: isObject(location)
       ? normalizeAdvertLocation(location)
       : createEmptyAdvertLocation(),
@@ -160,6 +163,7 @@ export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
 
   claims: [],
   waitlist: [],
+  markedAsReadyForPickup: false,
 
   location: createEmptyAdvertLocation(),
   contact: createEmptyAdvertContact(),
@@ -206,7 +210,7 @@ export const createEmptyAdvertInput = (): AdvertInput => ({
   externalId: '',
   notes: '',
   tags: [],
-
+  markedAsReadyForPickup: false,
   location: createEmptyAdvertLocation(),
   contact: createEmptyAdvertContact(),
 })

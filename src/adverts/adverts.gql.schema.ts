@@ -57,6 +57,11 @@ export const advertsGqlSchema = /* GraphQL */ `
     in: [String]
   }
 
+  input BoolFilterInput {
+    eq: Boolean
+    ne: Boolean
+  }
+
   enum AdvertType {
     recycle
     borrow
@@ -103,6 +108,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     reference: StringFilterInput
     externalId: StringFilterInput
     tags: StringFilterInput
+    markedAsReadyForPickup: BoolFilterInput
     size: StringFilterInput
     and: [AdvertFieldsFilterInput]
     or: [AdvertFieldsFilterInput]
@@ -175,6 +181,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     externalId: String
     notes: String
     tags: [String]
+    markedAsReadyForPickup: Boolean
     location: AdvertLocationInput
     contact: AdvertContactInput
   }
@@ -275,6 +282,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     externalId: String
     notes: String
     tags: [String]
+    markedAsReadyForPickup: Boolean
     location: AdvertLocation
     contact: AdvertContact
   }

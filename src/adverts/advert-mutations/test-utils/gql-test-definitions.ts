@@ -21,6 +21,7 @@ export const advertProps = `
 	externalId
 	notes
 	tags
+	markedAsReadyForPickup
 	contact {
 		email
 		phone
@@ -58,6 +59,7 @@ export const advertWithMetaProps = `
 	externalId
 	notes
 	tags
+	markedAsReadyForPickup
 	contact {
 		email
 		phone

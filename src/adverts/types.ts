@@ -41,6 +41,7 @@ export interface AdvertUserFields {
   externalId: string
   notes: string
   tags: string[]
+  markedAsReadyForPickup: boolean
   location: AdvertLocation
   contact: AdvertContact
 }

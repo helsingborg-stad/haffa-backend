@@ -39,6 +39,7 @@ describe('createAdvert', () => {
           category: 'c',
           externalId: 'eid',
           tags: ['t'],
+          markedAsReadyForPickup: false,
         }
         const result = await mappedGqlRequest<AdvertMutationResult>(
           'createAdvert',

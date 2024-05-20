@@ -65,6 +65,7 @@ export const FieldLabels: Record<FieldName, string> = {
   email: 'Email',
   phone: 'Telefon',
   country: 'Land',
+  markedAsReadyForPickup: 'Plockad',
 }
 
 export interface FieldConfig {
