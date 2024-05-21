@@ -60,7 +60,8 @@ const advertSchemaValidator = new Ajv().compile<Advert>({
         'createdBy',
         'createdAt',
         'modifiedAt',
-        'archivedAt'
+        'archivedAt',
+        'pickedAt'
       ),
       ...stringProps(
         'title',

@@ -83,6 +83,8 @@ export const getAdvertMeta = (
         isNotArchived &&
         (myReservationCount > 0 || quantity > claimCount) &&
         canCollectAdverts,
+      canPick: false,
+      canUnpick: false,
       canJoinWaitList:
         isNotArchived &&
         canJoinWaitlist &&
@@ -116,6 +118,8 @@ export const getAdvertMeta = (
     canReserve: false,
     canCancelReservation: false,
     canCollect: false,
+    canPick: false,
+    canUnpick: false,
     canJoinWaitList: false,
     canLeaveWaitList: false,
     canManageClaims: false,

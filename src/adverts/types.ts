@@ -61,6 +61,8 @@ export interface AdvertMeta {
   canEdit: boolean
   canArchive: boolean
   canUnarchive: boolean
+  canPick: boolean
+  canUnpick: boolean
   canRemove: boolean
   canBook: boolean
   canReserve: boolean
@@ -134,6 +136,7 @@ export interface Advert extends AdvertUserFields {
   createdAt: string
   modifiedAt: string
   archivedAt: string
+  pickedAt: string
   claims: AdvertClaim[]
   waitlist: string[]
 }
@@ -154,11 +157,12 @@ type Flatten<Type> = Type extends Array<infer Item> ? Item : Type
 
 export type AdvertFieldsFilterInput = {
   id?: FilterInput<string>
-  // for internal searched
+  // for internal searches
   createdBy?: FilterInput<string>
   createdAt?: FilterInput<string>
   modifiedAt?: FilterInput<string>
   archivedAt?: FilterInput<string>
+  pickedAt?: FilterInput<string>
 } & {
   [Property in keyof Omit<AdvertUserFields, 'images'>]?: FilterInput<
     Flatten<AdvertUserFields[Property]>
@@ -172,6 +176,7 @@ export interface AdvertRestrictionsFilterInput {
   createdByMe?: boolean
   editableByMe?: boolean
   isArchived?: boolean
+  isPicked?: boolean
   hasReservations?: boolean
   hasCollects?: boolean
 }

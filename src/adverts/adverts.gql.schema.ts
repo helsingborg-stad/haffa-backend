@@ -116,6 +116,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     createdByMe: Boolean
     editableByMe: Boolean
     isArchived: Boolean
+    isPicked: Boolean
     hasReservations: Boolean
     hasCollects: Boolean
   }
@@ -205,6 +206,8 @@ export const advertsGqlSchema = /* GraphQL */ `
     canEdit: Boolean!
     canArchive: Boolean!
     canUnarchive: Boolean!
+    canPick: Boolean!
+    canUnpick: Boolean!
     canRemove: Boolean!
     canBook: Boolean!
     canReserve: Boolean!

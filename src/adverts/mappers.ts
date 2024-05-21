@@ -138,6 +138,7 @@ export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
   createdAt: new Date(0).toISOString(),
   modifiedAt: new Date(0).toISOString(),
   archivedAt: '',
+  pickedAt: '',
   title: '',
   description: '',
   quantity: 1,
