@@ -138,6 +138,18 @@ export const createAdvertsGqlModule = (
           .then(result =>
             mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
           ),
+      markAdvertAsPicked: async ({ ctx: { user }, args: { id } }) =>
+        createAdvertMutations(services)
+          .markAdvertAsPicked(user, id)
+          .then(result =>
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+          ),
+      markAdvertAsUnpicked: async ({ ctx: { user }, args: { id } }) =>
+        createAdvertMutations(services)
+          .markAdvertAsUnpicked(user, id)
+          .then(result =>
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+          ),
     },
   },
 })

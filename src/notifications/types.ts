@@ -76,4 +76,6 @@ export interface NotificationService {
     quantity: number,
     advert: Advert
   ) => Promise<void>
+  advertWasPickedOwner: (by: HaffaUser, advert: Advert) => Promise<void>
+  advertWasUnpickedOwner: (by: HaffaUser, advert: Advert) => Promise<void>
 }

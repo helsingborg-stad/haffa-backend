@@ -32,6 +32,8 @@ export const advertsGqlSchema = /* GraphQL */ `
     returnAdvert(id: ID!): AdvertMutationResult
     joinAdvertWaitlist(id: ID!): AdvertMutationResult
     leaveAdvertWaitlist(id: ID!): AdvertMutationResult
+    markAdvertAsPicked(id: ID!): AdvertMutationResult
+    markAdvertAsUnpicked(id: ID!): AdvertMutationResult
   }
 
   type AdvertMutationStatus {
@@ -222,6 +224,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     isLendingAdvert: Boolean!
     isReservedBySome: Boolean!
     isCollectedBySome: Boolean!
+    isPicked: Boolean!
     returnInfo: [AdvertReturnInfo]!
     claims: [AdvertClaim]!
   }

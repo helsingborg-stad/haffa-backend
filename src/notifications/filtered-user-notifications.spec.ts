@@ -29,6 +29,8 @@ describe('tryCreateEmailUserNotifications', () => {
       advertWasReturned: jest.fn(),
       advertWasReturnedOwner: jest.fn(),
       advertWaitlistAvailable: jest.fn(),
+      advertWasPickedOwner: jest.fn(),
+      advertWasUnpickedOwner: jest.fn(),
     }
     const n = tryCreateEmailUserNotifications(inner)!
 

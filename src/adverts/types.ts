@@ -77,6 +77,7 @@ export interface AdvertMeta {
   isLendingAdvert: boolean
   isReservedBySome: boolean
   isCollectedBySome: boolean
+  isPicked: boolean
   returnInfo: AdvertReturnInfo[]
   claims: AdvertMetaClaim[]
 }
@@ -325,6 +326,14 @@ export interface AdvertMutations {
     id: string
   ) => Promise<AdvertMutationResult>
   notifyAdvertWaitlist: (
+    user: HaffaUser,
+    id: string
+  ) => Promise<AdvertMutationResult>
+  markAdvertAsPicked: (
+    user: HaffaUser,
+    id: string
+  ) => Promise<AdvertMutationResult>
+  markAdvertAsUnpicked: (
     user: HaffaUser,
     id: string
   ) => Promise<AdvertMutationResult>

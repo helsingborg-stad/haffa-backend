@@ -100,6 +100,12 @@ export const createTestNotificationServices = (
   advertWaitlistAvailable: unexpectedInvocation(
     'NotificationService::advertWaitlistAvailable'
   ),
+  advertWasPickedOwner: unexpectedInvocation(
+    'NotificationService::advertWasPickedOwner'
+  ),
+  advertWasUnpickedOwner: unexpectedInvocation(
+    'NotificationService::advertWasUnpickedOwner'
+  ),
   ...notifications,
 })
 

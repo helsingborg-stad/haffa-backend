@@ -45,5 +45,9 @@ export const createCompositeNotifications = (
       all(inner => inner.advertWasReturnedOwner(...args)),
     advertWaitlistAvailable: (...args) =>
       all(inner => inner.advertWaitlistAvailable(...args)),
+    advertWasPickedOwner: (...args) =>
+      all(inner => inner.advertWasPickedOwner(...args)),
+    advertWasUnpickedOwner: (...args) =>
+      all(inner => inner.advertWasUnpickedOwner(...args)),
   }
 }
