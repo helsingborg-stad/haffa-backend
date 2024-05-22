@@ -62,6 +62,7 @@ describe('removeAdvert', () => {
 
         T('should have notified about the interesting event', () =>
           expect(advertWasRemoved).toHaveBeenCalledWith(
+            user.id,
             expect.objectContaining(user),
             mockAdvert
           )

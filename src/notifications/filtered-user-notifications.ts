@@ -9,10 +9,8 @@ export const tryCreateUserFilteredNotifications = (
 ): NotificationService | null => {
   const whenId = (id: string, then: () => Promise<void>): Promise<void> =>
     isValidUserId(id) ? then() : Promise.resolve()
-  const whenUser = (
-    { id }: HaffaUser,
-    then: () => Promise<void>
-  ): Promise<void> => whenId(id, then)
+  const whenUser = (id: string, then: () => Promise<void>): Promise<void> =>
+    whenId(id, then)
 
   return inner
     ? {

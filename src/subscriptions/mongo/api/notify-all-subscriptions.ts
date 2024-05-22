@@ -80,6 +80,7 @@ export const createNotifyAllSubscriptions =
       const foundAdverts = [...foundAdvertsMap.values()]
       if (foundAdverts.length) {
         await notifications.subscriptionsHasNewAdverts(
+          user.id,
           user,
           foundAdverts.slice(0, 16)
         )

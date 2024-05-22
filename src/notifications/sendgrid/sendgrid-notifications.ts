@@ -25,7 +25,7 @@ export const createSendGridNotifications = (
 ): NotificationService => {
   const send = createSendGridMailSender(config)
   return {
-    subscriptionsHasNewAdverts: (by, adverts) =>
+    subscriptionsHasNewAdverts: (to, by, adverts) =>
       send(by.id, 'subscriptions-has-new-adverts', { by, adverts }),
     pincodeRequested: (email, pincode) =>
       send(email, 'pincode-requested', { email, pincode }),
@@ -33,31 +33,31 @@ export const createSendGridNotifications = (
     advertWasRemoved: async () => undefined,
     advertWasArchived: async () => undefined,
     advertWasUnarchived: async () => undefined,
-    advertWasReserved: (by, quantity, advert) =>
-      send(by.id, 'advert-was-reserved', { by, quantity, advert }),
+    advertWasReserved: (to, by, quantity, advert) =>
+      send(to, 'advert-was-reserved', { by, quantity, advert }),
     advertWasReservedOwner: async () => undefined,
-    advertReservationWasCancelled: (by, quantity, advert) =>
-      send(by.id, 'advert-reservation-was-cancelled', { by, quantity, advert }),
+    advertReservationWasCancelled: (to, by, quantity, advert) =>
+      send(to, 'advert-reservation-was-cancelled', { by, quantity, advert }),
     advertReservationWasCancelledOwner: async () => undefined,
-    advertWasCollected: (by, quantity, advert) =>
-      send(by.id, 'advert-was-collected', { by, quantity, advert }),
+    advertWasCollected: (to, by, quantity, advert) =>
+      send(to, 'advert-was-collected', { by, quantity, advert }),
     advertWasCollectedOwner: async () => undefined,
-    advertCollectWasCancelled: (by, quantity, advert) =>
-      send(by.id, 'advert-collect-was-cancelled', { by, quantity, advert }),
+    advertCollectWasCancelled: (to, by, quantity, advert) =>
+      send(to, 'advert-collect-was-cancelled', { by, quantity, advert }),
     advertCollectWasCancelledOwner: async () => undefined,
-    advertNotCollected: (by, quantity, advert) =>
-      send(by.id, 'advert-not-collected', { by, quantity, advert }),
-    advertNotReturned: (by, quantity, advert) =>
-      send(by.id, 'advert-not-returned', { by, quantity, advert }),
-    advertWasReturned: (by, quantity, advert) =>
-      send(by.id, 'advert-was-returned', { by, quantity, advert }),
-    advertWasReturnedOwner: (by, quantity, advert) =>
-      send(by.id, 'advert-was-returned-owner', { by, quantity, advert }),
-    advertWaitlistAvailable: (by, quantity, advert) =>
-      send(by.id, 'advert-waitlist-avaible', { by, quantity, advert }),
-    advertWasPickedOwner: (by, advert) =>
-      send(by.id, 'advert-was-picked-owner', { by, advert }),
-    advertWasUnpickedOwner: (by, advert) =>
-      send(by.id, 'advert-was-unpicked-owner', { by, advert }),
+    advertNotCollected: (to, by, quantity, advert) =>
+      send(to, 'advert-not-collected', { by, quantity, advert }),
+    advertNotReturned: (to, by, quantity, advert) =>
+      send(to, 'advert-not-returned', { by, quantity, advert }),
+    advertWasReturned: (to, by, quantity, advert) =>
+      send(to, 'advert-was-returned', { by, quantity, advert }),
+    advertWasReturnedOwner: (to, by, quantity, advert) =>
+      send(to, 'advert-was-returned-owner', { by, quantity, advert }),
+    advertWaitlistAvailable: (to, by, quantity, advert) =>
+      send(to, 'advert-waitlist-avaible', { by, quantity, advert }),
+    advertWasPickedOwner: (to, by, advert) =>
+      send(to, 'advert-was-picked-owner', { by, advert }),
+    advertWasUnpickedOwner: (to, by, advert) =>
+      send(to, 'advert-was-unpicked-owner', { by, advert }),
   }
 }

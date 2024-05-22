@@ -29,7 +29,7 @@ export const createBrevoNotifications = (
   ) => client.send(to, template, params, replyTo)
 
   return {
-    subscriptionsHasNewAdverts: (by, adverts) =>
+    subscriptionsHasNewAdverts: (to, by, adverts) =>
       send(
         'subscriptions-has-new-adverts',
         { name: by.id, email: by.id },
@@ -48,7 +48,7 @@ export const createBrevoNotifications = (
     advertWasRemoved: async () => undefined,
     advertWasArchived: async () => undefined,
     advertWasUnarchived: async () => undefined,
-    advertWasReserved: (by, quantity, advert) =>
+    advertWasReserved: (to, by, quantity, advert) =>
       send(
         'advert-was-reserved',
         { name: by.id, email: by.id },
@@ -59,7 +59,7 @@ export const createBrevoNotifications = (
         },
         { name: advert.createdBy, email: advert.createdBy }
       ),
-    advertWasReservedOwner: (by, quantity, advert) =>
+    advertWasReservedOwner: (to, by, quantity, advert) =>
       send(
         'advert-was-reserved-owner',
         { email: advert.createdBy, name: advert.createdBy },
@@ -69,7 +69,7 @@ export const createBrevoNotifications = (
           advert: stripAdvert(advert),
         }
       ),
-    advertReservationWasCancelled: (by, quantity, advert) =>
+    advertReservationWasCancelled: (to, by, quantity, advert) =>
       send(
         'advert-reservation-was-cancelled',
         { name: by.id, email: by.id },
@@ -79,7 +79,7 @@ export const createBrevoNotifications = (
           advert: stripAdvert(advert),
         }
       ),
-    advertReservationWasCancelledOwner: (by, quantity, advert) =>
+    advertReservationWasCancelledOwner: (to, by, quantity, advert) =>
       send(
         'advert-reservation-was-cancelled-owner',
         { name: advert.createdBy, email: advert.createdBy },
@@ -89,7 +89,7 @@ export const createBrevoNotifications = (
           advert: stripAdvert(advert),
         }
       ),
-    advertWasCollected: (by, quantity, advert) =>
+    advertWasCollected: (to, by, quantity, advert) =>
       send(
         'advert-was-collected',
         { name: by.id, email: by.id },
@@ -99,7 +99,7 @@ export const createBrevoNotifications = (
           advert: stripAdvert(advert),
         }
       ),
-    advertWasCollectedOwner: (by, quantity, advert) =>
+    advertWasCollectedOwner: (to, by, quantity, advert) =>
       send(
         'advert-was-collected-owner',
         { name: advert.createdBy, email: advert.createdBy },
@@ -109,7 +109,7 @@ export const createBrevoNotifications = (
           advert: stripAdvert(advert),
         }
       ),
-    advertCollectWasCancelled: (by, quantity, advert) =>
+    advertCollectWasCancelled: (to, by, quantity, advert) =>
       send(
         'advert-collect-was-cancelled',
         { name: by.id, email: by.id },
@@ -119,7 +119,7 @@ export const createBrevoNotifications = (
           advert: stripAdvert(advert),
         }
       ),
-    advertCollectWasCancelledOwner: (by, quantity, advert) =>
+    advertCollectWasCancelledOwner: (to, by, quantity, advert) =>
       send(
         'advert-collect-was-cancelled-owner',
         { name: advert.createdBy, email: advert.createdBy },
@@ -129,7 +129,7 @@ export const createBrevoNotifications = (
           advert: stripAdvert(advert),
         }
       ),
-    advertNotCollected: (by, quantity, advert) =>
+    advertNotCollected: (to, by, quantity, advert) =>
       send(
         'advert-not-collected',
         { name: by.id, email: by.id },
@@ -140,7 +140,7 @@ export const createBrevoNotifications = (
         },
         { name: advert.createdBy, email: advert.createdBy }
       ),
-    advertNotReturned: (by, quantity, advert) =>
+    advertNotReturned: (to, by, quantity, advert) =>
       send(
         'advert-not-returned',
         { name: by.id, email: by.id },
@@ -151,7 +151,7 @@ export const createBrevoNotifications = (
         },
         { name: advert.createdBy, email: advert.createdBy }
       ),
-    advertWasReturned: (by, quantity, advert) =>
+    advertWasReturned: (to, by, quantity, advert) =>
       send(
         'advert-was-returned',
         { name: by.id, email: by.id },
@@ -161,7 +161,7 @@ export const createBrevoNotifications = (
           advert: stripAdvert(advert),
         }
       ),
-    advertWasReturnedOwner: (by, quantity, advert) =>
+    advertWasReturnedOwner: (to, by, quantity, advert) =>
       send(
         'advert-was-returned-owner',
         { name: by.id, email: by.id },
@@ -171,7 +171,7 @@ export const createBrevoNotifications = (
           advert: stripAdvert(advert),
         }
       ),
-    advertWaitlistAvailable: (by, quantity, advert) =>
+    advertWaitlistAvailable: (to, by, quantity, advert) =>
       send(
         'advert-waitlist-available',
         { name: by.id, email: by.id },
@@ -182,12 +182,12 @@ export const createBrevoNotifications = (
         }
       ),
 
-    advertWasPickedOwner: (by, advert) =>
+    advertWasPickedOwner: (to, by, advert) =>
       send('advert-was-picked-owner', advertOwner(advert), {
         by,
         advert: stripAdvert(advert),
       }),
-    advertWasUnpickedOwner: (by, advert) =>
+    advertWasUnpickedOwner: (to, by, advert) =>
       send('advert-was-picked-owner', advertOwner(advert), {
         by,
         advert: stripAdvert(advert),

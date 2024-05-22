@@ -39,6 +39,7 @@ export const createReservedClaimsNotifier =
             // Queue notification for Email/SMS delivery
             actions(() =>
               notifications.advertNotCollected(
+                c.by,
                 { id: c.by, roles: {} },
                 c.quantity,
                 advert

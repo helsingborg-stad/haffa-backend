@@ -8,7 +8,7 @@ describe('tryCreateEmailUserNotifications', () => {
   it('doesnt wrap null', () =>
     expect(tryCreateEmailUserNotifications(null)).toBeNull())
 
-  it('does forward callls for email users', async () => {
+  it('does forward calls for email users', async () => {
     const inner: NotificationService = {
       pincodeRequested: jest.fn(),
       advertCollectWasCancelled: jest.fn(),
@@ -37,35 +37,41 @@ describe('tryCreateEmailUserNotifications', () => {
     const u: HaffaUser = { id: 'test@user.com' }
     const a = createEmptyAdvert()
 
-    await n.pincodeRequested(u.id, '123456')
-    await n.advertCollectWasCancelled(u, 1, a)
-    await n.advertNotCollected(u, 1, a)
-    await n.advertReservationWasCancelled(u, 1, a)
-    await n.advertWasArchived(u, a)
-    await n.advertWasCollected(u, 1, a)
-    await n.advertWasCreated(u, a)
-    await n.advertWasRemoved(u, a)
-    await n.advertWasReserved(u, 1, a)
-    await n.advertWasUnarchived(u, a)
-    await n.subscriptionsHasNewAdverts(u, [])
-    await n.advertNotReturned(u, 1, a)
-    await n.advertWasReturned(u, 1, a)
-    await n.advertWasReturnedOwner(u, 1, a)
+    const to = 'valid@email.com'
+    await n.pincodeRequested(to, '123456')
+    await n.advertCollectWasCancelled(to, u, 1, a)
+    await n.advertNotCollected(to, u, 1, a)
+    await n.advertReservationWasCancelled(to, u, 1, a)
+    await n.advertWasArchived(to, u, a)
+    await n.advertWasCollected(to, u, 1, a)
+    await n.advertWasCreated(to, u, a)
+    await n.advertWasRemoved(to, u, a)
+    await n.advertWasReserved(to, u, 1, a)
+    await n.advertWasUnarchived(to, u, a)
+    await n.subscriptionsHasNewAdverts(to, u, [])
+    await n.advertNotReturned(to, u, 1, a)
+    await n.advertWasReturned(to, u, 1, a)
+    await n.advertWasReturnedOwner(to, u, 1, a)
 
-    expect(inner.pincodeRequested).toHaveBeenCalledWith(u.id, '123456')
-    expect(inner.advertCollectWasCancelled).toHaveBeenCalledWith(u, 1, a)
-    expect(inner.advertNotCollected).toHaveBeenCalledWith(u, 1, a)
-    expect(inner.advertReservationWasCancelled).toHaveBeenCalledWith(u, 1, a)
-    expect(inner.advertWasArchived).toHaveBeenCalledWith(u, a)
-    expect(inner.advertWasCollected).toHaveBeenCalledWith(u, 1, a)
-    expect(inner.advertWasCreated).toHaveBeenCalledWith(u, a)
-    expect(inner.advertWasRemoved).toHaveBeenCalledWith(u, a)
-    expect(inner.advertWasReserved).toHaveBeenCalledWith(u, 1, a)
-    expect(inner.advertWasUnarchived).toHaveBeenCalledWith(u, a)
-    expect(inner.subscriptionsHasNewAdverts).toHaveBeenCalledWith(u, [])
-    expect(inner.advertNotReturned).toHaveBeenCalledWith(u, 1, a)
-    expect(inner.advertWasReturned).toHaveBeenCalledWith(u, 1, a)
-    expect(inner.advertWasReturnedOwner).toHaveBeenCalledWith(u, 1, a)
+    expect(inner.pincodeRequested).toHaveBeenCalledWith(to, '123456')
+    expect(inner.advertCollectWasCancelled).toHaveBeenCalledWith(to, u, 1, a)
+    expect(inner.advertNotCollected).toHaveBeenCalledWith(to, u, 1, a)
+    expect(inner.advertReservationWasCancelled).toHaveBeenCalledWith(
+      to,
+      u,
+      1,
+      a
+    )
+    expect(inner.advertWasArchived).toHaveBeenCalledWith(to, u, a)
+    expect(inner.advertWasCollected).toHaveBeenCalledWith(to, u, 1, a)
+    expect(inner.advertWasCreated).toHaveBeenCalledWith(to, u, a)
+    expect(inner.advertWasRemoved).toHaveBeenCalledWith(to, u, a)
+    expect(inner.advertWasReserved).toHaveBeenCalledWith(to, u, 1, a)
+    expect(inner.advertWasUnarchived).toHaveBeenCalledWith(to, u, a)
+    expect(inner.subscriptionsHasNewAdverts).toHaveBeenCalledWith(to, u, [])
+    expect(inner.advertNotReturned).toHaveBeenCalledWith(to, u, 1, a)
+    expect(inner.advertWasReturned).toHaveBeenCalledWith(to, u, 1, a)
+    expect(inner.advertWasReturnedOwner).toHaveBeenCalledWith(to, u, 1, a)
   })
 
   it('doesnt forward calls for non-email users', async () => {
@@ -74,23 +80,23 @@ describe('tryCreateEmailUserNotifications', () => {
     const inner = createTestNotificationServices({})
     const n = tryCreateEmailUserNotifications(inner)!
 
-    const u: HaffaUser = { id: 'not an email' }
+    const u: HaffaUser = { id: 'test@user.com' }
     const a = createEmptyAdvert()
-
     await expect(
       (async () => {
-        await n.pincodeRequested(u.id, '123456')
-        await n.advertCollectWasCancelled(u, 1, a)
-        await n.advertNotCollected(u, 1, a)
-        await n.advertReservationWasCancelled(u, 1, a)
-        await n.advertWasArchived(u, a)
-        await n.advertWasCollected(u, 1, a)
-        await n.advertWasCreated(u, a)
-        await n.advertWasRemoved(u, a)
-        await n.advertWasReserved(u, 1, a)
-        await n.advertWasUnarchived(u, a)
-        await n.subscriptionsHasNewAdverts(u, [])
-        await n.advertNotReturned(u, 1, a)
+        const to = 'not an email'
+        await n.pincodeRequested(to, '123456')
+        await n.advertCollectWasCancelled(to, u, 1, a)
+        await n.advertNotCollected(to, u, 1, a)
+        await n.advertReservationWasCancelled(to, u, 1, a)
+        await n.advertWasArchived(to, u, a)
+        await n.advertWasCollected(to, u, 1, a)
+        await n.advertWasCreated(to, u, a)
+        await n.advertWasRemoved(to, u, a)
+        await n.advertWasReserved(to, u, 1, a)
+        await n.advertWasUnarchived(to, u, a)
+        await n.subscriptionsHasNewAdverts(to, u, [])
+        await n.advertNotReturned(to, u, 1, a)
         return 'no notifications where forwarded'
       })()
     ).resolves.toMatch('no notifications where forwarded')

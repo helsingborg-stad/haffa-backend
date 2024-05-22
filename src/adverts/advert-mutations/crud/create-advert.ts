@@ -21,7 +21,7 @@ export const createCreateAdvert =
         } as Advert)
       )
       .then(async advert => {
-        await notifications.advertWasCreated(user, advert)
+        await notifications.advertWasCreated(advert.createdBy, user, advert)
         return advert
       })
       .then(advert => ({ advert, status: null }))

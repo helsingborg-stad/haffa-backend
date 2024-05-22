@@ -45,6 +45,7 @@ describe('collectAdvert', () => {
           ...createEmptyAdvert(),
           id: 'advert-123',
           quantity: 5,
+          createdBy: 'test@owner',
         }
 
         const result = await mappedGqlRequest<AdvertMutationResult>(
@@ -71,6 +72,7 @@ describe('collectAdvert', () => {
 
         T('should have notified about the interesting event', () =>
           expect(advertWasCollected).toHaveBeenCalledWith(
+            user.id,
             expect.objectContaining(user),
             1,
             adverts['advert-123']
@@ -78,6 +80,7 @@ describe('collectAdvert', () => {
         )
         T('should have notified about the interesting event', () =>
           expect(advertWasCollectedOwner).toHaveBeenCalledWith(
+            'test@owner',
             expect.objectContaining(user),
             1,
             adverts['advert-123']

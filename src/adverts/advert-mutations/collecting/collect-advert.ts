@@ -30,8 +30,18 @@ export const createCollectAdvert =
           const at = new Date().toISOString()
           actions(patched =>
             Promise.all([
-              notifications.advertWasCollected(user, quantity, patched),
-              notifications.advertWasCollectedOwner(user, quantity, patched),
+              notifications.advertWasCollected(
+                user.id,
+                user,
+                quantity,
+                patched
+              ),
+              notifications.advertWasCollectedOwner(
+                advert.createdBy,
+                user,
+                quantity,
+                patched
+              ),
             ])
           )
 

@@ -9,7 +9,7 @@ const stripQuantityZero = (claims: AdvertClaim[]) =>
 
 export const normalizeAdvertClaims = (claims: AdvertClaim[]): AdvertClaim[] => {
   const groups =
-    // group by (by, type)
+    // group by (to,by, type)
     toLookup(stripQuantityZero(claims), ({ by, type }) => `${type}:${by}`)
 
   const combined = mapValues<AdvertClaim[], AdvertClaim>(groups, group =>

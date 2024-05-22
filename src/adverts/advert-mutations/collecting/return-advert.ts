@@ -33,15 +33,12 @@ export const createReturnAdvert =
         actions(patched =>
           Promise.all([
             ...collects.map(({ by, quantity }) =>
-              notifications.advertWasReturned(
-                makeUser({ id: by }),
-                quantity,
-                patched
-              )
+              notifications.advertWasReturned(by, user, quantity, patched)
             ),
             ...collects.map(({ by, quantity }) =>
               notifications.advertWasReturnedOwner(
-                makeUser({ id: by }),
+                advert.createdBy,
+                user,
                 quantity,
                 patched
               )

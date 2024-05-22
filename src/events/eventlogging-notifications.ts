@@ -15,32 +15,34 @@ export const createEventLoggingNotifications = (
   return {
     subscriptionsHasNewAdverts: async () => undefined,
     pincodeRequested: async () => undefined,
-    advertWasCreated: (by, advert) => log('advert-was-created', { by, advert }),
-    advertWasRemoved: (by, advert) => log('advert-was-removed', { by, advert }),
-    advertWasArchived: (by, advert) =>
+    advertWasCreated: (to, by, advert) =>
+      log('advert-was-created', { by, advert }),
+    advertWasRemoved: (to, by, advert) =>
+      log('advert-was-removed', { by, advert }),
+    advertWasArchived: (to, by, advert) =>
       log('advert-was-archived', { by, advert }),
-    advertWasUnarchived: (by, advert) =>
+    advertWasUnarchived: (to, by, advert) =>
       log('advert-was-unarchived', { by, advert }),
-    advertWasReserved: (by, quantity, advert) =>
+    advertWasReserved: (to, by, quantity, advert) =>
       log('advert-was-reserved', { by, quantity, advert }),
     advertWasReservedOwner: async () => undefined,
-    advertReservationWasCancelled: (by, quantity, advert) =>
+    advertReservationWasCancelled: (to, by, quantity, advert) =>
       log('advert-reservation-was-cancelled', {
         by,
         quantity,
         advert,
       }),
     advertReservationWasCancelledOwner: async () => undefined,
-    advertWasCollected: (by, quantity, advert) =>
+    advertWasCollected: (to, by, quantity, advert) =>
       log('advert-was-collected', { by, quantity, advert }),
     advertWasCollectedOwner: async () => undefined,
-    advertCollectWasCancelled: (by, quantity, advert) =>
+    advertCollectWasCancelled: (to, by, quantity, advert) =>
       log('advert-collect-was-cancelled', { by, quantity, advert }),
     advertCollectWasCancelledOwner: async () => undefined,
     advertNotCollected: async () => undefined,
-    advertNotReturned: (by, quantity, advert) =>
+    advertNotReturned: (to, by, quantity, advert) =>
       log('advert-not-returned', { by, quantity, advert }),
-    advertWasReturned: (by, quantity, advert) =>
+    advertWasReturned: (to, by, quantity, advert) =>
       log('advert-was-returned', { by, quantity, advert }),
     advertWasReturnedOwner: async () => undefined,
     advertWaitlistAvailable: async () => undefined,

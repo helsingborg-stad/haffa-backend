@@ -47,12 +47,7 @@ export const createConvertAdvertClaim =
         }))
 
         actions(patched =>
-          notifyClaimsWas(
-            notifications,
-            makeUser({ id: by }),
-            patched,
-            updatedClaims
-          )
+          notifyClaimsWas(notifications, user, patched, updatedClaims)
         )
         return {
           ...advert,

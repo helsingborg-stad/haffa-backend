@@ -29,7 +29,8 @@ export const createNotifyAdvertWaitlist =
         recipients.forEach(recipient =>
           actions(() =>
             notifications.advertWaitlistAvailable(
-              makeUser({ id: recipient }),
+              recipient,
+              user,
               quantity,
               advert
             )
