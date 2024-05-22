@@ -5,6 +5,11 @@ import { createClient } from './brevo-client'
 import type { BrevoConfig, Identity, TemplateName } from './types'
 import type { StartupLog } from '../../types'
 
+const advertOwner = ({ createdBy }: Advert): Identity => ({
+  email: createdBy,
+  name: createdBy,
+})
+
 export const createBrevoNotifications = (
   config: BrevoConfig
 ): NotificationService => {
@@ -176,6 +181,17 @@ export const createBrevoNotifications = (
           advert: stripAdvert(advert),
         }
       ),
+
+    advertWasPickedOwner: (by, advert) =>
+      send('advert-was-picked-owner', advertOwner(advert), {
+        by,
+        advert: stripAdvert(advert),
+      }),
+    advertWasUnpickedOwner: (by, advert) =>
+      send('advert-was-picked-owner', advertOwner(advert), {
+        by,
+        advert: stripAdvert(advert),
+      }),
   }
 }
 

@@ -23,6 +23,8 @@ import { createImportAdvertSnapshot } from './crud/import-advert-snapshot'
 import { createJoinAdvertWaitlist } from './waitlist/join-advert-waitlist'
 import { createLeaveAdvertWaitlist } from './waitlist/leave-advert-waitlist'
 import { createNotifyAdvertWaitlist } from './waitlist/notify-advert-waitlist'
+import { createMarkAdvertAsPicked } from './picked/mark-advert-as-picked'
+import { createMarkAdvertAsUnpicked } from './picked/mark-advert-as-unpicked'
 
 export const createAdvertMutations = (
   services: Pick<Services, 'adverts' | 'files' | 'notifications' | 'syslog'>
@@ -46,4 +48,6 @@ export const createAdvertMutations = (
   joinAdvertWaitlist: createJoinAdvertWaitlist(services),
   leaveAdvertWaitlist: createLeaveAdvertWaitlist(services),
   notifyAdvertWaitlist: createNotifyAdvertWaitlist(services),
+  markAdvertAsPicked: createMarkAdvertAsPicked(services),
+  markAdvertAsUnpicked: createMarkAdvertAsUnpicked(services),
 })

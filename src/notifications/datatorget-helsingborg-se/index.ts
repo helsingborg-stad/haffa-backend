@@ -91,6 +91,10 @@ const createDatatorgetSmsNotifications = ({
       send(by.id, 'advert-was-returned-owner', { by, quantity, advert }),
     advertWaitlistAvailable: (by, quantity, advert) =>
       send(by.id, 'advert-waitlist-available', { by, quantity, advert }),
+    advertWasPickedOwner: (by, advert) =>
+      send(by.id, 'advert-was-picked-owner', { by, advert }),
+    advertWasUnpickedOwner: (by, advert) =>
+      send(by.id, 'advert-was-picked-owner', { by, advert }),
   }
 }
 

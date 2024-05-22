@@ -14,6 +14,8 @@ export type TemplateName =
   | 'advert-was-returned'
   | 'advert-was-returned-owner'
   | 'advert-waitlist-available'
+  | 'advert-was-picked-owner'
+  | 'advert-was-unpicked-owner'
 
 export interface Identity {
   name: string

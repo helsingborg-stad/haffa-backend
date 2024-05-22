@@ -50,6 +50,7 @@ export const getAdvertMeta = (
     canManageAllAdverts,
     canManageReturns,
     canJoinWaitlist,
+    canManagePicked,
   } = normalizeRoles(user.roles)
 
   const canManageClaims =
@@ -83,6 +84,10 @@ export const getAdvertMeta = (
         isNotArchived &&
         (myReservationCount > 0 || quantity > claimCount) &&
         canCollectAdverts,
+      canPick:
+        canManagePicked && (mine || canManageAllAdverts) && !advert.pickedAt,
+      canUnpick:
+        canManagePicked && (mine || canManageAllAdverts) && !!advert.pickedAt,
       canJoinWaitList:
         isNotArchived &&
         canJoinWaitlist &&
@@ -98,6 +103,7 @@ export const getAdvertMeta = (
       isLendingAdvert,
       isReservedBySome,
       isCollectedBySome,
+      isPicked: !!advert.pickedAt,
       returnInfo: getClaimReturnInfo(advert.claims, advert.lendingPeriod),
       claims,
     }
@@ -116,6 +122,8 @@ export const getAdvertMeta = (
     canReserve: false,
     canCancelReservation: false,
     canCollect: false,
+    canPick: false,
+    canUnpick: false,
     canJoinWaitList: false,
     canLeaveWaitList: false,
     canManageClaims: false,
@@ -125,6 +133,7 @@ export const getAdvertMeta = (
     isLendingAdvert,
     isReservedBySome,
     isCollectedBySome,
+    isPicked: false,
     returnInfo: [],
     claims: [],
   }

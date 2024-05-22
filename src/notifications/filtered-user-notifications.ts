@@ -58,6 +58,10 @@ export const tryCreateUserFilteredNotifications = (
           whenUser(args[0], () => inner.advertWasReturnedOwner(...args)),
         advertWaitlistAvailable: (...args) =>
           whenUser(args[0], () => inner.advertWaitlistAvailable(...args)),
+        advertWasPickedOwner: (...args) =>
+          whenUser(args[0], () => inner.advertWasPickedOwner(...args)),
+        advertWasUnpickedOwner: (...args) =>
+          whenUser(args[0], () => inner.advertWasUnpickedOwner(...args)),
       }
     : null
 }
