@@ -38,7 +38,7 @@ export const createExpiredClaimsNotifier =
             actions(() =>
               notifications.advertReservationWasCancelled(
                 c.by,
-                { id: c.by, roles: {} },
+                user,
                 c.quantity,
                 advert
               )

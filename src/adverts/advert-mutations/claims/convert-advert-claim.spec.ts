@@ -118,7 +118,7 @@ describe('convertAdvertClaim', () => {
         T('should have notified about the interesting event', () => {
           expect(advertWasCollected).toHaveBeenCalledWith(
             'claims@user',
-            expect.objectContaining({ id: user.id }),
+            expect.objectContaining(user),
             1,
             adverts['advert-123']
           )
@@ -126,7 +126,7 @@ describe('convertAdvertClaim', () => {
         T('should have notified about the interesting event', () => {
           expect(advertWasCollectedOwner).toHaveBeenCalledWith(
             'some@owner',
-            expect.objectContaining({ id: user.id }),
+            expect.objectContaining(user),
             1,
             adverts['advert-123']
           )

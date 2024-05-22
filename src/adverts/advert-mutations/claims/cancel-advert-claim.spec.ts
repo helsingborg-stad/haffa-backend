@@ -104,7 +104,7 @@ describe('cancelAdvertClaim - reserved', () => {
         T('should have notified about the interesting event', () =>
           expect(advertReservationWasCancelled).toHaveBeenCalledWith(
             'claims@user',
-            expect.objectContaining({ id: user.id }),
+            expect.objectContaining(user),
             1,
             adverts['advert-123']
           )
@@ -113,7 +113,7 @@ describe('cancelAdvertClaim - reserved', () => {
         T('should have notified about the interesting event', () =>
           expect(advertReservationWasCancelledOwner).toHaveBeenCalledWith(
             'some@owner',
-            expect.objectContaining({ id: user.id }),
+            expect.objectContaining(user),
             1,
             adverts['advert-123']
           )
@@ -207,7 +207,7 @@ describe('cancelAdvertClaim - collected', () => {
         T('should have notified about the interesting event', () =>
           expect(advertCollectWasCancelled).toHaveBeenCalledWith(
             'claims@user',
-            expect.objectContaining({ id: user.id }),
+            expect.objectContaining(user),
             1,
             adverts['advert-123']
           )
@@ -215,7 +215,7 @@ describe('cancelAdvertClaim - collected', () => {
         T('should have notified about the interesting event', () =>
           expect(advertCollectWasCancelledOwner).toHaveBeenCalledWith(
             'some@owner',
-            expect.objectContaining({ id: user.id }),
+            expect.objectContaining(user),
             1,
             adverts['advert-123']
           )

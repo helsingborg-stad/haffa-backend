@@ -1,4 +1,3 @@
-import { makeUser } from '../../../login'
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { getAdvertMeta } from '../../advert-meta'

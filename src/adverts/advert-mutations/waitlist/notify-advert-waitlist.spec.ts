@@ -1,4 +1,4 @@
-import { makeAdmin, makeUser } from '../../../login'
+import { makeAdmin } from '../../../login'
 import { createTestNotificationServices } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
 import { createInMemoryAdvertsRepository } from '../../repository/memory'
