@@ -168,6 +168,14 @@ export const createConsoleNotificationService = (): NotificationService => ({
         ...advertInfo(advert),
       },
     }),
+  advertWasPicked: async (to, by, advert) =>
+    console.log({
+      advertWasPicked: {
+        to,
+        by,
+        ...advertInfo(advert),
+      },
+    }),
   advertWasPickedOwner: async (to, by, advert) =>
     console.log({
       advertWasPickedOwner: {

@@ -5,6 +5,7 @@ import {
 } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
 import type { AdvertMutationResult } from '../../types'
+import { makeReservedClaim } from '../test-utils/claims'
 import { mutationProps } from '../test-utils/gql-test-definitions'
 
 const markAdvertAsPickedMutation = /* GraphQL */ `
@@ -19,8 +20,10 @@ const markAdvertAsPickedMutation = /* GraphQL */ `
 
 describe('markAdvertAsPicked', () => {
   it('updates pickedAt at notifies', () => {
-    const advertWasPickedOwner = jest.fn(async () => void 0)
+    const advertWasPicked = jest.fn(async () => undefined)
+    const advertWasPickedOwner = jest.fn(async () => undefined)
     const notifications = createTestNotificationServices({
+      advertWasPicked,
       advertWasPickedOwner,
     })
     return end2endTest(
@@ -47,6 +50,11 @@ describe('markAdvertAsPicked', () => {
           ...createEmptyAdvert(),
           id: 'advert-123',
           createdBy: 'some@owner',
+          quantity: 10,
+          claims: [
+            makeReservedClaim({ by: 'reserver1' }),
+            makeReservedClaim({ by: 'reserver2' }),
+          ],
         }
 
         const result = await mappedGqlRequest<AdvertMutationResult>(
@@ -58,13 +66,26 @@ describe('markAdvertAsPicked', () => {
         )
         expect(result.status).toBeNull()
 
-        T('should have notified about the interesting event', () =>
+        T('owner is notified', () =>
           expect(advertWasPickedOwner).toHaveBeenCalledWith(
             'some@owner',
             expect.objectContaining(user),
             adverts['advert-123']
           )
         )
+
+        T('reservers are notified', () => {
+          expect(advertWasPicked).toHaveBeenCalledWith(
+            'reserver1',
+            expect.objectContaining(user),
+            adverts['advert-123']
+          )
+          expect(advertWasPicked).toHaveBeenCalledWith(
+            'reserver2',
+            expect.objectContaining(user),
+            adverts['advert-123']
+          )
+        })
 
         T('timestamp should be updated', () => {
           const { pickedAt } = adverts['advert-123']

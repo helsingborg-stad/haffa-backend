@@ -55,6 +55,8 @@ export const createSendGridNotifications = (
       send(to, 'advert-was-returned-owner', { by, quantity, advert }),
     advertWaitlistAvailable: (to, by, quantity, advert) =>
       send(to, 'advert-waitlist-avaible', { by, quantity, advert }),
+    advertWasPicked: (to, by, advert) =>
+      send(to, 'advert-was-picked', { by, advert }),
     advertWasPickedOwner: (to, by, advert) =>
       send(to, 'advert-was-picked-owner', { by, advert }),
     advertWasUnpickedOwner: (to, by, advert) =>
