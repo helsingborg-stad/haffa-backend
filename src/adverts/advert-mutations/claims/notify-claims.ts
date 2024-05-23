@@ -19,8 +19,13 @@ export const notifyClaimsWas = async (
       .filter(claim => claim.type === AdvertClaimType.reserved)
       .map(claim =>
         Promise.all([
-          notifications.advertWasReserved(by, claim.quantity, advert),
-          notifications.advertWasReservedOwner(by, claim.quantity, advert),
+          notifications.advertWasReserved(claim.by, by, claim.quantity, advert),
+          notifications.advertWasReservedOwner(
+            advert.createdBy,
+            by,
+            claim.quantity,
+            advert
+          ),
         ])
       )
   )
@@ -30,8 +35,18 @@ export const notifyClaimsWas = async (
       .filter(claim => claim.type === AdvertClaimType.collected)
       .map(claim =>
         Promise.all([
-          notifications.advertWasCollected(by, claim.quantity, advert),
-          notifications.advertWasCollectedOwner(by, claim.quantity, advert),
+          notifications.advertWasCollected(
+            claim.by,
+            by,
+            claim.quantity,
+            advert
+          ),
+          notifications.advertWasCollectedOwner(
+            advert.createdBy,
+            by,
+            claim.quantity,
+            advert
+          ),
         ])
       )
   )
@@ -50,11 +65,13 @@ export const notifyClaimsWasCancelled = async (
       .map(claim =>
         Promise.all([
           notifications.advertReservationWasCancelled(
+            claim.by,
             by,
             claim.quantity,
             advert
           ),
           notifications.advertReservationWasCancelledOwner(
+            advert.createdBy,
             by,
             claim.quantity,
             advert
@@ -68,8 +85,14 @@ export const notifyClaimsWasCancelled = async (
       .filter(claim => claim.type === AdvertClaimType.collected)
       .map(claim =>
         Promise.all([
-          notifications.advertCollectWasCancelled(by, claim.quantity, advert),
+          notifications.advertCollectWasCancelled(
+            claim.by,
+            by,
+            claim.quantity,
+            advert
+          ),
           notifications.advertCollectWasCancelledOwner(
+            advert.createdBy,
             by,
             claim.quantity,
             advert

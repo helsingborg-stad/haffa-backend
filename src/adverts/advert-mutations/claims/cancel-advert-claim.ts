@@ -38,12 +38,7 @@ export const createCancelAdvertClaim =
         }
 
         actions(patched =>
-          notifyClaimsWasCancelled(
-            notifications,
-            makeUser({ id: by }),
-            patched,
-            claims
-          )
+          notifyClaimsWasCancelled(notifications, user, patched, claims)
         )
 
         return {

@@ -71,14 +71,16 @@ describe('returnAdvert', () => {
 
         T('should have notified about the interesting event', () =>
           expect(advertWasReturned).toHaveBeenCalledWith(
-            expect.objectContaining({ id: 'collector@test.com' }),
+            'collector@test.com',
+            expect.objectContaining(user),
             1,
             adverts['advert-123']
           )
         )
         T('should have notified about the interesting event', () =>
           expect(advertWasReturnedOwner).toHaveBeenCalledWith(
-            expect.objectContaining({ id: 'collector@test.com' }),
+            'owner@test.com',
+            expect.objectContaining(user),
             1,
             adverts['advert-123']
           )

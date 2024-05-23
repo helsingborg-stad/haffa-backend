@@ -1,10 +1,16 @@
 /* eslint-disable no-console */
+import type { Advert } from '../adverts/types'
 import type { NotificationService } from './types'
 
+const advertInfo = ({ id, createdBy, title }: Advert) => ({
+  advert: { id, createdBy, title },
+})
+
 export const createConsoleNotificationService = (): NotificationService => ({
-  subscriptionsHasNewAdverts: async (by, adverts) =>
+  subscriptionsHasNewAdverts: async (to, by, adverts) =>
     console.log({
       subscriptionsHasNewAdverts: {
+        to,
         by,
         adverts,
       },
@@ -13,150 +19,169 @@ export const createConsoleNotificationService = (): NotificationService => ({
     console.log({
       pincodeRequested: { email, pincode },
     }),
-  advertWasCreated: async (by, advert) =>
+  advertWasCreated: async (to, by, advert) =>
     console.log({
       advertWasCreated: {
+        to,
         by,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertWasRemoved: async (by, advert) =>
+  advertWasRemoved: async (to, by, advert) =>
     console.log({
       advertWasRemoved: {
+        to,
         by,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertWasArchived: async (by, advert) =>
+  advertWasArchived: async (to, by, advert) =>
     console.log({
       advertWasArchived: {
+        to,
         by,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertWasUnarchived: async (by, advert) =>
+  advertWasUnarchived: async (to, by, advert) =>
     console.log({
       advertWasUnarchived: {
+        to,
         by,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertWasReserved: async (by, quantity, advert) =>
+  advertWasReserved: async (to, by, quantity, advert) =>
     console.log({
       advertWasReserved: {
+        to,
         by,
         quantity,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertWasReservedOwner: async (by, quantity, advert) =>
+  advertWasReservedOwner: async (to, by, quantity, advert) =>
     console.log({
       advertWasReservedOwner: {
+        to,
         by,
         quantity,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertReservationWasCancelled: async (by, quantity, advert) =>
+  advertReservationWasCancelled: async (to, by, quantity, advert) =>
     console.log({
       advertReservationWasCancelled: {
+        to,
         by,
         quantity,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertReservationWasCancelledOwner: async (by, quantity, advert) =>
+  advertReservationWasCancelledOwner: async (to, by, quantity, advert) =>
     console.log({
       advertReservationWasCancelledOwner: {
+        to,
         by,
         quantity,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertWasCollected: async (by, quantity, advert) =>
+  advertWasCollected: async (to, by, quantity, advert) =>
     console.log({
       advertWasCollected: {
+        to,
         by,
         quantity,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertWasCollectedOwner: async (by, quantity, advert) =>
+  advertWasCollectedOwner: async (to, by, quantity, advert) =>
     console.log({
       advertWasCollectedOwner: {
+        to,
         by,
         quantity,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertCollectWasCancelled: async (by, quantity, advert) =>
+  advertCollectWasCancelled: async (to, by, quantity, advert) =>
     console.log({
       advertCollectWasCancelled: {
+        to,
         by,
         quantity,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertCollectWasCancelledOwner: async (by, quantity, advert) =>
+  advertCollectWasCancelledOwner: async (to, by, quantity, advert) =>
     console.log({
       advertCollectWasCancelledOwner: {
+        to,
         by,
         quantity,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertNotCollected: async (by, quantity, advert) =>
+  advertNotCollected: async (to, by, quantity, advert) =>
     console.log({
       advertNotCollected: {
+        to,
         by,
         quantity,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertNotReturned: async (by, quantity, advert) =>
+  advertNotReturned: async (to, by, quantity, advert) =>
     console.log({
       advertNotReturned: {
+        to,
         by,
         quantity,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertWasReturned: async (by, quantity, advert) =>
+  advertWasReturned: async (to, by, quantity, advert) =>
     console.log({
       advertWastReturned: {
+        to,
         by,
         quantity,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertWasReturnedOwner: async (by, quantity, advert) =>
+  advertWasReturnedOwner: async (to, by, quantity, advert) =>
     console.log({
       advertWasReturnedOwner: {
+        to,
         by,
         quantity,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertWaitlistAvailable: async (by, quantity, advert) =>
+  advertWaitlistAvailable: async (to, by, quantity, advert) =>
     console.log({
       advertWaitlistAvailable: {
+        to,
         by,
         quantity,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertWasPickedOwner: async (by, advert) =>
+  advertWasPickedOwner: async (to, by, advert) =>
     console.log({
       advertWasPickedOwner: {
+        to,
         by,
-        advert,
+        ...advertInfo(advert),
       },
     }),
-  advertWasUnpickedOwner: async (by, advert) =>
+  advertWasUnpickedOwner: async (to, by, advert) =>
     console.log({
       advertWasUnpickedOwner: {
+        to,
         by,
-        advert,
+        ...advertInfo(advert),
       },
     }),
 })

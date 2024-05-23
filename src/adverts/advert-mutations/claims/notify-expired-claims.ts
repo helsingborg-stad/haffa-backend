@@ -37,7 +37,8 @@ export const createExpiredClaimsNotifier =
             // Queue notification for Email/SMS delivery
             actions(() =>
               notifications.advertReservationWasCancelled(
-                { id: c.by, roles: {} },
+                c.by,
+                user,
                 c.quantity,
                 advert
               )

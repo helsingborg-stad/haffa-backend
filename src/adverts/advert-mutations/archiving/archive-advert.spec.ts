@@ -58,6 +58,7 @@ describe('archiveAdvert', () => {
 
         T('should have notified about the interesting event', () =>
           expect(advertWasArchived).toHaveBeenCalledWith(
+            user.id,
             expect.objectContaining(user),
             expect.objectContaining(adverts['advert-123'])
           )

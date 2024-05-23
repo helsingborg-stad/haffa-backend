@@ -1,4 +1,3 @@
-import { makeUser } from '../../../login'
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { getAdvertMeta } from '../../advert-meta'
@@ -29,7 +28,8 @@ export const createNotifyAdvertWaitlist =
         recipients.forEach(recipient =>
           actions(() =>
             notifications.advertWaitlistAvailable(
-              makeUser({ id: recipient }),
+              recipient,
+              user,
               quantity,
               advert
             )

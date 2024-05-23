@@ -1,4 +1,4 @@
-import { makeAdmin, makeUser } from '../../../login'
+import { makeAdmin } from '../../../login'
 import { createTestNotificationServices } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
 import { createInMemoryAdvertsRepository } from '../../repository/memory'
@@ -30,6 +30,7 @@ describe('notifyAdvertWaitlist', () => {
     const adverts = createInMemoryAdvertsRepository({
       [advert.id]: advert,
     })
+    const user = makeAdmin({ id: 'test@user.com' })
 
     // Setup notifications
     const advertWaitlistAvailable = jest.fn()
@@ -39,16 +40,18 @@ describe('notifyAdvertWaitlist', () => {
 
     // Send notifications to recipients
     const notify = createNotifyAdvertWaitlist({ adverts, notifications })
-    await notify(makeAdmin({ id: 'test@user.com' }), 'advert-123')
+    await notify(user, 'advert-123')
 
     // waitlist users should be notified
     expect(advertWaitlistAvailable).toHaveBeenCalledWith(
-      makeUser({ id: 'user1' }),
+      'user1',
+      user,
       1,
       advert
     )
     expect(advertWaitlistAvailable).toHaveBeenCalledWith(
-      makeUser({ id: 'user2' }),
+      'user2',
+      user,
       1,
       advert
     )

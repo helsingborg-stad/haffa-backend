@@ -26,7 +26,9 @@ export const createMarkAdvertAsPicked =
       )
       .patch((advert, { actions }) => {
         const at = new Date().toISOString()
-        actions(patched => notifications.advertWasPickedOwner(user, patched))
+        actions(patched =>
+          notifications.advertWasPickedOwner(advert.createdBy, user, patched)
+        )
         return {
           ...advert,
           pickedAt: at,

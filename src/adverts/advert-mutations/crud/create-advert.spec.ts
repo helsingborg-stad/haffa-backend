@@ -54,6 +54,7 @@ describe('createAdvert', () => {
 
         T('should have notified about the interesting event', () =>
           expect(advertWasCreated).toHaveBeenCalledWith(
+            user.id,
             expect.objectContaining(user),
             expect.objectContaining(input)
           )

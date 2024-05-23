@@ -25,7 +25,9 @@ export const createMarkAdvertAsUnpicked =
         throwIf(!getAdvertMeta(advert, user).canUnpick, TxErrors.Unauthorized)
       )
       .patch((advert, { actions }) => {
-        actions(patched => notifications.advertWasUnpickedOwner(user, patched))
+        actions(patched =>
+          notifications.advertWasUnpickedOwner(advert.createdBy, user, patched)
+        )
         return {
           ...advert,
           pickedAt: '',

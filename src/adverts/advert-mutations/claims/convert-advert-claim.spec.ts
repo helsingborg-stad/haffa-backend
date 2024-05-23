@@ -38,14 +38,14 @@ describe('convertAdvertClaim', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: user.id,
-            roles: ['canManageOwnAdvertsHistory'],
+            roles: ['canManageOwnAdvertsHistory', 'canManageAllAdverts'],
           },
         ])
         // eslint-disable-next-line no-param-reassign
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
           id: 'advert-123',
-          createdBy: user.id,
+          createdBy: 'some@owner',
           quantity: 50,
           claims: [
             {
@@ -56,7 +56,7 @@ describe('convertAdvertClaim', () => {
               events: [],
             },
             {
-              by: user.id,
+              by: 'claims@user',
               at: '',
               quantity: 1,
               type: AdvertClaimType.reserved,
@@ -82,7 +82,7 @@ describe('convertAdvertClaim', () => {
           convertAdvertClaimMutation,
           {
             id: 'advert-123',
-            by: user.id,
+            by: 'claims@user',
             type: AdvertClaimType.reserved,
             newType: AdvertClaimType.collected,
           }
@@ -106,7 +106,7 @@ describe('convertAdvertClaim', () => {
               events: [],
             },
             {
-              by: user.id,
+              by: 'claims@user',
               // at: '',
               quantity: 1,
               type: AdvertClaimType.collected,
@@ -117,14 +117,16 @@ describe('convertAdvertClaim', () => {
 
         T('should have notified about the interesting event', () => {
           expect(advertWasCollected).toHaveBeenCalledWith(
-            makeUser({ id: user.id }),
+            'claims@user',
+            expect.objectContaining(user),
             1,
             adverts['advert-123']
           )
         })
         T('should have notified about the interesting event', () => {
           expect(advertWasCollectedOwner).toHaveBeenCalledWith(
-            makeUser({ id: user.id }),
+            'some@owner',
+            expect.objectContaining(user),
             1,
             adverts['advert-123']
           )

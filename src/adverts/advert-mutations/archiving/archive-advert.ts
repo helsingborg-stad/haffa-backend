@@ -19,7 +19,9 @@ export const createArchiveAdvert =
         throwIf(!getAdvertMeta(advert, user).canArchive, TxErrors.Unauthorized)
       )
       .patch(async (advert, { actions }) => {
-        actions(patched => notifications.advertWasArchived(user, patched))
+        actions(patched =>
+          notifications.advertWasArchived(advert.createdBy, user, patched)
+        )
         return {
           ...advert,
           archivedAt: new Date().toISOString(),

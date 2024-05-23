@@ -1,8 +1,6 @@
-import { mapValues, toLookup } from '../../lib'
 import type { TxError, TxResult } from '../../transactions'
 import type {
   Advert,
-  AdvertClaim,
   AdvertMutationResult,
   AdvertMutationStatus,
 } from '../types'

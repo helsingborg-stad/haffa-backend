@@ -32,7 +32,11 @@ describe('markAdvertAsPicked', () => {
         await loginPolicies.updateLoginPolicies([
           {
             emailPattern: user.id,
-            roles: ['canManagePicked', 'canEditOwnAdverts'],
+            roles: [
+              'canManagePicked',
+              'canEditOwnAdverts',
+              'canManageAllAdverts',
+            ],
           },
         ])
 
@@ -42,7 +46,7 @@ describe('markAdvertAsPicked', () => {
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
           id: 'advert-123',
-          createdBy: user.id,
+          createdBy: 'some@owner',
         }
 
         const result = await mappedGqlRequest<AdvertMutationResult>(
@@ -56,6 +60,7 @@ describe('markAdvertAsPicked', () => {
 
         T('should have notified about the interesting event', () =>
           expect(advertWasPickedOwner).toHaveBeenCalledWith(
+            'some@owner',
             expect.objectContaining(user),
             adverts['advert-123']
           )

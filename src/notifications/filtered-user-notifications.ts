@@ -1,5 +1,4 @@
 import { isValidPhoneNumber } from 'libphonenumber-js'
-import type { HaffaUser } from '../login/types'
 import { isValidEmail } from '../users'
 import type { NotificationService } from './types'
 
@@ -7,61 +6,54 @@ export const tryCreateUserFilteredNotifications = (
   inner: NotificationService | undefined | null,
   isValidUserId: (id: string) => boolean
 ): NotificationService | null => {
-  const whenId = (id: string, then: () => Promise<void>): Promise<void> =>
+  const guard = (id: string, then: () => Promise<void>): Promise<void> =>
     isValidUserId(id) ? then() : Promise.resolve()
-  const whenUser = (
-    { id }: HaffaUser,
-    then: () => Promise<void>
-  ): Promise<void> => whenId(id, then)
-
   return inner
     ? {
-        subscriptionsHasNewAdverts: (...args) =>
-          whenUser(args[0], () => inner.subscriptionsHasNewAdverts(...args)),
-        pincodeRequested: (...args) =>
-          whenId(args[0], () => inner.pincodeRequested(...args)),
-        advertWasCreated: (...args) =>
-          whenUser(args[0], () => inner.advertWasCreated(...args)),
-        advertWasRemoved: (...args) =>
-          whenUser(args[0], () => inner.advertWasRemoved(...args)),
-        advertWasArchived: (...args) =>
-          whenUser(args[0], () => inner.advertWasArchived(...args)),
-        advertWasUnarchived: (...args) =>
-          whenUser(args[0], () => inner.advertWasUnarchived(...args)),
-        advertWasReserved: (...args) =>
-          whenUser(args[0], () => inner.advertWasReserved(...args)),
-        advertWasReservedOwner: (...args) =>
-          whenUser(args[0], () => inner.advertWasReservedOwner(...args)),
-        advertReservationWasCancelled: (...args) =>
-          whenUser(args[0], () => inner.advertReservationWasCancelled(...args)),
-        advertReservationWasCancelledOwner: (...args) =>
-          whenUser(args[0], () =>
-            inner.advertReservationWasCancelledOwner(...args)
+        subscriptionsHasNewAdverts: (to, ...args) =>
+          guard(to, () => inner.subscriptionsHasNewAdverts(to, ...args)),
+        pincodeRequested: (to, ...args) =>
+          guard(to, () => inner.pincodeRequested(to, ...args)),
+        advertWasCreated: (to, ...args) =>
+          guard(to, () => inner.advertWasCreated(to, ...args)),
+        advertWasRemoved: (to, ...args) =>
+          guard(to, () => inner.advertWasRemoved(to, ...args)),
+        advertWasArchived: (to, ...args) =>
+          guard(to, () => inner.advertWasArchived(to, ...args)),
+        advertWasUnarchived: (to, ...args) =>
+          guard(to, () => inner.advertWasUnarchived(to, ...args)),
+        advertWasReserved: (to, ...args) =>
+          guard(to, () => inner.advertWasReserved(to, ...args)),
+        advertWasReservedOwner: (to, ...args) =>
+          guard(to, () => inner.advertWasReservedOwner(to, ...args)),
+        advertReservationWasCancelled: (to, ...args) =>
+          guard(to, () => inner.advertReservationWasCancelled(to, ...args)),
+        advertReservationWasCancelledOwner: (to, ...args) =>
+          guard(to, () =>
+            inner.advertReservationWasCancelledOwner(to, ...args)
           ),
-        advertWasCollected: (...args) =>
-          whenUser(args[0], () => inner.advertWasCollected(...args)),
-        advertWasCollectedOwner: (...args) =>
-          whenUser(args[0], () => inner.advertWasCollectedOwner(...args)),
-        advertCollectWasCancelled: (...args) =>
-          whenUser(args[0], () => inner.advertCollectWasCancelled(...args)),
-        advertCollectWasCancelledOwner: (...args) =>
-          whenUser(args[0], () =>
-            inner.advertCollectWasCancelledOwner(...args)
-          ),
-        advertNotCollected: (...args) =>
-          whenUser(args[0], () => inner.advertNotCollected(...args)),
-        advertNotReturned: (...args) =>
-          whenUser(args[0], () => inner.advertNotReturned(...args)),
-        advertWasReturned: (...args) =>
-          whenUser(args[0], () => inner.advertWasReturned(...args)),
-        advertWasReturnedOwner: (...args) =>
-          whenUser(args[0], () => inner.advertWasReturnedOwner(...args)),
-        advertWaitlistAvailable: (...args) =>
-          whenUser(args[0], () => inner.advertWaitlistAvailable(...args)),
-        advertWasPickedOwner: (...args) =>
-          whenUser(args[0], () => inner.advertWasPickedOwner(...args)),
-        advertWasUnpickedOwner: (...args) =>
-          whenUser(args[0], () => inner.advertWasUnpickedOwner(...args)),
+        advertWasCollected: (to, ...args) =>
+          guard(to, () => inner.advertWasCollected(to, ...args)),
+        advertWasCollectedOwner: (to, ...args) =>
+          guard(to, () => inner.advertWasCollectedOwner(to, ...args)),
+        advertCollectWasCancelled: (to, ...args) =>
+          guard(to, () => inner.advertCollectWasCancelled(to, ...args)),
+        advertCollectWasCancelledOwner: (to, ...args) =>
+          guard(to, () => inner.advertCollectWasCancelledOwner(to, ...args)),
+        advertNotCollected: (to, ...args) =>
+          guard(to, () => inner.advertNotCollected(to, ...args)),
+        advertNotReturned: (to, ...args) =>
+          guard(to, () => inner.advertNotReturned(to, ...args)),
+        advertWasReturned: (to, ...args) =>
+          guard(to, () => inner.advertWasReturned(to, ...args)),
+        advertWasReturnedOwner: (to, ...args) =>
+          guard(to, () => inner.advertWasReturnedOwner(to, ...args)),
+        advertWaitlistAvailable: (to, ...args) =>
+          guard(to, () => inner.advertWaitlistAvailable(to, ...args)),
+        advertWasPickedOwner: (to, ...args) =>
+          guard(to, () => inner.advertWasPickedOwner(to, ...args)),
+        advertWasUnpickedOwner: (to, ...args) =>
+          guard(to, () => inner.advertWasUnpickedOwner(to, ...args)),
       }
     : null
 }

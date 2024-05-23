@@ -22,7 +22,9 @@ export const createUnarchiveAdvert =
         )
       )
       .patch(async (advert, { actions }) => {
-        actions(patched => notifications.advertWasUnarchived(user, patched))
+        actions(patched =>
+          notifications.advertWasUnarchived(advert.createdBy, user, patched)
+        )
         return {
           ...advert,
           archivedAt: '',

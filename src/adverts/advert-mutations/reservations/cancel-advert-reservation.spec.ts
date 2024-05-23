@@ -43,6 +43,7 @@ describe('cancelAdvertReservation', () => {
         adverts['advert-123'] = {
           ...createEmptyAdvert(),
           id: 'advert-123',
+          createdBy: 'some@owner',
           quantity: 50,
           claims: [
             {
@@ -100,6 +101,7 @@ describe('cancelAdvertReservation', () => {
 
         T('should have notified about the interesting event', () =>
           expect(advertReservationWasCancelled).toHaveBeenCalledWith(
+            user.id,
             expect.objectContaining(user),
             3,
             adverts['advert-123']
@@ -107,6 +109,7 @@ describe('cancelAdvertReservation', () => {
         )
         T('should have notified about the interesting event', () =>
           expect(advertReservationWasCancelledOwner).toHaveBeenCalledWith(
+            'some@owner',
             expect.objectContaining(user),
             3,
             adverts['advert-123']

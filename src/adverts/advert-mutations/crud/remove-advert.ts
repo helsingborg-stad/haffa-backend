@@ -20,7 +20,9 @@ export const createRemoveAdvert =
         throwIf(!getAdvertMeta(advert, user).canRemove, TxErrors.Unauthorized)
       )
       .patch(async (advert, { actions }) => {
-        actions(() => notifications.advertWasRemoved(user, advert))
+        actions(() =>
+          notifications.advertWasRemoved(advert.createdBy, user, advert)
+        )
         advert.images.forEach(({ url }) =>
           actions(() => files.tryCleanupUrl(url))
         )
