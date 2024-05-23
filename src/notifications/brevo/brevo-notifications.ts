@@ -135,7 +135,7 @@ export const createBrevoNotifications = (
         advert: stripAdvert(advert),
       }),
     advertWasUnpickedOwner: (to, by, advert) =>
-      send('advert-was-picked-owner', to, {
+      send('advert-was-unpicked-owner', to, {
         by,
         advert: stripAdvert(advert),
       }),
