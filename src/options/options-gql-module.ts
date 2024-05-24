@@ -5,8 +5,6 @@ import { optionsGqlSchema } from './options.gql.schema'
 import { normalizeRoles } from '../login'
 import { optionsAdapter } from './options-adapter'
 
-const publicOptionsNames = new Set<string>(['tag-descriptions'])
-
 export const createOptionsGqlModule = ({
   settings,
 }: Pick<Services, 'settings'>): GraphQLModule => ({
@@ -16,12 +14,7 @@ export const createOptionsGqlModule = ({
       // https://www.graphql-tools.com/docs/resolvers
       options: async ({ ctx, args: { name } }) => {
         const { user } = ctx
-        if (
-          !(
-            publicOptionsNames.has(name) ||
-            normalizeRoles(user?.roles).canEditTerms
-          )
-        ) {
+        if (!normalizeRoles(user?.roles).canEditTerms) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return optionsAdapter(settings).getOptions(name)
