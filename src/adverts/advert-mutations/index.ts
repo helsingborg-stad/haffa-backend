@@ -25,6 +25,7 @@ import { createLeaveAdvertWaitlist } from './waitlist/leave-advert-waitlist'
 import { createNotifyAdvertWaitlist } from './waitlist/notify-advert-waitlist'
 import { createMarkAdvertAsPicked } from './picked/mark-advert-as-picked'
 import { createMarkAdvertAsUnpicked } from './picked/mark-advert-as-unpicked'
+import { createPatchAdvertTags } from './tags/patch-advert-tags'
 
 export const createAdvertMutations = (
   services: Pick<Services, 'adverts' | 'files' | 'notifications' | 'syslog'>
@@ -50,4 +51,5 @@ export const createAdvertMutations = (
   notifyAdvertWaitlist: createNotifyAdvertWaitlist(services),
   markAdvertAsPicked: createMarkAdvertAsPicked(services),
   markAdvertAsUnpicked: createMarkAdvertAsUnpicked(services),
+  patchAdvertTags: createPatchAdvertTags(services),
 })

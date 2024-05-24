@@ -1,3 +1,4 @@
+import { exceptValues } from './except-values'
 import { mapValues } from './map-values'
 import { obfuscate } from './obfuscate'
 import { sortBy } from './sort-by'
@@ -16,6 +17,7 @@ export {
   waitForAll,
   uniqueBy,
   sortBy,
+  exceptValues,
 }
 
 export const echo = <T>(value: T): T => {

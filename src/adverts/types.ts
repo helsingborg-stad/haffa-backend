@@ -337,6 +337,11 @@ export interface AdvertMutations {
     user: HaffaUser,
     id: string
   ) => Promise<AdvertMutationResult>
+  patchAdvertTags: (
+    user: HaffaUser,
+    id: string,
+    patch: { add: string; remove: string[] }
+  ) => Promise<AdvertMutationResult>
 }
 
 interface AdvertStats {

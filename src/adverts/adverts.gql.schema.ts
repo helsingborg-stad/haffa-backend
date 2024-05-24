@@ -34,6 +34,11 @@ export const advertsGqlSchema = /* GraphQL */ `
     leaveAdvertWaitlist(id: ID!): AdvertMutationResult
     markAdvertAsPicked(id: ID!): AdvertMutationResult
     markAdvertAsUnpicked(id: ID!): AdvertMutationResult
+    patchAdvertTags(
+      id: ID!
+      add: [String]!
+      remove: [String]!
+    ): AdvertMutationResult
   }
 
   type AdvertMutationStatus {

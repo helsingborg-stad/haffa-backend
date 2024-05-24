@@ -150,6 +150,12 @@ export const createAdvertsGqlModule = (
           .then(result =>
             mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
           ),
+      patchAdvertTags: async ({ ctx: { user }, args: { id, add, remove } }) =>
+        createAdvertMutations(services)
+          .patchAdvertTags(user, id, { add, remove })
+          .then(result =>
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+          ),
     },
   },
 })
