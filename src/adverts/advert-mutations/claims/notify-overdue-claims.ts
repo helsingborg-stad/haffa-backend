@@ -41,7 +41,7 @@ export const createOverdueClaimsNotifier =
             if (now >= getNextClaimEventDate(c, interval)) {
               // Queue notification for Email/SMS delivery
               actions(() =>
-                notifications.advertNotCollected(
+                notifications.advertNotReturned(
                   c.by,
                   { id: c.by, roles: {} },
                   c.quantity,
