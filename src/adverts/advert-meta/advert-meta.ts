@@ -73,7 +73,11 @@ export const getAdvertMeta = (
       isMine: mine,
       canEdit: canEditOwnAdverts && (mine || canManageAllAdverts),
       canArchive:
-        isNotArchived && canArchiveOwnAdverts && (mine || canManageAllAdverts),
+        isNotArchived &&
+        canArchiveOwnAdverts &&
+        (mine || canManageAllAdverts) &&
+        !isReservedBySome &&
+        !(isLendingAdvert && isCollectedBySome),
       canUnarchive:
         isArchived && canArchiveOwnAdverts && (mine || canManageAllAdverts),
       canRemove: canRemoveOwnAdverts && (mine || canManageAllAdverts),

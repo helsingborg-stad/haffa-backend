@@ -81,7 +81,7 @@ export const getClaimReturnInfo = (claims: AdvertClaim[], daysValid: number) =>
     .sort((a, b) => a.at.localeCompare(b.at))
 
 export const hasReservations = (claims: AdvertClaim[]) =>
-  claims.filter(claim => claim.type === AdvertClaimType.reserved).length > 0
+  claims.some(claim => claim.type === AdvertClaimType.reserved)
 
 export const hasCollects = (claims: AdvertClaim[]) =>
-  claims.filter(claim => claim.type === AdvertClaimType.collected).length > 0
+  claims.some(claim => claim.type === AdvertClaimType.collected)
