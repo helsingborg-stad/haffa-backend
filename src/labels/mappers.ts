@@ -6,6 +6,7 @@ export const getDefaultLabelOptions = (): LabelOptions => ({
   headline: 'HAFFA',
   displayReference: 'true',
   displayTitle: 'true',
+  errorCorrectionLevel: 'low',
 })
 
 export const transformLabelOptions = (options: Option[]): LabelOptions =>

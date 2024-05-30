@@ -82,6 +82,7 @@ export const advertLabelModule =
                 advert.id
               )}`,
               {
+                errorCorrectionLevel: labelOptions.errorCorrectionLevel,
                 margin: 0,
                 width: codeHeight * 2,
               }
