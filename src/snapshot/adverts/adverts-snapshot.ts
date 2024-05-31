@@ -1,11 +1,11 @@
 import { PassThrough } from 'stream'
-import type { Advert } from '../adverts/types'
-import type { FilesService } from '../files/types'
-import { convertObjectStream, jsonStream } from '../lib/streams'
-import type { ImportSnapshotFunction, SnapshotFunction } from './types'
-import { createAdvertMutations } from '../adverts/advert-mutations'
-import { waitForAll } from '../lib'
-import { validateAdvert } from '../adverts/repository/validation'
+import type { Advert } from '../../adverts/types'
+import type { FilesService } from '../../files/types'
+import { convertObjectStream, jsonStream } from '../../lib/streams'
+import type { ImportSnapshotFunction, SnapshotFunction } from '../types'
+import { createAdvertMutations } from '../../adverts/advert-mutations'
+import { waitForAll } from '../../lib'
+import { validateAdvert } from '../../adverts/repository/validation'
 
 const createConvertAdvertToAdvertWithInlinedImages =
   (files: FilesService) => (advert: Advert) =>

@@ -3,15 +3,24 @@ import { type ApplicationModule } from '@helsingborg-stad/gdi-api-node'
 import type { Services } from '../types'
 import { normalizeRoles } from '../login'
 import type { ImportSnapshotFunction, SnapshotFunction } from './types'
-import { advertsSnapshot, importAdvertsSnapshot } from './adverts-snapshot'
+import {
+  advertsSnapshot,
+  importAdvertsSnapshot,
+} from './adverts/adverts-snapshot'
 import { requireHaffaUser } from '../login/require-haffa-user'
+import {
+  categoriesSnapshot,
+  importCategoriesSnapshot,
+} from './categories/categories-snapshot'
 
 const snapshotHandlers: Record<string, SnapshotFunction> = {
   adverts: advertsSnapshot,
+  categories: categoriesSnapshot,
 }
 
 const importSnapshotHandlers: Record<string, ImportSnapshotFunction> = {
   adverts: importAdvertsSnapshot,
+  categories: importCategoriesSnapshot,
 }
 
 export const snapshotModule =
