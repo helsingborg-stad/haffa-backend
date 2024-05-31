@@ -11,6 +11,7 @@ export const createLogEvent = async (
     by,
     quantity,
     advert: {
+      id,
       category,
       contact: { organization },
     },
@@ -20,6 +21,7 @@ export const createLogEvent = async (
   at: new Date().toISOString(),
   quantity,
   organization,
+  advertId: id,
   ...(await createCategoryEvent(category, categories)),
   ...(await createByEvent(by, profiles)),
 })

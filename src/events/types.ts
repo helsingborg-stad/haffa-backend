@@ -20,6 +20,7 @@ export interface LogEvent {
   event: string
   at: string
   by: string
+  advertId?: string
   byOrganization?: string
   quantity?: number
   organization?: string
