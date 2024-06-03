@@ -2,7 +2,7 @@ import HttpStatusCodes from 'http-status-codes'
 import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import { profileGqlSchema } from './profile.gql.schema'
 import type { Services } from '../types'
-import { elevateUser } from '../login'
+import { elevateUser, normalizeRoles } from '../login'
 import { waitForAll } from '../lib'
 import { waitRepeat } from '../lib/wait'
 import type { RemoveProfileInput } from './types'
@@ -28,6 +28,9 @@ export const createProfileGqlModule = ({
         if (user.guest) {
           return ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
+        if (!normalizeRoles(user?.roles).canManageProfile) {
+          return ctx.throw(HttpStatusCodes.UNAUTHORIZED)
+        }
         return profiles.updateProfile(user, input)
       },
 
@@ -35,6 +38,9 @@ export const createProfileGqlModule = ({
         const { user } = ctx
         const p = input as unknown as RemoveProfileInput
         if (user.guest) {
+          return ctx.throw(HttpStatusCodes.UNAUTHORIZED)
+        }
+        if (!normalizeRoles(user?.roles).canManageProfile) {
           return ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         const effectiveUser = elevateUser(user, { canRemoveOwnAdverts: true })
