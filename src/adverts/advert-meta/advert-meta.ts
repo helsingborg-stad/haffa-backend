@@ -65,7 +65,6 @@ export const getAdvertMeta = (
         ? isClaimOverdue(c, advert.lendingPeriod, now)
         : false,
   }))
-
   if (type === AdvertType.recycle) {
     return {
       reservableQuantity: quantity - claimCount,
@@ -108,6 +107,7 @@ export const getAdvertMeta = (
       isReservedBySome,
       isCollectedBySome,
       isPicked: !!advert.pickedAt,
+      waitlistCount: advert.waitlist.length,
       returnInfo: getClaimReturnInfo(advert.claims, advert.lendingPeriod),
       claims,
     }
@@ -138,6 +138,7 @@ export const getAdvertMeta = (
     isReservedBySome,
     isCollectedBySome,
     isPicked: false,
+    waitlistCount: advert.waitlist.length,
     returnInfo: [],
     claims: [],
   }

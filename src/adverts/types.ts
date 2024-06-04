@@ -78,6 +78,7 @@ export interface AdvertMeta {
   isReservedBySome: boolean
   isCollectedBySome: boolean
   isPicked: boolean
+  waitlistCount: number
   returnInfo: AdvertReturnInfo[]
   claims: AdvertMetaClaim[]
 }
