@@ -4,7 +4,14 @@ import type { ProfileInput } from '../types'
 
 describe('getProfile', () => {
   it('returns repository content with email set to calling user', () =>
-    end2endTest(null, async ({ user, profiles, gqlRequest }) => {
+    end2endTest(null, async ({ user, profiles, loginPolicies, gqlRequest }) => {
+      await loginPolicies.updateLoginPolicies([
+        {
+          emailPattern: user.id,
+          roles: ['canManageProfile'],
+        },
+      ])
+
       const input: ProfileInput = {
         name: 'Foo',
         phone: '123-45678',

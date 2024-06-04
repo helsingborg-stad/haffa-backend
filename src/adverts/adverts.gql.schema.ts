@@ -230,7 +230,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     isReservedBySome: Boolean!
     isCollectedBySome: Boolean!
     isPicked: Boolean!
-    waitlistCount: Number!
+    waitlistCount: Int!
     returnInfo: [AdvertReturnInfo]!
     claims: [AdvertClaim]!
   }
