@@ -12,7 +12,7 @@ const haffaUser: HaffaUser = {
 describe('getAdvertMeta::returnInfo', () => {
   const createClaim = (defaults?: Partial<AdvertClaim>): AdvertClaim => ({
     by: 'test@user',
-    at: 'new Date().toISOString()',
+    at: new Date().toISOString(),
     quantity: 1,
     type: AdvertClaimType.collected,
     events: [],
