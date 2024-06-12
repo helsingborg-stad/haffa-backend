@@ -25,14 +25,14 @@ describe('getAdvertMeta::returnInfo', () => {
       quantity: 0,
       claims: [
         createClaim({ at: '2024-01-05', quantity: 1 }),
-        createClaim({ at: '2024-01-01', quantity: 2 }),
+        createClaim({ at: '2024-01-01', quantity: 2, by: haffaUser.id }),
       ],
     })
     const meta = getAdvertMeta(advert, haffaUser)
 
     expect(meta.returnInfo).toStrictEqual([
-      { at: '2024-01-11T00:00:00.000Z', quantity: 2 },
-      { at: '2024-01-15T00:00:00.000Z', quantity: 1 },
+      { at: '2024-01-11T00:00:00.000Z', quantity: 2, isMine: true },
+      { at: '2024-01-15T00:00:00.000Z', quantity: 1, isMine: false },
     ])
   })
   it('ignores claims of type reservation', () => {

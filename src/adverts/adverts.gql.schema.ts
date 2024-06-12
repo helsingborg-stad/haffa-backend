@@ -236,8 +236,9 @@ export const advertsGqlSchema = /* GraphQL */ `
   }
 
   type AdvertReturnInfo {
-    at: String
-    quantity: Int
+    at: String!
+    quantity: Int!
+    isMine: Boolean!
   }
 
   type AdvertLocation {

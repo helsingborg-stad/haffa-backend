@@ -108,7 +108,7 @@ export const getAdvertMeta = (
       isCollectedBySome,
       isPicked: !!advert.pickedAt,
       waitlistCount: advert.waitlist.length,
-      returnInfo: getClaimReturnInfo(advert.claims, advert.lendingPeriod),
+      returnInfo: getClaimReturnInfo(user, advert.claims, advert.lendingPeriod),
       claims,
     }
   }

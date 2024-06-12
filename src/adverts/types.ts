@@ -53,6 +53,7 @@ export interface AdvertMetaClaim extends AdvertClaim {
 export interface AdvertReturnInfo {
   at: string
   quantity: number
+  isMine: boolean
 }
 export interface AdvertMeta {
   reservableQuantity: number

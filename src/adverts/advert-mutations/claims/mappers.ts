@@ -1,5 +1,6 @@
 import { sortBy } from '../../../lib'
 import { dateBuilder } from '../../../lib/date-builder'
+import type { HaffaUser } from '../../../login/types'
 import { AdvertClaimType } from '../../types'
 import type { AdvertReturnInfo, AdvertClaim } from '../../types'
 
@@ -52,15 +53,17 @@ export const isClaimOverdue = (
 }
 
 export const getClaimReturnInfo = (
+  { id }: HaffaUser,
   claims: AdvertClaim[],
   daysValid: number
 ): AdvertReturnInfo[] =>
   daysValid > 0
     ? claims
         .filter(({ type }) => type === AdvertClaimType.collected)
-        .map(({ at, quantity }) => ({
+        .map(({ at, by, quantity }) => ({
           at: dateBuilder(at).addDays(daysValid).toISOString(),
           quantity,
+          isMine: by === id,
         }))
         .sort(sortBy(c => c.at))
     : []
