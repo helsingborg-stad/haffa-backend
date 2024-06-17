@@ -1,8 +1,8 @@
-import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import HttpStatusCodes from 'http-status-codes'
 import type { Services } from '../types'
 import { normalizeRoles } from '../login'
 import { eventsGqlSchema } from './events.gql.schema'
+import type { GraphQLModule } from '../lib/gdi-api-node'
 
 export const createEventsGqlModule = ({
   eventLog,

@@ -1,9 +1,9 @@
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import type { NotificationService } from '../types'
 import type { Advert } from '../../adverts/types'
 import { createClient } from './brevo-client'
 import type { BrevoConfig, Identity, TemplateName } from './types'
 import type { StartupLog } from '../../types'
+import { getEnv } from '../../lib/gdi-api-node'
 
 export const createBrevoNotifications = (
   config: BrevoConfig

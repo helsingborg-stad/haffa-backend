@@ -1,5 +1,4 @@
 import HttpStatusCodes from 'http-status-codes'
-import { type ApplicationModule } from '@helsingborg-stad/gdi-api-node'
 import type { Services } from '../types'
 import { normalizeRoles } from '../login'
 import type { ImportSnapshotFunction, SnapshotFunction } from './types'
@@ -12,6 +11,7 @@ import {
   categoriesSnapshot,
   importCategoriesSnapshot,
 } from './categories/categories-snapshot'
+import type { ApplicationModule } from '../lib/gdi-api-node'
 
 const snapshotHandlers: Record<string, SnapshotFunction> = {
   adverts: advertsSnapshot,

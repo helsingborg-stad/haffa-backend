@@ -1,5 +1,10 @@
 export { createApplication } from './application'
-export  { Application, ApplicationContext, ApplicationModule } from './application/types'
+export {
+  Application,
+  ApplicationContext,
+  ApplicationModule,
+  ApplicationRunHandler,
+} from './application/types'
 
 export { getEnv } from './config'
 
@@ -14,4 +19,8 @@ export { swaggerModule } from './modules/swagger'
 
 export { webFrameworkModule } from './modules/web-framework'
 
-export { createAuthorizationService, createAuthorizationServiceFromEnv } from './services/authorization-service'
+export {
+  AuthorizationService,
+  createAuthorizationService,
+  createAuthorizationServiceFromEnv,
+} from './services/authorization-service'

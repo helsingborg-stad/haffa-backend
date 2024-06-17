@@ -1,4 +1,3 @@
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import ms from 'ms'
 import type { LoginService } from '../types'
 import { RequestPincodeStatus } from '../types'
@@ -12,6 +11,7 @@ import type { UserMapper } from '../../users/types'
 import type { StartupLog } from '../../types'
 import type { IssuePincode } from '../issue-pincode/types'
 import { createIssuePincode } from '../issue-pincode'
+import { getEnv } from '../../lib/gdi-api-node'
 
 export const tryCreateMongoLoginServiceFromEnv = (
   startupLog: StartupLog,

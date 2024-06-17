@@ -1,4 +1,3 @@
-import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import { advertsGqlSchema } from './adverts.gql.schema'
 import {
   mapAdvertMutationResultToAdvertWithMetaMutationResult,
@@ -7,6 +6,7 @@ import {
 } from './mappers'
 import { createAdvertMutations } from './advert-mutations'
 import type { Services } from '../types'
+import type { GraphQLModule } from '../lib/gdi-api-node'
 
 export const createAdvertsGqlModule = (
   services: Pick<

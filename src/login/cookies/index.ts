@@ -1,4 +1,4 @@
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
+import { getEnv } from '../../lib/gdi-api-node'
 import type { StartupLog } from '../../types'
 import type { CookieService } from '../types'
 import { createCookieService } from './cookie-service'

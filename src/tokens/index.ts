@@ -1,8 +1,8 @@
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import { createTokenService } from './create-token-service'
 import type { TokenService } from './types'
 import type { UserMapper } from '../users/types'
 import type { StartupLog } from '../types'
+import { getEnv } from '../lib/gdi-api-node'
 
 export { createTokenService }
 

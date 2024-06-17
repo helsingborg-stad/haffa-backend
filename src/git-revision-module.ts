@@ -1,6 +1,6 @@
-import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
+import type { ApplicationModule } from './lib/gdi-api-node'
 
 // Small module that exposes contents of 'git_revision.txt' to a response header
 export const gitRevisionModule = (): ApplicationModule => {

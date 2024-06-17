@@ -1,10 +1,10 @@
 import request from 'superagent'
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import type { StartupLog } from '../../types'
 import type { NotificationService } from '../types'
 import type { SettingsService } from '../../settings/types'
 import { userMapperConfigAdapter } from '../../users'
 import { smsTemplateMapper } from '../templates/sms-templates/sms-template-mapper'
+import { getEnv } from '../../lib/gdi-api-node'
 
 const createDatatorgetSmsNotifications = ({
   apiKey,

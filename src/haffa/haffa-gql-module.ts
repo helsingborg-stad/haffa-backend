@@ -1,5 +1,3 @@
-import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
-import type { EntityResolverMap } from '@helsingborg-stad/gdi-api-node/graphql'
 import type { Services } from '../types'
 import { createAdvertsGqlModule } from '../adverts/adverts-gql-module'
 import { createProfileGqlModule } from '../profile/profile-gql-module'
@@ -19,6 +17,8 @@ import { createLocationsGqlModule } from '../locations/locations-gql-module'
 import { createUserMapperGqlModule } from '../users'
 import { createSmsTemplatesGqlModule } from '../notifications/templates/sms-templates/sms-templates-gql-module'
 import { createSyslogGqlModule } from '../syslog/syslog-gql-module'
+import type { GraphQLModule } from '../lib/gdi-api-node'
+import type { EntityResolverMap } from '../lib/gdi-api-node/graphql'
 
 export const createStandardGqlModule = (): GraphQLModule => ({
   schema: haffaGqlSchema,

@@ -1,10 +1,6 @@
 import type { Test } from 'supertest'
 import request from 'supertest'
 import HttpStatusCodes from 'http-status-codes'
-import type {
-  Application,
-  ApplicationRunHandler,
-} from '@helsingborg-stad/gdi-api-node/application'
 import type { Services } from '../types'
 import type { Advert } from '../adverts/types'
 import type { LoginRequestEntry } from '../login/in-memory-login-service/in-memory-login-service'
@@ -21,7 +17,7 @@ import { createUserMapper } from '../users'
 import { createInMemorySettingsService } from '../settings'
 import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import { createIssuePincode } from '../login'
-import type { LoginPolicy } from '../login-policies/types'
+import type { Application, ApplicationRunHandler } from '../lib/gdi-api-node'
 
 const createGqlRequest =
   (

@@ -1,8 +1,8 @@
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import type { NotificationService } from '../types'
 import { createSendGridMailSender } from './sendgrid-mail-sender'
 import type { SendGridConfig } from './types'
 import type { StartupLog } from '../../types'
+import { getEnv } from '../../lib/gdi-api-node'
 
 export const tryCreateSendGridNofificationsFromEnv = (
   startupLog: StartupLog

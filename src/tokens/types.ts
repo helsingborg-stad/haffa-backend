@@ -1,4 +1,4 @@
-import type { AuthorizationService } from '@helsingborg-stad/gdi-api-node/services/authorization-service'
+import type { AuthorizationService } from '../lib/gdi-api-node'
 import type { HaffaUser } from '../login/types'
 
 export interface TokenService extends AuthorizationService {

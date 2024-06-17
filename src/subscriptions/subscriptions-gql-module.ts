@@ -1,8 +1,8 @@
 import HttpStatusCodes from 'http-status-codes'
-import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import { subscriptionsGqlSchema } from './subscriptions.gql.schema'
 import { normalizeRoles } from '../login'
 import type { Services } from '../types'
+import type { GraphQLModule } from '../lib/gdi-api-node'
 
 export const createSubscriptionsGqlModule = ({
   subscriptions,

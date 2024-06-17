@@ -1,7 +1,7 @@
-import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
 import type { Services } from '../types'
 import { makeGuestUser } from '../login'
 import { optionsAdapter } from '../options'
+import type { ApplicationModule } from '../lib/gdi-api-node'
 
 export const socialPreviewModule =
   ({ adverts, settings }: Services): ApplicationModule =>

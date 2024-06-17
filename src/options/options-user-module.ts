@@ -1,8 +1,8 @@
-import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
 import type { SettingsService } from '../settings/types'
 import { optionsAdapter } from './options-adapter'
 import { type Option } from './types'
 import { userMapperConfigAdapter } from '../users'
+import type { ApplicationModule } from '../lib/gdi-api-node'
 
 const getSystemSettings = async (
   settings: SettingsService

@@ -1,9 +1,9 @@
 import HttpStatusCodes from 'http-status-codes'
-import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import { termsGqlSchema } from './terms.gql.schema'
 import type { Services } from '../types'
 import { termsAdapter } from './mappers'
 import { normalizeRoles } from '../login'
+import type { GraphQLModule } from '../lib/gdi-api-node'
 
 export const createTermsGqlModule = ({
   settings,

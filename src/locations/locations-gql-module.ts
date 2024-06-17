@@ -1,9 +1,9 @@
-import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import HttpStatusCodes from 'http-status-codes'
 import type { Services } from '../types'
 import { normalizeRoles } from '../login'
 import { locationsGqlSchema } from './locations.gql.schema'
 import { locationsAdapter } from './locations-adapter'
+import type { GraphQLModule } from '../lib/gdi-api-node'
 
 export const createLocationsGqlModule = ({
   settings,
