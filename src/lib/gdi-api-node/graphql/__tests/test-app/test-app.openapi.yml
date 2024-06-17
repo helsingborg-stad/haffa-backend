@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+  title: Test App
+  description: GraphQL API for unit tests  
+  version: 1.0.0
+paths:
+  /api/v1/test/graphql:
+    post:
+      operationId: testGql
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GraphQLQuery"
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphQLResponse"
+components:
+  schemas:
+    GraphQLQuery:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+        parameters:
+          type: object
+    GraphQLResponse:
+      type: object
+      properties:
+        data:
+          type: object

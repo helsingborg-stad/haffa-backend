@@ -1,0 +1,66 @@
+openapi: 3.0.0
+info:
+  title: Test App
+  description: GraphQL API for unit tests  
+  version: 1.0.0
+paths:
+  /api/v1/test-operation:
+    post:
+      operationId: testOperation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TestParams"
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TestResponse"
+  /api/v1/{namespace}/healthcheck:
+    get:
+      operationId: healthCheck
+      summary: "Healthcheck of service"
+      tags:
+        - Status of Operations
+      parameters:
+        - name: namespace
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "Service is healthy"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type:
+                      string
+
+components:
+  schemas:
+    TestParams:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+        parameters:
+          type: object
+    TestResponse:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        answer:
+          type: string
