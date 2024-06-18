@@ -44,6 +44,14 @@ export const createExpiredClaimsNotifier =
               )
             )
             actions(() =>
+              notifications.advertReservationWasCancelledOwner(
+                advert.createdBy,
+                user,
+                c.quantity,
+                advert
+              )
+            )
+            actions(() =>
               syslog.write({
                 by: user.id,
                 type: 'NOTIFY_EXPIRED_CLAIM',
