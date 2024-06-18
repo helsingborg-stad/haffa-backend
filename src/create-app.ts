@@ -39,8 +39,8 @@ export const createApp = ({
     .use(optionsUserModule(services.settings))
     .use(apiKeyUserModule(services.settings))
     .use(jwtUserModule(services.tokens))
-    .use(guestUserModule(services.userMapper))
     .use(cookieUserModule(services.cookies, services.tokens))
+    .use(guestUserModule(services.userMapper))
     .use(advertLabelModule(services))
     .use(healthCheckModule())
     /* .use(({ app }) =>
