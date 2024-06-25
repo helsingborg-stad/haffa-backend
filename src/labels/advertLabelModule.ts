@@ -1,5 +1,4 @@
 import HttpStatusCodes from 'http-status-codes'
-import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
 import PDFDocument from 'pdfkit'
 import QRCode from 'qrcode'
 import type { Services } from '../types'
@@ -8,6 +7,7 @@ import type { Advert } from '../adverts/types'
 import { optionsAdapter } from '../options'
 import { createLabelFooter, transformLabelOptions } from './mappers'
 import { requireHaffaUser } from '../login/require-haffa-user'
+import type { ApplicationModule } from '../lib/gdi-api-node'
 
 export const advertLabelModule =
   ({ adverts, settings, userMapper }: Services): ApplicationModule =>

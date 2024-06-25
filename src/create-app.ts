@@ -1,12 +1,5 @@
 import cors from '@koa/cors'
 import bodyparser from 'koa-bodyparser'
-import type { Application } from '@helsingborg-stad/gdi-api-node'
-import {
-  createApplication,
-  healthCheckModule,
-  jwtUserModule,
-  swaggerModule,
-} from '@helsingborg-stad/gdi-api-node'
 import type { Services } from './types'
 import { graphQLModule } from './haffa/haffa-module'
 import { loginModule } from './login/login-module'
@@ -18,6 +11,13 @@ import { guestUserModule } from './guest'
 import { snapshotModule } from './snapshot/snapshot-module'
 import { socialPreviewModule } from './social-preview/social-preview-module'
 import { advertLabelModule } from './labels/advertLabelModule'
+import type { Application } from './lib/gdi-api-node'
+import {
+  createApplication,
+  healthCheckModule,
+  jwtUserModule,
+  swaggerModule,
+} from './lib/gdi-api-node'
 
 /** Create fully packaged web application, given dependencies */
 export const createApp = ({

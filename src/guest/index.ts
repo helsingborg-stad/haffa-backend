@@ -1,4 +1,4 @@
-import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
+import type { ApplicationModule } from '../lib/gdi-api-node'
 import type { UserMapper } from '../users/types'
 
 export const guestUserModule =

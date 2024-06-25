@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import type { Application } from '@helsingborg-stad/gdi-api-node'
 import type { Services } from '../types'
 import { createInMemoryLoginService } from '../login/in-memory-login-service/in-memory-login-service'
 import { createInMemoryAdvertsRepository } from '../adverts/repository/memory'
@@ -19,6 +18,7 @@ import { createNullEventLogService } from '../events'
 import { createNullSubscriptionsRepository } from '../subscriptions'
 import { createNullContentRepository } from '../content'
 import { createNullSyslogService } from '../syslog/null-syslog-service'
+import type { Application } from '../lib/gdi-api-node'
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
 

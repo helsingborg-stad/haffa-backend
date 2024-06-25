@@ -1,4 +1,4 @@
-import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
+import type { ApplicationModule } from '../lib/gdi-api-node'
 
 export interface FilesService {
   tryConvertDataUrlToUrl: (dataUrl: string) => Promise<string | null>

@@ -1,5 +1,5 @@
-import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
-import type { AuthorizationService } from '@helsingborg-stad/gdi-api-node/services/authorization-service'
+import type { ApplicationModule } from '../../lib/gdi-api-node'
+import type { AuthorizationService } from '../../lib/gdi-api-node/services/authorization-service'
 import type { CookieService } from '../types'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

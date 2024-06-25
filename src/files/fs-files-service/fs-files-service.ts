@@ -2,11 +2,11 @@ import { join, relative } from 'path'
 import { mkdirp } from 'mkdirp'
 import { readFile, writeFile, unlink } from 'fs/promises'
 import send from 'koa-send'
-import type { ApplicationContext } from '@helsingborg-stad/gdi-api-node'
 import ms from 'ms'
 import type { FilesService } from '../types'
 import { generateFileId, tryConvertDataUriToImageBuffer } from '../utils'
 import { tryConvertUrlToDataUrlForLocalUrlsHelper } from '../utils/image-utils'
+import type { ApplicationContext } from '../../lib/gdi-api-node'
 
 // max-age in ms header for transmitted files
 const SEND_MAX_AGE = ms('30 days')

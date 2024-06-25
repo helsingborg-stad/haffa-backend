@@ -1,6 +1,5 @@
 import request from 'supertest'
 import HttpStatusCodes from 'http-status-codes'
-import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
 import type { Services } from '../../types'
 import { requireHaffaUser } from '../require-haffa-user'
 import {
@@ -9,6 +8,7 @@ import {
   type End2EndTestContext,
 } from '../../test-utils'
 import type { LoginPolicy } from '../../login-policies/types'
+import type { ApplicationModule } from '../../lib/gdi-api-node'
 
 describe('user access validation', () => {
   interface TestCase {

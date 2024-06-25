@@ -1,10 +1,10 @@
 import { Client } from 'minio'
-import type { ApplicationModule } from '@helsingborg-stad/gdi-api-node'
 import mime from 'mime-types'
 import ms from 'ms'
 import type { FilesService } from '../types'
 import { generateFileId, tryConvertDataUriToImageBuffer } from '../utils'
 import { tryConvertUrlToDataUrlForLocalUrlsHelper } from '../utils/image-utils'
+import type { ApplicationModule } from '../../lib/gdi-api-node'
 
 const SEND_MAX_AGE = ms('30 days')
 interface MinioConfig {

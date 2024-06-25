@@ -1,10 +1,10 @@
-import { readFile, writeFile, unlink, rm } from 'fs/promises'
+import { readFile, writeFile, rm } from 'fs/promises'
 import { join } from 'path'
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import { mkdirp } from 'mkdirp'
 import type { Profile, ProfileRepository } from './types'
 import { createEmptyProfile } from './mappers'
 import type { StartupLog } from '../types'
+import { getEnv } from '../lib/gdi-api-node'
 
 export const createFsProfileRepository = (
   dataFolder: string

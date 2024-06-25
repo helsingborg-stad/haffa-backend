@@ -1,8 +1,8 @@
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import { createMongoProfileConnection } from './mongo-profile-connection'
 import { createMongoProfileRepository } from './mongo-profile-repository'
 import type { ProfileRepository } from '../types'
 import type { StartupLog } from '../../types'
+import { getEnv } from '../../lib/gdi-api-node'
 
 export const tryCreateMongoDbProfileRepositoryFromEnv = (
   startupLog: StartupLog

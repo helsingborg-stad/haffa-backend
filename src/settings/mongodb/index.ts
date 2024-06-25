@@ -1,10 +1,10 @@
-import { getEnv } from '@helsingborg-stad/gdi-api-node'
 import type { SettingsService } from '../types'
 import {
   createMongoSettingsConnection,
   createMongoSettingsService,
 } from './mongodb-settings-service'
 import type { StartupLog } from '../../types'
+import { getEnv } from '../../lib/gdi-api-node'
 
 export const tryCreateMongoDbSettingsServiceFromEnv = (
   startupLog: StartupLog

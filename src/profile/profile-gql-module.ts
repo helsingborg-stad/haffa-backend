@@ -1,11 +1,11 @@
 import HttpStatusCodes from 'http-status-codes'
-import type { GraphQLModule } from '@helsingborg-stad/gdi-api-node'
 import { profileGqlSchema } from './profile.gql.schema'
 import type { Services } from '../types'
 import { elevateUser, normalizeRoles } from '../login'
 import { waitForAll } from '../lib'
 import { waitRepeat } from '../lib/wait'
 import type { RemoveProfileInput } from './types'
+import type { GraphQLModule } from '../lib/gdi-api-node'
 
 export const createProfileGqlModule = ({
   profiles,
