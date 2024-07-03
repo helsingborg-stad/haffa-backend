@@ -92,5 +92,10 @@ export const mapRestrictions = (
     },
     restrictions?.hasReservations === false && { 'meta.reservedCount': 0 },
     restrictions?.hasCollects === true && { 'meta.collectedCount': { $gt: 0 } },
-    restrictions?.hasCollects === false && { 'meta.collectedCount': 0 }
+    restrictions?.hasCollects === false && { 'meta.collectedCount': 0 },
+
+    restrictions?.isPicked === true && { 'advert.pickedAt': { $gt: '' } },
+    restrictions?.isPicked === false && {
+      'advert.pickedAt': { $not: { $gt: '' } },
+    }
   )
