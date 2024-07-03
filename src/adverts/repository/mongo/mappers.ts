@@ -58,7 +58,10 @@ export const mapAdvertFilterInputToMongoQuery = (
 ): Filter<MongoAdvert> =>
   combineAnd(
     combineOr(
-      combineAnd(mapSearch(filter?.search), mapFields(filter?.fields)),
+      combineAnd(
+        mapSearch(filter?.search, filter?.pipelineCategoryIds),
+        mapFields(filter?.fields)
+      ),
       ...(filter?.pipelineOr?.map(({ fields }) => mapFields(fields)) || [])
     ),
     mapRestrictions(user, filter?.restrictions)

@@ -32,15 +32,7 @@ describe('convertFilterToCategoryMatchingFilter', () => {
       })
     ).toMatchObject({
       search: 'I can haz cheezburger',
-      pipelineOr: [
-        {
-          fields: {
-            category: {
-              in: ['c1'],
-            },
-          },
-        },
-      ],
+      pipelineCategoryIds: ['c1'],
     })
   })
 })

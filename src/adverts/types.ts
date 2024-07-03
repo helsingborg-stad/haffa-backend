@@ -205,6 +205,7 @@ export interface AdvertFilterInput {
   paging?: AdvertPagingInput
 
   // decorators/pipelines can attach additional criterias
+  pipelineCategoryIds?: string[]
   pipelineOr?: {
     fields: AdvertFieldsFilterInput
   }[]

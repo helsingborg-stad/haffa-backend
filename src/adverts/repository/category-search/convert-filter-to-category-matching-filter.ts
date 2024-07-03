@@ -64,6 +64,8 @@ export const convertFilterToCategoryMatchingFilter = async (
 
   return {
     ...filter,
+    pipelineCategoryIds: allCategoryIds,
+    /*
     pipelineOr: [
       ...(filter.pipelineOr || []),
       {
@@ -74,5 +76,6 @@ export const convertFilterToCategoryMatchingFilter = async (
         },
       },
     ],
+    */
   }
 }
