@@ -14,6 +14,7 @@ export const categoriesGqlSchema = /* GraphQL */ `
     co2kg: Int
     valueByUnit: Int
     advertCount: Int!
+    unarchivedAdvertCount: Int!
   }
 
   input CategoryInput {

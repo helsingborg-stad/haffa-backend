@@ -243,7 +243,8 @@ export interface AdvertsRepository {
   // return count of adverts per value of selected property
   countBy: (
     user: HaffaUser,
-    by: keyof Only<Advert, string>
+    by: keyof Only<Advert, string>,
+    excludeArchived?: boolean
     // by: keyof Extract<Advert, string>
   ) => Promise<Record<string, number>>
   getAdvertsByClaimStatus: (filter: AdvertsClaimFilter) => Promise<string[]>

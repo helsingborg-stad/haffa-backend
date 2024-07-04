@@ -169,10 +169,19 @@ export const createFsAdvertsRepository = (
     return null
   }
 
-  const countBy: AdvertsRepository['countBy'] = async (user, by) =>
+  const countBy: AdvertsRepository['countBy'] = async (
+    user,
+    by,
+    excludeArchived
+  ) =>
     list(user).then(advertList =>
       mapValues(
-        toLookup(advertList.adverts, advert => advert[by]),
+        toLookup(
+          advertList.adverts.filter(a =>
+            excludeArchived ? !a.archivedAt : true
+          ),
+          advert => advert[by]
+        ),
         l => l.length
       )
     )

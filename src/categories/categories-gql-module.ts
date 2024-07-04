@@ -19,6 +19,13 @@ export const createCategoriesGqlModule = ({
         )
         return summary[source.id] || 0
       },
+      unarchivedAdvertCount: async ({ source, ctx, cache }) => {
+        const summary = await cache.getOrCreateCachedValue(
+          'unarchived-adverts-category-summary',
+          () => adverts.countBy(ctx.user, 'category', true)
+        )
+        return summary[source.id] || 0
+      },
     },
     Query: {
       // https://www.graphql-tools.com/docs/resolvers
