@@ -126,6 +126,8 @@ describe('renewAdvertClaim', () => {
           ])
         )
         T('notoifications should have been called', () => {
+          expect(advertCollectWasRenewed).toHaveBeenCalledTimes(1)
+          expect(advertCollectWasRenewedOwner).toHaveBeenCalledTimes(1)
           expect(advertCollectWasRenewed).toHaveBeenCalledWith(
             'renew-user',
             expect.objectContaining(user),
