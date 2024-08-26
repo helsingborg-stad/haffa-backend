@@ -47,8 +47,10 @@ export const createEventLoggingNotifications = (
     advertWasReturnedOwner: async () => undefined,
     advertWaitlistAvailable: async () => undefined,
     advertWasPicked: async () => undefined,
-    advertWasPickedOwner: async () => undefined,
-    advertWasUnpickedOwner: async () => undefined,
+    advertWasPickedOwner: (to, by, advert) =>
+      log('advert-was-picked', { by, advert }),
+    advertWasUnpickedOwner: (to, by, advert) =>
+      log('advert-was-unpicked', { by, advert }),
     advertCollectWasRenewed: (to, by, quantity, advert) =>
       log('advert-collect-was-renewed', { by, quantity, advert }),
     advertCollectWasRenewedOwner: async () => undefined,

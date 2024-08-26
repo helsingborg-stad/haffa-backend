@@ -14,12 +14,13 @@ export const createMongoEventLogService = ({
       event,
     })
   },
-  getEvents: async ({ from, to }) => {
+  getEvents: async ({ from, to, advertId }) => {
     const collection = await getCollection()
     const cursor = collection.find({
       $and: [
         from && { 'event.at': { $gte: from.toISOString() } },
         to && { 'event.at': { $lte: to.toISOString() } },
+        advertId && { 'event.advertId': advertId },
       ].filter(v => v),
     } as Filter<MongoEvent>)
 
