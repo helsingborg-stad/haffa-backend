@@ -109,4 +109,28 @@ export interface NotificationService {
     by: HaffaUser,
     advert: Advert
   ) => Promise<void>
+  advertReservationWasRenewed: (
+    to: string,
+    by: HaffaUser,
+    quantity: number,
+    advert: Advert
+  ) => Promise<void>
+  advertReservationWasRenewedOwner: (
+    to: string,
+    by: HaffaUser,
+    quantity: number,
+    advert: Advert
+  ) => Promise<void>
+  advertCollectWasRenewed: (
+    to: string,
+    by: HaffaUser,
+    quantity: number,
+    advert: Advert
+  ) => Promise<void>
+  advertCollectWasRenewedOwner: (
+    to: string,
+    by: HaffaUser,
+    quantity: number,
+    advert: Advert
+  ) => Promise<void>
 }

@@ -23,10 +23,16 @@ mutation Mutation(
 
 describe('renewAdvertClaim', () => {
   it('updates created date, clears events and doesnt notify', () => {
-    const notificationsThatMustNotBeCalled = createTestNotificationServices({})
+    const advertCollectWasRenewed = jest.fn()
+    const advertCollectWasRenewedOwner = jest.fn()
+    const renewNotifications = createTestNotificationServices({
+      advertCollectWasRenewed,
+      advertCollectWasRenewedOwner,
+    })
+
     return end2endTest(
       {
-        services: { notifications: notificationsThatMustNotBeCalled },
+        services: { notifications: renewNotifications },
       },
       async ({ mappedGqlRequest, adverts, user, loginPolicies }) => {
         // give us rights to handle claims
@@ -52,7 +58,7 @@ describe('renewAdvertClaim', () => {
             },
             {
               // this one is expected to mutate
-              by: user.id,
+              by: 'renew-user',
               at: '',
               quantity: 2,
               type: AdvertClaimType.collected,
@@ -78,7 +84,7 @@ describe('renewAdvertClaim', () => {
           renewAdvertClaimMutation,
           {
             id: 'advert-123',
-            by: user.id,
+            by: 'renew-user',
             type: AdvertClaimType.collected,
           }
         )
@@ -87,7 +93,8 @@ describe('renewAdvertClaim', () => {
         T('claim should have timestamp near current time', () => {
           const at = adverts['advert-123'].claims.find(
             claim =>
-              claim.by === user.id && claim.type === AdvertClaimType.collected
+              claim.by === 'renew-user' &&
+              claim.type === AdvertClaimType.collected
           )?.at!
 
           expect(Date.now() - new Date(at).getTime()).toBeLessThan(10 * 1000)
@@ -110,7 +117,7 @@ describe('renewAdvertClaim', () => {
               events: [],
             },
             {
-              by: user.id,
+              by: 'renew-user',
               // at: '',
               quantity: 2,
               type: AdvertClaimType.collected,
@@ -118,6 +125,20 @@ describe('renewAdvertClaim', () => {
             },
           ])
         )
+        T('notoifications should have been called', () => {
+          expect(advertCollectWasRenewed).toHaveBeenCalledWith(
+            'renew-user',
+            expect.objectContaining(user),
+            2,
+            adverts['advert-123']
+          )
+          expect(advertCollectWasRenewedOwner).toHaveBeenCalledWith(
+            user.id,
+            expect.objectContaining(user),
+            2,
+            adverts['advert-123']
+          )
+        })
       }
     )
   })

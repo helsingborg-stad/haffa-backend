@@ -56,6 +56,14 @@ export const tryCreateUserFilteredNotifications = (
           guard(to, () => inner.advertWasPickedOwner(to, ...args)),
         advertWasUnpickedOwner: (to, ...args) =>
           guard(to, () => inner.advertWasUnpickedOwner(to, ...args)),
+        advertCollectWasRenewed: (to, ...args) =>
+          guard(to, () => inner.advertCollectWasRenewed(to, ...args)),
+        advertCollectWasRenewedOwner: (to, ...args) =>
+          guard(to, () => inner.advertCollectWasRenewedOwner(to, ...args)),
+        advertReservationWasRenewed: (to, ...args) =>
+          guard(to, () => inner.advertReservationWasRenewed(to, ...args)),
+        advertReservationWasRenewedOwner: (to, ...args) =>
+          guard(to, () => inner.advertReservationWasRenewedOwner(to, ...args)),
       }
     : null
 }

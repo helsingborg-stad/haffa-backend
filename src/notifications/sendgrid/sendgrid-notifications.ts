@@ -61,5 +61,17 @@ export const createSendGridNotifications = (
       send(to, 'advert-was-picked-owner', { by, advert }),
     advertWasUnpickedOwner: (to, by, advert) =>
       send(to, 'advert-was-unpicked-owner', { by, advert }),
+    advertCollectWasRenewed: (to, by, quantity, advert) =>
+      send(to, 'advert-collect-was-renewed', { by, quantity, advert }),
+    advertCollectWasRenewedOwner: (to, by, quantity, advert) =>
+      send(to, 'advert-collect-was-renewed-owner', { by, quantity, advert }),
+    advertReservationWasRenewed: (to, by, quantity, advert) =>
+      send(to, 'advert-reservation-was-renewed', { by, quantity, advert }),
+    advertReservationWasRenewedOwner: (to, by, quantity, advert) =>
+      send(to, 'advert-reservation-was-renewed-owner', {
+        by,
+        quantity,
+        advert,
+      }),
   }
 }

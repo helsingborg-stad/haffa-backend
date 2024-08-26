@@ -10,10 +10,15 @@ import {
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
 } from '../verifiers'
+import {
+  notifyClaimsWasCancelled,
+  notifyClaimsWasRenewed,
+} from './notify-claims'
 
 export const createRenewAdvertClaim =
   ({
     adverts,
+    notifications,
   }: Pick<
     Services,
     'adverts' | 'notifications'
@@ -27,9 +32,8 @@ export const createRenewAdvertClaim =
           TxErrors.Unauthorized
         )
       )
-      .patch(advert => ({
-        ...advert,
-        claims: normalizeAdvertClaims(
+      .patch((advert, { actions }) => {
+        const claims = normalizeAdvertClaims(
           advert.claims.map(claim =>
             claim.by === by && claim.type === type
               ? {
@@ -39,8 +43,22 @@ export const createRenewAdvertClaim =
                 }
               : claim
           )
-        ),
-      }))
+        )
+
+        actions(patched =>
+          notifyClaimsWasRenewed(
+            notifications,
+            user,
+            patched,
+            patched.claims.filter(c => c.type === type && c.by === by)
+          )
+        )
+
+        return {
+          ...advert,
+          claims,
+        }
+      })
       .verify((_, ctx) =>
         verifyAll(
           ctx,

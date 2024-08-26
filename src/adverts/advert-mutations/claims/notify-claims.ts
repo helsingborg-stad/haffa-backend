@@ -101,3 +101,53 @@ export const notifyClaimsWasCancelled = async (
       )
   )
 }
+
+export const notifyClaimsWasRenewed = async (
+  notifications: NotificationService,
+  by: HaffaUser,
+  advert: Advert,
+  claims: AdvertClaim[]
+) => {
+  const nc = normalizeAdvertClaims(claims)
+  await all(
+    nc
+      .filter(claim => claim.type === AdvertClaimType.reserved)
+      .map(claim =>
+        Promise.all([
+          notifications.advertReservationWasRenewed(
+            claim.by,
+            by,
+            claim.quantity,
+            advert
+          ),
+          notifications.advertReservationWasRenewedOwner(
+            advert.createdBy,
+            by,
+            claim.quantity,
+            advert
+          ),
+        ])
+      )
+  )
+
+  await all(
+    nc
+      .filter(claim => claim.type === AdvertClaimType.collected)
+      .map(claim =>
+        Promise.all([
+          notifications.advertCollectWasRenewed(
+            claim.by,
+            by,
+            claim.quantity,
+            advert
+          ),
+          notifications.advertCollectWasRenewedOwner(
+            advert.createdBy,
+            by,
+            claim.quantity,
+            advert
+          ),
+        ])
+      )
+  )
+}

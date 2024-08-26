@@ -192,4 +192,40 @@ export const createConsoleNotificationService = (): NotificationService => ({
         ...advertInfo(advert),
       },
     }),
+  advertCollectWasRenewed: async (to, by, quantity, advert) =>
+    console.log({
+      advertCollectWasRenewed: {
+        to,
+        by,
+        quantity,
+        ...advertInfo(advert),
+      },
+    }),
+  advertCollectWasRenewedOwner: async (to, by, quantity, advert) =>
+    console.log({
+      advertCollectWasRenewedOwner: {
+        to,
+        by,
+        quantity,
+        ...advertInfo(advert),
+      },
+    }),
+  advertReservationWasRenewed: async (to, by, quantity, advert) =>
+    console.log({
+      advertReservationWasRenewed: {
+        to,
+        by,
+        quantity,
+        ...advertInfo(advert),
+      },
+    }),
+  advertReservationWasRenewedOwner: async (to, by, quantity, advert) =>
+    console.log({
+      advertReservationWasRenewedOwner: {
+        to,
+        by,
+        quantity,
+        ...advertInfo(advert),
+      },
+    }),
 })

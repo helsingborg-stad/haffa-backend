@@ -17,6 +17,10 @@ export type TemplateName =
   | 'advert-was-picked'
   | 'advert-was-picked-owner'
   | 'advert-was-unpicked-owner'
+  | 'advert-collect-was-renewed'
+  | 'advert-collect-was-renewed-owner'
+  | 'advert-reservation-was-renewed'
+  | 'advert-reservation-was-renewed-owner'
 
 export interface Identity {
   name: string

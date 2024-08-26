@@ -107,6 +107,19 @@ export const createTestNotificationServices = (
   advertWasUnpickedOwner: unexpectedInvocation(
     'NotificationService::advertWasUnpickedOwner'
   ),
+  advertCollectWasRenewed: unexpectedInvocation(
+    'NotificationService::advertCollectWasRenewed'
+  ),
+  advertCollectWasRenewedOwner: unexpectedInvocation(
+    'NotificationService::advertCollectWasRenewedOwner'
+  ),
+  advertReservationWasRenewed: unexpectedInvocation(
+    'NotificationService::advertReservationWasRenewed'
+  ),
+  advertReservationWasRenewedOwner: unexpectedInvocation(
+    'NotificationService::advertReservationWasRenewedOwner'
+  ),
+
   ...notifications,
 })
 

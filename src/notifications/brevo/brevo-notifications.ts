@@ -143,6 +143,26 @@ export const createBrevoNotifications = (
         by,
         advert: stripAdvert(advert),
       }),
+    advertCollectWasRenewed: (to, by, quantity, advert) =>
+      send('advert-collect-was-renewed', to, {
+        by,
+        advert: stripAdvert(advert),
+      }),
+    advertCollectWasRenewedOwner: (to, by, quantity, advert) =>
+      send('advert-collect-was-renewed-owner', to, {
+        by,
+        advert: stripAdvert(advert),
+      }),
+    advertReservationWasRenewed: (to, by, quantity, advert) =>
+      send('advert-reservation-was-renewed', to, {
+        by,
+        advert: stripAdvert(advert),
+      }),
+    advertReservationWasRenewedOwner: (to, by, quantity, advert) =>
+      send('advert-reservation-was-renewed-owner', to, {
+        by,
+        advert: stripAdvert(advert),
+      }),
   }
 }
 
