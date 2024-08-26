@@ -19,6 +19,18 @@ export const createEventsGqlModule = ({
         return eventLog.getEvents({
           from: from ? new Date(from) : null,
           to: to ? new Date(to) : null,
+          advertId: null,
+        })
+      },
+      advertEvents: async ({ ctx, args: { advertId } }) => {
+        const { user } = ctx
+        if (!normalizeRoles(user?.roles).canSeeSystemStatistics) {
+          ctx.throw(HttpStatusCodes.UNAUTHORIZED)
+        }
+        return eventLog.getEvents({
+          from: null,
+          to: null,
+          advertId,
         })
       },
     },

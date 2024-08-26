@@ -6,9 +6,11 @@ export interface EventLogService {
   getEvents: ({
     from,
     to,
+    advertId,
   }: {
     from: Date | null
     to: Date | null
+    advertId: string | null
   }) => Promise<LogEvent[]>
   enumerate: (
     { from, to }: { from: Date; to: Date },
