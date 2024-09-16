@@ -56,6 +56,7 @@ export const normalizeAdvert = (
     reference,
     externalId,
     notes,
+    stockItem,
     tags,
     location,
     contact,
@@ -90,6 +91,7 @@ export const normalizeAdvert = (
     reference,
     externalId,
     notes,
+    stockItem,
     tags: isArray(tags) ? normalizeStringArray(tags) : [],
     waitlist: isArray(waitlist) ? normalizeStringArray(waitlist) : [],
     location: isObject(location)
@@ -159,6 +161,7 @@ export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
   reference: '',
   externalId: '',
   notes: '',
+  stockItem: false,
   tags: [],
 
   claims: [],
@@ -208,6 +211,7 @@ export const createEmptyAdvertInput = (): AdvertInput => ({
   reference: '',
   externalId: '',
   notes: '',
+  stockItem: false,
   tags: [],
 
   location: createEmptyAdvertLocation(),

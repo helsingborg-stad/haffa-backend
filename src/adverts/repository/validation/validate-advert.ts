@@ -29,6 +29,10 @@ const numberProps = <T = Advert>(
   ...fields: (keyof T)[]
 ): Record<keyof T, any> => props<T>({ type: 'number' }, ...fields)
 
+const booleanProps = <T = Advert>(
+  ...fields: (keyof T)[]
+): Record<keyof T, any> => props<T>({ type: 'boolean' }, ...fields)
+
 interface ObjectSchema<T extends object> {
   required?: (keyof T)[]
   additionalProperties?: boolean
@@ -82,6 +86,7 @@ const advertSchemaValidator = new Ajv().compile<Advert>({
         'tags'
       ),
       ...numberProps('quantity', 'lendingPeriod'),
+      ...booleanProps('stockItem'),
       images: describeObjectArray<AdvertImage>({
         required: ['url'],
         properties: {
@@ -135,5 +140,4 @@ export const validateAdvert: (advert: Advert) => Advert = a =>
           expose: true,
           status: StatusCodes.BAD_REQUEST,
         })
-        return a
       })()
