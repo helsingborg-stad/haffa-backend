@@ -2,6 +2,7 @@ import { Severity } from '../../../syslog/types'
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
+import { mapAdvertToAdvertWithMeta } from '../../mappers'
 import {
   type Advert,
   type AdvertMutations,
@@ -25,42 +26,53 @@ export const createExpiredClaimsNotifier =
       .load(() => adverts.getAdvert(user, id))
       .validate(() => undefined)
       .patch((advert, { actions }) => {
+        const meta = mapAdvertToAdvertWithMeta(user, advert)?.meta
+
         const claims = advert.claims.reduce<AdvertClaim[]>((p, c) => {
           if (
-            // Check the claim reservation status
-            // =====================================
-            // A) Claim is of type "reserved"
-            // B) Claim creation date + max reservations is larger than "now"
-            c.type === AdvertClaimType.reserved &&
-            isClaimOverdue(c, interval, now)
+            // Check the advert type and snooze if not picked
+            // ==============================================
+            // A) Advert is a stock item and it hasnt been picked
+            // B) Advert is NOT a stock item
+            (advert.isStockItem && meta?.isPicked) ||
+            !advert.isStockItem
           ) {
-            // Queue notification for Email/SMS delivery
-            actions(() =>
-              notifications.advertReservationWasCancelled(
-                c.by,
-                user,
-                c.quantity,
-                advert
+            if (
+              // Check the claim reservation status
+              // =====================================
+              // A) Claim is of type "reserved"
+              // B) Claim creation date + max reservations is larger than "now"
+              c.type === AdvertClaimType.reserved &&
+              isClaimOverdue(c, interval, now)
+            ) {
+              // Queue notification for Email/SMS delivery
+              actions(() =>
+                notifications.advertReservationWasCancelled(
+                  c.by,
+                  user,
+                  c.quantity,
+                  advert
+                )
               )
-            )
-            actions(() =>
-              notifications.advertReservationWasCancelledOwner(
-                advert.createdBy,
-                user,
-                c.quantity,
-                advert
+              actions(() =>
+                notifications.advertReservationWasCancelledOwner(
+                  advert.createdBy,
+                  user,
+                  c.quantity,
+                  advert
+                )
               )
-            )
-            actions(() =>
-              syslog.write({
-                by: user.id,
-                type: 'NOTIFY_EXPIRED_CLAIM',
-                severity: Severity.info,
-                message: `Removed claim for: ${c.by} on ${advert.id}`,
-              })
-            )
-            // Remove claim from advert
-            return [...p]
+              actions(() =>
+                syslog.write({
+                  by: user.id,
+                  type: 'NOTIFY_EXPIRED_CLAIM',
+                  severity: Severity.info,
+                  message: `Removed claim for: ${c.by} on ${advert.id}`,
+                })
+              )
+              // Remove claim from advert
+              return [...p]
+            }
           }
           // Retain claim in advert
           return [...p, c]

@@ -20,7 +20,7 @@ export const advertProps = `
 	reference
 	externalId
 	notes
-	stockItem
+	isStockItem
 	tags
 	contact {
 		email
@@ -58,7 +58,7 @@ export const advertWithMetaProps = `
 	reference
 	externalId
 	notes
-	stockItem
+	isStockItem
 	tags
 	contact {
 		email

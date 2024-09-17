@@ -40,7 +40,7 @@ export interface AdvertUserFields {
   reference: string
   externalId: string
   notes: string
-  stockItem: boolean
+  isStockItem: boolean
   tags: string[]
   location: AdvertLocation
   contact: AdvertContact

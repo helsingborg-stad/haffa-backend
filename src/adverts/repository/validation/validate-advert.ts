@@ -86,7 +86,7 @@ const advertSchemaValidator = new Ajv().compile<Advert>({
         'tags'
       ),
       ...numberProps('quantity', 'lendingPeriod'),
-      ...booleanProps('stockItem'),
+      ...booleanProps('isStockItem'),
       images: describeObjectArray<AdvertImage>({
         required: ['url'],
         properties: {

@@ -182,7 +182,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     reference: String
     externalId: String
     notes: String
-    stockItem: Boolean
+    isStockItem: Boolean
     tags: [String]
     location: AdvertLocationInput
     contact: AdvertContactInput
@@ -288,7 +288,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     reference: String
     externalId: String
     notes: String
-    stockItem: Boolean
+    isStockItem: Boolean
     tags: [String]
     location: AdvertLocation
     contact: AdvertContact
