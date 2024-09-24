@@ -28,6 +28,7 @@ describe('notifyReservedClaims', () => {
         user,
         'advert-123',
         10,
+        0,
         new Date('2023-06-01T00:00:00.000Z')
       )
       expect(adverts['advert-123'].claims[0].events).toMatchObject([
@@ -66,6 +67,7 @@ describe('notifyReservedClaims', () => {
         user,
         'advert-123',
         10,
+        0,
         new Date('2023-05-20T00:00:00.000Z')
       )
 
@@ -80,7 +82,7 @@ describe('notifyReservedClaims', () => {
         },
       ])
     }))
-  it('should return null when no claim is reminder is sent)', () =>
+  it('should return null when no claim reminder is sent)', () =>
     end2endTest({}, async ({ user, adverts, services }) => {
       // eslint-disable-next-line no-param-reassign
       adverts['advert-123'] = {
@@ -104,8 +106,40 @@ describe('notifyReservedClaims', () => {
         user,
         'advert-123',
         1,
+        0,
         new Date('2023-05-03T00:00:00.000Z')
       )
       expect(result.advert).toBeNull()
     }))
 })
+
+it('should snooze an event when advert not picked)', () =>
+  end2endTest({}, async ({ user, adverts, services }) => {
+    // eslint-disable-next-line no-param-reassign
+    adverts['advert-123'] = {
+      ...createEmptyAdvert(),
+      id: 'advert-123',
+      createdBy: user.id,
+      pickedAt: '',
+      quantity: 50,
+      claims: [
+        {
+          by: user.id,
+          at: '2023-05-01T00:00:00.000Z',
+          quantity: 2,
+          type: AdvertClaimType.reserved,
+          events: [],
+        },
+      ],
+    }
+    const notifyAdvertClaim = createReservedClaimsNotifier(services)
+
+    await notifyAdvertClaim(
+      user,
+      'advert-123',
+      10,
+      1,
+      new Date('2023-06-01T00:00:00.000Z')
+    )
+    expect(adverts['advert-123'].claims[0].events).toMatchObject([])
+  }))

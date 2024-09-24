@@ -59,6 +59,9 @@ export const createJobExecutorServiceFromEnv = (
     reminderFrequency: Number(
       getEnv('REMINDER_FREQUENCY_DAYS', { fallback: '3' })
     ),
+    reminderSnoozeUntilPicked: Number(
+      getEnv('REMINDER_SNOOZE_UNTIL_PICKED', { fallback: '0' })
+    ),
     syslogRetentionDays: Number(
       getEnv('SYSLOG_RETENTION_DAYS', { fallback: '10' })
     ),

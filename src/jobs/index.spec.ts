@@ -8,6 +8,7 @@ import { Severity } from '../syslog/types'
 const parameters: JobParameters = {
   maxReservationDays: 10,
   reminderFrequency: 5,
+  reminderSnoozeUntilPicked: 0,
   syslogRetentionDays: 2,
 }
 

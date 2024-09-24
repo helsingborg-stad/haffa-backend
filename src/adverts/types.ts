@@ -306,6 +306,7 @@ export interface AdvertMutations {
     user: HaffaUser,
     id: string,
     interval: number,
+    snooze: number,
     now: Date
   ) => Promise<AdvertMutationResult>
   notifyExpiredClaims: (

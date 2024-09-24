@@ -2,6 +2,7 @@ import { Severity } from '../../../syslog/types'
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
+import { getAdvertMeta } from '../../advert-meta'
 import {
   type Advert,
   type AdvertMutations,
@@ -20,13 +21,17 @@ export const createReservedClaimsNotifier =
     Services,
     'adverts' | 'notifications' | 'syslog'
   >): AdvertMutations['notifyReservedClaims'] =>
-  (user, id, interval, now) =>
+  (user, id, interval, snooze, now) =>
     txBuilder<Advert>()
       .load(() => adverts.getAdvert(user, id))
       .validate(() => undefined)
       .patch((advert, { actions }) => {
-        let isModified = false
+        const meta = getAdvertMeta(advert, user, now)
+        if (snooze === 1 && !meta.isPicked) {
+          return null
+        }
 
+        let isModified = false
         const claims = advert.claims.map(c => {
           // Check the claim reserved status
           // =====================================

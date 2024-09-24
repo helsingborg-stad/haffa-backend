@@ -5,7 +5,7 @@ import type { TaskRunnerSignature } from '../types'
 
 export const sendReservationReminder: TaskRunnerSignature = async (
   services,
-  { reminderFrequency },
+  { reminderFrequency, reminderSnoozeUntilPicked },
   user
 ) => {
   const mutations = createAdvertMutations(services as Services)
@@ -18,7 +18,13 @@ export const sendReservationReminder: TaskRunnerSignature = async (
     async (p, c) =>
       p.then(res =>
         mutations
-          .notifyReservedClaims(user, c, reminderFrequency, new Date())
+          .notifyReservedClaims(
+            user,
+            c,
+            reminderFrequency,
+            reminderSnoozeUntilPicked,
+            new Date()
+          )
           .then(ver => (ver.advert ? res + 1 : res))
       ),
     Promise.resolve(0)
