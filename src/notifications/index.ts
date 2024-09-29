@@ -1,6 +1,7 @@
 import { createEventLoggingNotifications } from '../events'
 import type { SettingsService } from '../settings/types'
 import type { Services, StartupLog } from '../types'
+import { tryCreateBrevoSmsNotificationsFromEnv } from './brevo-sms'
 import { tryCreateBrevoNotificationsFromEnv } from './brevo/brevo-notifications'
 import { createCompositeNotifications } from './composite-notifications'
 import { createConsoleNotificationService } from './console-notifications'
@@ -74,7 +75,8 @@ const tryCreateSmsNotificationsFromEnv = (
   settings: SettingsService
 ) =>
   tryCreatePhoneUserNotifications(
-    tryCreateDatatorgetSmsNotificationsFromEnv(startupLog, settings)
+    tryCreateBrevoSmsNotificationsFromEnv(startupLog, settings) ||
+      tryCreateDatatorgetSmsNotificationsFromEnv(startupLog, settings)
   )
 
 const createConsoleNotificationsFromEnv = (startupLog: StartupLog) =>
