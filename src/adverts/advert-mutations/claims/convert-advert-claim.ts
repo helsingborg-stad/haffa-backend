@@ -21,7 +21,7 @@ export const createConvertAdvertClaim =
     Services,
     'adverts' | 'notifications'
   >): AdvertMutations['convertAdvertClaim'] =>
-  (user, id, by, type, newType) =>
+  (user, id, by, type, newType, impersonate) =>
     txBuilder<Advert>()
       .load(() => adverts.getAdvert(user, id))
       .validate(async (advert, { throwIf }) =>
@@ -47,7 +47,13 @@ export const createConvertAdvertClaim =
         }))
 
         actions(patched =>
-          notifyClaimsWas(notifications, user, patched, updatedClaims)
+          notifyClaimsWas(
+            notifications,
+            user,
+            patched,
+            updatedClaims,
+            impersonate || null
+          )
         )
         return {
           ...advert,

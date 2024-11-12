@@ -1,6 +1,6 @@
 import type { GetCategories } from '../categories/types'
 import type { HaffaUser } from '../login/types'
-import type { GetProfile } from '../profile/types'
+import type { GetProfile, ProfileInput } from '../profile/types'
 import type { LogEvent, LogEventContext } from './types'
 
 export const createLogEvent = async (
@@ -15,7 +15,8 @@ export const createLogEvent = async (
       category,
       contact: { organization },
     },
-  }: LogEventContext
+  }: LogEventContext,
+  impersonate: Partial<ProfileInput> | null
 ): Promise<LogEvent> => ({
   event,
   at: new Date().toISOString(),
@@ -23,16 +24,17 @@ export const createLogEvent = async (
   organization,
   advertId: id,
   ...(await createCategoryEvent(category, categories)),
-  ...(await createByEvent(by, profiles)),
+  ...(await createByEvent(by, profiles, impersonate)),
 })
 
 const createByEvent = async (
   by: HaffaUser,
-  { getProfile }: GetProfile
+  { getProfile }: GetProfile,
+  impersonate: Partial<ProfileInput> | null
 ): Promise<Pick<LogEvent, 'by' | 'byOrganization'>> =>
   getProfile(by).then(profile => ({
     by: by.id,
-    byOrganization: profile?.organization,
+    byOrganization: impersonate?.organization || profile?.organization,
   }))
 
 const createCategoryEvent = async (

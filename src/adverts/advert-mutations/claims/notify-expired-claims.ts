@@ -40,7 +40,8 @@ export const createExpiredClaimsNotifier =
                 c.by,
                 user,
                 c.quantity,
-                advert
+                advert,
+                null
               )
             )
             actions(() =>
@@ -48,7 +49,8 @@ export const createExpiredClaimsNotifier =
                 advert.createdBy,
                 user,
                 c.quantity,
-                advert
+                advert,
+                null
               )
             )
             actions(() =>

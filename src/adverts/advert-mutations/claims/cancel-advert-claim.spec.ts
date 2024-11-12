@@ -1,4 +1,3 @@
-import { makeUser } from '../../../login'
 import {
   T,
   createTestNotificationServices,
@@ -22,8 +21,8 @@ mutation Mutation(
 `
 describe('cancelAdvertClaim - reserved', () => {
   it('removes all reservations (by user) from database', () => {
-    const advertReservationWasCancelled = jest.fn(async () => void 0)
-    const advertReservationWasCancelledOwner = jest.fn(async () => void 0)
+    const advertReservationWasCancelled = jest.fn(async () => undefined)
+    const advertReservationWasCancelledOwner = jest.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertReservationWasCancelled,
       advertReservationWasCancelledOwner,
@@ -106,7 +105,8 @@ describe('cancelAdvertClaim - reserved', () => {
             'claims@user',
             expect.objectContaining(user),
             1,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
         )
 
@@ -115,7 +115,8 @@ describe('cancelAdvertClaim - reserved', () => {
             'some@owner',
             expect.objectContaining(user),
             1,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
         )
       }
@@ -125,8 +126,8 @@ describe('cancelAdvertClaim - reserved', () => {
 
 describe('cancelAdvertClaim - collected', () => {
   it('removes all reservations (by user) from database', () => {
-    const advertCollectWasCancelled = jest.fn(async () => void 0)
-    const advertCollectWasCancelledOwner = jest.fn(async () => void 0)
+    const advertCollectWasCancelled = jest.fn(async () => undefined)
+    const advertCollectWasCancelledOwner = jest.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertCollectWasCancelled,
       advertCollectWasCancelledOwner,
@@ -209,7 +210,8 @@ describe('cancelAdvertClaim - collected', () => {
             'claims@user',
             expect.objectContaining(user),
             1,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
         )
         T('should have notified about the interesting event', () =>
@@ -217,7 +219,8 @@ describe('cancelAdvertClaim - collected', () => {
             'some@owner',
             expect.objectContaining(user),
             1,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
         )
       }

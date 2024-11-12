@@ -20,8 +20,8 @@ mutation Mutation(
 
 describe('cancelAdvertReservation', () => {
   it('removes all reservations (by user) from database', () => {
-    const advertReservationWasCancelled = jest.fn(async () => void 0)
-    const advertReservationWasCancelledOwner = jest.fn(async () => void 0)
+    const advertReservationWasCancelled = jest.fn(async () => undefined)
+    const advertReservationWasCancelledOwner = jest.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertReservationWasCancelled,
       advertReservationWasCancelledOwner,
@@ -104,7 +104,8 @@ describe('cancelAdvertReservation', () => {
             user.id,
             expect.objectContaining(user),
             3,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
         )
         T('should have notified about the interesting event', () =>
@@ -112,7 +113,8 @@ describe('cancelAdvertReservation', () => {
             'some@owner',
             expect.objectContaining(user),
             3,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
         )
       }

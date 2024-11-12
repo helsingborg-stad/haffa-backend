@@ -28,7 +28,7 @@ export const createCancelAdvertReservation =
         }
 
         actions(patched =>
-          notifyClaimsWasCancelled(notifications, user, patched, claims)
+          notifyClaimsWasCancelled(notifications, user, patched, claims, null)
         )
 
         /*

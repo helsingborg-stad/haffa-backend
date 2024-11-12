@@ -1,6 +1,7 @@
 import type stream from 'stream'
 import type { Only } from '../lib/types'
 import type { HaffaUser } from '../login/types'
+import type { ProfileInput } from '../profile/types'
 
 export enum AdvertType {
   recycle = 'recycle',
@@ -287,20 +288,23 @@ export interface AdvertMutations {
     user: HaffaUser,
     id: string,
     by: string,
-    type: AdvertClaimType
+    type: AdvertClaimType,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<AdvertMutationResult>
   convertAdvertClaim: (
     user: HaffaUser,
     id: string,
     by: string,
     type: AdvertClaimType,
-    newType: AdvertClaimType
+    newType: AdvertClaimType,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<AdvertMutationResult>
   renewAdvertClaim: (
     user: HaffaUser,
     id: string,
     by: string,
-    type: AdvertClaimType
+    type: AdvertClaimType,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<AdvertMutationResult>
   notifyReservedClaims: (
     user: HaffaUser,

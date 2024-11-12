@@ -120,7 +120,8 @@ describe('convertAdvertClaim', () => {
             'claims@user',
             expect.objectContaining(user),
             1,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
         })
         T('should have notified about the interesting event', () => {
@@ -128,7 +129,8 @@ describe('convertAdvertClaim', () => {
             'some@owner',
             expect.objectContaining(user),
             1,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
         })
       }

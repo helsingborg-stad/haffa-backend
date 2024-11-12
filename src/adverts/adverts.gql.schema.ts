@@ -17,17 +17,20 @@ export const advertsGqlSchema = /* GraphQL */ `
       id: ID!
       by: String!
       type: AdvertClaimType!
+      impersonate: ProfileInput
     ): AdvertMutationResult
     convertAdvertClaim(
       id: ID!
       by: String!
       type: AdvertClaimType!
       newType: AdvertClaimType!
+      impersonate: ProfileInput
     ): AdvertMutationResult
     renewAdvertClaim(
       id: ID!
       by: String!
       type: AdvertClaimType!
+      impersonate: ProfileInput
     ): AdvertMutationResult
     returnAdvert(id: ID!): AdvertMutationResult
     joinAdvertWaitlist(id: ID!): AdvertMutationResult

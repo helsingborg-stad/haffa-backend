@@ -26,12 +26,19 @@ export const createReserveAdvert =
         if (quantity > 0) {
           actions(patched =>
             Promise.all([
-              notifications.advertWasReserved(user.id, user, quantity, patched),
+              notifications.advertWasReserved(
+                user.id,
+                user,
+                quantity,
+                patched,
+                null
+              ),
               notifications.advertWasReservedOwner(
                 advert.createdBy,
                 user,
                 quantity,
-                patched
+                patched,
+                null
               ),
             ])
           )

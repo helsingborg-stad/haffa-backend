@@ -22,8 +22,8 @@ mutation Mutation(
 
 describe('collectAdvert', () => {
   it('creates reservation claim', () => {
-    const advertWasCollected = jest.fn(async () => void 0)
-    const advertWasCollectedOwner = jest.fn(async () => void 0)
+    const advertWasCollected = jest.fn(async () => undefined)
+    const advertWasCollectedOwner = jest.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasCollected,
       advertWasCollectedOwner,
@@ -75,7 +75,8 @@ describe('collectAdvert', () => {
             user.id,
             expect.objectContaining(user),
             1,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
         )
         T('should have notified about the interesting event', () =>
@@ -83,7 +84,8 @@ describe('collectAdvert', () => {
             'test@owner',
             expect.objectContaining(user),
             1,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
         )
       }
@@ -91,7 +93,7 @@ describe('collectAdvert', () => {
   })
 
   it('denies overcollects', () => {
-    const advertWasCollected = jest.fn(async () => void 0)
+    const advertWasCollected = jest.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasCollected,
     })
