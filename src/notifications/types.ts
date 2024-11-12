@@ -1,5 +1,6 @@
 import type { Advert } from '../adverts/types'
 import type { HaffaUser } from '../login/types'
+import type { ProfileInput } from '../profile/types'
 
 export interface NotificationService {
   subscriptionsHasNewAdverts: (
@@ -24,49 +25,57 @@ export interface NotificationService {
     to: string,
     by: HaffaUser,
     quantity: number,
-    advert: Advert
+    advert: Advert,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<void>
   advertWasReservedOwner: (
     to: string,
     by: HaffaUser,
     quantity: number,
-    advert: Advert
+    advert: Advert,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<void>
   advertReservationWasCancelled: (
     to: string,
     by: HaffaUser,
     quantity: number,
-    advert: Advert
+    advert: Advert,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<void>
   advertReservationWasCancelledOwner: (
     to: string,
     by: HaffaUser,
     quantity: number,
-    advert: Advert
+    advert: Advert,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<void>
   advertWasCollected: (
     to: string,
     by: HaffaUser,
     quantity: number,
-    advert: Advert
+    advert: Advert,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<void>
   advertWasCollectedOwner: (
     to: string,
     by: HaffaUser,
     quantity: number,
-    advert: Advert
+    advert: Advert,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<void>
   advertCollectWasCancelled: (
     to: string,
     by: HaffaUser,
     quantity: number,
-    advert: Advert
+    advert: Advert,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<void>
   advertCollectWasCancelledOwner: (
     to: string,
     by: HaffaUser,
     quantity: number,
-    advert: Advert
+    advert: Advert,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<void>
   advertNotCollected: (
     to: string,
@@ -113,24 +122,28 @@ export interface NotificationService {
     to: string,
     by: HaffaUser,
     quantity: number,
-    advert: Advert
+    advert: Advert,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<void>
   advertReservationWasRenewedOwner: (
     to: string,
     by: HaffaUser,
     quantity: number,
-    advert: Advert
+    advert: Advert,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<void>
   advertCollectWasRenewed: (
     to: string,
     by: HaffaUser,
     quantity: number,
-    advert: Advert
+    advert: Advert,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<void>
   advertCollectWasRenewedOwner: (
     to: string,
     by: HaffaUser,
     quantity: number,
-    advert: Advert
+    advert: Advert,
+    impersonate: Partial<ProfileInput> | null
   ) => Promise<void>
 }

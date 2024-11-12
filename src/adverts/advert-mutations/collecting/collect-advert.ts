@@ -34,13 +34,15 @@ export const createCollectAdvert =
                 user.id,
                 user,
                 quantity,
-                patched
+                patched,
+                null
               ),
               notifications.advertWasCollectedOwner(
                 advert.createdBy,
                 user,
                 quantity,
-                patched
+                patched,
+                null
               ),
             ])
           )

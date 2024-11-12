@@ -98,24 +98,30 @@ export const createAdvertsGqlModule = (
           .then(result =>
             mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
           ),
-      cancelAdvertClaim: async ({ ctx: { user }, args: { id, by, type } }) =>
+      cancelAdvertClaim: async ({
+        ctx: { user },
+        args: { id, by, type, impersonate },
+      }) =>
         createAdvertMutations(services)
-          .cancelAdvertClaim(user, id, by, type)
+          .cancelAdvertClaim(user, id, by, type, impersonate)
           .then(result =>
             mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
           ),
       convertAdvertClaim: async ({
         ctx: { user },
-        args: { id, by, type, newType },
+        args: { id, by, type, newType, impersonate },
       }) =>
         createAdvertMutations(services)
-          .convertAdvertClaim(user, id, by, type, newType)
+          .convertAdvertClaim(user, id, by, type, newType, impersonate)
           .then(result =>
             mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
           ),
-      renewAdvertClaim: async ({ ctx: { user }, args: { id, by, type } }) =>
+      renewAdvertClaim: async ({
+        ctx: { user },
+        args: { id, by, type, impersonate },
+      }) =>
         createAdvertMutations(services)
-          .renewAdvertClaim(user, id, by, type)
+          .renewAdvertClaim(user, id, by, type, impersonate)
           .then(result =>
             mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
           ),

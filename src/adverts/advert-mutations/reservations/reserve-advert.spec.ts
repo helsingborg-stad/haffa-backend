@@ -22,8 +22,8 @@ mutation Mutation(
 
 describe('reserveAdvert', () => {
   it('updates an advert in the database', () => {
-    const advertWasReserved = jest.fn(async () => void 0)
-    const advertWasReservedOwner = jest.fn(async () => void 0)
+    const advertWasReserved = jest.fn(async () => undefined)
+    const advertWasReservedOwner = jest.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasReserved,
       advertWasReservedOwner,
@@ -74,7 +74,8 @@ describe('reserveAdvert', () => {
             user.id,
             expect.objectContaining(user),
             1,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
         )
         T('should have notified about the interesting event', () =>
@@ -82,7 +83,8 @@ describe('reserveAdvert', () => {
             'some@owner',
             expect.objectContaining(user),
             1,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
         )
       }

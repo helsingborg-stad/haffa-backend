@@ -1,5 +1,6 @@
 import type { HaffaUser } from '../../../login/types'
 import type { NotificationService } from '../../../notifications/types'
+import type { ProfileInput } from '../../../profile/types'
 import { normalizeAdvertClaims } from '../../advert-claims'
 import type { Advert, AdvertClaim } from '../../types'
 import { AdvertClaimType } from '../../types'
@@ -11,7 +12,8 @@ export const notifyClaimsWas = async (
   notifications: NotificationService,
   by: HaffaUser,
   advert: Advert,
-  claims: AdvertClaim[]
+  claims: AdvertClaim[],
+  impersonate: Partial<ProfileInput> | null
 ) => {
   const nc = normalizeAdvertClaims(claims)
   await all(
@@ -19,12 +21,19 @@ export const notifyClaimsWas = async (
       .filter(claim => claim.type === AdvertClaimType.reserved)
       .map(claim =>
         Promise.all([
-          notifications.advertWasReserved(claim.by, by, claim.quantity, advert),
+          notifications.advertWasReserved(
+            claim.by,
+            by,
+            claim.quantity,
+            advert,
+            impersonate
+          ),
           notifications.advertWasReservedOwner(
             advert.createdBy,
             by,
             claim.quantity,
-            advert
+            advert,
+            impersonate
           ),
         ])
       )
@@ -39,13 +48,15 @@ export const notifyClaimsWas = async (
             claim.by,
             by,
             claim.quantity,
-            advert
+            advert,
+            impersonate
           ),
           notifications.advertWasCollectedOwner(
             advert.createdBy,
             by,
             claim.quantity,
-            advert
+            advert,
+            impersonate
           ),
         ])
       )
@@ -56,7 +67,8 @@ export const notifyClaimsWasCancelled = async (
   notifications: NotificationService,
   by: HaffaUser,
   advert: Advert,
-  claims: AdvertClaim[]
+  claims: AdvertClaim[],
+  impersonate: Partial<ProfileInput> | null
 ) => {
   const nc = normalizeAdvertClaims(claims)
   await all(
@@ -68,13 +80,15 @@ export const notifyClaimsWasCancelled = async (
             claim.by,
             by,
             claim.quantity,
-            advert
+            advert,
+            impersonate
           ),
           notifications.advertReservationWasCancelledOwner(
             advert.createdBy,
             by,
             claim.quantity,
-            advert
+            advert,
+            impersonate
           ),
         ])
       )
@@ -89,13 +103,15 @@ export const notifyClaimsWasCancelled = async (
             claim.by,
             by,
             claim.quantity,
-            advert
+            advert,
+            impersonate
           ),
           notifications.advertCollectWasCancelledOwner(
             advert.createdBy,
             by,
             claim.quantity,
-            advert
+            advert,
+            impersonate
           ),
         ])
       )
@@ -106,7 +122,8 @@ export const notifyClaimsWasRenewed = async (
   notifications: NotificationService,
   by: HaffaUser,
   advert: Advert,
-  claims: AdvertClaim[]
+  claims: AdvertClaim[],
+  impersonate: Partial<ProfileInput> | null
 ) => {
   const nc = normalizeAdvertClaims(claims)
   await all(
@@ -118,13 +135,15 @@ export const notifyClaimsWasRenewed = async (
             claim.by,
             by,
             claim.quantity,
-            advert
+            advert,
+            impersonate
           ),
           notifications.advertReservationWasRenewedOwner(
             advert.createdBy,
             by,
             claim.quantity,
-            advert
+            advert,
+            impersonate
           ),
         ])
       )
@@ -139,13 +158,15 @@ export const notifyClaimsWasRenewed = async (
             claim.by,
             by,
             claim.quantity,
-            advert
+            advert,
+            impersonate
           ),
           notifications.advertCollectWasRenewedOwner(
             advert.createdBy,
             by,
             claim.quantity,
-            advert
+            advert,
+            impersonate
           ),
         ])
       )

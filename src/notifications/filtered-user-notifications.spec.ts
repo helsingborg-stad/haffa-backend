@@ -44,14 +44,14 @@ describe('tryCreateEmailUserNotifications', () => {
 
     const to = 'valid@email.com'
     await n.pincodeRequested(to, '123456')
-    await n.advertCollectWasCancelled(to, u, 1, a)
+    await n.advertCollectWasCancelled(to, u, 1, a, null)
     await n.advertNotCollected(to, u, 1, a)
-    await n.advertReservationWasCancelled(to, u, 1, a)
+    await n.advertReservationWasCancelled(to, u, 1, a, null)
     await n.advertWasArchived(to, u, a)
-    await n.advertWasCollected(to, u, 1, a)
+    await n.advertWasCollected(to, u, 1, a, null)
     await n.advertWasCreated(to, u, a)
     await n.advertWasRemoved(to, u, a)
-    await n.advertWasReserved(to, u, 1, a)
+    await n.advertWasReserved(to, u, 1, a, null)
     await n.advertWasUnarchived(to, u, a)
     await n.subscriptionsHasNewAdverts(to, u, [])
     await n.advertNotReturned(to, u, 1, a)
@@ -59,19 +59,26 @@ describe('tryCreateEmailUserNotifications', () => {
     await n.advertWasReturnedOwner(to, u, 1, a)
 
     expect(inner.pincodeRequested).toHaveBeenCalledWith(to, '123456')
-    expect(inner.advertCollectWasCancelled).toHaveBeenCalledWith(to, u, 1, a)
+    expect(inner.advertCollectWasCancelled).toHaveBeenCalledWith(
+      to,
+      u,
+      1,
+      a,
+      null
+    )
     expect(inner.advertNotCollected).toHaveBeenCalledWith(to, u, 1, a)
     expect(inner.advertReservationWasCancelled).toHaveBeenCalledWith(
       to,
       u,
       1,
-      a
+      a,
+      null
     )
     expect(inner.advertWasArchived).toHaveBeenCalledWith(to, u, a)
-    expect(inner.advertWasCollected).toHaveBeenCalledWith(to, u, 1, a)
+    expect(inner.advertWasCollected).toHaveBeenCalledWith(to, u, 1, a, null)
     expect(inner.advertWasCreated).toHaveBeenCalledWith(to, u, a)
     expect(inner.advertWasRemoved).toHaveBeenCalledWith(to, u, a)
-    expect(inner.advertWasReserved).toHaveBeenCalledWith(to, u, 1, a)
+    expect(inner.advertWasReserved).toHaveBeenCalledWith(to, u, 1, a, null)
     expect(inner.advertWasUnarchived).toHaveBeenCalledWith(to, u, a)
     expect(inner.subscriptionsHasNewAdverts).toHaveBeenCalledWith(to, u, [])
     expect(inner.advertNotReturned).toHaveBeenCalledWith(to, u, 1, a)
@@ -91,14 +98,14 @@ describe('tryCreateEmailUserNotifications', () => {
       (async () => {
         const to = 'not an email'
         await n.pincodeRequested(to, '123456')
-        await n.advertCollectWasCancelled(to, u, 1, a)
+        await n.advertCollectWasCancelled(to, u, 1, a, null)
         await n.advertNotCollected(to, u, 1, a)
-        await n.advertReservationWasCancelled(to, u, 1, a)
+        await n.advertReservationWasCancelled(to, u, 1, a, null)
         await n.advertWasArchived(to, u, a)
-        await n.advertWasCollected(to, u, 1, a)
+        await n.advertWasCollected(to, u, 1, a, null)
         await n.advertWasCreated(to, u, a)
         await n.advertWasRemoved(to, u, a)
-        await n.advertWasReserved(to, u, 1, a)
+        await n.advertWasReserved(to, u, 1, a, null)
         await n.advertWasUnarchived(to, u, a)
         await n.subscriptionsHasNewAdverts(to, u, [])
         await n.advertNotReturned(to, u, 1, a)

@@ -51,76 +51,102 @@ export const createConsoleNotificationService = (): NotificationService => ({
         ...advertInfo(advert),
       },
     }),
-  advertWasReserved: async (to, by, quantity, advert) =>
+  advertWasReserved: async (to, by, quantity, advert, impersonate) =>
     console.log({
       advertWasReserved: {
         to,
         by,
         quantity,
         ...advertInfo(advert),
+        impersonate,
       },
     }),
-  advertWasReservedOwner: async (to, by, quantity, advert) =>
+  advertWasReservedOwner: async (to, by, quantity, advert, impersonate) =>
     console.log({
       advertWasReservedOwner: {
         to,
         by,
         quantity,
         ...advertInfo(advert),
+        impersonate,
       },
     }),
-  advertReservationWasCancelled: async (to, by, quantity, advert) =>
+  advertReservationWasCancelled: async (
+    to,
+    by,
+    quantity,
+    advert,
+    impersonate
+  ) =>
     console.log({
       advertReservationWasCancelled: {
         to,
         by,
         quantity,
         ...advertInfo(advert),
+        impersonate,
       },
     }),
-  advertReservationWasCancelledOwner: async (to, by, quantity, advert) =>
+  advertReservationWasCancelledOwner: async (
+    to,
+    by,
+    quantity,
+    advert,
+    impersonate
+  ) =>
     console.log({
       advertReservationWasCancelledOwner: {
         to,
         by,
         quantity,
         ...advertInfo(advert),
+        impersonate,
       },
     }),
-  advertWasCollected: async (to, by, quantity, advert) =>
+  advertWasCollected: async (to, by, quantity, advert, impersonate) =>
     console.log({
       advertWasCollected: {
         to,
         by,
         quantity,
         ...advertInfo(advert),
+        impersonate,
       },
     }),
-  advertWasCollectedOwner: async (to, by, quantity, advert) =>
+  advertWasCollectedOwner: async (to, by, quantity, advert, impersonate) =>
     console.log({
       advertWasCollectedOwner: {
         to,
         by,
         quantity,
         ...advertInfo(advert),
+        impersonate,
       },
     }),
-  advertCollectWasCancelled: async (to, by, quantity, advert) =>
+  advertCollectWasCancelled: async (to, by, quantity, advert, impersonate) =>
     console.log({
       advertCollectWasCancelled: {
         to,
         by,
         quantity,
         ...advertInfo(advert),
+        impersonate,
       },
     }),
-  advertCollectWasCancelledOwner: async (to, by, quantity, advert) =>
+  advertCollectWasCancelledOwner: async (
+    to,
+    by,
+    quantity,
+    advert,
+    impersonate
+  ) =>
     console.log({
       advertCollectWasCancelledOwner: {
         to,
         by,
         quantity,
         ...advertInfo(advert),
+        impersonate,
       },
     }),
   advertNotCollected: async (to, by, quantity, advert) =>
@@ -192,40 +218,50 @@ export const createConsoleNotificationService = (): NotificationService => ({
         ...advertInfo(advert),
       },
     }),
-  advertCollectWasRenewed: async (to, by, quantity, advert) =>
+  advertCollectWasRenewed: async (to, by, quantity, advert, impersonate) =>
     console.log({
       advertCollectWasRenewed: {
         to,
         by,
         quantity,
         ...advertInfo(advert),
+        impersonate,
       },
     }),
-  advertCollectWasRenewedOwner: async (to, by, quantity, advert) =>
+  advertCollectWasRenewedOwner: async (to, by, quantity, advert, impersonate) =>
     console.log({
       advertCollectWasRenewedOwner: {
         to,
         by,
         quantity,
         ...advertInfo(advert),
+        impersonate,
       },
     }),
-  advertReservationWasRenewed: async (to, by, quantity, advert) =>
+  advertReservationWasRenewed: async (to, by, quantity, advert, impersonate) =>
     console.log({
       advertReservationWasRenewed: {
         to,
         by,
         quantity,
         ...advertInfo(advert),
+        impersonate,
       },
     }),
-  advertReservationWasRenewedOwner: async (to, by, quantity, advert) =>
+  advertReservationWasRenewedOwner: async (
+    to,
+    by,
+    quantity,
+    advert,
+    impersonate
+  ) =>
     console.log({
       advertReservationWasRenewedOwner: {
         to,
         by,
         quantity,
         ...advertInfo(advert),
+        impersonate,
       },
     }),
 })

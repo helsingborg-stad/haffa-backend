@@ -132,13 +132,15 @@ describe('renewAdvertClaim', () => {
             'renew-user',
             expect.objectContaining(user),
             2,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
           expect(advertCollectWasRenewedOwner).toHaveBeenCalledWith(
             user.id,
             expect.objectContaining(user),
             2,
-            adverts['advert-123']
+            adverts['advert-123'],
+            null
           )
         })
       }

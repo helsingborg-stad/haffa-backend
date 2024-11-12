@@ -21,7 +21,7 @@ export const createCancelAdvertClaim =
     Services,
     'adverts' | 'notifications'
   >): AdvertMutations['cancelAdvertClaim'] =>
-  (user, id, by, type) =>
+  (user, id, by, type, impersonate) =>
     txBuilder<Advert>()
       .load(() => adverts.getAdvert(user, id))
       .validate(async (advert, { throwIf }) =>
@@ -38,7 +38,13 @@ export const createCancelAdvertClaim =
         }
 
         actions(patched =>
-          notifyClaimsWasCancelled(notifications, user, patched, claims)
+          notifyClaimsWasCancelled(
+            notifications,
+            user,
+            patched,
+            claims,
+            impersonate || null
+          )
         )
 
         return {

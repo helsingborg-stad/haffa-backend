@@ -141,13 +141,15 @@ describe('notifyExpiredClaims', () => {
           'jane@doe1.se',
           expect.objectContaining(user),
           2,
-          createTestAdvert()
+          createTestAdvert(),
+          null
         )
         expect(advertReservationWasCancelledOwner).toHaveBeenCalledWith(
           adverts['advert-123'].createdBy,
           expect.objectContaining(user),
           2,
-          createTestAdvert()
+          createTestAdvert(),
+          null
         )
       }
     )

@@ -23,7 +23,7 @@ export const createRenewAdvertClaim =
     Services,
     'adverts' | 'notifications'
   >): AdvertMutations['renewAdvertClaim'] =>
-  (user, id, by, type) =>
+  (user, id, by, type, impersonate) =>
     txBuilder<Advert>()
       .load(() => adverts.getAdvert(user, id))
       .validate(async (advert, { throwIf }) =>
@@ -50,7 +50,8 @@ export const createRenewAdvertClaim =
             notifications,
             user,
             patched,
-            patched.claims.filter(c => c.type === type && c.by === by)
+            patched.claims.filter(c => c.type === type && c.by === by),
+            impersonate || null
           )
         )
 
