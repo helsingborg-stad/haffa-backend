@@ -12,6 +12,7 @@ import type { MongoConnection } from '../../../mongodb-utils/types'
 import { toMap } from '../../../lib'
 import { convertObjectStream } from '../../../lib/streams'
 import { createValidatingAdvertsRepository } from '../validation'
+import { combineAnd, combineOr } from './filters/filter-utils'
 
 export const createMongoAdvertsRepository = (
   { getCollection }: MongoConnection<MongoAdvert>,
@@ -131,13 +132,21 @@ export const createMongoAdvertsRepository = (
   ) => {
     // https://www.mongodb.com/docs/manual/reference/operator/aggregation/count-accumulator/#use-in--group-stage
     const collection = await getCollection()
+
+    const filter = combineAnd(
+      excludeArchived ? { 'meta.archived': { $ne: true } } : null,
+      combineOr(
+        { 'meta.unreservedCount': { $gt: 0 } },
+        { 'advert.lendingPeriod': { $gt: 0 } }
+      )
+    )
     const cursor = collection.aggregate<{ _id: string; c: number }>(
       [
-        excludeArchived
-          ? {
-              $match: { 'meta.archived': { $ne: true } },
-            }
-          : null,
+        {
+          $match: {
+            ...filter,
+          },
+        },
         {
           $group: {
             _id: `$advert.${by}`,
