@@ -19,6 +19,7 @@ import { createSmsTemplatesGqlModule } from '../notifications/templates/sms-temp
 import { createSyslogGqlModule } from '../syslog/syslog-gql-module'
 import type { GraphQLModule } from '../lib/gdi-api-node'
 import type { EntityResolverMap } from '../lib/gdi-api-node/graphql'
+import { createPickupLocationsGqlModule } from '../pickup/pickup-locations-gql-module'
 
 export const createStandardGqlModule = (): GraphQLModule => ({
   schema: haffaGqlSchema,
@@ -42,6 +43,7 @@ export const createHaffaGqlModule = (services: Services): GraphQLModule =>
     createContentGqlModule(services),
     createAdvertFieldConfigGqlModule(services),
     createLocationsGqlModule(services),
+    createPickupLocationsGqlModule(services),
     createUserMapperGqlModule(services),
     createSmsTemplatesGqlModule(services),
     createSyslogGqlModule(services)
