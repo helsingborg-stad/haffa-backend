@@ -14,6 +14,7 @@ import { createEventLogServiceFromEnv } from './events'
 import { createSubscriptionsRepositoryFromEnv } from './subscriptions'
 import { createContentRepositoryFromEnv } from './content'
 import { createSyslogServiceFromEnv } from './syslog'
+import { createWorkflowServiceFromEnv } from './workflow'
 
 const createStartupLog = (): StartupLog => ({
   echo: (service, { name, config }) => {
@@ -28,6 +29,7 @@ const createStartupLog = (): StartupLog => ({
 })
 
 const createServicesFromEnv = (): Services => {
+  const workflow = createWorkflowServiceFromEnv()
   const startupLog = createStartupLog()
   const settings = createSettingsServiceFromEnv(startupLog)
   const userMapper = createUserMapperFromEnv(startupLog, settings)
@@ -49,6 +51,7 @@ const createServicesFromEnv = (): Services => {
     userMapper,
   })
   return {
+    workflow,
     userMapper,
     categories,
     settings,
@@ -60,6 +63,7 @@ const createServicesFromEnv = (): Services => {
     profiles,
     notifications,
     jobs: createJobExecutorServiceFromEnv({
+      workflow,
       syslog,
       notifications,
       adverts,

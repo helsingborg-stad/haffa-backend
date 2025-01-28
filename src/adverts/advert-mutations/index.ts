@@ -28,7 +28,10 @@ import { createMarkAdvertAsUnpicked } from './picked/mark-advert-as-unpicked'
 import { createPatchAdvertTags } from './tags/patch-advert-tags'
 
 export const createAdvertMutations = (
-  services: Pick<Services, 'adverts' | 'files' | 'notifications' | 'syslog'>
+  services: Pick<
+    Services,
+    'adverts' | 'files' | 'notifications' | 'syslog' | 'workflow'
+  >
 ): AdvertMutations => ({
   importAdvertSnapshot: createImportAdvertSnapshot(services),
   createAdvert: createCreateAdvert(services),
