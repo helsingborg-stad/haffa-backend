@@ -1,4 +1,3 @@
-import { makeUser } from '../../../login'
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'

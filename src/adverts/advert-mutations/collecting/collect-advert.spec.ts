@@ -136,4 +136,57 @@ describe('collectAdvert', () => {
       }
     )
   })
+
+  it('should set picked at collect', () => {
+    const advertWasCollected = jest.fn(async () => undefined)
+    const advertWasCollectedOwner = jest.fn(async () => undefined)
+    const notifications = createTestNotificationServices({
+      advertWasCollected,
+      advertWasCollectedOwner,
+    })
+    const doPickOnCollect = jest.fn(() => true)
+    const workflow = {
+      doPickOnCollect,
+    }
+
+    return end2endTest(
+      { services: { notifications, workflow } },
+      async ({ mappedGqlRequest, adverts, user, loginPolicies }) => {
+        // give us rights to collect
+        await loginPolicies.updateLoginPolicies([
+          {
+            emailPattern: user.id,
+            roles: ['canCollectAdverts'],
+          },
+        ])
+
+        // eslint-disable-next-line no-param-reassign
+        adverts['advert-123'] = {
+          ...createEmptyAdvert(),
+          id: 'advert-123',
+          quantity: 1,
+        }
+
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'collectAdvert',
+          collectAdvertMutation,
+          {
+            id: 'advert-123',
+            quantity: 1,
+          }
+        )
+        expect(result.status).toBeNull()
+
+        T('should be updated in database', () =>
+          expect(adverts['advert-123'].pickedAt).toHaveLength(
+            '2025-01-17T13:35:25.725Z'.length
+          )
+        )
+
+        T('should have checked configuration', () =>
+          expect(doPickOnCollect).toHaveBeenCalled()
+        )
+      }
+    )
+  })
 })
