@@ -125,7 +125,9 @@ export const createTestNotificationServices = (
 
 export const createTestServices = (services: Partial<Services>): Services => {
   const workflow = {
-    doPickOnCollect: () => false,
+    get pickOnCollect() {
+      return false
+    },
   }
   const settings = services.settings || createInMemorySettingsService()
   const userMapper = services.userMapper || createUserMapper(null, settings)

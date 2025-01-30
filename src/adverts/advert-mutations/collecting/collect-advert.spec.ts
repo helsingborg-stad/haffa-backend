@@ -144,10 +144,12 @@ describe('collectAdvert', () => {
       advertWasCollected,
       advertWasCollectedOwner,
     })
-    const doPickOnCollect = jest.fn(() => true)
     const workflow = {
-      doPickOnCollect,
+      get pickOnCollect() {
+        return true
+      },
     }
+    const spy = jest.spyOn(workflow, 'pickOnCollect', 'get')
 
     return end2endTest(
       { services: { notifications, workflow } },
@@ -184,7 +186,7 @@ describe('collectAdvert', () => {
         )
 
         T('should have checked configuration', () =>
-          expect(doPickOnCollect).toHaveBeenCalled()
+          expect(spy).toHaveBeenCalled()
         )
       }
     )

@@ -21,7 +21,7 @@ export const createConvertAdvertClaim =
   ({
     adverts,
     notifications,
-    workflow,
+    workflow: { pickOnCollect },
   }: Pick<
     Services,
     'adverts' | 'notifications' | 'workflow'
@@ -63,7 +63,7 @@ export const createConvertAdvertClaim =
           )
         )
         const pickedAt =
-          newType === AdvertClaimType.collected && workflow.doPickOnCollect()
+          newType === AdvertClaimType.collected && pickOnCollect
             ? at
             : advert.pickedAt
 

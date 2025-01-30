@@ -1,3 +1,3 @@
 export interface WorkflowService {
-  doPickOnCollect: () => boolean
+  pickOnCollect: boolean
 }

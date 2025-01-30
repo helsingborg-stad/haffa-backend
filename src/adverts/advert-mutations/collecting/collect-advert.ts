@@ -15,7 +15,7 @@ export const createCollectAdvert =
   ({
     adverts,
     notifications,
-    workflow,
+    workflow: { pickOnCollect },
   }: Pick<
     Services,
     'adverts' | 'notifications' | 'workflow'
@@ -63,7 +63,7 @@ export const createCollectAdvert =
             .map(({ quantity }) => quantity)
             .reduce((s, v) => s + v, 0)
 
-          const pickedAt = workflow.doPickOnCollect() ? at : advert.pickedAt
+          const pickedAt = pickOnCollect ? at : advert.pickedAt
 
           return {
             ...advert,
