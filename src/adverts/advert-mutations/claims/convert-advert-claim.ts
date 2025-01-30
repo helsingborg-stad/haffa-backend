@@ -1,9 +1,13 @@
-import { makeUser } from '../../../login'
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
 import { getAdvertMeta } from '../../advert-meta'
-import type { AdvertClaim, Advert, AdvertMutations } from '../../types'
+import {
+  type AdvertClaim,
+  type Advert,
+  type AdvertMutations,
+  AdvertClaimType,
+} from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
   verifyAll,
@@ -17,9 +21,10 @@ export const createConvertAdvertClaim =
   ({
     adverts,
     notifications,
+    workflow: { pickOnCollect },
   }: Pick<
     Services,
-    'adverts' | 'notifications'
+    'adverts' | 'notifications' | 'workflow'
   >): AdvertMutations['convertAdvertClaim'] =>
   (user, id, by, type, newType, impersonate) =>
     txBuilder<Advert>()
@@ -31,6 +36,8 @@ export const createConvertAdvertClaim =
         )
       )
       .patch((advert, { actions }) => {
+        const at = new Date().toISOString()
+
         const matchClaim = (c: AdvertClaim) =>
           c.by === by && c.type === type && c.type !== newType
 
@@ -41,7 +48,7 @@ export const createConvertAdvertClaim =
 
         const updatedClaims = claims.map(c => ({
           ...c,
-          at: new Date().toISOString(),
+          at,
           type: newType,
           events: [],
         }))
@@ -55,8 +62,14 @@ export const createConvertAdvertClaim =
             impersonate || null
           )
         )
+        const pickedAt =
+          newType === AdvertClaimType.collected && pickOnCollect
+            ? at
+            : advert.pickedAt
+
         return {
           ...advert,
+          pickedAt,
           claims: normalizeAdvertClaims(
             advert.claims.filter(c => !matchClaim(c)).concat(updatedClaims)
           ),

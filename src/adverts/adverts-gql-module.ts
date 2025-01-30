@@ -11,7 +11,7 @@ import type { GraphQLModule } from '../lib/gdi-api-node'
 export const createAdvertsGqlModule = (
   services: Pick<
     Services,
-    'adverts' | 'categories' | 'files' | 'notifications' | 'syslog'
+    'adverts' | 'categories' | 'files' | 'notifications' | 'syslog' | 'workflow'
   >
 ): GraphQLModule => ({
   schema: advertsGqlSchema,

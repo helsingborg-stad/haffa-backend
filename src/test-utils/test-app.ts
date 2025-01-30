@@ -124,6 +124,11 @@ export const createTestNotificationServices = (
 })
 
 export const createTestServices = (services: Partial<Services>): Services => {
+  const workflow = {
+    get pickOnCollect() {
+      return false
+    },
+  }
   const settings = services.settings || createInMemorySettingsService()
   const userMapper = services.userMapper || createUserMapper(null, settings)
   const categories = services.categories || categoryAdapter(settings)
@@ -135,6 +140,7 @@ export const createTestServices = (services: Partial<Services>): Services => {
   const subscriptions = createNullSubscriptionsRepository()
 
   return {
+    workflow,
     userMapper,
     categories,
     settings,
@@ -146,6 +152,7 @@ export const createTestServices = (services: Partial<Services>): Services => {
     files,
     notifications,
     jobs: createJobExecutorServiceFromEnv({
+      workflow,
       syslog,
       notifications,
       adverts,

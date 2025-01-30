@@ -4,7 +4,12 @@ import type { Services } from '../types'
 
 export type JobServices = Pick<
   Services,
-  'syslog' | 'notifications' | 'adverts' | 'files' | 'subscriptions'
+  | 'syslog'
+  | 'notifications'
+  | 'adverts'
+  | 'files'
+  | 'subscriptions'
+  | 'workflow'
 >
 export type TaskRunnerSignature = (
   services: JobServices,

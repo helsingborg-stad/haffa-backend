@@ -12,6 +12,7 @@ import type { EventLogService } from './events/types'
 import type { SubscriptionsRepository } from './subscriptions/types'
 import type { ContentRepository } from './content/types'
 import type { SyslogService } from './syslog/types'
+import type { WorkflowService } from './workflow/types'
 
 export interface StartupLog {
   echo: <TService>(
@@ -24,6 +25,7 @@ export interface StartupLog {
 }
 
 export interface Services {
+  workflow: WorkflowService
   userMapper: UserMapper
   categories: CategoryRepository
   settings: SettingsService
