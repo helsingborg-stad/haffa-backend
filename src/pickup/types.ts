@@ -2,6 +2,7 @@ import type { AdvertLocation } from '../adverts/types'
 
 export interface PickupLocation extends AdvertLocation {
   notifyEmail: string
+  trackingName: string
   tags: string[]
 }
 

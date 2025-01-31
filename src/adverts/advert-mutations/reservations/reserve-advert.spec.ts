@@ -1,23 +1,32 @@
 import {
+  normalizePickupLocation,
+  patchAdvertWithPickupLocation,
+} from '../../../pickup/mappers'
+import {
   T,
   createTestNotificationServices,
   end2endTest,
 } from '../../../test-utils'
 import { TxErrors } from '../../../transactions'
-import { createEmptyAdvert } from '../../mappers'
+import {
+  createEmptyAdvert,
+  createEmptyAdvertLocation,
+  normalizeAdvertLocation,
+} from '../../mappers'
 import type { AdvertMutationResult } from '../../types'
 import { AdvertClaimType } from '../../types'
 import { mutationProps } from '../test-utils/gql-test-definitions'
 
 const reserveAdvertMutation = /* GraphQL */ `
-mutation Mutation(
-	$id: ID!
-	$quantity: Int
-) {
-	reserveAdvert(id: $id, quantity: $quantity) {
-		${mutationProps}
-	}
-}
+  mutation Mutation(
+    $id: ID!
+    $quantity: Int!
+    $pickupLocation: PickupLocationInput
+  ) {
+    reserveAdvert(id: $id, quantity: $quantity, pickupLocation: $pickupLocation) {
+      ${mutationProps}
+    }
+  }
 `
 
 describe('reserveAdvert', () => {
@@ -127,6 +136,97 @@ describe('reserveAdvert', () => {
         )
         T('no notifications should be called', () =>
           expect(advertWasReservedOwner).not.toHaveBeenCalled()
+        )
+      }
+    )
+  })
+
+  it('handles pickup locations', () => {
+    const advertWasReserved = jest.fn(async () => undefined)
+    const advertWasReservedOwner = jest.fn(async () => undefined)
+    const notifications = createTestNotificationServices({
+      advertWasReserved,
+      advertWasReservedOwner,
+    })
+
+    return end2endTest(
+      { services: { notifications } },
+      async ({ mappedGqlRequest, adverts, user, loginPolicies }) => {
+        // create a pickup location
+        const pickupLocation = normalizePickupLocation({
+          name: 'pl1',
+          adress: 'pl street',
+          zipCode: '12345',
+          city: 'pickup town',
+          notifyEmail: 'notify@me',
+        })
+
+        // give us rights to handle claims
+        await loginPolicies.updateLoginPolicies([
+          {
+            emailPattern: user.id,
+            roles: ['canReserveAdverts'],
+          },
+        ])
+
+        // eslint-disable-next-line no-param-reassign
+        adverts['advert-123'] = {
+          ...createEmptyAdvert(),
+          id: 'advert-123',
+          quantity: 5,
+          createdBy: 'some@owner',
+          location: createEmptyAdvertLocation({
+            name: 'orig loc',
+            adress: 'orig street',
+          }),
+        }
+
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'reserveAdvert',
+          reserveAdvertMutation,
+          {
+            id: 'advert-123',
+            quantity: 1,
+            pickupLocation,
+          }
+        )
+        expect(result.status).toBeNull()
+
+        T('should have reservation logged in database', () =>
+          expect(adverts['advert-123'].claims).toMatchObject([
+            {
+              by: user.id,
+              quantity: 1,
+              type: AdvertClaimType.reserved,
+              events: [],
+              pickupLocation,
+            },
+          ])
+        )
+
+        // for notifications, the announced advert should have a changed location
+        const notificationAdvert = patchAdvertWithPickupLocation(
+          adverts['advert-123'],
+          pickupLocation
+        )
+
+        T('should have notified about the interesting event', () =>
+          expect(advertWasReserved).toHaveBeenCalledWith(
+            user.id,
+            expect.objectContaining(user),
+            1,
+            notificationAdvert,
+            null
+          )
+        )
+        T('pickup location manager should be notified', () =>
+          expect(advertWasReservedOwner).toHaveBeenCalledWith(
+            'notify@me',
+            expect.objectContaining(user),
+            1,
+            notificationAdvert,
+            null
+          )
         )
       }
     )

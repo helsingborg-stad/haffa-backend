@@ -14,6 +14,7 @@ export const pickupLocationsGqlSchema = /* GraphQL */ `
     city: String!
     country: String!
     notifyEmail: String!
+    trackingName: String!
     tags: [String]!
   }
 
@@ -24,6 +25,7 @@ export const pickupLocationsGqlSchema = /* GraphQL */ `
     city: String!
     country: String
     notifyEmail: String!
+    trackingName: String!
     tags: [String]!
   }
 `

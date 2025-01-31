@@ -7,6 +7,7 @@ import { mapFields } from './filters/map-fields'
 import { mapSearch } from './filters/map-search'
 import { mapRestrictions } from './filters/map-restrictions'
 import { combineAnd, combineOr } from './filters/filter-utils'
+import { uniqueBy } from '../../../lib'
 
 export const mapAdvertToMongoAdvert = (advert: Advert): MongoAdvert => {
   const isRecycle = advert.type === AdvertType.recycle
@@ -26,6 +27,11 @@ export const mapAdvertToMongoAdvert = (advert: Advert): MongoAdvert => {
     ? advert.quantity - reservedCount - collectedCount
     : 0
 
+  const reservationTrackingNames = advert.claims
+    .filter(({ type }) => type === AdvertClaimType.reserved)
+    .map(c => c.pickupLocation?.trackingName ?? '')
+    .filter(v => v!)
+    .filter(uniqueBy(v => v))
   return {
     id: advert.id,
     versionId: advert.versionId,
@@ -35,6 +41,7 @@ export const mapAdvertToMongoAdvert = (advert: Advert): MongoAdvert => {
       unreservedCount,
       collectedCount,
       archived: !!advert.archivedAt,
+      reservationTrackingNames,
     },
   }
 }

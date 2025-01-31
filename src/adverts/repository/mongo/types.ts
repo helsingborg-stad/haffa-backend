@@ -5,6 +5,7 @@ export interface MongoAdvertMeta {
   reservedCount: number
   collectedCount: number
   archived: boolean
+  reservationTrackingNames: string[]
 }
 
 export interface MongoAdvert {

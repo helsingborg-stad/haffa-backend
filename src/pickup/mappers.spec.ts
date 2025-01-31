@@ -17,6 +17,7 @@ it('should add default values to missing fields', () => {
       city: '',
       country: '',
       notifyEmail: '',
+      trackingName: '',
       tags: [],
     },
   ])
@@ -31,6 +32,7 @@ it('should trim field values', () => {
       city: '  valid  ',
       country: '  valid  ',
       notifyEmail: '  valid  ',
+      trackingName: '  valid  ',
       tags: ['  valid  '],
     },
   ])
@@ -43,6 +45,7 @@ it('should trim field values', () => {
       city: 'valid',
       country: 'valid',
       notifyEmail: 'valid',
+      trackingName: 'valid',
       tags: ['valid'],
     },
   ])
@@ -63,6 +66,7 @@ it('should remove unexpected fields', () => {
       city: '',
       country: '',
       notifyEmail: '',
+      trackingName: '',
       tags: [],
     },
   ])

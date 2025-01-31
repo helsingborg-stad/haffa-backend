@@ -2,6 +2,7 @@ import type stream from 'stream'
 import type { Only } from '../lib/types'
 import type { HaffaUser } from '../login/types'
 import type { ProfileInput } from '../profile/types'
+import type { PickupLocation } from '../pickup/types'
 
 export enum AdvertType {
   recycle = 'recycle',
@@ -125,6 +126,7 @@ export interface AdvertClaim {
   at: string
   type: AdvertClaimType
   events: AdvertClaimEvent[]
+  pickupLocation?: PickupLocation
 }
 export interface AdvertReservations {
   id: string
@@ -268,7 +270,8 @@ export interface AdvertMutations {
   reserveAdvert: (
     user: HaffaUser,
     id: string,
-    quantity: number
+    quantity: number,
+    location?: PickupLocation
   ) => Promise<AdvertMutationResult>
   cancelAdvertReservation: (
     user: HaffaUser,
