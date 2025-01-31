@@ -15,9 +15,10 @@ export const createCollectAdvert =
   ({
     adverts,
     notifications,
+    workflow: { pickOnCollect },
   }: Pick<
     Services,
-    'adverts' | 'notifications'
+    'adverts' | 'notifications' | 'workflow'
   >): AdvertMutations['reserveAdvert'] =>
   (user, id, quantity) =>
     txBuilder<Advert>()
@@ -61,8 +62,12 @@ export const createCollectAdvert =
             )
             .map(({ quantity }) => quantity)
             .reduce((s, v) => s + v, 0)
+
+          const pickedAt = pickOnCollect ? at : advert.pickedAt
+
           return {
             ...advert,
+            pickedAt,
             claims: normalizeAdvertClaims([
               ...advert.claims.filter(({ by }) => by !== user.id), // all except mine
               {
