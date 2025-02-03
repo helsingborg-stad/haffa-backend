@@ -187,6 +187,10 @@ export interface AdvertRestrictionsFilterInput {
   hasCollects?: boolean
 }
 
+export interface AdvertWorkflowInput {
+  pickupLocationTrackingNames?: string[]
+}
+
 export interface AdvertSorting {
   field?: keyof AdvertUserFields
   ascending?: boolean
@@ -206,6 +210,7 @@ export interface AdvertFilterInput {
   restrictions?: AdvertRestrictionsFilterInput
   sorting?: AdvertSorting
   paging?: AdvertPagingInput
+  workflow?: AdvertWorkflowInput
 
   // decorators/pipelines can attach additional criterias
   pipelineCategoryIds?: string[]

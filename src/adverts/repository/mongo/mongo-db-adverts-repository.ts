@@ -38,6 +38,7 @@ export const createMongoAdvertsRepository = (
   const list: AdvertsRepository['list'] = async (user, filter) => {
     const collection = await getCollection()
     const query = mapAdvertFilterInputToMongoQuery(user, filter)
+    // console.log(JSON.stringify(query))
     const totalCount = await collection.countDocuments(query)
     const getInt = (v: any, d: number, max: number) =>
       v > 0 && v <= max ? Math.ceil(v) : d

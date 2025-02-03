@@ -148,12 +148,17 @@ export const advertsGqlSchema = /* GraphQL */ `
     cursor: String
   }
 
+  input AdvertWorkflowInput {
+    pickupLocationTrackingNames: [String]
+  }
+
   input AdvertFilterInput {
     search: String
     fields: AdvertFieldsFilterInput
     restrictions: AdvertRestrictionsInput
     sorting: AdvertSortingInput
     paging: AdvertPagingInput
+    workflow: AdvertWorkflowInput
   }
 
   input AdvertLocationInput {

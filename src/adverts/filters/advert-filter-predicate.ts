@@ -1,7 +1,9 @@
+import { worker } from 'fastq'
 import type { HaffaUser } from '../../login/types'
 import { getAdvertMeta } from '../advert-meta'
-import {
-  AdvertClaimType,
+import { AdvertClaimType } from '../types'
+import type {
+  AdvertWorkflowInput,
   type Advert,
   type AdvertFilterInput,
   type AdvertRestrictionsFilterInput,
@@ -31,6 +33,17 @@ const createFreeTextPredicate = (search: string): Predicate<Advert> => {
             re.test(advert.description) ||
             re.test(advert.reference)
         )
+    : () => true
+}
+
+const createWorkflowPredicate = (
+  workflow?: AdvertWorkflowInput
+): Predicate<Advert> => {
+  const s = new Set(
+    (workflow?.pickupLocationTrackingNames || []).filter(v => v)
+  )
+  return s.size > 0
+    ? a => a.claims.some(c => s.has(c.pickupLocation?.name || ''))
     : () => true
 }
 
@@ -116,6 +129,7 @@ export const createAdvertFilterPredicate = (
         createFreeTextPredicate(input?.search || ''),
         createFieldFilterPredicate(input?.fields)
       ),
+      createWorkflowPredicate(input?.workflow),
       ...(input?.pipelineOr?.map(({ fields }) =>
         createFieldFilterPredicate(fields)
       ) || [])

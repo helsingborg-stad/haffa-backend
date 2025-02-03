@@ -5,12 +5,15 @@ export interface MongoAdvertMeta {
   reservedCount: number
   collectedCount: number
   archived: boolean
-  reservationTrackingNames: string[]
 }
 
+export interface MongoAdvertWorkflow {
+  pickupLocationTrackingNames: string[]
+}
 export interface MongoAdvert {
   id: string
   versionId: string
   meta: MongoAdvertMeta
+  workflow: MongoAdvertWorkflow
   advert: Advert
 }

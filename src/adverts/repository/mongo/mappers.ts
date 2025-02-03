@@ -8,6 +8,7 @@ import { mapSearch } from './filters/map-search'
 import { mapRestrictions } from './filters/map-restrictions'
 import { combineAnd, combineOr } from './filters/filter-utils'
 import { uniqueBy } from '../../../lib'
+import { mapWorkflow } from './filters/map-workflow'
 
 export const mapAdvertToMongoAdvert = (advert: Advert): MongoAdvert => {
   const isRecycle = advert.type === AdvertType.recycle
@@ -27,8 +28,8 @@ export const mapAdvertToMongoAdvert = (advert: Advert): MongoAdvert => {
     ? advert.quantity - reservedCount - collectedCount
     : 0
 
-  const reservationTrackingNames = advert.claims
-    .filter(({ type }) => type === AdvertClaimType.reserved)
+  const pickupLocationTrackingNames = advert.claims
+    // .filter(({ type }) => type === AdvertClaimType.reserved)
     .map(c => c.pickupLocation?.trackingName ?? '')
     .filter(v => v!)
     .filter(uniqueBy(v => v))
@@ -41,8 +42,8 @@ export const mapAdvertToMongoAdvert = (advert: Advert): MongoAdvert => {
       unreservedCount,
       collectedCount,
       archived: !!advert.archivedAt,
-      reservationTrackingNames,
     },
+    workflow: { pickupLocationTrackingNames },
   }
 }
 
@@ -69,6 +70,7 @@ export const mapAdvertFilterInputToMongoQuery = (
         mapSearch(filter?.search, filter?.pipelineCategoryIds),
         mapFields(filter?.fields)
       ),
+      mapWorkflow(filter?.workflow),
       ...(filter?.pipelineOr?.map(({ fields }) => mapFields(fields)) || [])
     ),
     mapRestrictions(user, filter?.restrictions)
