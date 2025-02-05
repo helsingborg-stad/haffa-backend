@@ -38,12 +38,19 @@ const createFreeTextPredicate = (search: string): Predicate<Advert> => {
 const createWorkflowPredicate = (
   workflow?: AdvertWorkflowInput
 ): Predicate<Advert> | null => {
-  const s = new Set(
-    (workflow?.pickupLocationTrackingNames || []).filter(v => v)
-  )
-  return s.size > 0
-    ? a => a.claims.some(c => s.has(c.pickupLocation?.name || ''))
-    : null
+  const pickupLocationTrackingNames = (): Predicate<Advert> | null => {
+    const s = new Set(
+      (workflow?.pickupLocationTrackingNames || []).filter(v => v)
+    )
+    return s.size > 0
+      ? a => a.claims.some(c => s.has(c.pickupLocation?.name || ''))
+      : null
+  }
+  const places = (): Predicate<Advert> | null => {
+    const s = new Set((workflow?.places || []).filter(v => v))
+    return s.size > 0 ? a => s.has(a.place) : null
+  }
+  return combineAnd(pickupLocationTrackingNames(), places())
 }
 
 const createRestrictionsPredicate = (

@@ -7,10 +7,18 @@ export const mapWorkflow = (
   workflow?: AdvertWorkflowInput
 ): Filter<MongoAdvert> | null =>
   combineOr(
-    ...(workflow?.pickupLocationTrackingNames || [])
-      .map(n => n.trim())
-      .filter(n => n)
-      .map(n => ({
-        'workflow.pickupLocationTrackingNames': { $elemMatch: { $eq: n } },
-      }))
+    ...[
+      ...(workflow?.pickupLocationTrackingNames || [])
+        .map(n => n.trim())
+        .filter(n => n)
+        .map(n => ({
+          'workflow.pickupLocationTrackingNames': { $elemMatch: { $eq: n } },
+        })),
+      ...(workflow?.places || [])
+        .map(n => n)
+        .filter(n => n)
+        .map(n => ({
+          'advert.place': { $eq: n },
+        })),
+    ]
   )

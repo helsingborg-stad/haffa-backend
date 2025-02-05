@@ -150,6 +150,7 @@ export const advertsGqlSchema = /* GraphQL */ `
 
   input AdvertWorkflowInput {
     pickupLocationTrackingNames: [String]
+    places: [String]
   }
 
   input AdvertFilterInput {

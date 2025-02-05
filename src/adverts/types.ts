@@ -190,6 +190,7 @@ export interface AdvertRestrictionsFilterInput {
 
 export interface AdvertWorkflowInput {
   pickupLocationTrackingNames?: string[]
+  places?: string[]
 }
 
 export interface AdvertSorting {
