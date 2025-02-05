@@ -1,3 +1,4 @@
+import { patchAdvertWithPickupLocation } from '../../../pickup/mappers'
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
@@ -18,7 +19,7 @@ export const createReserveAdvert =
     Services,
     'adverts' | 'notifications'
   >): AdvertMutations['reserveAdvert'] =>
-  (user, id, quantity) =>
+  (user, id, quantity, location) =>
     txBuilder<Advert>()
       .load(() => adverts.getAdvert(user, id))
       .validate(() => {})
@@ -30,14 +31,14 @@ export const createReserveAdvert =
                 user.id,
                 user,
                 quantity,
-                patched,
+                patchAdvertWithPickupLocation(patched, location),
                 null
               ),
               notifications.advertWasReservedOwner(
-                advert.createdBy,
+                location?.notifyEmail || advert.createdBy,
                 user,
                 quantity,
-                patched,
+                patchAdvertWithPickupLocation(patched, location),
                 null
               ),
             ])
@@ -47,7 +48,7 @@ export const createReserveAdvert =
             by === user.id && type === AdvertClaimType.reserved
           const reservedByMeCount = advert.claims
             .filter(isReservedByMe)
-            .map(({ quantity }) => quantity)
+            .map(c => c.quantity)
             .reduce((s, v) => s + v, 0)
 
           return {
@@ -60,6 +61,7 @@ export const createReserveAdvert =
                 quantity: reservedByMeCount + quantity,
                 type: AdvertClaimType.reserved,
                 events: [],
+                pickupLocation: location,
               },
             ]),
           }

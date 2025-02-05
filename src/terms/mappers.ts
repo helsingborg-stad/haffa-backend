@@ -1,3 +1,4 @@
+import { uniqueBy } from '../lib'
 import type { SettingsService } from '../settings/types'
 import type { Terms } from './types'
 
@@ -7,6 +8,7 @@ const normalizeStringList = (l: any, defaultValue: string[]): string[] =>
         .filter(v => typeof v === 'string')
         .map(s => s.trim())
         .filter(s => s)
+        .filter(uniqueBy(s => s))
     : defaultValue
 
 const normalizeTerms = (terms: Terms | null): Terms => ({
@@ -46,6 +48,7 @@ const normalizeTerms = (terms: Terms | null): Terms => ({
   usage: normalizeStringList(terms?.usage, ['Inomhus', 'Utomhus']),
   tags: normalizeStringList(terms?.tags, []),
   sizes: normalizeStringList(terms?.sizes, []),
+  places: normalizeStringList(terms?.places, []),
 })
 
 export const termsAdapter = (settings: SettingsService) => ({

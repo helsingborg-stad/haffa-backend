@@ -1,10 +1,11 @@
 import type { HaffaUser } from '../../login/types'
 import { getAdvertMeta } from '../advert-meta'
-import {
-  AdvertClaimType,
-  type Advert,
-  type AdvertFilterInput,
-  type AdvertRestrictionsFilterInput,
+import { AdvertClaimType } from '../types'
+import type {
+  AdvertWorkflowInput,
+  Advert,
+  AdvertFilterInput,
+  AdvertRestrictionsFilterInput,
 } from '../types'
 import { createFieldFilterPredicate } from './field-filter-predicate'
 import type { Predicate } from './types'
@@ -32,6 +33,24 @@ const createFreeTextPredicate = (search: string): Predicate<Advert> => {
             re.test(advert.reference)
         )
     : () => true
+}
+
+const createWorkflowPredicate = (
+  workflow?: AdvertWorkflowInput
+): Predicate<Advert> | null => {
+  const pickupLocationTrackingNames = (): Predicate<Advert> | null => {
+    const s = new Set(
+      (workflow?.pickupLocationTrackingNames || []).filter(v => v)
+    )
+    return s.size > 0
+      ? a => a.claims.some(c => s.has(c.pickupLocation?.name || ''))
+      : null
+  }
+  const places = (): Predicate<Advert> | null => {
+    const s = new Set((workflow?.places || []).filter(v => v))
+    return s.size > 0 ? a => s.has(a.place) : null
+  }
+  return combineAnd(pickupLocationTrackingNames(), places())
 }
 
 const createRestrictionsPredicate = (
@@ -96,15 +115,29 @@ const createRestrictionsPredicate = (
     : () => true
 }
 
-const combineAnd =
-  (...matchers: Predicate<Advert>[]): Predicate<Advert> =>
-  advert =>
-    matchers.every(matcher => matcher(advert))
+const combineAnd = (
+  ...matchers: (Predicate<Advert> | null)[]
+): Predicate<Advert> | null => {
+  const ml = matchers.filter(v => v)
+  // eslint-disable-next-line no-nested-ternary
+  return ml.length === 0
+    ? null
+    : ml.length === 1
+    ? ml[0]
+    : advert => ml.every(m => m!(advert))
+}
 
-const combineOr =
-  (...matchers: Predicate<Advert>[]): Predicate<Advert> =>
-  advert =>
-    matchers.some(matcher => matcher(advert))
+const combineOr = (
+  ...matchers: (Predicate<Advert> | null)[]
+): Predicate<Advert> | null => {
+  const ml = matchers.filter(v => v)
+  // eslint-disable-next-line no-nested-ternary
+  return ml.length === 0
+    ? null
+    : ml.length === 1
+    ? ml[0]
+    : advert => ml.some(m => m!(advert))
+}
 
 export const createAdvertFilterPredicate = (
   user: HaffaUser,
@@ -120,5 +153,6 @@ export const createAdvertFilterPredicate = (
         createFieldFilterPredicate(fields)
       ) || [])
     ),
-    createRestrictionsPredicate(user, input?.restrictions || {})
-  )
+    createRestrictionsPredicate(user, input?.restrictions || {}),
+    createWorkflowPredicate(input?.workflow)
+  ) ?? (() => true)

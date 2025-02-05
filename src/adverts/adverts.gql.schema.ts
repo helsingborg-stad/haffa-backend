@@ -8,7 +8,11 @@ export const advertsGqlSchema = /* GraphQL */ `
     createAdvert(input: AdvertInput!): AdvertMutationResult
     updateAdvert(id: ID!, input: AdvertInput!): AdvertMutationResult
     removeAdvert(id: ID!): AdvertMutationResult
-    reserveAdvert(id: ID!, quantity: Int = 1): AdvertMutationResult
+    reserveAdvert(
+      id: ID!
+      quantity: Int = 1
+      pickupLocation: PickupLocationInput
+    ): AdvertMutationResult
     cancelAdvertReservation(id: ID!): AdvertMutationResult
     collectAdvert(id: ID!, quantity: Int = 1): AdvertMutationResult
     archiveAdvert(id: ID!): AdvertMutationResult
@@ -144,12 +148,18 @@ export const advertsGqlSchema = /* GraphQL */ `
     cursor: String
   }
 
+  input AdvertWorkflowInput {
+    pickupLocationTrackingNames: [String]
+    places: [String]
+  }
+
   input AdvertFilterInput {
     search: String
     fields: AdvertFieldsFilterInput
     restrictions: AdvertRestrictionsInput
     sorting: AdvertSortingInput
     paging: AdvertPagingInput
+    workflow: AdvertWorkflowInput
   }
 
   input AdvertLocationInput {
@@ -188,6 +198,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     tags: [String]
     location: AdvertLocationInput
     contact: AdvertContactInput
+    place: String
   }
   enum AdvertClaimEventType {
     reminder
@@ -293,6 +304,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     tags: [String]
     location: AdvertLocation
     contact: AdvertContact
+    place: String
   }
 
   type AdvertListPaging {

@@ -68,9 +68,12 @@ export const createAdvertsGqlModule = (
           .then(result =>
             mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
           ),
-      reserveAdvert: async ({ ctx: { user }, args: { id, quantity } }) =>
+      reserveAdvert: async ({
+        ctx: { user },
+        args: { id, quantity, pickupLocation },
+      }) =>
         createAdvertMutations(services)
-          .reserveAdvert(user, id, quantity)
+          .reserveAdvert(user, id, quantity, pickupLocation)
           .then(result =>
             mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
           ),

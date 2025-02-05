@@ -2,6 +2,7 @@ import type stream from 'stream'
 import type { Only } from '../lib/types'
 import type { HaffaUser } from '../login/types'
 import type { ProfileInput } from '../profile/types'
+import type { PickupLocation } from '../pickup/types'
 
 export enum AdvertType {
   recycle = 'recycle',
@@ -44,6 +45,7 @@ export interface AdvertUserFields {
   tags: string[]
   location: AdvertLocation
   contact: AdvertContact
+  place: string
 }
 
 export interface AdvertMetaClaim extends AdvertClaim {
@@ -125,6 +127,7 @@ export interface AdvertClaim {
   at: string
   type: AdvertClaimType
   events: AdvertClaimEvent[]
+  pickupLocation?: PickupLocation
 }
 export interface AdvertReservations {
   id: string
@@ -185,6 +188,11 @@ export interface AdvertRestrictionsFilterInput {
   hasCollects?: boolean
 }
 
+export interface AdvertWorkflowInput {
+  pickupLocationTrackingNames?: string[]
+  places?: string[]
+}
+
 export interface AdvertSorting {
   field?: keyof AdvertUserFields
   ascending?: boolean
@@ -204,6 +212,7 @@ export interface AdvertFilterInput {
   restrictions?: AdvertRestrictionsFilterInput
   sorting?: AdvertSorting
   paging?: AdvertPagingInput
+  workflow?: AdvertWorkflowInput
 
   // decorators/pipelines can attach additional criterias
   pipelineCategoryIds?: string[]
@@ -268,7 +277,8 @@ export interface AdvertMutations {
   reserveAdvert: (
     user: HaffaUser,
     id: string,
-    quantity: number
+    quantity: number,
+    location?: PickupLocation
   ) => Promise<AdvertMutationResult>
   cancelAdvertReservation: (
     user: HaffaUser,

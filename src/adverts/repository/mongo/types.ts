@@ -7,9 +7,13 @@ export interface MongoAdvertMeta {
   archived: boolean
 }
 
+export interface MongoAdvertWorkflow {
+  pickupLocationTrackingNames: string[]
+}
 export interface MongoAdvert {
   id: string
   versionId: string
   meta: MongoAdvertMeta
+  workflow: MongoAdvertWorkflow
   advert: Advert
 }

@@ -59,6 +59,7 @@ export const normalizeAdvert = (
     tags,
     location,
     contact,
+    place,
     waitlist,
   }: Advert = createEmptyAdvert()
 ): Advert =>
@@ -98,6 +99,7 @@ export const normalizeAdvert = (
     contact: isObject(contact)
       ? normalizeAdvertContact(contact)
       : createEmptyAdvertContact(),
+    place,
   })
 
 export const normalizeAdvertImage = ({ url }: AdvertImage): AdvertImage => ({
@@ -166,6 +168,7 @@ export const createEmptyAdvert = (defaults?: Partial<Advert>): Advert => ({
 
   location: createEmptyAdvertLocation(),
   contact: createEmptyAdvertContact(),
+  place: '',
   ...omitNullProperties(defaults),
 })
 
@@ -212,6 +215,7 @@ export const createEmptyAdvertInput = (): AdvertInput => ({
 
   location: createEmptyAdvertLocation(),
   contact: createEmptyAdvertContact(),
+  place: '',
 })
 
 export const mapCreateAdvertInputToAdvert = (

@@ -34,6 +34,7 @@ it('should override default values with input', () => {
     { ...getFieldConfig('email') },
     { ...getFieldConfig('phone'), adornment: 'dummy' },
     { ...getFieldConfig('country') },
+    { ...getFieldConfig('place') },
   ])
 })
 
@@ -65,6 +66,7 @@ it('should handle null document', () => {
     { ...getFieldConfig('email') },
     { ...getFieldConfig('phone') },
     { ...getFieldConfig('country') },
+    { ...getFieldConfig('place') },
   ])
 })
 
@@ -99,6 +101,7 @@ it('should remove duplicates (Keep last)', () => {
     { ...getFieldConfig('email') },
     { ...getFieldConfig('phone') },
     { ...getFieldConfig('country') },
+    { ...getFieldConfig('place') },
   ])
 })
 
