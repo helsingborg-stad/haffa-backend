@@ -79,7 +79,7 @@ const advertSchemaValidator = new Ajv().compile<Advert>({
         'reference',
         'externalId',
         'notes',
-        'tags'
+        'place'
       ),
       ...numberProps('quantity', 'lendingPeriod'),
       images: describeObjectArray<AdvertImage>({

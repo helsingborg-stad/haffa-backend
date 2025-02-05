@@ -1,12 +1,11 @@
-import { worker } from 'fastq'
 import type { HaffaUser } from '../../login/types'
 import { getAdvertMeta } from '../advert-meta'
 import { AdvertClaimType } from '../types'
 import type {
   AdvertWorkflowInput,
-  type Advert,
-  type AdvertFilterInput,
-  type AdvertRestrictionsFilterInput,
+  Advert,
+  AdvertFilterInput,
+  AdvertRestrictionsFilterInput,
 } from '../types'
 import { createFieldFilterPredicate } from './field-filter-predicate'
 import type { Predicate } from './types'
@@ -38,13 +37,13 @@ const createFreeTextPredicate = (search: string): Predicate<Advert> => {
 
 const createWorkflowPredicate = (
   workflow?: AdvertWorkflowInput
-): Predicate<Advert> => {
+): Predicate<Advert> | null => {
   const s = new Set(
     (workflow?.pickupLocationTrackingNames || []).filter(v => v)
   )
   return s.size > 0
     ? a => a.claims.some(c => s.has(c.pickupLocation?.name || ''))
-    : () => true
+    : null
 }
 
 const createRestrictionsPredicate = (
@@ -109,15 +108,29 @@ const createRestrictionsPredicate = (
     : () => true
 }
 
-const combineAnd =
-  (...matchers: Predicate<Advert>[]): Predicate<Advert> =>
-  advert =>
-    matchers.every(matcher => matcher(advert))
+const combineAnd = (
+  ...matchers: (Predicate<Advert> | null)[]
+): Predicate<Advert> | null => {
+  const ml = matchers.filter(v => v)
+  // eslint-disable-next-line no-nested-ternary
+  return ml.length === 0
+    ? null
+    : ml.length === 1
+    ? ml[0]
+    : advert => ml.every(m => m!(advert))
+}
 
-const combineOr =
-  (...matchers: Predicate<Advert>[]): Predicate<Advert> =>
-  advert =>
-    matchers.some(matcher => matcher(advert))
+const combineOr = (
+  ...matchers: (Predicate<Advert> | null)[]
+): Predicate<Advert> | null => {
+  const ml = matchers.filter(v => v)
+  // eslint-disable-next-line no-nested-ternary
+  return ml.length === 0
+    ? null
+    : ml.length === 1
+    ? ml[0]
+    : advert => ml.some(m => m!(advert))
+}
 
 export const createAdvertFilterPredicate = (
   user: HaffaUser,
@@ -129,10 +142,10 @@ export const createAdvertFilterPredicate = (
         createFreeTextPredicate(input?.search || ''),
         createFieldFilterPredicate(input?.fields)
       ),
-      createWorkflowPredicate(input?.workflow),
       ...(input?.pipelineOr?.map(({ fields }) =>
         createFieldFilterPredicate(fields)
       ) || [])
     ),
-    createRestrictionsPredicate(user, input?.restrictions || {})
-  )
+    createRestrictionsPredicate(user, input?.restrictions || {}),
+    createWorkflowPredicate(input?.workflow)
+  ) ?? (() => true)

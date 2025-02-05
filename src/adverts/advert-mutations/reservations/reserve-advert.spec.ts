@@ -8,11 +8,7 @@ import {
   end2endTest,
 } from '../../../test-utils'
 import { TxErrors } from '../../../transactions'
-import {
-  createEmptyAdvert,
-  createEmptyAdvertLocation,
-  normalizeAdvertLocation,
-} from '../../mappers'
+import { createEmptyAdvert, createEmptyAdvertLocation } from '../../mappers'
 import type { AdvertMutationResult } from '../../types'
 import { AdvertClaimType } from '../../types'
 import { mutationProps } from '../test-utils/gql-test-definitions'

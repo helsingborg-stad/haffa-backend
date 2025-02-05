@@ -73,6 +73,7 @@ describe('updateAdvert', () => {
           category: 'c',
           externalId: 'eid',
           tags: ['t'],
+          place: 'p',
         }
         const result = await mappedGqlRequest<AdvertMutationResult>(
           'updateAdvert',

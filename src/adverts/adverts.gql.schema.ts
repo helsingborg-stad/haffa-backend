@@ -197,6 +197,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     tags: [String]
     location: AdvertLocationInput
     contact: AdvertContactInput
+    place: String
   }
   enum AdvertClaimEventType {
     reminder
@@ -302,6 +303,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     tags: [String]
     location: AdvertLocation
     contact: AdvertContact
+    place: String
   }
 
   type AdvertListPaging {

@@ -33,6 +33,7 @@ export const advertProps = `
 		city
 		country
 	}
+	place
 `
 
 export const advertWithMetaProps = `
@@ -70,6 +71,7 @@ export const advertWithMetaProps = `
 		city
 		country
 	}
+	place
 	meta {
 		reservableQuantity
 		collectableQuantity

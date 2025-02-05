@@ -8,22 +8,24 @@ export const termsGqlSchema = /* GraphQL */ `
   }
 
   input TermsInput {
+    places: [String]
     organization: [String]
+    tags: [String]
     unit: [String]
     material: [String]
     condition: [String]
     usage: [String]
-    tags: [String]
     sizes: [String]
   }
 
   type Terms {
+    places: [String]
     organization: [String]
+    tags: [String]
     unit: [String]
     material: [String]
     condition: [String]
     usage: [String]
-    tags: [String]
     sizes: [String]
   }
 `

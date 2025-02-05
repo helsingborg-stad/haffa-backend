@@ -45,6 +45,7 @@ export interface AdvertUserFields {
   tags: string[]
   location: AdvertLocation
   contact: AdvertContact
+  place: string
 }
 
 export interface AdvertMetaClaim extends AdvertClaim {
