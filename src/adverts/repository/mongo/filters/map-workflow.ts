@@ -1,12 +1,12 @@
 import type { Filter } from 'mongodb'
 import type { MongoAdvert } from '../types'
 import type { AdvertWorkflowInput } from '../../../types'
-import { combineOr } from './filter-utils'
+import { combineAnd } from './filter-utils'
 
 export const mapWorkflow = (
   workflow?: AdvertWorkflowInput
 ): Filter<MongoAdvert> | null =>
-  combineOr(
+  combineAnd(
     ...[
       ...(workflow?.pickupLocationTrackingNames || [])
         .map(n => n.trim())
