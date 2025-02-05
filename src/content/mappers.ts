@@ -8,6 +8,7 @@ export const createEmptyModule = (): ContentModule => ({
   border: 'true',
   background: '',
   image: '',
+  alt: '',
   position: 'top',
   width: '100%',
   categories: '',
