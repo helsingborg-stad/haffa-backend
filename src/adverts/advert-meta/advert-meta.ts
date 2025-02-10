@@ -7,16 +7,17 @@ import {
   isClaimOverdue,
 } from '../advert-mutations/claims/mappers'
 import { AdvertClaimType, AdvertType } from '../types'
-import type { Advert, AdvertMeta } from '../types'
+import type { Advert } from '../types'
+import type { GetAdvertMeta } from './types'
 
 const hasSingleCollectClaim = ({ claims }: Advert) =>
   claims.filter(({ type }) => type === AdvertClaimType.collected).length === 1
 
-export const getAdvertMeta = (
+const getAdvertMeta = (
   advert: Advert,
   user: HaffaUser,
   now: Date = new Date()
-): AdvertMeta => {
+) => {
   const { type, quantity } = advert
   const mine = advert.createdBy === user.id
 
@@ -143,3 +144,5 @@ export const getAdvertMeta = (
     claims: [],
   }
 }
+
+export const createGetAdvertMeta = (): GetAdvertMeta => getAdvertMeta

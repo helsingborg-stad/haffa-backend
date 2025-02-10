@@ -18,6 +18,7 @@ import { createInMemorySettingsService } from '../settings'
 import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import { createIssuePincode } from '../login'
 import type { Application, ApplicationRunHandler } from '../lib/gdi-api-node'
+import { createGetAdvertMeta } from '../adverts/advert-meta'
 
 const createGqlRequest =
   (
@@ -74,6 +75,7 @@ export const end2endTest = (
   config: End2EndTestConfig | null,
   ...handlers: End2EndTestHandler[]
 ): Promise<void> => {
+  const getAdvertMeta = config?.services?.getAdvertMeta || createGetAdvertMeta()
   const user: HaffaUser = config?.user || { id: 'test@user.com' }
   const adverts: Record<string, Advert> = {}
   const logins: Record<string, LoginRequestEntry> = {}
@@ -85,7 +87,7 @@ export const end2endTest = (
   const services = createTestServices({
     userMapper,
     settings,
-    adverts: createInMemoryAdvertsRepository(adverts),
+    adverts: createInMemoryAdvertsRepository(getAdvertMeta, adverts),
     profiles: createInMemoryProfileRepository(profiles),
     login: createInMemoryLoginService(
       userMapper,

@@ -19,6 +19,7 @@ import { createNullSubscriptionsRepository } from '../subscriptions'
 import { createNullContentRepository } from '../content'
 import { createNullSyslogService } from '../syslog/null-syslog-service'
 import type { Application } from '../lib/gdi-api-node'
+import { createGetAdvertMeta } from '../adverts/advert-meta'
 
 export const TEST_SHARED_SECRET = 'shared scret used in tests'
 
@@ -129,17 +130,19 @@ export const createTestServices = (services: Partial<Services>): Services => {
       return false
     },
   }
+  const getAdvertMeta = services.getAdvertMeta || createGetAdvertMeta()
   const settings = services.settings || createInMemorySettingsService()
   const userMapper = services.userMapper || createUserMapper(null, settings)
   const categories = services.categories || categoryAdapter(settings)
   const cookies = services.cookies || createCookieService('haffa-token')
   const syslog = services.syslog || createNullSyslogService()
-  const adverts = createInMemoryAdvertsRepository()
+  const adverts = createInMemoryAdvertsRepository(getAdvertMeta)
   const notifications = createNullNotificationService()
   const files = createNullFileService()
   const subscriptions = createNullSubscriptionsRepository()
 
   return {
+    getAdvertMeta,
     workflow,
     userMapper,
     categories,
@@ -152,6 +155,7 @@ export const createTestServices = (services: Partial<Services>): Services => {
     files,
     notifications,
     jobs: createJobExecutorServiceFromEnv({
+      getAdvertMeta,
       workflow,
       syslog,
       notifications,

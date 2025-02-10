@@ -1,16 +1,16 @@
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
-import { getAdvertMeta } from '../../advert-meta'
 import type { Advert, AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 
 export const createArchiveAdvert =
   ({
+    getAdvertMeta,
     adverts,
     notifications,
   }: Pick<
     Services,
-    'adverts' | 'notifications'
+    'getAdvertMeta' | 'adverts' | 'notifications'
   >): AdvertMutations['archiveAdvert'] =>
   (user, id) =>
     txBuilder<Advert>()

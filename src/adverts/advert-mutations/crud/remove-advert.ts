@@ -1,17 +1,17 @@
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
-import { getAdvertMeta } from '../../advert-meta'
 import type { Advert, AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 
 export const createRemoveAdvert =
   ({
+    getAdvertMeta,
     adverts,
     files,
     notifications,
   }: Pick<
     Services,
-    'adverts' | 'files' | 'notifications'
+    'getAdvertMeta' | 'adverts' | 'files' | 'notifications'
   >): AdvertMutations['removeAdvert'] =>
   async (user, id) =>
     txBuilder<Advert>()

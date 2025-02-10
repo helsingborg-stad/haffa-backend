@@ -1,7 +1,6 @@
 import { uniqueBy } from '../../../lib'
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
-import { getAdvertMeta } from '../../advert-meta'
 import { type Advert, type AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
@@ -13,8 +12,12 @@ import {
 
 export const createJoinAdvertWaitlist =
   ({
+    getAdvertMeta,
     adverts,
-  }: Pick<Services, 'adverts'>): AdvertMutations['joinAdvertWaitlist'] =>
+  }: Pick<
+    Services,
+    'getAdvertMeta' | 'adverts'
+  >): AdvertMutations['joinAdvertWaitlist'] =>
   (user, id) =>
     txBuilder<Advert>()
       .load(() => adverts.getAdvert(user, id))

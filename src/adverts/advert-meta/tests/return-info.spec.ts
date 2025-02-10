@@ -1,8 +1,8 @@
-import { getAdvertMeta } from '..'
 import type { HaffaUser } from '../../../login/types'
 import { createEmptyAdvert } from '../../mappers'
 import type { AdvertClaim } from '../../types'
 import { AdvertClaimType } from '../../types'
+import { createGetAdvertMeta } from '../advert-meta'
 
 const haffaUser: HaffaUser = {
   id: 'test@user.se',
@@ -10,6 +10,8 @@ const haffaUser: HaffaUser = {
 }
 
 describe('getAdvertMeta::returnInfo', () => {
+  const getAdvertMeta = createGetAdvertMeta()
+
   const createClaim = (defaults?: Partial<AdvertClaim>): AdvertClaim => ({
     by: 'test@user',
     at: new Date().toISOString(),

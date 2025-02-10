@@ -1,5 +1,6 @@
 import { makeAdmin } from '../../../login'
 import { createTestNotificationServices } from '../../../test-utils'
+import { createGetAdvertMeta } from '../../advert-meta'
 import { createEmptyAdvert } from '../../mappers'
 import { createInMemoryAdvertsRepository } from '../../repository/memory'
 import { AdvertClaimType, type AdvertClaim } from '../../types'
@@ -21,13 +22,14 @@ const collected = (c: Partial<AdvertClaim>) =>
 
 describe('notifyAdvertWaitlist', () => {
   it('notifies users and clears waitlist', async () => {
+    const getAdvertMeta = createGetAdvertMeta()
     // Setup a database with 1 advert
     const advert = createEmptyAdvert({
       id: 'advert-123',
       quantity: 1,
       waitlist: ['user1', 'user2'],
     })
-    const adverts = createInMemoryAdvertsRepository({
+    const adverts = createInMemoryAdvertsRepository(getAdvertMeta, {
       [advert.id]: advert,
     })
     const user = makeAdmin({ id: 'test@user.com' })
@@ -39,7 +41,11 @@ describe('notifyAdvertWaitlist', () => {
     })
 
     // Send notifications to recipients
-    const notify = createNotifyAdvertWaitlist({ adverts, notifications })
+    const notify = createNotifyAdvertWaitlist({
+      getAdvertMeta,
+      adverts,
+      notifications,
+    })
     await notify(user, 'advert-123')
 
     // waitlist users should be notified
@@ -61,7 +67,8 @@ describe('notifyAdvertWaitlist', () => {
   })
 
   it('does not notify if availablity is zero', async () => {
-    const adverts = createInMemoryAdvertsRepository({
+    const getAdvertMeta = createGetAdvertMeta()
+    const adverts = createInMemoryAdvertsRepository(getAdvertMeta, {
       a1: createEmptyAdvert({
         id: 'a1',
         quantity: 1,
@@ -82,6 +89,7 @@ describe('notifyAdvertWaitlist', () => {
     })
 
     const notify = createNotifyAdvertWaitlist({
+      getAdvertMeta,
       adverts,
       notifications,
     })

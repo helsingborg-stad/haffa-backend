@@ -11,7 +11,13 @@ import type { GraphQLModule } from '../lib/gdi-api-node'
 export const createAdvertsGqlModule = (
   services: Pick<
     Services,
-    'adverts' | 'categories' | 'files' | 'notifications' | 'syslog' | 'workflow'
+    | 'getAdvertMeta'
+    | 'adverts'
+    | 'categories'
+    | 'files'
+    | 'notifications'
+    | 'syslog'
+    | 'workflow'
   >
 ): GraphQLModule => ({
   schema: advertsGqlSchema,
@@ -41,12 +47,12 @@ export const createAdvertsGqlModule = (
         const l = await services.adverts.list(user, filter)
         return {
           ...l,
-          adverts: mapAdvertsToAdvertsWithMeta(user, l.adverts),
+          adverts: mapAdvertsToAdvertsWithMeta(user, l.adverts, services),
         }
       },
       getAdvert: async ({ ctx: { user }, args: { id } }) => {
         const advert = await services.adverts.getAdvert(user, id)
-        return mapAdvertToAdvertWithMeta(user, advert)
+        return mapAdvertToAdvertWithMeta(user, advert, services)
       },
     },
     Mutation: {
@@ -54,19 +60,31 @@ export const createAdvertsGqlModule = (
         createAdvertMutations(services)
           .createAdvert(user, input)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       updateAdvert: async ({ ctx: { user }, args: { id, input } }) =>
         createAdvertMutations(services)
           .updateAdvert(user, id, input)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       removeAdvert: async ({ ctx: { user }, args: { id } }) =>
         createAdvertMutations(services)
           .removeAdvert(user, id)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       reserveAdvert: async ({
         ctx: { user },
@@ -75,31 +93,51 @@ export const createAdvertsGqlModule = (
         createAdvertMutations(services)
           .reserveAdvert(user, id, quantity, pickupLocation)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       cancelAdvertReservation: async ({ ctx: { user }, args: { id } }) =>
         createAdvertMutations(services)
           .cancelAdvertReservation(user, id)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       collectAdvert: async ({ ctx: { user }, args: { id, quantity } }) =>
         createAdvertMutations(services)
           .collectAdvert(user, id, quantity)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       archiveAdvert: async ({ ctx: { user }, args: { id } }) =>
         createAdvertMutations(services)
           .archiveAdvert(user, id)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       unarchiveAdvert: async ({ ctx: { user }, args: { id } }) =>
         createAdvertMutations(services)
           .unarchiveAdvert(user, id)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       cancelAdvertClaim: async ({
         ctx: { user },
@@ -108,7 +146,11 @@ export const createAdvertsGqlModule = (
         createAdvertMutations(services)
           .cancelAdvertClaim(user, id, by, type, impersonate)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       convertAdvertClaim: async ({
         ctx: { user },
@@ -117,7 +159,11 @@ export const createAdvertsGqlModule = (
         createAdvertMutations(services)
           .convertAdvertClaim(user, id, by, type, newType, impersonate)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       renewAdvertClaim: async ({
         ctx: { user },
@@ -126,44 +172,72 @@ export const createAdvertsGqlModule = (
         createAdvertMutations(services)
           .renewAdvertClaim(user, id, by, type, impersonate)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       returnAdvert: async ({ ctx: { user }, args: { id } }) =>
         createAdvertMutations(services)
           .returnAdvert(user, id)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       joinAdvertWaitlist: async ({ ctx: { user }, args: { id } }) =>
         createAdvertMutations(services)
           .joinAdvertWaitlist(user, id)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
 
       leaveAdvertWaitlist: async ({ ctx: { user }, args: { id } }) =>
         createAdvertMutations(services)
           .leaveAdvertWaitlist(user, id)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       markAdvertAsPicked: async ({ ctx: { user }, args: { id } }) =>
         createAdvertMutations(services)
           .markAdvertAsPicked(user, id)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       markAdvertAsUnpicked: async ({ ctx: { user }, args: { id } }) =>
         createAdvertMutations(services)
           .markAdvertAsUnpicked(user, id)
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
       patchAdvertTags: async ({ ctx: { user }, args: { id, add, remove } }) =>
         createAdvertMutations(services)
           .patchAdvertTags(user, id, { add, remove })
           .then(result =>
-            mapAdvertMutationResultToAdvertWithMetaMutationResult(user, result)
+            mapAdvertMutationResultToAdvertWithMetaMutationResult(
+              user,
+              result,
+              services
+            )
           ),
     },
   },

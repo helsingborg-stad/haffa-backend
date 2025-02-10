@@ -1,7 +1,6 @@
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
-import { getAdvertMeta } from '../../advert-meta'
 import type { Advert, AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
@@ -10,18 +9,16 @@ import {
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
 } from '../verifiers'
-import {
-  notifyClaimsWasCancelled,
-  notifyClaimsWasRenewed,
-} from './notify-claims'
+import { notifyClaimsWasRenewed } from './notify-claims'
 
 export const createRenewAdvertClaim =
   ({
+    getAdvertMeta,
     adverts,
     notifications,
   }: Pick<
     Services,
-    'adverts' | 'notifications'
+    'getAdvertMeta' | 'adverts' | 'notifications'
   >): AdvertMutations['renewAdvertClaim'] =>
   (user, id, by, type, impersonate) =>
     txBuilder<Advert>()

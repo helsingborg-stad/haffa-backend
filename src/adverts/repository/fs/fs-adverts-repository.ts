@@ -13,6 +13,7 @@ import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
 import { mapValues, toLookup } from '../../../lib'
 import { objectStream } from '../../../lib/streams'
 import { createValidatingAdvertsRepository } from '../validation'
+import type { GetAdvertMeta } from '../../advert-meta/types'
 
 const notFundHandler =
   <T>(errorValue: T) =>
@@ -42,7 +43,8 @@ const findPaths = async (folder: string): Promise<string[]> =>
     .catch(notFundHandler([]))
 
 export const createFsAdvertsRepository = (
-  dataFolder: string
+  dataFolder: string,
+  getAdvertMeta: GetAdvertMeta
 ): AdvertsRepository => {
   const scan = (): Promise<Advert[]> =>
     readdir(dataFolder)
@@ -113,7 +115,7 @@ export const createFsAdvertsRepository = (
         })
       )
       .then(adverts =>
-        adverts.filter(createAdvertFilterPredicate(user, filter))
+        adverts.filter(createAdvertFilterPredicate(user, getAdvertMeta, filter))
       )
       .then(adverts =>
         [...adverts].sort(createAdvertFilterComparer(user, filter))

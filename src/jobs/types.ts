@@ -4,6 +4,7 @@ import type { Services } from '../types'
 
 export type JobServices = Pick<
   Services,
+  | 'getAdvertMeta'
   | 'syslog'
   | 'notifications'
   | 'adverts'

@@ -1,7 +1,6 @@
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
-import { getAdvertMeta } from '../../advert-meta'
 import type { AdvertClaim, Advert, AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
@@ -14,11 +13,12 @@ import { notifyClaimsWasCancelled } from './notify-claims'
 
 export const createCancelAdvertClaim =
   ({
+    getAdvertMeta,
     adverts,
     notifications,
   }: Pick<
     Services,
-    'adverts' | 'notifications'
+    'getAdvertMeta' | 'adverts' | 'notifications'
   >): AdvertMutations['cancelAdvertClaim'] =>
   (user, id, by, type, impersonate) =>
     txBuilder<Advert>()

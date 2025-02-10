@@ -5,11 +5,13 @@ import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
 import type { StartupLog } from '../../../types'
 import { createPagedAdvertList } from '../../mappers'
 import { createValidatingAdvertsRepository } from '../validation'
+import type { GetAdvertMeta } from '../../advert-meta/types'
 
 export const createInMemoryAdvertsRepositoryFromEnv = (
-  startupLog: StartupLog
+  startupLog: StartupLog,
+  getAdvertMeta: GetAdvertMeta
 ) =>
-  startupLog.echo(createInMemoryAdvertsRepository(), {
+  startupLog.echo(createInMemoryAdvertsRepository(getAdvertMeta), {
     name: 'adverts',
     config: {
       on: 'memory',
@@ -17,6 +19,7 @@ export const createInMemoryAdvertsRepositoryFromEnv = (
   })
 
 export const createInMemoryAdvertsRepository = (
+  getAdvertMeta: GetAdvertMeta,
   db: Record<string, Advert> = {}
 ): AdvertsRepository & { getDb: () => Record<string, Advert> } => ({
   getDb: () => db,
@@ -29,7 +32,7 @@ export const createInMemoryAdvertsRepository = (
     getAdvert: async (user, id) => db[id] || null,
     list: async (user, filter) => {
       const allAdverts = Object.values(db)
-        .filter(createAdvertFilterPredicate(user, filter))
+        .filter(createAdvertFilterPredicate(user, getAdvertMeta, filter))
         .sort(createAdvertFilterComparer(user, filter))
 
       return createPagedAdvertList(allAdverts, filter)

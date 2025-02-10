@@ -1,6 +1,6 @@
-import { getAdvertMeta } from '..'
 import type { HaffaUser } from '../../../login/types'
 import { createEmptyAdvert } from '../../mappers'
+import { createGetAdvertMeta } from '../advert-meta'
 
 const haffaUser: HaffaUser = {
   id: 'test@user.se',
@@ -8,6 +8,7 @@ const haffaUser: HaffaUser = {
 }
 
 describe('getAdvertMeta::canBook', () => {
+  const getAdvertMeta = createGetAdvertMeta()
   it('cannot be booked if lending period is zero', () => {
     expect(
       getAdvertMeta(

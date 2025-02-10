@@ -1,4 +1,4 @@
-import { getAdvertMeta } from '..'
+import { createGetAdvertMeta } from '..'
 import type { HaffaUser } from '../../../login/types'
 import { createEmptyAdvert } from '../../mappers'
 import type { AdvertClaim } from '../../types'
@@ -87,6 +87,8 @@ describe('getAdvertMeta::isOverdue', () => {
       claims: dates.map(date => createReserved(date)),
     }),
   ]
+
+  const getAdvertMeta = createGetAdvertMeta()
 
   it('should not report overdue when lendingPeriod is 0', () => {
     const meta = getAdvertMeta(

@@ -1,8 +1,9 @@
-import { getAdvertMeta } from '..'
 import type { HaffaUser } from '../../../login/types'
 import { createEmptyAdvert } from '../../mappers'
+import { createGetAdvertMeta } from '../advert-meta'
 
 describe('getAdvertMeta::canEdit', () => {
+  const getAdvertMeta = createGetAdvertMeta()
   const createUserWithRights = (id: string): HaffaUser => ({
     id,
     roles: { canEditOwnAdverts: true },

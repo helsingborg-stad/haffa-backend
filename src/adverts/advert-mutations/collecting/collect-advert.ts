@@ -1,7 +1,6 @@
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
-import { getAdvertMeta } from '../../advert-meta'
 import { AdvertClaimType, type Advert, type AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
@@ -13,12 +12,13 @@ import {
 
 export const createCollectAdvert =
   ({
+    getAdvertMeta,
     adverts,
     notifications,
     workflow: { pickOnCollect },
   }: Pick<
     Services,
-    'adverts' | 'notifications' | 'workflow'
+    'getAdvertMeta' | 'adverts' | 'notifications' | 'workflow'
   >): AdvertMutations['reserveAdvert'] =>
   (user, id, quantity) =>
     txBuilder<Advert>()

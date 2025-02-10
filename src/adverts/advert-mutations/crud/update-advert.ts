@@ -1,6 +1,5 @@
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
-import { getAdvertMeta } from '../../advert-meta'
 import { patchAdvertWithAdvertInput } from '../../mappers'
 import type { Advert, AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
@@ -13,9 +12,13 @@ import {
 
 export const createUpdateAdvert =
   ({
+    getAdvertMeta,
     adverts,
     files,
-  }: Pick<Services, 'adverts' | 'files'>): AdvertMutations['updateAdvert'] =>
+  }: Pick<
+    Services,
+    'getAdvertMeta' | 'adverts' | 'files'
+  >): AdvertMutations['updateAdvert'] =>
   (user, id, input) =>
     txBuilder<Advert>()
       .load(() => adverts.getAdvert(user, id))

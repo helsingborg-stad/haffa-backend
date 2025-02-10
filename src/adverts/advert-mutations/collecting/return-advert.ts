@@ -1,8 +1,6 @@
-import { makeUser } from '../../../login'
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
-import { getAdvertMeta } from '../../advert-meta'
 import { AdvertClaimType, type Advert, type AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
@@ -14,11 +12,12 @@ import {
 
 export const createReturnAdvert =
   ({
+    getAdvertMeta,
     adverts,
     notifications,
   }: Pick<
     Services,
-    'adverts' | 'notifications'
+    'getAdvertMeta' | 'adverts' | 'notifications'
   >): AdvertMutations['returnAdvert'] =>
   (user, id) =>
     txBuilder<Advert>()

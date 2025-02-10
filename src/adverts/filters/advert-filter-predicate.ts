@@ -1,5 +1,5 @@
 import type { HaffaUser } from '../../login/types'
-import { getAdvertMeta } from '../advert-meta'
+import type { GetAdvertMeta } from '../advert-meta/types'
 import { AdvertClaimType } from '../types'
 import type {
   AdvertWorkflowInput,
@@ -55,6 +55,7 @@ const createWorkflowPredicate = (
 
 const createRestrictionsPredicate = (
   user: HaffaUser,
+  getAdvertMeta: GetAdvertMeta,
   restrictions: AdvertRestrictionsFilterInput
 ): Predicate<Advert> => {
   const makeMatcher = (
@@ -141,6 +142,7 @@ const combineOr = (
 
 export const createAdvertFilterPredicate = (
   user: HaffaUser,
+  getAdvertMeta: GetAdvertMeta,
   input?: AdvertFilterInput
 ): Predicate<Advert> =>
   combineAnd(
@@ -153,6 +155,6 @@ export const createAdvertFilterPredicate = (
         createFieldFilterPredicate(fields)
       ) || [])
     ),
-    createRestrictionsPredicate(user, input?.restrictions || {}),
+    createRestrictionsPredicate(user, getAdvertMeta, input?.restrictions || {}),
     createWorkflowPredicate(input?.workflow)
   ) ?? (() => true)

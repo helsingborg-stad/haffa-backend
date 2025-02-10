@@ -2,7 +2,6 @@ import { Severity } from '../../../syslog/types'
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
-import { getAdvertMeta } from '../../advert-meta'
 import {
   type Advert,
   type AdvertMutations,
@@ -14,12 +13,13 @@ import { getNextClaimEventDate } from './mappers'
 
 export const createReservedClaimsNotifier =
   ({
+    getAdvertMeta,
     adverts,
     notifications,
     syslog,
   }: Pick<
     Services,
-    'adverts' | 'notifications' | 'syslog'
+    'getAdvertMeta' | 'adverts' | 'notifications' | 'syslog'
   >): AdvertMutations['notifyReservedClaims'] =>
   (user, id, interval, snooze, now) =>
     txBuilder<Advert>()

@@ -1,7 +1,6 @@
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
-import { getAdvertMeta } from '../../advert-meta'
 import {
   type AdvertClaim,
   type Advert,
@@ -19,12 +18,13 @@ import { notifyClaimsWas } from './notify-claims'
 
 export const createConvertAdvertClaim =
   ({
+    getAdvertMeta,
     adverts,
     notifications,
     workflow: { pickOnCollect },
   }: Pick<
     Services,
-    'adverts' | 'notifications' | 'workflow'
+    'getAdvertMeta' | 'adverts' | 'notifications' | 'workflow'
   >): AdvertMutations['convertAdvertClaim'] =>
   (user, id, by, type, newType, impersonate) =>
     txBuilder<Advert>()

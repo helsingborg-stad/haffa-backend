@@ -1,9 +1,11 @@
 import { createAdvertFilterPredicate } from './advert-filter-predicate'
 import { createEmptyAdvert } from '../mappers'
-import { AdvertClaimType, type Advert, type FilterInput } from '../types'
+import { AdvertClaimType, type Advert } from '../types'
 import type { HaffaUser } from '../../login/types'
+import { createGetAdvertMeta } from '../advert-meta'
 
 describe('createAdvertFilterPredicate', () => {
+  const getAdvertMeta = createGetAdvertMeta()
   const createTestUser = (user?: Partial<HaffaUser>): HaffaUser => ({
     id: 'test@testerson.com',
     ...user,
@@ -27,12 +29,14 @@ describe('createAdvertFilterPredicate', () => {
   it('matches all by default', () => {
     const adverts = createSampleAdverts(10)
     expect(
-      adverts.filter(createAdvertFilterPredicate(createTestUser()))
+      adverts.filter(
+        createAdvertFilterPredicate(createTestUser(), createGetAdvertMeta())
+      )
     ).toMatchObject(adverts)
   })
 
   it('does free text search in {title, description}', () => {
-    const p = createAdvertFilterPredicate(createTestUser(), {
+    const p = createAdvertFilterPredicate(createTestUser(), getAdvertMeta, {
       search: 'unicorn',
     })
 
@@ -48,7 +52,7 @@ describe('createAdvertFilterPredicate', () => {
   })
 
   it('find tagged adverts', () => {
-    const p = createAdvertFilterPredicate(createTestUser(), {
+    const p = createAdvertFilterPredicate(createTestUser(), getAdvertMeta, {
       fields: {
         tags: {
           in: ['banana', 'orange', 'melon'],
@@ -72,7 +76,7 @@ describe('createAdvertFilterPredicate', () => {
     ])
   })
   it('treats search text as a list of separate words combined with or to match {title, description}', () => {
-    const p = createAdvertFilterPredicate(createTestUser(), {
+    const p = createAdvertFilterPredicate(createTestUser(), getAdvertMeta, {
       search: 'unicorn orange banana',
     })
 
@@ -92,7 +96,7 @@ describe('createAdvertFilterPredicate', () => {
   })
 
   it('combines search text with filter predicates with logical AND', () => {
-    const p = createAdvertFilterPredicate(createTestUser(), {
+    const p = createAdvertFilterPredicate(createTestUser(), getAdvertMeta, {
       search: 'unicorn',
       fields: {
         description: {
@@ -114,10 +118,14 @@ describe('createAdvertFilterPredicate', () => {
   })
 
   it('restricts to creator', () => {
-    const p = createAdvertFilterPredicate(createTestUser({ id: 'a@b.com' }), {
-      search: 'unicorn',
-      restrictions: { createdByMe: true },
-    })
+    const p = createAdvertFilterPredicate(
+      createTestUser({ id: 'a@b.com' }),
+      getAdvertMeta,
+      {
+        search: 'unicorn',
+        restrictions: { createdByMe: true },
+      }
+    )
 
     const adverts = createSampleAdverts(100, {
       'advert-10': { title: 'I like my unicorn!' },
@@ -132,10 +140,14 @@ describe('createAdvertFilterPredicate', () => {
   })
 
   it('restricts to reserved by', () => {
-    const p = createAdvertFilterPredicate(createTestUser({ id: 'a@b.com' }), {
-      search: 'unicorn',
-      restrictions: { reservedByMe: true },
-    })
+    const p = createAdvertFilterPredicate(
+      createTestUser({ id: 'a@b.com' }),
+      getAdvertMeta,
+      {
+        search: 'unicorn',
+        restrictions: { reservedByMe: true },
+      }
+    )
 
     const adverts = createSampleAdverts(100, {
       'advert-10': { title: 'I like my unicorn!' },
@@ -160,6 +172,7 @@ describe('createAdvertFilterPredicate', () => {
   it('restricts to can be reserved', () => {
     const p = createAdvertFilterPredicate(
       createTestUser({ id: 'a@b.com', roles: { canReserveAdverts: true } }),
+      getAdvertMeta,
       {
         search: 'unicorn',
         restrictions: { canBeReserved: true },
@@ -194,7 +207,9 @@ describe('createAdvertFilterPredicate', () => {
   })
 
   it('bugfix: supports exotic characters', () => {
-    const p = createAdvertFilterPredicate(createTestUser(), { search: 'ÅÄÖ' })
+    const p = createAdvertFilterPredicate(createTestUser(), getAdvertMeta, {
+      search: 'ÅÄÖ',
+    })
 
     const adverts = createSampleAdverts(100, {
       'advert-10': { title: 'I like my unicorn named åäö!' },
@@ -209,7 +224,7 @@ describe('createAdvertFilterPredicate', () => {
     ])
   })
   it('should search reference field', () => {
-    const p = createAdvertFilterPredicate(createTestUser(), {
+    const p = createAdvertFilterPredicate(createTestUser(), getAdvertMeta, {
       search: '#123456abc',
     })
 

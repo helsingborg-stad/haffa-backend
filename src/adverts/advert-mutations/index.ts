@@ -30,7 +30,12 @@ import { createPatchAdvertTags } from './tags/patch-advert-tags'
 export const createAdvertMutations = (
   services: Pick<
     Services,
-    'adverts' | 'files' | 'notifications' | 'syslog' | 'workflow'
+    | 'getAdvertMeta'
+    | 'adverts'
+    | 'files'
+    | 'notifications'
+    | 'syslog'
+    | 'workflow'
   >
 ): AdvertMutations => ({
   importAdvertSnapshot: createImportAdvertSnapshot(services),

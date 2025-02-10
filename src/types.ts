@@ -13,6 +13,7 @@ import type { SubscriptionsRepository } from './subscriptions/types'
 import type { ContentRepository } from './content/types'
 import type { SyslogService } from './syslog/types'
 import type { WorkflowService } from './workflow/types'
+import type { GetAdvertMeta } from './adverts/advert-meta/types'
 
 export interface StartupLog {
   echo: <TService>(
@@ -25,6 +26,7 @@ export interface StartupLog {
 }
 
 export interface Services {
+  getAdvertMeta: GetAdvertMeta
   workflow: WorkflowService
   userMapper: UserMapper
   categories: CategoryRepository

@@ -1,6 +1,5 @@
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
-import { getAdvertMeta } from '../../advert-meta'
 import { type Advert, type AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
@@ -12,11 +11,12 @@ import {
 
 export const createMarkAdvertAsUnpicked =
   ({
+    getAdvertMeta,
     adverts,
     notifications,
   }: Pick<
     Services,
-    'adverts' | 'notifications'
+    'getAdvertMeta' | 'adverts' | 'notifications'
   >): AdvertMutations['markAdvertAsUnpicked'] =>
   (user, id) =>
     txBuilder<Advert>()

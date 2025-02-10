@@ -13,7 +13,7 @@ import type {
 } from './types'
 import { AdvertType } from './types'
 import type { HaffaUser } from '../login/types'
-import { getAdvertMeta } from './advert-meta'
+import type { Services } from '../types'
 
 const isObject = (o: any) => o === Object(o)
 const isArray = (a: any) => Array.isArray(a)
@@ -243,7 +243,8 @@ export const patchAdvertWithAdvertInput = (
 
 export const mapAdvertToAdvertWithMeta = (
   user: HaffaUser,
-  advert: Advert | null
+  advert: Advert | null,
+  { getAdvertMeta }: Pick<Services, 'getAdvertMeta'>
 ): AdvertWithMeta | null =>
   advert
     ? {
@@ -258,15 +259,17 @@ export const mapAdvertToAdvertWithMeta = (
 
 export const mapAdvertsToAdvertsWithMeta = (
   user: HaffaUser,
-  adverts: (Advert | null)[]
+  adverts: (Advert | null)[],
+  services: Pick<Services, 'getAdvertMeta'>
 ): (AdvertWithMeta | null)[] =>
-  adverts.map(a => mapAdvertToAdvertWithMeta(user, a)).filter(a => a)
+  adverts.map(a => mapAdvertToAdvertWithMeta(user, a, services)).filter(a => a)
 
 export const mapAdvertMutationResultToAdvertWithMetaMutationResult = (
   user: HaffaUser,
-  result: AdvertMutationResult
+  result: AdvertMutationResult,
+  services: Pick<Services, 'getAdvertMeta'>
 ): AdvertWithMetaMutationResult => ({
-  advert: mapAdvertToAdvertWithMeta(user, result.advert),
+  advert: mapAdvertToAdvertWithMeta(user, result.advert, services),
   status: result.status,
 })
 

@@ -1,4 +1,4 @@
-import { getAdvertMeta } from '..'
+import { createGetAdvertMeta } from '..'
 import { makeAdmin } from '../../../login'
 import type { HaffaUser } from '../../../login/types'
 import {
@@ -8,6 +8,7 @@ import {
 import { createEmptyAdvert } from '../../mappers'
 
 describe('getAdvertMeta::canArchive', () => {
+  const getAdvertMeta = createGetAdvertMeta()
   const createUserWithRights = (id: string): HaffaUser => ({
     id,
     roles: { canArchiveOwnAdverts: true },

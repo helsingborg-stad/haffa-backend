@@ -1,9 +1,9 @@
-import { getAdvertMeta } from '..'
 import { makeAdmin, makeUser } from '../../../login'
 import type { HaffaUser } from '../../../login/types'
 import { createEmptyAdvert } from '../../mappers'
 import type { Advert, AdvertClaim } from '../../types'
 import { AdvertClaimType, AdvertType } from '../../types'
+import { createGetAdvertMeta } from '../advert-meta'
 
 const makeClaim = (c?: Partial<AdvertClaim>): AdvertClaim => ({
   quantity: 1,
@@ -19,6 +19,7 @@ const collected = (c?: Partial<AdvertClaim>) =>
   makeClaim({ type: AdvertClaimType.collected, ...c })
 
 describe('getAdvertMeta::canJoinWatlist', () => {
+  const getAdvertMeta = createGetAdvertMeta()
   const joinableUser = makeAdmin({ id: 'test@user' })
   const deniedUser = makeUser({
     id: 'someone@else',

@@ -15,6 +15,7 @@ import { createSubscriptionsRepositoryFromEnv } from './subscriptions'
 import { createContentRepositoryFromEnv } from './content'
 import { createSyslogServiceFromEnv } from './syslog'
 import { createWorkflowServiceFromEnv } from './workflow'
+import { createGetAdvertMeta } from './adverts/advert-meta'
 
 const createStartupLog = (): StartupLog => ({
   echo: (service, { name, config }) => {
@@ -29,13 +30,18 @@ const createStartupLog = (): StartupLog => ({
 })
 
 const createServicesFromEnv = (): Services => {
+  const getAdvertMeta = createGetAdvertMeta()
   const workflow = createWorkflowServiceFromEnv()
   const startupLog = createStartupLog()
   const settings = createSettingsServiceFromEnv(startupLog)
   const userMapper = createUserMapperFromEnv(startupLog, settings)
   const eventLog = createEventLogServiceFromEnv(startupLog)
   const categories = categoryAdapter(settings)
-  const adverts = createAdvertsRepositoryFromEnv(startupLog, settings)
+  const adverts = createAdvertsRepositoryFromEnv(
+    startupLog,
+    getAdvertMeta,
+    settings
+  )
   const files = createFilesServiceFromEnv(startupLog)
   const profiles = createProfileRepositoryFromEnv(startupLog)
   const syslog = createSyslogServiceFromEnv(startupLog)
@@ -51,6 +57,7 @@ const createServicesFromEnv = (): Services => {
     userMapper,
   })
   return {
+    getAdvertMeta,
     workflow,
     userMapper,
     categories,
@@ -63,6 +70,7 @@ const createServicesFromEnv = (): Services => {
     profiles,
     notifications,
     jobs: createJobExecutorServiceFromEnv({
+      getAdvertMeta,
       workflow,
       syslog,
       notifications,
