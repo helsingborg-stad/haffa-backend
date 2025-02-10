@@ -1,6 +1,7 @@
 export const pickupLocationsGqlSchema = /* GraphQL */ `
   type Query {
     pickupLocations: [PickupLocation]
+    pickupLocationsByAdvert(id: ID!): [PickupLocation]
   }
 
   type Mutation {

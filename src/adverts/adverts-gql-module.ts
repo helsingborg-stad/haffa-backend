@@ -7,6 +7,9 @@ import {
 import { createAdvertMutations } from './advert-mutations'
 import type { Services } from '../types'
 import type { GraphQLModule } from '../lib/gdi-api-node'
+import type { Advert } from './types'
+import { pickupLocationsAdapter } from '../pickup/pickup-locations-adapter'
+import { byCommonTags } from '../lib'
 
 export const createAdvertsGqlModule = (
   services: Pick<
@@ -16,6 +19,7 @@ export const createAdvertsGqlModule = (
     | 'categories'
     | 'files'
     | 'notifications'
+    | 'settings'
     | 'syslog'
     | 'workflow'
   >
@@ -25,12 +29,30 @@ export const createAdvertsGqlModule = (
     Advert: {
       // handle advert.notes visibility
       notes: async ({ source }) => (source.meta.canEdit ? source.notes : ''),
+
+      // for meta, we introdue a hidden/non-exposed backrefence to the advert for ceratin computations later on
+      meta: async ({ source }) => ({ ...source.meta, '@advert': source }),
     },
 
     AdvertMeta: {
       // handle advert.meta.claims visibility
       claims: async ({ source }) =>
         source.canManageClaims ? source.claims : [],
+
+      // Computed field
+      hasPickupLocations: async ({ source, cache }) => {
+        // get source advert
+        const advert = source['@advert'] as Advert
+        // compute once per request a tag filter based on currect pickup locations
+        const pickupLocationMatcher = await cache.getOrCreateCachedValue(
+          'match-pickup-locations-by-advert-tags',
+          async () =>
+            pickupLocationsAdapter(
+              services.settings
+            ).createPickupLocationMatcher()
+        )
+        return pickupLocationMatcher(advert).length > 0
+      },
     },
 
     AdvertMutationResult: {

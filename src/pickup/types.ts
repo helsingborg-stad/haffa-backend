@@ -1,4 +1,5 @@
 import type { AdvertLocation } from '../adverts/types'
+import type { Func } from '../lib/types'
 
 export interface PickupLocation extends AdvertLocation {
   notifyEmail: string
@@ -11,4 +12,7 @@ export interface PickupLocationsRepository {
   updatePickopLocations: (
     locations: PickupLocation[]
   ) => Promise<PickupLocation[]>
+  createPickupLocationMatcher: () => Promise<
+    Func<{ tags: string[] }, PickupLocation[]>
+  >
 }

@@ -1,3 +1,4 @@
+import { byCommonTags } from './by-common-tags'
 import { exceptValues } from './except-values'
 import { mapValues } from './map-values'
 import { obfuscate } from './obfuscate'
@@ -18,6 +19,7 @@ export {
   uniqueBy,
   sortBy,
   exceptValues,
+  byCommonTags,
 }
 
 export const echo = <T>(value: T): T => {

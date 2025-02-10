@@ -247,6 +247,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     waitlistCount: Int!
     returnInfo: [AdvertReturnInfo]!
     claims: [AdvertClaim]!
+    hasPickupLocations: Boolean!
   }
 
   type AdvertReturnInfo {
