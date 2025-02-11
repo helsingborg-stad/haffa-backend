@@ -70,8 +70,8 @@ export const mapAdvertFilterInputToMongoQuery = (
         mapSearch(filter?.search, filter?.pipelineCategoryIds),
         mapFields(filter?.fields)
       ),
-      mapWorkflow(filter?.workflow),
       ...(filter?.pipelineOr?.map(({ fields }) => mapFields(fields)) || [])
     ),
-    mapRestrictions(user, filter?.restrictions)
+    mapRestrictions(user, filter?.restrictions),
+    mapWorkflow(filter?.workflow)
   ) || {}
