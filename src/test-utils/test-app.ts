@@ -129,6 +129,9 @@ export const createTestServices = (services: Partial<Services>): Services => {
     get pickOnCollect() {
       return false
     },
+    get unpickOnReturn() {
+      return false
+    },
   }
   const getAdvertMeta = services.getAdvertMeta || createGetAdvertMeta()
   const settings = services.settings || createInMemorySettingsService()

@@ -15,9 +15,10 @@ export const createReturnAdvert =
     getAdvertMeta,
     adverts,
     notifications,
+    workflow: { unpickOnReturn },
   }: Pick<
     Services,
-    'getAdvertMeta' | 'adverts' | 'notifications'
+    'getAdvertMeta' | 'adverts' | 'notifications' | 'workflow'
   >): AdvertMutations['returnAdvert'] =>
   (user, id) =>
     txBuilder<Advert>()
@@ -44,8 +45,11 @@ export const createReturnAdvert =
             ),
           ])
         )
+        const pickedAt = unpickOnReturn ? '' : advert.pickedAt
+
         return {
           ...advert,
+          pickedAt,
           claims: normalizeAdvertClaims(
             advert.claims.filter(
               ({ type }) => type !== AdvertClaimType.collected

@@ -148,6 +148,9 @@ describe('convertAdvertClaim - picking', () => {
       get pickOnCollect() {
         return true
       },
+      get unpickOnReturn() {
+        return false
+      },
     }
     const spy = jest.spyOn(workflow, 'pickOnCollect', 'get')
 
