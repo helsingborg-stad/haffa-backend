@@ -99,6 +99,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     externalId
     tags
     size
+    place
   }
 
   input AdvertFieldsFilterInput {
