@@ -20,6 +20,7 @@ import { createSyslogGqlModule } from '../syslog/syslog-gql-module'
 import type { GraphQLModule } from '../lib/gdi-api-node'
 import type { EntityResolverMap } from '../lib/gdi-api-node/graphql'
 import { createPickupLocationsGqlModule } from '../pickup/pickup-locations-gql-module'
+import { createTagsGqlModule } from '../tags/tags-gql-module'
 
 export const createStandardGqlModule = (): GraphQLModule => ({
   schema: haffaGqlSchema,
@@ -46,7 +47,8 @@ export const createHaffaGqlModule = (services: Services): GraphQLModule =>
     createPickupLocationsGqlModule(services),
     createUserMapperGqlModule(services),
     createSmsTemplatesGqlModule(services),
-    createSyslogGqlModule(services)
+    createSyslogGqlModule(services),
+    createTagsGqlModule(services)
   )
 
 const mergeModules = (...modules: GraphQLModule[]): GraphQLModule => ({
