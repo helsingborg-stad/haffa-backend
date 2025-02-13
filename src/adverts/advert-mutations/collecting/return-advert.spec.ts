@@ -165,4 +165,69 @@ describe('returnAdvert', () => {
         expect(result.status).toMatchObject(TxErrors.Unauthorized)
       }
     ))
+  it('should set unpicked on return', () => {
+    const advertWasReturned = jest.fn(async () => undefined)
+    const advertWasReturnedOwner = jest.fn(async () => undefined)
+    const notifications = createTestNotificationServices({
+      advertWasReturned,
+      advertWasReturnedOwner,
+    })
+    const workflow = {
+      get pickOnCollect() {
+        return true
+      },
+      get unpickOnReturn() {
+        return true
+      },
+    }
+    const spy = jest.spyOn(workflow, 'unpickOnReturn', 'get')
+
+    return end2endTest(
+      { services: { notifications, workflow } },
+      async ({ mappedGqlRequest, adverts, user, loginPolicies }) => {
+        // give us rights to collect
+        await loginPolicies.updateLoginPolicies([
+          {
+            emailPattern: user.id,
+            roles: ['canManageReturns'],
+          },
+        ])
+
+        // eslint-disable-next-line no-param-reassign
+        adverts['advert-123'] = {
+          ...createEmptyAdvert(),
+          id: 'advert-123',
+          createdBy: 'owner@test.com',
+          pickedAt: '2025-01-01T00:00:00:000Z',
+          quantity: 5,
+          claims: [
+            {
+              type: AdvertClaimType.collected,
+              by: 'collector@test.com',
+              quantity: 1,
+              at: new Date().toISOString(),
+              events: [],
+            },
+          ],
+        }
+
+        const result = await mappedGqlRequest<AdvertMutationResult>(
+          'returnAdvert',
+          returnAdvertMutation,
+          {
+            id: 'advert-123',
+          }
+        )
+        expect(result.status).toBeNull()
+
+        T('should be updated in database', () =>
+          expect(adverts['advert-123'].pickedAt).toBe('')
+        )
+
+        T('should have checked configuration', () =>
+          expect(spy).toHaveBeenCalled()
+        )
+      }
+    )
+  })
 })
