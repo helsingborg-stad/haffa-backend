@@ -2,6 +2,7 @@ import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { AdvertClaimType, type Advert, type AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
+import { createAdvertNotifier } from '../notifications'
 import {
   verifyAll,
   verifyReservationLimits,
@@ -26,18 +27,14 @@ export const createMarkAdvertAsPicked =
       )
       .patch((advert, { actions }) => {
         const at = new Date().toISOString()
-        const reservers = advert.claims
-          .filter(({ type }) => type === AdvertClaimType.reserved)
-          .map(({ by }) => by)
+        const reservers = advert.claims.filter(
+          ({ type }) => type === AdvertClaimType.reserved
+        )
 
         actions(patched =>
-          notifications.advertWasPickedOwner(advert.createdBy, user, patched)
-        )
-        actions(patched =>
-          Promise.all(
-            reservers.map(to =>
-              notifications.advertWasPicked(to, user, patched)
-            )
+          createAdvertNotifier({ notifications, user }).wasPicked(
+            patched,
+            reservers
           )
         )
 

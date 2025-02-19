@@ -3,12 +3,14 @@ import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
 import { AdvertClaimType, type Advert, type AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
+import { createAdvertClaimsNotifier } from '../notifications'
 import {
   verifyAll,
   verifyReservationLimits,
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
 } from '../verifiers'
+import { claimsBy } from '../claims/mappers'
 
 export const createCollectAdvert =
   ({
@@ -29,39 +31,21 @@ export const createCollectAdvert =
       .patch((advert, { actions }) => {
         if (quantity > 0) {
           const at = new Date().toISOString()
-          actions(patched =>
-            Promise.all([
-              notifications.advertWasCollected(
-                user.id,
-                user,
-                quantity,
-                patched,
-                null
-              ),
-              notifications.advertWasCollectedOwner(
-                advert.createdBy,
-                user,
-                quantity,
-                patched,
-                null
-              ),
-            ])
+
+          const reserved = advert.claims.filter(
+            claimsBy(user, AdvertClaimType.reserved)
+          )
+          const collected = advert.claims.filter(
+            claimsBy(user, AdvertClaimType.collected)
           )
 
-          const reservedByMeCount = advert.claims
-            .filter(
-              ({ by, type }) =>
-                by === user.id && type === AdvertClaimType.reserved
+          actions(patched =>
+            createAdvertClaimsNotifier({ notifications, user }).wasCollected(
+              patched,
+              quantity,
+              patched.claims.filter(claimsBy(user, AdvertClaimType.collected))
             )
-            .map(({ quantity }) => quantity)
-            .reduce((s, v) => s + v, 0)
-          const collectedByMeCount = advert.claims
-            .filter(
-              ({ by, type }) =>
-                by === user.id && type === AdvertClaimType.collected
-            )
-            .map(({ quantity }) => quantity)
-            .reduce((s, v) => s + v, 0)
+          )
 
           const pickedAt = pickOnCollect ? at : advert.pickedAt
 
@@ -70,17 +54,18 @@ export const createCollectAdvert =
             pickedAt,
             claims: normalizeAdvertClaims([
               ...advert.claims.filter(({ by }) => by !== user.id), // all except mine
+              // decrease all reservations (atmost 1 due to normalizations)
+              ...reserved.map(c => ({ ...c, quantity: c.quantity - quantity })),
+              // increase all collects (atmost 1 due to normalizations)
+              ...collected.map(c => ({
+                ...c,
+                quantity: c.quantity + quantity,
+              })),
+              // fallback new claim if no previous collects existed
               {
                 by: user.id,
                 at,
-                quantity: reservedByMeCount - quantity,
-                type: AdvertClaimType.reserved,
-                events: [],
-              },
-              {
-                by: user.id,
-                at,
-                quantity: collectedByMeCount + quantity,
+                quantity,
                 type: AdvertClaimType.collected,
                 events: [],
               },

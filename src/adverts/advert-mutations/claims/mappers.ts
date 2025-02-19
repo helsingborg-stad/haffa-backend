@@ -1,5 +1,6 @@
 import { sortBy } from '../../../lib'
 import { dateBuilder } from '../../../lib/date-builder'
+import type { Func } from '../../../lib/types'
 import type { HaffaUser } from '../../../login/types'
 import { AdvertClaimType } from '../../types'
 import type { AdvertReturnInfo, AdvertClaim } from '../../types'
@@ -73,3 +74,8 @@ export const hasReservations = (claims: AdvertClaim[]) =>
 
 export const hasCollects = (claims: AdvertClaim[]) =>
   claims.some(claim => claim.type === AdvertClaimType.collected)
+
+export const claimsBy =
+  (user: HaffaUser, type: AdvertClaimType): Func<AdvertClaim, boolean> =>
+  c =>
+    c.by === user.id && c.type === type

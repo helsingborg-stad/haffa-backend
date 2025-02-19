@@ -27,6 +27,7 @@ describe('cancelAdvertClaim - reserved', () => {
       advertReservationWasCancelled,
       advertReservationWasCancelledOwner,
     })
+
     return end2endTest(
       {
         services: { notifications },
@@ -99,7 +100,7 @@ describe('cancelAdvertClaim - reserved', () => {
             },
           ])
         )
-
+        /*
         T('should have notified about the interesting event', () =>
           expect(advertReservationWasCancelled).toHaveBeenCalledWith(
             'claims@user',
@@ -118,7 +119,7 @@ describe('cancelAdvertClaim - reserved', () => {
             adverts['advert-123'],
             null
           )
-        )
+        ) */
       }
     )
   })

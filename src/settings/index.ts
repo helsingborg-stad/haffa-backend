@@ -1,3 +1,4 @@
+import { Exception } from 'handlebars'
 import {
   createInMemorySettingsService,
   createInMemorySettingsServiceFromEnv,

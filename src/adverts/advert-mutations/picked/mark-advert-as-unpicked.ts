@@ -2,6 +2,7 @@ import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { type Advert, type AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
+import { createAdvertNotifier } from '../notifications'
 import {
   verifyAll,
   verifyReservationLimits,
@@ -26,7 +27,7 @@ export const createMarkAdvertAsUnpicked =
       )
       .patch((advert, { actions }) => {
         actions(patched =>
-          notifications.advertWasUnpickedOwner(advert.createdBy, user, patched)
+          createAdvertNotifier({ notifications, user }).wasUnPicked(patched)
         )
         return {
           ...advert,

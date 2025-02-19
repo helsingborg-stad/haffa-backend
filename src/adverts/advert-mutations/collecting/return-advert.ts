@@ -3,6 +3,7 @@ import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
 import { AdvertClaimType, type Advert, type AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
+import { createAdvertClaimsNotifier } from '../notifications'
 import {
   verifyAll,
   verifyReservationLimits,
@@ -30,21 +31,14 @@ export const createReturnAdvert =
         const collects = advert.claims.filter(
           ({ type }) => type === AdvertClaimType.collected
         )
+
         actions(patched =>
-          Promise.all([
-            ...collects.map(({ by, quantity }) =>
-              notifications.advertWasReturned(by, user, quantity, patched)
-            ),
-            ...collects.map(({ by, quantity }) =>
-              notifications.advertWasReturnedOwner(
-                advert.createdBy,
-                user,
-                quantity,
-                patched
-              )
-            ),
-          ])
+          createAdvertClaimsNotifier({ notifications, user }).wasReturned(
+            patched,
+            collects
+          )
         )
+
         const pickedAt = unpickOnReturn ? '' : advert.pickedAt
 
         return {

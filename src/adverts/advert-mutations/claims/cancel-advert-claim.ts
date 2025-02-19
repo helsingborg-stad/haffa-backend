@@ -3,13 +3,13 @@ import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
 import type { AdvertClaim, Advert, AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
+import { createAdvertClaimsNotifier } from '../notifications'
 import {
   verifyAll,
   verifyReservationLimits,
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
 } from '../verifiers'
-import { notifyClaimsWasCancelled } from './notify-claims'
 
 export const createCancelAdvertClaim =
   ({
@@ -38,14 +38,13 @@ export const createCancelAdvertClaim =
         }
 
         actions(patched =>
-          notifyClaimsWasCancelled(
+          createAdvertClaimsNotifier({
             notifications,
             user,
-            patched,
-            claims,
-            impersonate || null
-          )
+            impersonate,
+          }).wasCancelled(patched, claims)
         )
+
         const pickedAt = unpickOnReturn ? '' : advert.pickedAt
 
         return {

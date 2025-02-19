@@ -14,7 +14,7 @@ import {
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
 } from '../verifiers'
-import { notifyClaimsWas } from './notify-claims'
+import { createAdvertClaimsNotifier } from '../notifications'
 
 export const createConvertAdvertClaim =
   ({
@@ -54,14 +54,13 @@ export const createConvertAdvertClaim =
         }))
 
         actions(patched =>
-          notifyClaimsWas(
+          createAdvertClaimsNotifier({
             notifications,
             user,
-            patched,
-            updatedClaims,
-            impersonate || null
-          )
+            impersonate,
+          }).wasReservedOrCollected(patched, updatedClaims)
         )
+
         const pickedAt =
           newType === AdvertClaimType.collected && pickOnCollect
             ? at

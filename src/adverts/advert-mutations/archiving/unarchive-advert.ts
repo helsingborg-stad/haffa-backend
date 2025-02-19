@@ -2,6 +2,7 @@ import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import type { Advert, AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
+import { createAdvertNotifier } from '../notifications'
 
 export const createUnarchiveAdvert =
   ({
@@ -23,7 +24,7 @@ export const createUnarchiveAdvert =
       )
       .patch(async (advert, { actions }) => {
         actions(patched =>
-          notifications.advertWasUnarchived(advert.createdBy, user, patched)
+          createAdvertNotifier({ notifications, user }).wasUnArchived(patched)
         )
         return {
           ...advert,

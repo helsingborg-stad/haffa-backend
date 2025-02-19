@@ -9,7 +9,7 @@ import {
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
 } from '../verifiers'
-import { notifyClaimsWasRenewed } from './notify-claims'
+import { createAdvertClaimsNotifier } from '../notifications/advert-claims-notifier'
 
 export const createRenewAdvertClaim =
   ({
@@ -43,12 +43,13 @@ export const createRenewAdvertClaim =
         )
 
         actions(patched =>
-          notifyClaimsWasRenewed(
-            notifications,
+          createAdvertClaimsNotifier({
             user,
+            notifications,
+            impersonate,
+          }).wasRenewed(
             patched,
-            patched.claims.filter(c => c.type === type && c.by === by),
-            impersonate || null
+            patched.claims.filter(c => c.type === type && c.by === by)
           )
         )
 

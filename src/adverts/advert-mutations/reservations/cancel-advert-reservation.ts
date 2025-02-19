@@ -3,7 +3,7 @@ import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
 import { AdvertClaimType } from '../../types'
 import type { AdvertClaim, Advert, AdvertMutations } from '../../types'
-import { notifyClaimsWasCancelled } from '../claims/notify-claims'
+import { createAdvertClaimsNotifier } from '../notifications/advert-claims-notifier'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 
 export const createCancelAdvertReservation =
@@ -28,23 +28,12 @@ export const createCancelAdvertReservation =
         }
 
         actions(patched =>
-          notifyClaimsWasCancelled(notifications, user, patched, claims, null)
-        )
-
-        /*
-        actions((patched, original) =>
-          notifications.advertReservationWasCancelled(
-            user,
-            original.claims
-              .filter(
-                ({ by, type }) =>
-                  by === user.id && type === AdvertClaimType.reserved
-              )
-              .reduce((s, { quantity }) => s + quantity, 0),
-            patched
+          createAdvertClaimsNotifier({ user, notifications }).wasCancelled(
+            patched,
+            claims
           )
         )
-*/
+
         return {
           ...advert,
           claims: normalizeAdvertClaims(
