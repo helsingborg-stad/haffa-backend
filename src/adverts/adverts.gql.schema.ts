@@ -211,12 +211,16 @@ export const advertsGqlSchema = /* GraphQL */ `
     at: String
   }
 
+  type AdvertClaimPickupLocation {
+    trackingName: String
+  }
   type AdvertClaim {
     quantity: Int
     by: String
     at: String
     type: AdvertClaimType
     events: [AdvertClaimEvent]
+    pickupLocation: AdvertClaimPickupLocation
     canCancel: Boolean
     canConvert: Boolean
     isOverdue: Boolean

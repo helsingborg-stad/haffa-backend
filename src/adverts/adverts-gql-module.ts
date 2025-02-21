@@ -9,7 +9,6 @@ import type { Services } from '../types'
 import type { GraphQLModule } from '../lib/gdi-api-node'
 import type { Advert } from './types'
 import { pickupLocationsAdapter } from '../pickup/pickup-locations-adapter'
-import { byCommonTags } from '../lib'
 
 export const createAdvertsGqlModule = (
   services: Pick<
