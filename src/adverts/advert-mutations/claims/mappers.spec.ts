@@ -30,7 +30,7 @@ const completeClaim = {
   ],
 }
 
-it('should handle empty event array', () => {
+it('should handle empty event array WITHOUT default date override', () => {
   expect(
     getLastClaimEventDate({
       at: '2024-01-30',
@@ -41,7 +41,21 @@ it('should handle empty event array', () => {
     })
   ).toEqual(new Date('2024-01-30'))
 })
-it('should handle missing event array', () => {
+it('should handle empty event array WITH default date override', () => {
+  expect(
+    getLastClaimEventDate(
+      {
+        at: '2024-01-30',
+        type: AdvertClaimType.collected,
+        quantity: 1,
+        by: 'jane@doe.se',
+        events: [],
+      },
+      '2025-01-01'
+    )
+  ).toEqual(new Date('2025-01-01'))
+})
+it('should handle missing event array WITHOUT default date override', () => {
   expect(
     getLastClaimEventDate({
       at: '2024-01-30',
@@ -51,7 +65,21 @@ it('should handle missing event array', () => {
     } as AdvertClaim)
   ).toEqual(new Date('2024-01-30'))
 })
-it('should handle single event', () => {
+it('should handle missing event array WITH default date override', () => {
+  expect(
+    getLastClaimEventDate(
+      {
+        at: '2024-01-30',
+        type: AdvertClaimType.collected,
+        quantity: 1,
+        by: 'jane@doe.se',
+      } as AdvertClaim,
+      '2025-01-01'
+    )
+  ).toEqual(new Date('2025-01-01'))
+})
+
+it('should handle single event WITHOUT default date override', () => {
   expect(
     getLastClaimEventDate({
       at: '2024-01-30',
@@ -67,6 +95,25 @@ it('should handle single event', () => {
     })
   ).toEqual(new Date('2024-02-01'))
 })
+it('should handle single event WITH default date override', () => {
+  expect(
+    getLastClaimEventDate(
+      {
+        at: '2024-01-30',
+        type: AdvertClaimType.collected,
+        quantity: 1,
+        by: 'jane@doe.se',
+        events: [
+          {
+            at: '2024-02-01',
+            type: AdvertClaimEventType.reminder,
+          },
+        ],
+      },
+      '2025-01-01'
+    )
+  ).toEqual(new Date('2024-02-01'))
+})
 
 it('should handle handle arbitrary order of events', () => {
   expect(getLastClaimEventDate(completeClaim)).toEqual(new Date('2024-03-01'))
@@ -78,7 +125,7 @@ it('should calculate next event from previous event', () => {
   )
 })
 
-it('should calculate next event without previous event', () => {
+it('should calculate next event WITHOUT default date override', () => {
   expect(
     getNextClaimEventDate(
       {
@@ -91,6 +138,22 @@ it('should calculate next event without previous event', () => {
       10
     )
   ).toEqual(new Date('2024-02-11'))
+})
+
+it('should calculate next event WITH default date override', () => {
+  expect(
+    getNextClaimEventDate(
+      {
+        at: '2024-02-01',
+        type: AdvertClaimType.collected,
+        quantity: 1,
+        by: 'jane@doe.se',
+        events: [],
+      },
+      10,
+      '2025-01-01'
+    )
+  ).toEqual(new Date('2025-01-11'))
 })
 
 it('should calculate overdue', () => {

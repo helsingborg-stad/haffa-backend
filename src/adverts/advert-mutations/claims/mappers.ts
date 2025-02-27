@@ -8,17 +8,19 @@ import type { AdvertReturnInfo, AdvertClaim } from '../../types'
 /**
  * Returns the date when the last event was generated
  * e.g when the last reminder was sent
- * @param claim A refereence to an AdvertClaim
+ * @param claim A refereece to an AdvertClaim
+ * @param defaultDate A date to fallback on if no events are recorded
  * @returns A date object
  */
-export const getLastClaimEventDate = (claim: AdvertClaim): Date =>
-  // If no events are logged, return the date
-  // of the claim itself as it represents the
-  // time of the latest status change
+export const getLastClaimEventDate = (
+  claim: AdvertClaim,
+  defaultDate?: string
+): Date =>
+  // If no events are logged, return the default date
   new Date(
     claim.events && claim.events.length > 0
       ? [...claim.events].sort(sortBy(ev => ev.at)).reverse()[0].at
-      : claim.at
+      : defaultDate ?? claim.at
   )
 
 /**
@@ -26,10 +28,15 @@ export const getLastClaimEventDate = (claim: AdvertClaim): Date =>
  * the next event is allowed to be logged
  * @param claim A reference to an AdvertClaim
  * @param interval The number of days that should occur before a new event is logged
+ * @param defaultDate A date to fallback on if no events are recorded
  * @returns A Date object
  */
-export const getNextClaimEventDate = (claim: AdvertClaim, interval: number) =>
-  dateBuilder(getLastClaimEventDate(claim))
+export const getNextClaimEventDate = (
+  claim: AdvertClaim,
+  interval: number,
+  defaultDate?: string
+) =>
+  dateBuilder(getLastClaimEventDate(claim, defaultDate))
     .addDays(Math.max(interval, 0))
     .toDate()
 
