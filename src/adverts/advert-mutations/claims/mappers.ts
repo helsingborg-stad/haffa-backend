@@ -46,15 +46,22 @@ export const getNextClaimEventDate = (
  * @param claim A reference to an AdvertClaim
  * @param daysValid The number of days from the latest status change the claim is valid
  * @param now The current date and time to validate towards
+ * @param defaultDate A date that overrides the claim date
  * @returns true if the claim is invalid, otherwise false
  */
 export const isClaimOverdue = (
   claim: AdvertClaim,
   daysValid: number,
-  now: Date
+  now: Date,
+  defaultDate?: string
 ) => {
   if (daysValid > 0) {
-    return now > dateBuilder(claim.at).addDays(daysValid).toDate()
+    return (
+      now >
+      dateBuilder(defaultDate ?? claim.at)
+        .addDays(daysValid)
+        .toDate()
+    )
   }
   // No limitation on validity
   return false

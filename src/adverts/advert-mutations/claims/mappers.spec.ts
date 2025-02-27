@@ -156,7 +156,7 @@ it('should calculate next event WITH default date override', () => {
   ).toEqual(new Date('2025-01-11'))
 })
 
-it('should calculate overdue', () => {
+it('should calculate overdue WITHOUT default date override', () => {
   const claim = {
     at: '2024-02-01',
     type: AdvertClaimType.collected,
@@ -164,9 +164,39 @@ it('should calculate overdue', () => {
     by: 'jane@doe.se',
     events: [],
   }
+  // Current Date: 2024-02-01, reservation date: 2024-02-01
+  // Comparison between 2024-02-01 and 2024-02-01 is 0 day = not overdue
   expect(isClaimOverdue(claim, 1, new Date('2024-02-01'))).toBe(false)
+  // Current Date: 2024-02-02, reservation date: 2024-02-01
+  // Comparison between 2024-02-02 and 2024-02-01 is 1 day = not overdue
   expect(isClaimOverdue(claim, 1, new Date('2024-02-02'))).toBe(false)
+  // Current Date: 2024-02-03, reservation date: 2024-02-01
+  // Comparison between 2024-02-03 and 2024-02-01 is 2 days = overdue
   expect(isClaimOverdue(claim, 1, new Date('2024-02-03'))).toBe(true)
+  // Current Date: 2024-02-04, reservation date: 2024-02-01
+  // Comparison between 2024-02-04 and 2024-02-01 is 3 days = overdue
   expect(isClaimOverdue(claim, 1, new Date('2025-02-01'))).toBe(true)
+  // Current Date: 2024-01-31, reservation date: 2024-02-01
+  // Comparison between 2024-01-31 and 2024-02-01 is -1 day = not overdue
   expect(isClaimOverdue(claim, 1, new Date('2024-01-31'))).toBe(false)
+})
+
+it('should calculate overdue WITH default date override', () => {
+  const claim = {
+    at: '2024-02-01',
+    type: AdvertClaimType.reserved,
+    quantity: 1,
+    by: 'jane@doe.se',
+    events: [],
+  }
+  // Current Date: 2024-02-05, reservation date: 2024-02-01, picked date: 2024-02-04
+  // Comparison between 2024-02-05 and 2024-02-04 is 1 day = not overdue
+  expect(isClaimOverdue(claim, 1, new Date('2024-02-05'), '2024-02-04')).toBe(
+    false
+  )
+  // Current Date: 2024-02-06, reservation date: 2024-02-01, picked date: 2024-02-04
+  // Comparison between 2024-02-06 and 2024-02-04 is 2 days = overdue
+  expect(isClaimOverdue(claim, 1, new Date('2024-02-06'), '2024-02-04')).toBe(
+    true
+  )
 })
