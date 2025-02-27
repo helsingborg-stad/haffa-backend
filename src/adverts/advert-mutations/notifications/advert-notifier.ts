@@ -1,6 +1,7 @@
 import type { Func } from '../../../lib/types'
 import type { HaffaUser } from '../../../login/types'
 import type { NotificationService } from '../../../notifications/types'
+import { patchAdvertWithPickupLocation } from '../../../pickup/mappers'
 import { AdvertClaimType } from '../../types'
 import type { AdvertNotifier } from './types'
 
@@ -22,7 +23,13 @@ export const createAdvertNotifier: Func<
       notifications.advertWasPickedOwner(advert.createdBy, user, advert),
       ...claims
         .filter(({ type }) => type === AdvertClaimType.reserved)
-        .map(({ by: to }) => notifications.advertWasPicked(to, user, advert)),
+        .map(({ by: to, pickupLocation }) =>
+          notifications.advertWasPicked(
+            to,
+            user,
+            patchAdvertWithPickupLocation(advert, pickupLocation)
+          )
+        ),
     ]),
   wasUnPicked: advert =>
     notifications.advertWasUnpickedOwner(advert.createdBy, user, advert),
