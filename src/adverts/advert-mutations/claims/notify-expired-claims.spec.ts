@@ -13,8 +13,6 @@ describe('notifyExpiredClaims', () => {
       adverts['advert-123'] = {
         ...createEmptyAdvert(),
         id: 'advert-123',
-        createdBy: user.id,
-        quantity: 50,
         claims: [
           {
             by: 'jane@doe1.se',
@@ -59,7 +57,8 @@ describe('notifyExpiredClaims', () => {
         user,
         'advert-123',
         1,
-        new Date('2023-05-03T00:00:00.000Z')
+        0,
+        new Date('2023-05-03')
       )
       expect(result.advert?.claims).toHaveLength(4)
     }))
@@ -87,6 +86,7 @@ describe('notifyExpiredClaims', () => {
         user,
         'advert-123',
         1,
+        0,
         new Date('2023-05-03T00:00:00.000Z')
       )
       expect(result.advert).toBeNull()
@@ -135,6 +135,7 @@ describe('notifyExpiredClaims', () => {
           user,
           'advert-123',
           1,
+          0,
           new Date('2024-05-01T00:00:00.000Z')
         )
         expect(advertReservationWasCancelled).toHaveBeenCalledWith(
@@ -185,6 +186,7 @@ describe('notifyExpiredClaims', () => {
         user,
         'advert-123',
         1,
+        0,
         new Date('2025-01-03')
       )
       // Should be reset to empty string
@@ -223,9 +225,49 @@ describe('notifyExpiredClaims', () => {
         user,
         'advert-123',
         1,
+        0,
         new Date('2023-05-03')
       )
       // Should be reset to empty string
       expect(result.advert?.pickedAt).toBe('2025-01-01')
+    }))
+
+  it('should respect the snoozeReminderUntilPicked flag', () =>
+    end2endTest({}, async ({ user, adverts, services }) => {
+      // Reservation created: 2023-01-01
+      // Picked at: 2023-01-05
+      // Last event: -
+      // Reminder interval: 10 days
+      // Current date: 2023-01-11
+      // = Notification should NOT be sent
+
+      // eslint-disable-next-line no-param-reassign
+      adverts['advert-123'] = {
+        ...createEmptyAdvert(),
+        pickedAt: '2023-01-05',
+        id: 'advert-123',
+        createdBy: user.id,
+        quantity: 50,
+        claims: [
+          {
+            by: 'jane@doe1.se',
+            at: '2023-01-01',
+            quantity: 2,
+            type: AdvertClaimType.reserved,
+            events: [],
+          },
+        ],
+      }
+      const notifyExpiredClaims = createExpiredClaimsNotifier(services)
+
+      const result = await notifyExpiredClaims(
+        user,
+        'advert-123',
+        10,
+        1,
+        new Date('2023-01-11')
+      )
+
+      expect(result.advert).toBeNull()
     }))
 })

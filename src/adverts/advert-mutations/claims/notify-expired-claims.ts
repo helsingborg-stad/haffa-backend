@@ -13,27 +13,60 @@ import { isClaimOverdue } from './mappers'
 
 export const createExpiredClaimsNotifier =
   ({
+    getAdvertMeta,
     adverts,
     notifications,
     syslog,
     workflow: { unpickOnReturn },
   }: Pick<
     Services,
-    'adverts' | 'notifications' | 'syslog' | 'workflow'
+    'getAdvertMeta' | 'adverts' | 'notifications' | 'syslog' | 'workflow'
   >): AdvertMutations['notifyExpiredClaims'] =>
-  (user, id, interval, now) =>
+  (user, id, interval, snooze, now) =>
     txBuilder<Advert>()
       .load(() => adverts.getAdvert(user, id))
       .validate(() => undefined)
       .patch((advert, { actions }) => {
+        const meta = getAdvertMeta(advert, user, now)
+        // =====================================
+        // Rule: Supress notification
+        // =====================================
+        // Apply when:
+        // 1. Advert is not yet picked
+        // AND
+        // 2. reminderSnoozeUntilPicked is set to 1
+        //
+        if (snooze === 1 && !meta.isPicked) {
+          return null
+        }
+
         const claims = advert.claims.reduce<AdvertClaim[]>((p, c) => {
+          // =====================================
+          // Rule: Determine comparison date
+          // =====================================
+          // Comparison date will be pickedAt when
+          // 1. Advert is picked
+          // AND
+          // 2. pickedAt is later than claim date
+          // AND
+          // 3. reminderSnoozeUntilPicked is set to 1
+          //
+          // Otherwise comparison date will be claim date
+          //
+          const defaultDate =
+            snooze === 1 && meta.isPicked
+              ? [c.at, advert.pickedAt ?? '']
+                  .filter(x => x !== '')
+                  .sort((x, y) => y.localeCompare(x))[0]
+              : c.at
+
           if (
             // Check the claim reservation status
             // =====================================
             // A) Claim is of type "reserved"
             // B) Claim creation date + max reservations is larger than "now"
             c.type === AdvertClaimType.reserved &&
-            isClaimOverdue(c, interval, now)
+            isClaimOverdue(c, interval, now, defaultDate)
           ) {
             // Queue notification for Email/SMS delivery
             actions(() =>

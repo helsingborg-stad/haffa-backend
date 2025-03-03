@@ -27,19 +27,49 @@ export const createReservedClaimsNotifier =
       .validate(() => undefined)
       .patch((advert, { actions }) => {
         const meta = getAdvertMeta(advert, user, now)
+        // =====================================
+        // Rule: Supress notification
+        // =====================================
+        // Apply when:
+        // 1. Advert is not yet picked
+        // AND
+        // 2. reminderSnoozeUntilPicked is set to 1
         if (snooze === 1 && !meta.isPicked) {
           return null
         }
 
         let isModified = false
         const claims = advert.claims.map(c => {
-          // Check the claim reserved status
+          // =====================================
+          // Rule: Determine comparison date
+          // =====================================
+          // Comparison date will be pickedAt when
+          // 1. Advert is picked
+          // AND
+          // 2. pickedAt is later than claim date
+          // AND
+          // 3. reminderSnoozeUntilPicked is set to 1
+          //
+          // Otherwise comparison date will be claim date
+          //
+          const defaultDate =
+            snooze === 1 && meta.isPicked
+              ? [c.at, advert.pickedAt ?? '']
+                  .filter(x => x !== '')
+                  .sort((x, y) => y.localeCompare(x))[0]
+              : c.at
+          // =====================================
+          // Rule: Check the claim reserved status
           // =====================================
           // A) Claim is of type "reserved"
           // B) Determine the last time a reminder was sent
+          //
+          // defaultDate will either be the claim date or the pickedAt date
+          // of the advert.
+
           if (
             c.type === AdvertClaimType.reserved &&
-            now >= getNextClaimEventDate(c, interval)
+            now >= getNextClaimEventDate(c, interval, defaultDate)
           ) {
             // Queue notification for Email/SMS delivery
             actions(() =>
