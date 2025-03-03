@@ -16,9 +16,10 @@ export const createExpiredClaimsNotifier =
     adverts,
     notifications,
     syslog,
+    workflow: { unpickOnReturn },
   }: Pick<
     Services,
-    'adverts' | 'notifications' | 'syslog'
+    'adverts' | 'notifications' | 'syslog' | 'workflow'
   >): AdvertMutations['notifyExpiredClaims'] =>
   (user, id, interval, now) =>
     txBuilder<Advert>()
@@ -70,8 +71,11 @@ export const createExpiredClaimsNotifier =
 
         // One or more claims has been removed
         if (claims.length !== advert.claims.length) {
+          const pickedAt = unpickOnReturn ? '' : advert.pickedAt
+
           return {
             ...advert,
+            pickedAt,
             claims: normalizeAdvertClaims(claims),
           }
         }

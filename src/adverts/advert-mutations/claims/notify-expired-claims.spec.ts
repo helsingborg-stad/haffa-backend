@@ -154,4 +154,78 @@ describe('notifyExpiredClaims', () => {
       }
     )
   })
+  it('should reset pickedAt when unpickOnReturn is TRUE)', () =>
+    end2endTest({}, async ({ user, adverts, services }) => {
+      // eslint-disable-next-line no-param-reassign
+      adverts['advert-123'] = {
+        ...createEmptyAdvert(),
+        pickedAt: '2025-01-01',
+        id: 'advert-123',
+        createdBy: user.id,
+        quantity: 50,
+        claims: [
+          {
+            by: 'jane@doe1.se',
+            at: '2023-05-01',
+            quantity: 2,
+            type: AdvertClaimType.reserved,
+            events: [],
+          },
+        ],
+      }
+      const notifyExpiredClaims = createExpiredClaimsNotifier({
+        ...services,
+        workflow: {
+          ...services.workflow,
+          unpickOnReturn: true,
+        },
+      })
+
+      const result = await notifyExpiredClaims(
+        user,
+        'advert-123',
+        1,
+        new Date('2025-01-03')
+      )
+      // Should be reset to empty string
+      expect(result.advert?.pickedAt).toBe('')
+      // Should remove the claim when expired
+      expect(result.advert?.claims).toHaveLength(0)
+    }))
+  it('should NOT reset pickedAt when unpickOnReturn is FALSE)', () =>
+    end2endTest({}, async ({ user, adverts, services }) => {
+      // eslint-disable-next-line no-param-reassign
+      adverts['advert-123'] = {
+        ...createEmptyAdvert(),
+        pickedAt: '2025-01-01',
+        id: 'advert-123',
+        createdBy: user.id,
+        quantity: 50,
+        claims: [
+          {
+            by: 'jane@doe1.se',
+            at: '2023-05-01',
+            quantity: 2,
+            type: AdvertClaimType.reserved,
+            events: [],
+          },
+        ],
+      }
+      const notifyExpiredClaims = createExpiredClaimsNotifier({
+        ...services,
+        workflow: {
+          ...services.workflow,
+          unpickOnReturn: false,
+        },
+      })
+
+      const result = await notifyExpiredClaims(
+        user,
+        'advert-123',
+        1,
+        new Date('2023-05-03')
+      )
+      // Should be reset to empty string
+      expect(result.advert?.pickedAt).toBe('2025-01-01')
+    }))
 })
