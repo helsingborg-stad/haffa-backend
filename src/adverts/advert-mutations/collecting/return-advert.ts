@@ -2,6 +2,7 @@ import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
 import { AdvertClaimType, type Advert, type AdvertMutations } from '../../types'
+import { updateAdvertWithClaimDates } from '../claims/mappers'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import { createAdvertClaimsNotifier } from '../notifications'
 import {
@@ -41,15 +42,18 @@ export const createReturnAdvert =
 
         const pickedAt = unpickOnReturn ? '' : advert.pickedAt
 
-        return {
-          ...advert,
-          pickedAt,
-          claims: normalizeAdvertClaims(
-            advert.claims.filter(
-              ({ type }) => type !== AdvertClaimType.collected
-            )
-          ),
-        }
+        return updateAdvertWithClaimDates(
+          {
+            ...advert,
+            pickedAt,
+            claims: normalizeAdvertClaims(
+              advert.claims.filter(
+                ({ type }) => type !== AdvertClaimType.collected
+              )
+            ),
+          },
+          new Date().toISOString()
+        )
       })
       .verify((_, ctx) =>
         verifyAll(

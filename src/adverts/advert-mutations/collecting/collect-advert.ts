@@ -10,7 +10,7 @@ import {
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
 } from '../verifiers'
-import { claimsBy } from '../claims/mappers'
+import { claimsBy, updateAdvertWithClaimDates } from '../claims/mappers'
 
 export const createCollectAdvert =
   ({
@@ -49,7 +49,7 @@ export const createCollectAdvert =
 
           const pickedAt = pickOnCollect ? at : advert.pickedAt
 
-          return {
+          return updateAdvertWithClaimDates({
             ...advert,
             pickedAt,
             claims: normalizeAdvertClaims([
@@ -70,7 +70,7 @@ export const createCollectAdvert =
                 events: [],
               },
             ]),
-          }
+          })
         }
         return advert
       })

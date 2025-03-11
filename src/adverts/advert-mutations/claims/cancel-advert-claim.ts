@@ -1,7 +1,12 @@
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
-import type { AdvertClaim, Advert, AdvertMutations } from '../../types'
+import {
+  type AdvertClaim,
+  type Advert,
+  type AdvertMutations,
+  AdvertClaimType,
+} from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import { createAdvertClaimsNotifier } from '../notifications'
 import {
@@ -10,6 +15,7 @@ import {
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
 } from '../verifiers'
+import { updateAdvertWithClaimDates } from './mappers'
 
 export const createCancelAdvertClaim =
   ({
@@ -47,15 +53,20 @@ export const createCancelAdvertClaim =
 
         const pickedAt = unpickOnReturn ? '' : advert.pickedAt
 
-        return {
-          ...advert,
-          pickedAt,
-          claims: normalizeAdvertClaims(
-            advert.claims
-              .filter(c => !matchClaim(c))
-              .filter(({ quantity }) => quantity > 0)
-          ),
-        }
+        return updateAdvertWithClaimDates(
+          {
+            ...advert,
+            pickedAt,
+            claims: normalizeAdvertClaims(
+              advert.claims
+                .filter(c => !matchClaim(c))
+                .filter(({ quantity }) => quantity > 0)
+            ),
+          },
+          type === AdvertClaimType.collected
+            ? new Date().toISOString()
+            : advert.returnedAt
+        )
       })
       .verify((_, ctx) =>
         verifyAll(

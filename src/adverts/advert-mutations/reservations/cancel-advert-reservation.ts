@@ -5,6 +5,7 @@ import { AdvertClaimType } from '../../types'
 import type { AdvertClaim, Advert, AdvertMutations } from '../../types'
 import { createAdvertClaimsNotifier } from '../notifications/advert-claims-notifier'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
+import { updateAdvertWithClaimDates } from '../claims/mappers'
 
 export const createCancelAdvertReservation =
   ({
@@ -34,13 +35,13 @@ export const createCancelAdvertReservation =
           )
         )
 
-        return {
+        return updateAdvertWithClaimDates({
           ...advert,
           claims: normalizeAdvertClaims(
             advert.claims // remove all reservations for user
               .filter(claim => !matchClaim(claim))
           ),
-        }
+        })
       })
       .verify(update => update)
       .saveVersion((versionId, advert) =>

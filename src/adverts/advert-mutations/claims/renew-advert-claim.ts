@@ -10,6 +10,7 @@ import {
   verifyTypeIsReservation,
 } from '../verifiers'
 import { createAdvertClaimsNotifier } from '../notifications/advert-claims-notifier'
+import { updateAdvertWithClaimDates } from './mappers'
 
 export const createRenewAdvertClaim =
   ({
@@ -53,10 +54,10 @@ export const createRenewAdvertClaim =
           )
         )
 
-        return {
+        return updateAdvertWithClaimDates({
           ...advert,
           claims,
-        }
+        })
       })
       .verify((_, ctx) =>
         verifyAll(

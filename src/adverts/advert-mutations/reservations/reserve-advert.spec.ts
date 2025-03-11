@@ -227,4 +227,39 @@ describe('reserveAdvert', () => {
       }
     )
   })
+
+  it('updates reservedAt', () => {
+    const advertWasReserved = jest.fn(async () => void 0)
+    const advertWasReservedOwner = jest.fn(async () => void 0)
+    const notifications = createTestNotificationServices({
+      advertWasReserved,
+      advertWasReservedOwner,
+    })
+
+    return end2endTest(
+      { services: { notifications } },
+      async ({ mappedGqlRequest, adverts, user }) => {
+        adverts['advert-123'] = {
+          ...createEmptyAdvert(),
+          id: 'advert-123',
+          quantity: 5,
+        }
+
+        await mappedGqlRequest<AdvertMutationResult>(
+          'reserveAdvert',
+          reserveAdvertMutation,
+          {
+            id: 'advert-123',
+            quantity: 1,
+          }
+        )
+
+        T('reservedAt should be updated with current date', () =>
+          expect(adverts['advert-123'].reservedAt).toHaveLength(
+            new Date().toISOString().length
+          )
+        )
+      }
+    )
+  })
 })

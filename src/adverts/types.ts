@@ -144,6 +144,9 @@ export interface Advert extends AdvertUserFields {
   modifiedAt: string
   archivedAt: string
   pickedAt: string
+  reservedAt: string
+  collectedAt: string
+  returnedAt: string
   claims: AdvertClaim[]
   waitlist: string[]
 }

@@ -84,6 +84,9 @@ export const advertsGqlSchema = /* GraphQL */ `
     id
     title
     createdAt
+    reservedAt
+    collectedAt
+    returnedAt
     description
     notes
     lendingPeriod
@@ -289,6 +292,9 @@ export const advertsGqlSchema = /* GraphQL */ `
     type: AdvertType
     createdAt: String
     archivedAt: String
+    reservedAt: String
+    collectedAt: String
+    returnedAt: String
     meta: AdvertMeta
     title: String
     description: String

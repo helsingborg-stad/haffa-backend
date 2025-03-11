@@ -61,6 +61,9 @@ const advertSchemaValidator = new Ajv().compile<Advert>({
         'createdAt',
         'modifiedAt',
         'archivedAt',
+        'reservedAt',
+        'collectedAt',
+        'returnedAt',
         'pickedAt'
       ),
       ...stringProps(
@@ -135,5 +138,4 @@ export const validateAdvert: (advert: Advert) => Advert = a =>
           expose: true,
           status: StatusCodes.BAD_REQUEST,
         })
-        return a
       })()

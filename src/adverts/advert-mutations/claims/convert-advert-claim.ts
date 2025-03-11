@@ -15,6 +15,7 @@ import {
   verifyTypeIsReservation,
 } from '../verifiers'
 import { createAdvertClaimsNotifier } from '../notifications'
+import { updateAdvertWithClaimDates } from './mappers'
 
 export const createConvertAdvertClaim =
   ({
@@ -66,13 +67,13 @@ export const createConvertAdvertClaim =
             ? at
             : advert.pickedAt
 
-        return {
+        return updateAdvertWithClaimDates({
           ...advert,
           pickedAt,
           claims: normalizeAdvertClaims(
             advert.claims.filter(c => !matchClaim(c)).concat(updatedClaims)
           ),
-        }
+        })
       })
       .verify((_, ctx) =>
         verifyAll(

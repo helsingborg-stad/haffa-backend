@@ -69,6 +69,12 @@ describe('returnAdvert', () => {
           expect(adverts['advert-123'].claims).toHaveLength(0)
         )
 
+        T('should have set returnedAt', () =>
+          expect(adverts['advert-123'].returnedAt).toHaveLength(
+            new Date().toISOString().length
+          )
+        )
+
         T('should have notified about the interesting event', () =>
           expect(advertWasReturned).toHaveBeenCalledWith(
             'collector@test.com',

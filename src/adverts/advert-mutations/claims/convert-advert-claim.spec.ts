@@ -113,6 +113,11 @@ describe('convertAdvertClaim', () => {
             },
           ])
         )
+        T('should update collectedAt', () =>
+          expect(adverts['advert-123'].collectedAt).toHaveLength(
+            new Date().toISOString().length
+          )
+        )
 
         T('should have notified about the interesting event', () => {
           expect(advertWasCollected).toHaveBeenCalledWith(

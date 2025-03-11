@@ -3,7 +3,25 @@ import { dateBuilder } from '../../../lib/date-builder'
 import type { Func } from '../../../lib/types'
 import type { HaffaUser } from '../../../login/types'
 import { AdvertClaimType } from '../../types'
-import type { AdvertReturnInfo, AdvertClaim } from '../../types'
+import type { AdvertReturnInfo, AdvertClaim, Advert } from '../../types'
+
+export const updateAdvertWithClaimDates = (
+  advert: Advert,
+  returnedAt?: string
+): Advert => ({
+  ...advert,
+  reservedAt:
+    advert.claims
+      .filter(c => c.type === AdvertClaimType.reserved)
+      .sort(sortBy(c => c.at))
+      .reverse()[0]?.at || advert.reservedAt,
+  collectedAt:
+    advert.claims
+      .filter(c => c.type === AdvertClaimType.collected)
+      .sort(sortBy(c => c.at))
+      .reverse()[0]?.at || advert.collectedAt,
+  returnedAt: returnedAt ?? advert.returnedAt,
+})
 
 /**
  * Returns the date when the last event was generated

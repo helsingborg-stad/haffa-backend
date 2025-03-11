@@ -1,9 +1,9 @@
-import { patchAdvertWithPickupLocation } from '../../../pickup/mappers'
 import { txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
 import type { Advert, AdvertClaim, AdvertMutations } from '../../types'
 import { AdvertClaimType } from '../../types'
+import { updateAdvertWithClaimDates } from '../claims/mappers'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import { createAdvertClaimsNotifier } from '../notifications'
 import {
@@ -71,8 +71,7 @@ export const createReserveAdvert =
               [reservationClaim]
             )
           )
-
-          return {
+          return updateAdvertWithClaimDates({
             ...advert,
             claims: normalizeAdvertClaims([
               ...advert.claims.filter(a => !isReservedByMe(a)),
@@ -85,7 +84,7 @@ export const createReserveAdvert =
                 pickupLocation: location,
               },
             ]),
-          }
+          })
         }
         return advert
       })
