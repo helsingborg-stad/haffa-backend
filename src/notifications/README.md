@@ -29,7 +29,7 @@ NOTE That many templates exists in user/owner pairs to allow for different commu
 # Template data object
 
 Access the data object using dot notation with advert as the root element.
-e.g "advert.createdBy"
+e.g "advert.createdBy". Most notifications targetting claims also expose the "by" and "quantity" properties which defines the email/phone number of the user targeted and the quantity related to the claim.
 
 | Name                 | Typ      | Description                                                                                |
 | :------------------- | :------- | :----------------------------------------------------------------------------------------- |
