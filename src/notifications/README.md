@@ -28,8 +28,10 @@ NOTE That many templates exists in user/owner pairs to allow for different commu
 
 # Template data object
 
-Access the data object using dot notation with advert as the root element.
-e.g "advert.createdBy". Most notifications targetting claims also expose the "by" and "quantity" properties which defines the email/phone number of the user targeted and the quantity related to the claim.
+Access the data object using dot notation with params.advert as the root element.
+e.g in Brevo, a reference would look like {{ params.advert.createdBy }}.
+Most notifications triggered by claim updates also expose the "params.by" and "params.quantity" properties
+which refers to the email/phone number of the user in the claim and the quantity booked.
 
 | Name                 | Typ      | Description                                                                                |
 | :------------------- | :------- | :----------------------------------------------------------------------------------------- |
