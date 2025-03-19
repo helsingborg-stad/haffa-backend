@@ -6,7 +6,12 @@ import type { GraphQLModule } from '../lib/gdi-api-node'
 
 export const createEventsGqlModule = ({
   eventLog,
-}: Pick<Services, 'eventLog'>): GraphQLModule => ({
+  adverts,
+  getAdvertMeta,
+}: Pick<
+  Services,
+  'eventLog' | 'adverts' | 'getAdvertMeta'
+>): GraphQLModule => ({
   schema: eventsGqlSchema,
   resolvers: {
     Query: {
@@ -24,7 +29,13 @@ export const createEventsGqlModule = ({
       },
       advertEvents: async ({ ctx, args: { advertId } }) => {
         const { user } = ctx
-        if (!normalizeRoles(user?.roles).canSeeSystemStatistics) {
+
+        const advert = await adverts.getAdvert(user, advertId)
+
+        const { canManageClaims } = (advert && getAdvertMeta(advert, user)) ?? {
+          canManageClaims: false,
+        }
+        if (!canManageClaims) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
         return eventLog.getEvents({
