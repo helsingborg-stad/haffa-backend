@@ -22,8 +22,6 @@ export const createPickupLocationsGqlModule = ({
       // hide specific values from unauthorized eyes
       notifyEmail: ({ ctx: { user }, source }) =>
         resolveAdminProperty(source.notifyEmail, '', user),
-      trackingName: ({ ctx: { user }, source }) =>
-        resolveAdminProperty(source.trackingName, '', user),
       tags: ({ ctx: { user }, source }) =>
         resolveAdminProperty(source.tags, [], user),
     },
