@@ -241,6 +241,14 @@ export interface AdvertsClaimFilter {
   type: AdvertClaimType
 }
 
+export interface AdvertFigures {
+  totalLendingAdverts: number
+  availableLendingAdverts: number
+  recycleAdverts: number
+  totalAdverts: number
+  reservedAdverts: number
+  collectedAdverts: number
+}
 export interface AdvertsRepository {
   stats: AdvertStats
   getAdvert: (user: HaffaUser, id: string) => Promise<Advert | null>
@@ -263,6 +271,7 @@ export interface AdvertsRepository {
   getAdvertsByClaimStatus: (filter: AdvertsClaimFilter) => Promise<string[]>
   getReservableAdvertsWithWaitlist: () => Promise<string[]>
   getSnapshot: () => stream.Readable
+  getAdvertFigures: () => Promise<AdvertFigures>
 }
 
 export interface AdvertMutations {
