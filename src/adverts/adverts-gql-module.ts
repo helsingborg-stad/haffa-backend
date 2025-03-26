@@ -75,6 +75,7 @@ export const createAdvertsGqlModule = (
         const advert = await services.adverts.getAdvert(user, id)
         return mapAdvertToAdvertWithMeta(user, advert, services)
       },
+      getAdvertFigures: async () => services.adverts.getAdvertFigures(),
     },
     Mutation: {
       createAdvert: async ({ ctx: { user }, args: { input } }) =>

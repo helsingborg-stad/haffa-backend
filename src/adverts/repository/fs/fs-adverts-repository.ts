@@ -8,6 +8,7 @@ import {
   createEmptyAdvertLocation,
   createPagedAdvertList,
   mapCreateAdvertInputToAdvert,
+  normalizeAdvertFigures,
 } from '../../mappers'
 import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
 import { mapValues, toLookup } from '../../../lib'
@@ -261,6 +262,24 @@ export const createFsAdvertsRepository = (
           )
           .map(({ id }) => id)
       )
+  const getAdvertFigures: AdvertsRepository['getAdvertFigures'] = async () => {
+    const adverts = (await scan()).filter(a => !a.archivedAt)
+
+    return normalizeAdvertFigures({
+      totalLendingAdverts: adverts.filter(v => v.lendingPeriod).length,
+      availableLendingAdverts: adverts.filter(
+        v => !!v.lendingPeriod && v.claims.length === 0
+      ).length,
+      recycleAdverts: adverts.filter(v => !!v.lendingPeriod).length,
+      totalAdverts: adverts.length,
+      reservedAdverts: adverts.filter(
+        v => v.claims?.some(c => c.type === 'reserved') ?? 0
+      ).length,
+      collectedAdverts: adverts.filter(
+        v => v.claims?.some(c => c.type === 'collected') ?? 0
+      ).length,
+    })
+  }
 
   return createValidatingAdvertsRepository({
     stats,
@@ -273,5 +292,6 @@ export const createFsAdvertsRepository = (
     getAdvertsByClaimStatus,
     getSnapshot,
     getReservableAdvertsWithWaitlist,
+    getAdvertFigures,
   })
 }

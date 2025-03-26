@@ -3,7 +3,7 @@ import type { Advert, AdvertClaim, AdvertsRepository } from '../../types'
 import { createAdvertFilterPredicate } from '../../filters/advert-filter-predicate'
 import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
 import type { StartupLog } from '../../../types'
-import { createPagedAdvertList } from '../../mappers'
+import { createPagedAdvertList, normalizeAdvertFigures } from '../../mappers'
 import { createValidatingAdvertsRepository } from '../validation'
 import type { GetAdvertMeta } from '../../advert-meta/types'
 
@@ -98,5 +98,23 @@ export const createInMemoryAdvertsRepository = (
             quantity > claims.map(c => c.quantity).reduce((s, q) => s + q, 0)
         )
         .map(({ id }) => id),
+    getAdvertFigures: async () => {
+      const adverts = Object.values(db).filter(v => !v.archivedAt)
+
+      return normalizeAdvertFigures({
+        totalLendingAdverts: adverts.filter(v => v.lendingPeriod).length,
+        availableLendingAdverts: adverts.filter(
+          v => !!v.lendingPeriod && v.claims.length === 0
+        ).length,
+        recycleAdverts: adverts.filter(v => !!v.lendingPeriod).length,
+        totalAdverts: adverts.length,
+        reservedAdverts: adverts.filter(
+          v => v.claims?.some(c => c.type === 'reserved') ?? 0
+        ).length,
+        collectedAdverts: adverts.filter(
+          v => v.claims?.some(c => c.type === 'collected') ?? 0
+        ).length,
+      })
+    },
   }),
 })

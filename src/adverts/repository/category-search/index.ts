@@ -31,4 +31,5 @@ export const createAdvertsRepositoryWithCategorySearch = (
   getSnapshot: (...args) => inner.getSnapshot(...args),
   getReservableAdvertsWithWaitlist: (...args) =>
     inner.getReservableAdvertsWithWaitlist(...args),
+  getAdvertFigures: (...args) => inner.getAdvertFigures(...args),
 })

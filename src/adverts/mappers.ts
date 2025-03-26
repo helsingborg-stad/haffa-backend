@@ -8,6 +8,7 @@ import type {
   AdvertList,
   AdvertLocation,
   AdvertMutationResult,
+  AdvertFigures,
   AdvertWithMeta,
   AdvertWithMetaMutationResult,
 } from './types'
@@ -329,3 +330,15 @@ export const createPagedAdvertList = (
     },
   }
 }
+
+export const normalizeAdvertFigures = (
+  summary: Partial<AdvertFigures>
+): AdvertFigures => ({
+  totalLendingAdverts: 0,
+  availableLendingAdverts: 0,
+  recycleAdverts: 0,
+  totalAdverts: 0,
+  reservedAdverts: 0,
+  collectedAdverts: 0,
+  ...summary,
+})
