@@ -1,6 +1,10 @@
 import { makeUser } from '../../../login'
 import type { HaffaUser } from '../../../login/types'
 import type { NotificationService } from '../../../notifications/types'
+import {
+  normalizePickupLocation,
+  patchAdvertWithPickupLocation,
+} from '../../../pickup/mappers'
 import { createTestNotificationServices } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
 import type { Advert } from '../../types'
@@ -66,25 +70,48 @@ describe('advert-notifier delegates to NotificationService', () => {
       advert
     )
   })
-  it('wasPicked(advert) -> advertWasPicked(<reservation claims>>)', async () => {
+  it('wasPicked(advert) -> advertWasPicked(<reservation claims>)', async () => {
     const advertWasPicked = jest.fn()
     const advertWasPickedOwner = jest.fn()
     const { user, advert, notifier } = createCase({
       advertWasPicked,
       advertWasPickedOwner,
     })
+    const pl1 = normalizePickupLocation({})
+    const pl2 = undefined
     await notifier.wasPicked(advert, [
-      makeReservedClaim({ by: 'first@user' }),
+      makeReservedClaim({ by: 'first@user', pickupLocation: pl1 }),
       makeCollectClaim({ by: 'ignored' }),
-      makeReservedClaim({ by: 'second@user' }),
+      makeReservedClaim({ by: 'second@user', pickupLocation: pl2 }),
     ])
+    expect(advertWasPickedOwner).toHaveBeenCalledWith(
+      advert.createdBy,
+      user,
+      patchAdvertWithPickupLocation(advert, pl1)
+    )
+    expect(advertWasPickedOwner).toHaveBeenCalledWith(
+      advert.createdBy,
+      user,
+      patchAdvertWithPickupLocation(advert, pl1)
+    )
+
+    expect(advertWasPicked).toHaveBeenCalledWith('first@user', user, advert)
+    expect(advertWasPicked).toHaveBeenCalledWith('second@user', user, advert)
+  })
+  it('wasPicked(advert without reservations) -> advertWasPicked([])', async () => {
+    const advertWasPicked = jest.fn()
+    const advertWasPickedOwner = jest.fn()
+    const { user, advert, notifier } = createCase({
+      advertWasPicked,
+      advertWasPickedOwner,
+    })
+    await notifier.wasPicked(advert, [])
     expect(advertWasPickedOwner).toHaveBeenCalledWith(
       advert.createdBy,
       user,
       advert
     )
-    expect(advertWasPicked).toHaveBeenCalledWith('first@user', user, advert)
-    expect(advertWasPicked).toHaveBeenCalledWith('second@user', user, advert)
+    expect(advertWasPicked).toHaveBeenCalledTimes(0)
   })
   it('wasUnpicked(advert) -> advertWasUnpickedOwner(advert.createBy, user, advert)', async () => {
     const advertWasUnpickedOwner = jest.fn()
