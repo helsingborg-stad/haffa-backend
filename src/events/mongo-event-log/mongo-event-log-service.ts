@@ -3,6 +3,7 @@ import type { Filter } from 'mongodb'
 import type { MongoConnection } from '../../mongodb-utils/types'
 import type { EventLogService } from '../types'
 import type { MongoEvent } from './types'
+import { normalizeEventFigures } from '../mappers'
 
 export const createMongoEventLogService = ({
   getCollection,
@@ -51,4 +52,23 @@ export const createMongoEventLogService = ({
     }
     await cursor.close()
   },
+  getLogEventFigures: async () =>
+    getCollection()
+      .then(collection =>
+        collection.aggregate([
+          { $match: { 'event.event': { $eq: 'advert-was-collected' } } },
+          {
+            $group: {
+              _id: null,
+              co2Totals: { $sum: '$event.co2kg' },
+              valueTotals: {
+                $sum: { $multiply: ['$event.valueByUnit', '$event.quantity'] },
+              },
+              collectTotals: { $sum: 1 },
+            },
+          },
+        ])
+      )
+      .then(r => r.toArray())
+      .then(r => normalizeEventFigures(r[0])),
 })

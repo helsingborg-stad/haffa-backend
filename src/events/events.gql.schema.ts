@@ -2,6 +2,7 @@ export const eventsGqlSchema = /* GraphQL */ `
   type Query {
     events(from: String, to: String): [Event]
     advertEvents(advertId: String): [Event]
+    getLogEventFigures: LogEventFigures
   }
 
   type Event {
@@ -15,5 +16,11 @@ export const eventsGqlSchema = /* GraphQL */ `
     category: String
     co2kg: Int
     valueByUnit: Int
+  }
+
+  type LogEventFigures {
+    co2Totals: Int
+    valueTotals: Int
+    collectTotals: Int
   }
 `

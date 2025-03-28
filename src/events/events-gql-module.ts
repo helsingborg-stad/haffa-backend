@@ -44,6 +44,14 @@ export const createEventsGqlModule = ({
           advertId,
         })
       },
+      getLogEventFigures: async ({ ctx }) => {
+        const { user } = ctx
+
+        if (!user) {
+          ctx.throw(HttpStatusCodes.UNAUTHORIZED)
+        }
+        return eventLog.getLogEventFigures()
+      },
     },
   },
 })
