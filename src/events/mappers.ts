@@ -1,10 +1,10 @@
-import type { LogEventFigures } from './types'
+import type { EventFigures } from './types'
 
 export const normalizeEventFigures = (
-  figures?: Partial<LogEventFigures>
-): LogEventFigures => ({
-  co2Totals: 0,
-  valueTotals: 0,
-  collectTotals: 0,
+  figures?: Partial<EventFigures>
+): EventFigures => ({
+  totalCo2: 0,
+  totalValue: 0,
+  totalCollects: 0,
   ...figures,
 })

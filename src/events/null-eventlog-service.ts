@@ -5,5 +5,5 @@ export const createNullEventLogService = (): EventLogService => ({
   logEvent: async () => {},
   enumerate: async () => {},
   getEvents: async () => [],
-  getLogEventFigures: async () => normalizeEventFigures(),
+  getEventFigures: async () => normalizeEventFigures(),
 })

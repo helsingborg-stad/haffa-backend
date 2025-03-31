@@ -52,7 +52,7 @@ export const createMongoEventLogService = ({
     }
     await cursor.close()
   },
-  getLogEventFigures: async () =>
+  getEventFigures: async () =>
     getCollection()
       .then(collection =>
         collection.aggregate([
@@ -60,11 +60,11 @@ export const createMongoEventLogService = ({
           {
             $group: {
               _id: null,
-              co2Totals: { $sum: '$event.co2kg' },
-              valueTotals: {
+              totalCo2: { $sum: '$event.co2kg' },
+              totalValue: {
                 $sum: { $multiply: ['$event.valueByUnit', '$event.quantity'] },
               },
-              collectTotals: { $sum: 1 },
+              totalCollects: { $sum: 1 },
             },
           },
         ])
