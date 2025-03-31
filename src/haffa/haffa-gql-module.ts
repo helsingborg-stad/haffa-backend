@@ -4,7 +4,6 @@ import { createProfileGqlModule } from '../profile/profile-gql-module'
 import { createTermsGqlModule } from '../terms/terms-gql-module'
 import { createLoginPoliciesGqlModule } from '../login-policies'
 import { createCategoriesGqlModule } from '../categories'
-import { createStatsGqlModule } from '../stats'
 import { createJobsGqlModule } from '../jobs/jobs-gql-module'
 import { createApiKeysGqlModule } from '../api-keys/api-keys-gql-module'
 import { createOptionsGqlModule } from '../options/options-gql-module'
@@ -36,7 +35,6 @@ export const createHaffaGqlModule = (services: Services): GraphQLModule =>
     createCategoriesGqlModule(services),
     createLoginPoliciesGqlModule(services),
     createApiKeysGqlModule(services),
-    createStatsGqlModule(services),
     createJobsGqlModule(services),
     createOptionsGqlModule(services),
     createEventsGqlModule(services),

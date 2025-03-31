@@ -3,7 +3,7 @@ import type { Filter } from 'mongodb'
 import type { MongoConnection } from '../../mongodb-utils/types'
 import type { EventLogService } from '../types'
 import type { MongoEvent } from './types'
-import { normalizeEventFigures } from '../mappers'
+import { normalizeEventSummaries } from '../mappers'
 
 export const createMongoEventLogService = ({
   getCollection,
@@ -52,7 +52,7 @@ export const createMongoEventLogService = ({
     }
     await cursor.close()
   },
-  getEventFigures: async () =>
+  getEventSummaries: async () =>
     getCollection()
       .then(collection =>
         collection.aggregate([
@@ -70,5 +70,5 @@ export const createMongoEventLogService = ({
         ])
       )
       .then(r => r.toArray())
-      .then(r => normalizeEventFigures(r[0])),
+      .then(r => normalizeEventSummaries(r[0])),
 })

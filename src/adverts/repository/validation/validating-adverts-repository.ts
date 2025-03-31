@@ -5,9 +5,6 @@ import { normalizeAdvert } from '../../mappers'
 export const createValidatingAdvertsRepository = (
   inner: AdvertsRepository
 ): AdvertsRepository => ({
-  get stats() {
-    return inner.stats
-  },
   getAdvert: (...args) =>
     inner.getAdvert(...args).then(a => (a ? normalizeAdvert(a) : null)),
   saveAdvertVersion: async (user, versionId, advert) =>
@@ -26,5 +23,5 @@ export const createValidatingAdvertsRepository = (
   getSnapshot: (...args) => inner.getSnapshot(...args),
   getReservableAdvertsWithWaitlist: (...args) =>
     inner.getReservableAdvertsWithWaitlist(...args),
-  getAdvertFigures: (...args) => inner.getAdvertFigures(...args),
+  getAdvertSummaries: (...args) => inner.getAdvertSummaries(...args),
 })

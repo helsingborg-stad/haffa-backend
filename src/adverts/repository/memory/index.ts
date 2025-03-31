@@ -3,7 +3,7 @@ import type { Advert, AdvertClaim, AdvertsRepository } from '../../types'
 import { createAdvertFilterPredicate } from '../../filters/advert-filter-predicate'
 import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
 import type { StartupLog } from '../../../types'
-import { createPagedAdvertList, normalizeAdvertFigures } from '../../mappers'
+import { createPagedAdvertList, normalizeAdvertSummaries } from '../../mappers'
 import { createValidatingAdvertsRepository } from '../validation'
 import type { GetAdvertMeta } from '../../advert-meta/types'
 
@@ -24,11 +24,6 @@ export const createInMemoryAdvertsRepository = (
 ): AdvertsRepository & { getDb: () => Record<string, Advert> } => ({
   getDb: () => db,
   ...createValidatingAdvertsRepository({
-    stats: {
-      get advertCount() {
-        return Object.keys(db).length
-      },
-    },
     getAdvert: async (user, id) => db[id] || null,
     list: async (user, filter) => {
       const allAdverts = Object.values(db)
@@ -98,10 +93,10 @@ export const createInMemoryAdvertsRepository = (
             quantity > claims.map(c => c.quantity).reduce((s, q) => s + q, 0)
         )
         .map(({ id }) => id),
-    getAdvertFigures: async () => {
+    getAdvertSummaries: async () => {
       const adverts = Object.values(db).filter(v => !v.archivedAt)
 
-      return normalizeAdvertFigures({
+      return normalizeAdvertSummaries({
         totalLendingAdverts: adverts.filter(v => v.lendingPeriod).length,
         availableLendingAdverts: adverts.filter(
           v => !!v.lendingPeriod && v.claims.length === 0

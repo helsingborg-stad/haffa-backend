@@ -10,7 +10,7 @@ import {
 import {
   createEmptyAdvert,
   createEmptyAdvertLocation,
-  normalizeAdvertFigures,
+  normalizeAdvertSummaries,
 } from '../../mappers'
 import type { MongoConnection } from '../../../mongodb-utils/types'
 import { toMap } from '../../../lib'
@@ -174,12 +174,6 @@ export const createMongoAdvertsRepository = (
     )
   }
 
-  const stats: AdvertsRepository['stats'] = {
-    get advertCount() {
-      return getCollection().then(c => c.countDocuments())
-    },
-  }
-
   const getAdvertsByClaimStatus: AdvertsRepository['getAdvertsByClaimStatus'] =
     async filter =>
       getCollection()
@@ -224,73 +218,75 @@ export const createMongoAdvertsRepository = (
         .then(v => v.toArray())
         .then(i => i.map(r => r.id))
 
-  const getAdvertFigures: AdvertsRepository['getAdvertFigures'] = async () =>
-    getCollection()
-      .then(collection =>
-        collection.aggregate([
-          { $match: { 'meta.archived': { $eq: false } } },
-          {
-            $facet: {
-              totalLendingAdverts: [
-                { $match: { 'advert.lendingPeriod': { $gt: 0 } } },
-                { $count: 'totalLendingAdverts' },
-              ],
-              availableLendingAdverts: [
-                {
-                  $match: {
-                    $and: [
-                      { 'advert.lendingPeriod': { $gt: 0 } },
-                      { 'advert.claims': { $size: 0 } },
-                    ],
+  const getAdvertSummaries: AdvertsRepository['getAdvertSummaries'] =
+    async () =>
+      getCollection()
+        .then(collection =>
+          collection.aggregate([
+            { $match: { 'meta.archived': { $eq: false } } },
+            {
+              $facet: {
+                totalLendingAdverts: [
+                  { $match: { 'advert.lendingPeriod': { $gt: 0 } } },
+                  { $count: 'totalLendingAdverts' },
+                ],
+                availableLendingAdverts: [
+                  {
+                    $match: {
+                      $and: [
+                        { 'advert.lendingPeriod': { $gt: 0 } },
+                        { 'advert.claims': { $size: 0 } },
+                      ],
+                    },
                   },
-                },
-                { $count: 'availableLendingAdverts' },
-              ],
-              recycleAdverts: [
-                { $match: { 'advert.lendingPeriod': { $eq: 0 } } },
-                { $count: 'recycleAdverts' },
-              ],
-              totalAdverts: [{ $count: 'totalAdverts' }],
-              reservedAdverts: [
-                { $match: { 'advert.claims.type': { $eq: 'reserved' } } },
-                { $count: 'reservedAdverts' },
-              ],
-              collectedAdverts: [
-                { $match: { 'advert.claims.type': { $eq: 'collected' } } },
-                { $count: 'collectedAdverts' },
-              ],
-            },
-          },
-          {
-            $project: {
-              totalLendingAdverts: {
-                $arrayElemAt: ['$totalLendingAdverts.totalLendingAdverts', 0],
-              },
-              availableLendingAdverts: {
-                $arrayElemAt: [
-                  '$availableLendingAdverts.availableLendingAdverts',
-                  0,
+                  { $count: 'availableLendingAdverts' },
+                ],
+                recycleAdverts: [
+                  { $match: { 'advert.lendingPeriod': { $eq: 0 } } },
+                  { $count: 'recycleAdverts' },
+                ],
+                totalAdverts: [{ $count: 'totalAdverts' }],
+                reservedAdverts: [
+                  { $match: { 'advert.claims.type': { $eq: 'reserved' } } },
+                  { $count: 'reservedAdverts' },
+                ],
+                collectedAdverts: [
+                  { $match: { 'advert.claims.type': { $eq: 'collected' } } },
+                  { $count: 'collectedAdverts' },
                 ],
               },
-              recycleAdverts: {
-                $arrayElemAt: ['$recycleAdverts.recycleAdverts', 0],
-              },
-              totalAdverts: { $arrayElemAt: ['$totalAdverts.totalAdverts', 0] },
-              reservedAdverts: {
-                $arrayElemAt: ['$reservedAdverts.reservedAdverts', 0],
-              },
-              collectedAdverts: {
-                $arrayElemAt: ['$collectedAdverts.collectedAdverts', 0],
+            },
+            {
+              $project: {
+                totalLendingAdverts: {
+                  $arrayElemAt: ['$totalLendingAdverts.totalLendingAdverts', 0],
+                },
+                availableLendingAdverts: {
+                  $arrayElemAt: [
+                    '$availableLendingAdverts.availableLendingAdverts',
+                    0,
+                  ],
+                },
+                recycleAdverts: {
+                  $arrayElemAt: ['$recycleAdverts.recycleAdverts', 0],
+                },
+                totalAdverts: {
+                  $arrayElemAt: ['$totalAdverts.totalAdverts', 0],
+                },
+                reservedAdverts: {
+                  $arrayElemAt: ['$reservedAdverts.reservedAdverts', 0],
+                },
+                collectedAdverts: {
+                  $arrayElemAt: ['$collectedAdverts.collectedAdverts', 0],
+                },
               },
             },
-          },
-        ])
-      )
-      .then(r => r.toArray())
-      .then(r => normalizeAdvertFigures(r[0]))
+          ])
+        )
+        .then(r => r.toArray())
+        .then(r => normalizeAdvertSummaries(r[0]))
 
   return createValidatingAdvertsRepository({
-    stats,
     getAdvert,
     list,
     create,
@@ -300,6 +296,6 @@ export const createMongoAdvertsRepository = (
     getAdvertsByClaimStatus,
     getSnapshot,
     getReservableAdvertsWithWaitlist,
-    getAdvertFigures,
+    getAdvertSummaries,
   })
 }

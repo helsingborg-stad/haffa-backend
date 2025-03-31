@@ -76,13 +76,13 @@ export const createAdvertsGqlModule = (
         const advert = await services.adverts.getAdvert(user, id)
         return mapAdvertToAdvertWithMeta(user, advert, services)
       },
-      getAdvertFigures: async ({ ctx }) => {
+      advertSummaries: async ({ ctx }) => {
         const { user } = ctx
 
         if (!user) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        return services.adverts.getAdvertFigures()
+        return services.adverts.getAdvertSummaries()
       },
     },
     Mutation: {

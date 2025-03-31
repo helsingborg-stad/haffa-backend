@@ -7,9 +7,6 @@ export const createAdvertsRepositoryWithCategorySearch = (
   settings: SettingsService,
   inner: AdvertsRepository
 ): AdvertsRepository => ({
-  get stats() {
-    return inner.stats
-  },
   getAdvert: (...args) => inner.getAdvert(...args),
   saveAdvertVersion: (...args) => inner.saveAdvertVersion(...args),
   list: async (user, filter) => {
@@ -31,5 +28,5 @@ export const createAdvertsRepositoryWithCategorySearch = (
   getSnapshot: (...args) => inner.getSnapshot(...args),
   getReservableAdvertsWithWaitlist: (...args) =>
     inner.getReservableAdvertsWithWaitlist(...args),
-  getAdvertFigures: (...args) => inner.getAdvertFigures(...args),
+  getAdvertSummaries: (...args) => inner.getAdvertSummaries(...args),
 })

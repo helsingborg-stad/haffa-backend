@@ -2,7 +2,7 @@ export const advertsGqlSchema = /* GraphQL */ `
   type Query {
     adverts(filter: AdvertFilterInput): AdvertList
     getAdvert(id: ID!): Advert
-    getAdvertFigures: AdvertFigures
+    advertSummaries: AdvertSummaries
   }
 
   type Mutation {
@@ -335,7 +335,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     paging: AdvertListPaging!
   }
 
-  type AdvertFigures {
+  type AdvertSummaries {
     totalLendingAdverts: Int!
     availableLendingAdverts: Int!
     recycleAdverts: Int!

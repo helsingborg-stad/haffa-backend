@@ -8,7 +8,7 @@ import {
   createEmptyAdvertLocation,
   createPagedAdvertList,
   mapCreateAdvertInputToAdvert,
-  normalizeAdvertFigures,
+  normalizeAdvertSummaries,
 } from '../../mappers'
 import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
 import { mapValues, toLookup } from '../../../lib'
@@ -189,24 +189,6 @@ export const createFsAdvertsRepository = (
       )
     )
 
-  const stats: AdvertsRepository['stats'] = {
-    get advertCount() {
-      return readdir(dataFolder)
-        .then(names => names.filter(name => /.*\.json$/.test(name)))
-        .then(names => names.map(name => join(dataFolder, name)))
-        .then(paths =>
-          Promise.all(paths.map(path => stat(path).then(s => ({ s }))))
-        )
-        .then(fileStat => Promise.all(fileStat.filter(({ s }) => s.isFile())))
-        .then(s => s.length)
-        .catch(e => {
-          if (e?.code === 'ENOENT') {
-            return 0
-          }
-          throw e
-        })
-    },
-  }
   const getAdvertsByClaimStatus: AdvertsRepository['getAdvertsByClaimStatus'] =
     async filter => {
       const compare = (claim: AdvertClaim): boolean =>
@@ -262,27 +244,27 @@ export const createFsAdvertsRepository = (
           )
           .map(({ id }) => id)
       )
-  const getAdvertFigures: AdvertsRepository['getAdvertFigures'] = async () => {
-    const adverts = (await scan()).filter(a => !a.archivedAt)
+  const getAdvertFigures: AdvertsRepository['getAdvertSummaries'] =
+    async () => {
+      const adverts = (await scan()).filter(a => !a.archivedAt)
 
-    return normalizeAdvertFigures({
-      totalLendingAdverts: adverts.filter(v => v.lendingPeriod).length,
-      availableLendingAdverts: adverts.filter(
-        v => !!v.lendingPeriod && v.claims.length === 0
-      ).length,
-      recycleAdverts: adverts.filter(v => !!v.lendingPeriod).length,
-      totalAdverts: adverts.length,
-      reservedAdverts: adverts.filter(
-        v => v.claims?.some(c => c.type === 'reserved') ?? 0
-      ).length,
-      collectedAdverts: adverts.filter(
-        v => v.claims?.some(c => c.type === 'collected') ?? 0
-      ).length,
-    })
-  }
+      return normalizeAdvertSummaries({
+        totalLendingAdverts: adverts.filter(v => v.lendingPeriod).length,
+        availableLendingAdverts: adverts.filter(
+          v => !!v.lendingPeriod && v.claims.length === 0
+        ).length,
+        recycleAdverts: adverts.filter(v => !!v.lendingPeriod).length,
+        totalAdverts: adverts.length,
+        reservedAdverts: adverts.filter(
+          v => v.claims?.some(c => c.type === 'reserved') ?? 0
+        ).length,
+        collectedAdverts: adverts.filter(
+          v => v.claims?.some(c => c.type === 'collected') ?? 0
+        ).length,
+      })
+    }
 
   return createValidatingAdvertsRepository({
-    stats,
     getAdvert,
     saveAdvertVersion,
     list,
@@ -292,6 +274,6 @@ export const createFsAdvertsRepository = (
     getAdvertsByClaimStatus,
     getSnapshot,
     getReservableAdvertsWithWaitlist,
-    getAdvertFigures,
+    getAdvertSummaries: getAdvertFigures,
   })
 }
