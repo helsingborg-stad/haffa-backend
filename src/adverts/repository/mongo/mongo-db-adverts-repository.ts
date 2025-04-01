@@ -250,7 +250,11 @@ export const createMongoAdvertsRepository = (
                     $match: {
                       $and: [
                         { 'advert.lendingPeriod': { $eq: 0 } },
-                        { 'advert.quantity': { $gt: 0 } },
+                        {
+                          $expr: {
+                            $gt: ['$advert.quantity', '$meta.reservedCount'],
+                          },
+                        },
                       ],
                     },
                   },
