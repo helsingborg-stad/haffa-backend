@@ -230,6 +230,10 @@ export const createMongoAdvertsRepository = (
                   { $match: { 'advert.lendingPeriod': { $gt: 0 } } },
                   { $count: 'totalLendingAdverts' },
                 ],
+                totalRecycleAdverts: [
+                  { $match: { 'advert.lendingPeriod': { $eq: 0 } } },
+                  { $count: 'totalRecycleAdverts' },
+                ],
                 availableLendingAdverts: [
                   {
                     $match: {
@@ -241,9 +245,16 @@ export const createMongoAdvertsRepository = (
                   },
                   { $count: 'availableLendingAdverts' },
                 ],
-                recycleAdverts: [
-                  { $match: { 'advert.lendingPeriod': { $eq: 0 } } },
-                  { $count: 'recycleAdverts' },
+                availableRecycleAdverts: [
+                  {
+                    $match: {
+                      $and: [
+                        { 'advert.lendingPeriod': { $eq: 0 } },
+                        { 'advert.quantity': { $gt: 0 } },
+                      ],
+                    },
+                  },
+                  { $count: 'availableRecycleAdverts' },
                 ],
                 totalAdverts: [{ $count: 'totalAdverts' }],
                 reservedAdverts: [
@@ -261,14 +272,20 @@ export const createMongoAdvertsRepository = (
                 totalLendingAdverts: {
                   $arrayElemAt: ['$totalLendingAdverts.totalLendingAdverts', 0],
                 },
+                totalRecycleAdverts: {
+                  $arrayElemAt: ['$totalRecycleAdverts.totalRecycleAdverts', 0],
+                },
                 availableLendingAdverts: {
                   $arrayElemAt: [
                     '$availableLendingAdverts.availableLendingAdverts',
                     0,
                   ],
                 },
-                recycleAdverts: {
-                  $arrayElemAt: ['$recycleAdverts.recycleAdverts', 0],
+                availableRecycleAdverts: {
+                  $arrayElemAt: [
+                    '$availableRecycleAdverts.availableRecycleAdverts',
+                    0,
+                  ],
                 },
                 totalAdverts: {
                   $arrayElemAt: ['$totalAdverts.totalAdverts', 0],

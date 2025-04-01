@@ -243,8 +243,9 @@ export interface AdvertsClaimFilter {
 
 export interface AdvertSummaries {
   totalLendingAdverts: number
+  totalRecycleAdverts: number
   availableLendingAdverts: number
-  recycleAdverts: number
+  availableRecycleAdverts: number
   totalAdverts: number
   reservedAdverts: number
   collectedAdverts: number

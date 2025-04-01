@@ -250,10 +250,13 @@ export const createFsAdvertsRepository = (
 
       return normalizeAdvertSummaries({
         totalLendingAdverts: adverts.filter(v => v.lendingPeriod).length,
+        totalRecycleAdverts: adverts.filter(v => !!v.lendingPeriod).length,
         availableLendingAdverts: adverts.filter(
           v => !!v.lendingPeriod && v.claims.length === 0
         ).length,
-        recycleAdverts: adverts.filter(v => !!v.lendingPeriod).length,
+        availableRecycleAdverts: adverts.filter(
+          v => !v.lendingPeriod && v.quantity > 0
+        ).length,
         totalAdverts: adverts.length,
         reservedAdverts: adverts.filter(
           v => v.claims?.some(c => c.type === 'reserved') ?? 0

@@ -337,8 +337,9 @@ export const advertsGqlSchema = /* GraphQL */ `
 
   type AdvertSummaries {
     totalLendingAdverts: Int!
+    totalRecycleAdverts: Int!
     availableLendingAdverts: Int!
-    recycleAdverts: Int!
+    availableRecycleAdverts: Int!
     totalAdverts: Int!
     reservedAdverts: Int!
     collectedAdverts: Int!
