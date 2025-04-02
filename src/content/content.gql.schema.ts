@@ -25,6 +25,7 @@ export const contentGqlSchema = /* GraphQL */ `
     align: String
     border: String
     background: String
+    color: String
     image: String
     alt: String
     position: String
@@ -53,6 +54,7 @@ export const contentGqlSchema = /* GraphQL */ `
     border: String
     background: String
     image: String
+    color: String
     alt: String
     position: String
     width: String

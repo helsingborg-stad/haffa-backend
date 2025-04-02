@@ -7,6 +7,7 @@ export const createEmptyModule = (): ContentModule => ({
   align: 'left',
   border: 'true',
   background: '',
+  color: '',
   image: '',
   alt: '',
   position: 'top',
