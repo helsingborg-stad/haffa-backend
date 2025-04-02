@@ -16,6 +16,7 @@ export interface EventLogService {
     { from, to }: { from: Date; to: Date },
     inspect: (event: LogEvent) => Promise<boolean>
   ) => Promise<any>
+  getEventSummaries(): Promise<EventSummaries>
 }
 
 export interface LogEvent {
@@ -35,4 +36,10 @@ export interface LogEventContext {
   by: HaffaUser
   quantity?: number
   advert: Advert
+}
+
+export interface EventSummaries {
+  totalCo2: number
+  totalValue: number
+  totalCollects: number
 }

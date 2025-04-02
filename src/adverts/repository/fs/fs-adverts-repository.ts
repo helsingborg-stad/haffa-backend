@@ -1,19 +1,26 @@
 import { join } from 'path'
 import { mkdirp } from 'mkdirp'
 import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
-import type { AdvertClaim, Advert, AdvertsRepository } from '../../types'
+import {
+  type AdvertClaim,
+  type Advert,
+  type AdvertsRepository,
+  AdvertClaimType,
+} from '../../types'
 import { createAdvertFilterPredicate } from '../../filters/advert-filter-predicate'
 import {
   createEmptyAdvert,
   createEmptyAdvertLocation,
   createPagedAdvertList,
   mapCreateAdvertInputToAdvert,
+  normalizeAdvertSummaries,
 } from '../../mappers'
 import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
 import { mapValues, toLookup } from '../../../lib'
 import { objectStream } from '../../../lib/streams'
 import { createValidatingAdvertsRepository } from '../validation'
 import type { GetAdvertMeta } from '../../advert-meta/types'
+import type { HaffaUser } from '../../../login/types'
 
 const notFundHandler =
   <T>(errorValue: T) =>
@@ -188,24 +195,6 @@ export const createFsAdvertsRepository = (
       )
     )
 
-  const stats: AdvertsRepository['stats'] = {
-    get advertCount() {
-      return readdir(dataFolder)
-        .then(names => names.filter(name => /.*\.json$/.test(name)))
-        .then(names => names.map(name => join(dataFolder, name)))
-        .then(paths =>
-          Promise.all(paths.map(path => stat(path).then(s => ({ s }))))
-        )
-        .then(fileStat => Promise.all(fileStat.filter(({ s }) => s.isFile())))
-        .then(s => s.length)
-        .catch(e => {
-          if (e?.code === 'ENOENT') {
-            return 0
-          }
-          throw e
-        })
-    },
-  }
   const getAdvertsByClaimStatus: AdvertsRepository['getAdvertsByClaimStatus'] =
     async filter => {
       const compare = (claim: AdvertClaim): boolean =>
@@ -261,9 +250,35 @@ export const createFsAdvertsRepository = (
           )
           .map(({ id }) => id)
       )
+  const getAdvertSummaries: AdvertsRepository['getAdvertSummaries'] = async (
+    user: HaffaUser
+  ) => {
+    const adverts = (await scan()).filter(a => !a.archivedAt)
+    return normalizeAdvertSummaries({
+      totalLendingAdverts: adverts.filter(
+        v => getAdvertMeta(v, user).isLendingAdvert
+      ).length,
+      totalRecycleAdverts: adverts.filter(
+        v => !getAdvertMeta(v, user).isLendingAdvert
+      ).length,
+      availableLendingAdverts: adverts.filter(
+        v => getAdvertMeta(v, user).canBook
+      ).length,
+      availableRecycleAdverts: adverts.filter(
+        v =>
+          !getAdvertMeta(v, user).canBook && getAdvertMeta(v, user).canReserve
+      ).length,
+      totalAdverts: adverts.length,
+      reservedAdverts: adverts.filter(
+        v => v.claims?.some(c => c.type === AdvertClaimType.reserved) ?? 0
+      ).length,
+      collectedAdverts: adverts.filter(
+        v => v.claims?.some(c => c.type === AdvertClaimType.collected) ?? 0
+      ).length,
+    })
+  }
 
   return createValidatingAdvertsRepository({
-    stats,
     getAdvert,
     saveAdvertVersion,
     list,
@@ -273,5 +288,6 @@ export const createFsAdvertsRepository = (
     getAdvertsByClaimStatus,
     getSnapshot,
     getReservableAdvertsWithWaitlist,
+    getAdvertSummaries,
   })
 }

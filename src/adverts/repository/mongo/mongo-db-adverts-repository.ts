@@ -7,7 +7,11 @@ import {
   mapAdvertFilterInputToMongoSort,
   mapAdvertToMongoAdvert,
 } from './mappers'
-import { createEmptyAdvert, createEmptyAdvertLocation } from '../../mappers'
+import {
+  createEmptyAdvert,
+  createEmptyAdvertLocation,
+  normalizeAdvertSummaries,
+} from '../../mappers'
 import type { MongoConnection } from '../../../mongodb-utils/types'
 import { toMap } from '../../../lib'
 import { convertObjectStream } from '../../../lib/streams'
@@ -170,12 +174,6 @@ export const createMongoAdvertsRepository = (
     )
   }
 
-  const stats: AdvertsRepository['stats'] = {
-    get advertCount() {
-      return getCollection().then(c => c.countDocuments())
-    },
-  }
-
   const getAdvertsByClaimStatus: AdvertsRepository['getAdvertsByClaimStatus'] =
     async filter =>
       getCollection()
@@ -220,8 +218,104 @@ export const createMongoAdvertsRepository = (
         .then(v => v.toArray())
         .then(i => i.map(r => r.id))
 
+  const getAdvertSummaries: AdvertsRepository['getAdvertSummaries'] =
+    async _user =>
+      getCollection()
+        .then(collection =>
+          collection.aggregate([
+            { $match: { 'meta.archived': { $eq: false } } },
+            {
+              $facet: {
+                totalLendingAdverts: [
+                  { $match: { 'advert.lendingPeriod': { $gt: 0 } } },
+                  { $count: 'totalLendingAdverts' },
+                ],
+                totalRecycleAdverts: [
+                  { $match: { 'advert.lendingPeriod': { $eq: 0 } } },
+                  { $count: 'totalRecycleAdverts' },
+                ],
+                availableLendingAdverts: [
+                  {
+                    $match: {
+                      $and: [
+                        { 'advert.lendingPeriod': { $gt: 0 } },
+                        { 'advert.claims': { $size: 0 } },
+                      ],
+                    },
+                  },
+                  { $count: 'availableLendingAdverts' },
+                ],
+                availableRecycleAdverts: [
+                  {
+                    $match: {
+                      $and: [
+                        { 'advert.lendingPeriod': { $eq: 0 } },
+                        {
+                          $expr: {
+                            $gt: [
+                              '$advert.quantity',
+                              {
+                                $sum: [
+                                  '$meta.reservedCount',
+                                  '$meta.collectedCount',
+                                ],
+                              },
+                            ],
+                          },
+                        },
+                      ],
+                    },
+                  },
+                  { $count: 'availableRecycleAdverts' },
+                ],
+                totalAdverts: [{ $count: 'totalAdverts' }],
+                reservedAdverts: [
+                  { $match: { 'advert.claims.type': { $eq: 'reserved' } } },
+                  { $count: 'reservedAdverts' },
+                ],
+                collectedAdverts: [
+                  { $match: { 'advert.claims.type': { $eq: 'collected' } } },
+                  { $count: 'collectedAdverts' },
+                ],
+              },
+            },
+            {
+              $project: {
+                totalLendingAdverts: {
+                  $arrayElemAt: ['$totalLendingAdverts.totalLendingAdverts', 0],
+                },
+                totalRecycleAdverts: {
+                  $arrayElemAt: ['$totalRecycleAdverts.totalRecycleAdverts', 0],
+                },
+                availableLendingAdverts: {
+                  $arrayElemAt: [
+                    '$availableLendingAdverts.availableLendingAdverts',
+                    0,
+                  ],
+                },
+                availableRecycleAdverts: {
+                  $arrayElemAt: [
+                    '$availableRecycleAdverts.availableRecycleAdverts',
+                    0,
+                  ],
+                },
+                totalAdverts: {
+                  $arrayElemAt: ['$totalAdverts.totalAdverts', 0],
+                },
+                reservedAdverts: {
+                  $arrayElemAt: ['$reservedAdverts.reservedAdverts', 0],
+                },
+                collectedAdverts: {
+                  $arrayElemAt: ['$collectedAdverts.collectedAdverts', 0],
+                },
+              },
+            },
+          ])
+        )
+        .then(r => r.toArray())
+        .then(r => normalizeAdvertSummaries(r[0]))
+
   return createValidatingAdvertsRepository({
-    stats,
     getAdvert,
     list,
     create,
@@ -231,5 +325,6 @@ export const createMongoAdvertsRepository = (
     getAdvertsByClaimStatus,
     getSnapshot,
     getReservableAdvertsWithWaitlist,
+    getAdvertSummaries,
   })
 }

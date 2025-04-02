@@ -241,8 +241,16 @@ export interface AdvertsClaimFilter {
   type: AdvertClaimType
 }
 
+export interface AdvertSummaries {
+  totalLendingAdverts: number
+  totalRecycleAdverts: number
+  availableLendingAdverts: number
+  availableRecycleAdverts: number
+  totalAdverts: number
+  reservedAdverts: number
+  collectedAdverts: number
+}
 export interface AdvertsRepository {
-  stats: AdvertStats
   getAdvert: (user: HaffaUser, id: string) => Promise<Advert | null>
   saveAdvertVersion: (
     user: HaffaUser,
@@ -263,6 +271,7 @@ export interface AdvertsRepository {
   getAdvertsByClaimStatus: (filter: AdvertsClaimFilter) => Promise<string[]>
   getReservableAdvertsWithWaitlist: () => Promise<string[]>
   getSnapshot: () => stream.Readable
+  getAdvertSummaries: (user: HaffaUser) => Promise<AdvertSummaries>
 }
 
 export interface AdvertMutations {
@@ -365,8 +374,4 @@ export interface AdvertMutations {
     id: string,
     patch: { add: string; remove: string[] }
   ) => Promise<AdvertMutationResult>
-}
-
-interface AdvertStats {
-  advertCount: number | Promise<number>
 }

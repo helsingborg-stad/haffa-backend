@@ -1,3 +1,4 @@
+import HttpStatusCodes from 'http-status-codes'
 import { advertsGqlSchema } from './adverts.gql.schema'
 import {
   mapAdvertMutationResultToAdvertWithMetaMutationResult,
@@ -74,6 +75,14 @@ export const createAdvertsGqlModule = (
       getAdvert: async ({ ctx: { user }, args: { id } }) => {
         const advert = await services.adverts.getAdvert(user, id)
         return mapAdvertToAdvertWithMeta(user, advert, services)
+      },
+      advertSummaries: async ({ ctx }) => {
+        const { user } = ctx
+
+        if (!user) {
+          ctx.throw(HttpStatusCodes.UNAUTHORIZED)
+        }
+        return services.adverts.getAdvertSummaries(user)
       },
     },
     Mutation: {
