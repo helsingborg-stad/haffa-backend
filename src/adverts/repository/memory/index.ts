@@ -1,11 +1,17 @@
 import { Readable } from 'stream'
-import type { Advert, AdvertClaim, AdvertsRepository } from '../../types'
+import {
+  AdvertClaimType,
+  type Advert,
+  type AdvertClaim,
+  type AdvertsRepository,
+} from '../../types'
 import { createAdvertFilterPredicate } from '../../filters/advert-filter-predicate'
 import { createAdvertFilterComparer } from '../../filters/advert-filter-sorter'
 import type { StartupLog } from '../../../types'
 import { createPagedAdvertList, normalizeAdvertSummaries } from '../../mappers'
 import { createValidatingAdvertsRepository } from '../validation'
 import type { GetAdvertMeta } from '../../advert-meta/types'
+import type { HaffaUser } from '../../../login/types'
 
 export const createInMemoryAdvertsRepositoryFromEnv = (
   startupLog: StartupLog,
@@ -93,24 +99,29 @@ export const createInMemoryAdvertsRepository = (
             quantity > claims.map(c => c.quantity).reduce((s, q) => s + q, 0)
         )
         .map(({ id }) => id),
-    getAdvertSummaries: async () => {
+    getAdvertSummaries: async (user: HaffaUser) => {
       const adverts = Object.values(db).filter(v => !v.archivedAt)
 
       return normalizeAdvertSummaries({
-        totalLendingAdverts: adverts.filter(v => v.lendingPeriod).length,
-        totalRecycleAdverts: adverts.filter(v => !!v.lendingPeriod).length,
+        totalLendingAdverts: adverts.filter(
+          v => getAdvertMeta(v, user).isLendingAdvert
+        ).length,
+        totalRecycleAdverts: adverts.filter(
+          v => !getAdvertMeta(v, user).isLendingAdvert
+        ).length,
         availableLendingAdverts: adverts.filter(
-          v => !!v.lendingPeriod && v.claims.length === 0
+          v => getAdvertMeta(v, user).canBook
         ).length,
         availableRecycleAdverts: adverts.filter(
-          v => !v.lendingPeriod && v.quantity > 0
+          v =>
+            !getAdvertMeta(v, user).canBook && getAdvertMeta(v, user).canReserve
         ).length,
         totalAdverts: adverts.length,
         reservedAdverts: adverts.filter(
-          v => v.claims?.some(c => c.type === 'reserved') ?? 0
+          v => v.claims?.some(c => c.type === AdvertClaimType.reserved) ?? 0
         ).length,
         collectedAdverts: adverts.filter(
-          v => v.claims?.some(c => c.type === 'collected') ?? 0
+          v => v.claims?.some(c => c.type === AdvertClaimType.collected) ?? 0
         ).length,
       })
     },

@@ -82,7 +82,7 @@ export const createAdvertsGqlModule = (
         if (!user) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        return services.adverts.getAdvertSummaries()
+        return services.adverts.getAdvertSummaries(user)
       },
     },
     Mutation: {

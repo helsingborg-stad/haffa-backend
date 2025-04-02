@@ -1,7 +1,12 @@
 import { join } from 'path'
 import { mkdirp } from 'mkdirp'
 import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
-import type { AdvertClaim, Advert, AdvertsRepository } from '../../types'
+import {
+  type AdvertClaim,
+  type Advert,
+  type AdvertsRepository,
+  AdvertClaimType,
+} from '../../types'
 import { createAdvertFilterPredicate } from '../../filters/advert-filter-predicate'
 import {
   createEmptyAdvert,
@@ -15,6 +20,7 @@ import { mapValues, toLookup } from '../../../lib'
 import { objectStream } from '../../../lib/streams'
 import { createValidatingAdvertsRepository } from '../validation'
 import type { GetAdvertMeta } from '../../advert-meta/types'
+import type { HaffaUser } from '../../../login/types'
 
 const notFundHandler =
   <T>(errorValue: T) =>
@@ -244,28 +250,33 @@ export const createFsAdvertsRepository = (
           )
           .map(({ id }) => id)
       )
-  const getAdvertFigures: AdvertsRepository['getAdvertSummaries'] =
-    async () => {
-      const adverts = (await scan()).filter(a => !a.archivedAt)
-
-      return normalizeAdvertSummaries({
-        totalLendingAdverts: adverts.filter(v => v.lendingPeriod).length,
-        totalRecycleAdverts: adverts.filter(v => !!v.lendingPeriod).length,
-        availableLendingAdverts: adverts.filter(
-          v => !!v.lendingPeriod && v.claims.length === 0
-        ).length,
-        availableRecycleAdverts: adverts.filter(
-          v => !v.lendingPeriod && v.quantity > 0
-        ).length,
-        totalAdverts: adverts.length,
-        reservedAdverts: adverts.filter(
-          v => v.claims?.some(c => c.type === 'reserved') ?? 0
-        ).length,
-        collectedAdverts: adverts.filter(
-          v => v.claims?.some(c => c.type === 'collected') ?? 0
-        ).length,
-      })
-    }
+  const getAdvertSummaries: AdvertsRepository['getAdvertSummaries'] = async (
+    user: HaffaUser
+  ) => {
+    const adverts = (await scan()).filter(a => !a.archivedAt)
+    return normalizeAdvertSummaries({
+      totalLendingAdverts: adverts.filter(
+        v => getAdvertMeta(v, user).isLendingAdvert
+      ).length,
+      totalRecycleAdverts: adverts.filter(
+        v => !getAdvertMeta(v, user).isLendingAdvert
+      ).length,
+      availableLendingAdverts: adverts.filter(
+        v => getAdvertMeta(v, user).canBook
+      ).length,
+      availableRecycleAdverts: adverts.filter(
+        v =>
+          !getAdvertMeta(v, user).canBook && getAdvertMeta(v, user).canReserve
+      ).length,
+      totalAdverts: adverts.length,
+      reservedAdverts: adverts.filter(
+        v => v.claims?.some(c => c.type === AdvertClaimType.reserved) ?? 0
+      ).length,
+      collectedAdverts: adverts.filter(
+        v => v.claims?.some(c => c.type === AdvertClaimType.collected) ?? 0
+      ).length,
+    })
+  }
 
   return createValidatingAdvertsRepository({
     getAdvert,
@@ -277,6 +288,6 @@ export const createFsAdvertsRepository = (
     getAdvertsByClaimStatus,
     getSnapshot,
     getReservableAdvertsWithWaitlist,
-    getAdvertSummaries: getAdvertFigures,
+    getAdvertSummaries,
   })
 }

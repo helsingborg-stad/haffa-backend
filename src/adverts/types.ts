@@ -271,7 +271,7 @@ export interface AdvertsRepository {
   getAdvertsByClaimStatus: (filter: AdvertsClaimFilter) => Promise<string[]>
   getReservableAdvertsWithWaitlist: () => Promise<string[]>
   getSnapshot: () => stream.Readable
-  getAdvertSummaries: () => Promise<AdvertSummaries>
+  getAdvertSummaries: (user: HaffaUser) => Promise<AdvertSummaries>
 }
 
 export interface AdvertMutations {

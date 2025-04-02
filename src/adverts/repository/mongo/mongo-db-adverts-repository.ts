@@ -219,7 +219,7 @@ export const createMongoAdvertsRepository = (
         .then(i => i.map(r => r.id))
 
   const getAdvertSummaries: AdvertsRepository['getAdvertSummaries'] =
-    async () =>
+    async _user =>
       getCollection()
         .then(collection =>
           collection.aggregate([
@@ -252,7 +252,15 @@ export const createMongoAdvertsRepository = (
                         { 'advert.lendingPeriod': { $eq: 0 } },
                         {
                           $expr: {
-                            $gt: ['$advert.quantity', '$meta.reservedCount'],
+                            $gt: [
+                              '$advert.quantity',
+                              {
+                                $sum: [
+                                  '$meta.reservedCount',
+                                  '$meta.collectedCount',
+                                ],
+                              },
+                            ],
                           },
                         },
                       ],
