@@ -16,7 +16,13 @@ export interface EventLogService {
     { from, to }: { from: Date; to: Date },
     inspect: (event: LogEvent) => Promise<boolean>
   ) => Promise<any>
-  getEventSummaries(): Promise<EventSummaries>
+  getEventSummaries({
+    from,
+    to,
+  }: {
+    from: Date | null
+    to: Date | null
+  }): Promise<EventSummaries>
 }
 
 export interface LogEvent {

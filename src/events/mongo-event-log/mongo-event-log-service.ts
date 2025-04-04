@@ -52,11 +52,20 @@ export const createMongoEventLogService = ({
     }
     await cursor.close()
   },
-  getEventSummaries: async () =>
+
+  getEventSummaries: async ({ from, to }) =>
     getCollection()
       .then(collection =>
         collection.aggregate([
-          { $match: { 'event.event': { $eq: 'advert-was-collected' } } },
+          {
+            $match: {
+              $and: [
+                from && { 'event.at': { $gte: from.toISOString() } },
+                to && { 'event.at': { $lte: to.toISOString() } },
+                { 'event.event': { $eq: 'advert-was-collected' } },
+              ].filter(v => v),
+            },
+          },
           {
             $group: {
               _id: null,

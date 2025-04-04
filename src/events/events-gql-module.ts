@@ -44,13 +44,16 @@ export const createEventsGqlModule = ({
           advertId,
         })
       },
-      eventSummaries: async ({ ctx }) => {
+      eventSummaries: async ({ ctx, args: { from, to } }) => {
         const { user } = ctx
 
         if (!user) {
           ctx.throw(HttpStatusCodes.UNAUTHORIZED)
         }
-        return eventLog.getEventSummaries()
+        return eventLog.getEventSummaries({
+          from: from ? new Date(from) : null,
+          to: to ? new Date(to) : null,
+        })
       },
     },
   },

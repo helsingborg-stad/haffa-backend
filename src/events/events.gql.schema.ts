@@ -2,7 +2,7 @@ export const eventsGqlSchema = /* GraphQL */ `
   type Query {
     events(from: String, to: String): [Event]
     advertEvents(advertId: String): [Event]
-    eventSummaries: EventSummaries
+    eventSummaries(from: String, to: String): EventSummaries
   }
 
   type Event {
