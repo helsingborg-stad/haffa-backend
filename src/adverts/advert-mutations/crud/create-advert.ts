@@ -1,6 +1,8 @@
+import { TxErrors } from '../../../transactions'
 import type { Services } from '../../../types'
-import { mapCreateAdvertInputToAdvert } from '../../mappers'
-import type { Advert, AdvertMutations } from '../../types'
+import { createEmptyAdvert, mapCreateAdvertInputToAdvert } from '../../mappers'
+import type { AdvertMutations } from '../../types'
+import { mapTxErrorToAdvertMutationStatus } from '../mappers'
 import { processAdvertInput } from './process-advert-input'
 
 export const createCreateAdvert =
@@ -12,16 +14,17 @@ export const createCreateAdvert =
     Services,
     'adverts' | 'files' | 'notifications'
   >): AdvertMutations['createAdvert'] =>
-  (user, input) =>
-    processAdvertInput(input, files)
-      .then(convertedInput =>
-        adverts.create(user, {
-          x: 123,
-          ...mapCreateAdvertInputToAdvert(convertedInput, user),
-        } as Advert)
-      )
-      .then(async advert => {
-        await notifications.advertWasCreated(advert.createdBy, user, advert)
-        return advert
-      })
-      .then(advert => ({ advert, status: null }))
+  async (user, input) => {
+    if (!user.roles?.canEditOwnAdverts) {
+      return {
+        advert: createEmptyAdvert(),
+        status: mapTxErrorToAdvertMutationStatus(TxErrors.Unauthorized),
+      }
+    }
+    const convertedInput = await processAdvertInput(input, files)
+    const advert = await adverts.create(user, {
+      ...mapCreateAdvertInputToAdvert(convertedInput, user),
+    })
+    await notifications.advertWasCreated(advert.createdBy, user, advert)
+    return { advert, status: null }
+  }

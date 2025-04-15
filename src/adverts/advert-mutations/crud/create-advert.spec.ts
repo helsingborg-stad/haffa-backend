@@ -3,6 +3,7 @@ import {
   createTestNotificationServices,
   end2endTest,
 } from '../../../test-utils'
+import { TxErrors } from '../../../transactions'
 import { createEmptyAdvertInput } from '../../mappers'
 import type { AdvertMutationResult, AdvertInput } from '../../types'
 import { mutationProps } from '../test-utils/gql-test-definitions'
@@ -25,7 +26,14 @@ describe('createAdvert', () => {
 
     return end2endTest(
       { services: { notifications } },
-      async ({ mappedGqlRequest, user, adverts }) => {
+      async ({ mappedGqlRequest, user, adverts, loginPolicies }) => {
+        await loginPolicies.updateLoginPolicies([
+          {
+            emailPattern: user.id,
+            roles: ['canEditOwnAdverts'],
+          },
+        ])
+
         const input: AdvertInput = {
           ...createEmptyAdvertInput(),
           title: 't',
@@ -62,4 +70,32 @@ describe('createAdvert', () => {
       }
     )
   })
+
+  it('requires role canEditOwnAdverts', () =>
+    end2endTest({}, async ({ mappedGqlRequest, adverts }) => {
+      const input: AdvertInput = {
+        ...createEmptyAdvertInput(),
+        title: 't',
+        description: 'd',
+        images: [],
+        unit: 'u',
+        lendingPeriod: 1,
+        material: 'm',
+        condition: 'c',
+        usage: 'u',
+        category: 'c',
+        externalId: 'eid',
+        tags: ['t'],
+      }
+      const result = await mappedGqlRequest<AdvertMutationResult>(
+        'createAdvert',
+        createAdvertMutation,
+        { input }
+      )
+      expect(result.status).toMatchObject(TxErrors.Unauthorized)
+
+      T('no adverts should exist', () =>
+        expect(Object.keys(adverts)).toHaveLength(0)
+      )
+    }))
 })
