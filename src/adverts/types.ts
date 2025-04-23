@@ -246,6 +246,7 @@ export interface AdvertSummaries {
   totalRecycleAdverts: number
   availableLendingAdverts: number
   availableRecycleAdverts: number
+  availableAdverts: number
   totalAdverts: number
   reservedAdverts: number
   collectedAdverts: number

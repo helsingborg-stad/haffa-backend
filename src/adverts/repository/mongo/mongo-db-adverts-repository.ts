@@ -313,7 +313,13 @@ export const createMongoAdvertsRepository = (
           ])
         )
         .then(r => r.toArray())
-        .then(r => normalizeAdvertSummaries(r[0]))
+        .then(r =>
+          normalizeAdvertSummaries({
+            ...r[0],
+            availableAdverts:
+              r[0].availableLendingAdverts + r[0].availableRecycleAdverts,
+          })
+        )
 
   return createValidatingAdvertsRepository({
     getAdvert,

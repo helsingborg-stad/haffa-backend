@@ -254,6 +254,13 @@ export const createFsAdvertsRepository = (
     user: HaffaUser
   ) => {
     const adverts = (await scan()).filter(a => !a.archivedAt)
+    const availableRecycleAdverts = adverts.filter(
+      v => !getAdvertMeta(v, user).canBook && getAdvertMeta(v, user).canReserve
+    ).length
+    const availableLendingAdverts = adverts.filter(
+      v => getAdvertMeta(v, user).canBook
+    ).length
+
     return normalizeAdvertSummaries({
       totalLendingAdverts: adverts.filter(
         v => getAdvertMeta(v, user).isLendingAdvert
@@ -261,13 +268,9 @@ export const createFsAdvertsRepository = (
       totalRecycleAdverts: adverts.filter(
         v => !getAdvertMeta(v, user).isLendingAdvert
       ).length,
-      availableLendingAdverts: adverts.filter(
-        v => getAdvertMeta(v, user).canBook
-      ).length,
-      availableRecycleAdverts: adverts.filter(
-        v =>
-          !getAdvertMeta(v, user).canBook && getAdvertMeta(v, user).canReserve
-      ).length,
+      availableLendingAdverts,
+      availableRecycleAdverts,
+      availableAdverts: availableLendingAdverts + availableRecycleAdverts,
       totalAdverts: adverts.length,
       reservedAdverts: adverts.filter(
         v => v.claims?.some(c => c.type === AdvertClaimType.reserved) ?? 0

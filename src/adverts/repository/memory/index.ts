@@ -101,6 +101,13 @@ export const createInMemoryAdvertsRepository = (
         .map(({ id }) => id),
     getAdvertSummaries: async (user: HaffaUser) => {
       const adverts = Object.values(db).filter(v => !v.archivedAt)
+      const availableLendingAdverts = adverts.filter(
+        v => getAdvertMeta(v, user).canBook
+      ).length
+      const availableRecycleAdverts = adverts.filter(
+        v =>
+          !getAdvertMeta(v, user).canBook && getAdvertMeta(v, user).canReserve
+      ).length
 
       return normalizeAdvertSummaries({
         totalLendingAdverts: adverts.filter(
@@ -109,13 +116,9 @@ export const createInMemoryAdvertsRepository = (
         totalRecycleAdverts: adverts.filter(
           v => !getAdvertMeta(v, user).isLendingAdvert
         ).length,
-        availableLendingAdverts: adverts.filter(
-          v => getAdvertMeta(v, user).canBook
-        ).length,
-        availableRecycleAdverts: adverts.filter(
-          v =>
-            !getAdvertMeta(v, user).canBook && getAdvertMeta(v, user).canReserve
-        ).length,
+        availableLendingAdverts,
+        availableRecycleAdverts,
+        availableAdverts: availableLendingAdverts + availableRecycleAdverts,
         totalAdverts: adverts.length,
         reservedAdverts: adverts.filter(
           v => v.claims?.some(c => c.type === AdvertClaimType.reserved) ?? 0

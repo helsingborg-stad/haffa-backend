@@ -340,6 +340,7 @@ export const advertsGqlSchema = /* GraphQL */ `
     totalRecycleAdverts: Int!
     availableLendingAdverts: Int!
     availableRecycleAdverts: Int!
+    availableAdverts: Int!
     totalAdverts: Int!
     reservedAdverts: Int!
     collectedAdverts: Int!
