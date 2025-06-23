@@ -2,8 +2,9 @@ import {
   createEmptyAdvertInput,
   createPagedAdvertList,
   mapCreateAdvertInputToAdvert,
+  normalizeAdvertSummaries,
 } from './mappers'
-import type { Advert } from './types'
+import type { Advert, AdvertSummaries } from './types'
 
 describe('mapCreateAdvertInputToAdvert', () => {
   it('should set input field, user and timestamps', () => {
@@ -183,5 +184,21 @@ describe('createPagedAdvertList', () => {
 
     expect(result.adverts).toEqual(modifiedAdverts.slice(5, 10))
     expect(result.paging.totalCount).toBe(modifiedAdverts.length)
+  })
+
+  it('normalizeAdvertSummmaries() detects negative and NaN and non numbers', () => {
+    expect(
+      normalizeAdvertSummaries({
+        totalLendingAdverts: -1,
+        totalRecycleAdverts: NaN,
+        availableLendingAdverts: 'not a number',
+        availableAdverts: 10,
+      } as any as AdvertSummaries)
+    ).toMatchObject({
+      totalLendingAdverts: 0,
+      totalRecycleAdverts: 0,
+      availableLendingAdverts: 0,
+      availableAdverts: 10,
+    })
   })
 })

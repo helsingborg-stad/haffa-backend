@@ -15,6 +15,7 @@ import type {
 import { AdvertType } from './types'
 import type { HaffaUser } from '../login/types'
 import type { Services } from '../types'
+import { mapValues } from '../lib'
 
 const isObject = (o: any) => o === Object(o)
 const isArray = (a: any) => Array.isArray(a)
@@ -342,5 +343,6 @@ export const normalizeAdvertSummaries = (
   totalAdverts: 0,
   reservedAdverts: 0,
   collectedAdverts: 0,
-  ...summary,
+  // ...summary,
+  ...mapValues(summary, v => (v > 0 ? v : 0)),
 })
