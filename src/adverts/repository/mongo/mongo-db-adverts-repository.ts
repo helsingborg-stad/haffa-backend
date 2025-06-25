@@ -317,7 +317,7 @@ export const createMongoAdvertsRepository = (
           normalizeAdvertSummaries({
             ...r[0],
             availableAdverts:
-              r[0].availableLendingAdverts + r[0].availableRecycleAdverts,
+              (r[0].availableLendingAdverts ?? 0) + (r[0].availableRecycleAdverts ?? 0),
           })
         )
 
