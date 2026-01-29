@@ -13,9 +13,10 @@ export const createSendGridMailSender = ({
   return async (to, template, data) => {
     const templateId = await getTemplateId(template)
     if (!templateId) {
-      return console.error(
+      console.error(
         `sendgrid notifications: no template for event ${template} was found`
       )
+      return
     }
 
     await sgmail.send({
