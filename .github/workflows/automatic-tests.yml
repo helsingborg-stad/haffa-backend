@@ -22,9 +22,12 @@ jobs:
         with:
           node-version: '18'
     
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
 
       - name: cache yarn
         uses: actions/cache@v3
