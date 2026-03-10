@@ -35,7 +35,7 @@ which refers to the email/phone number of the user in the claim and the quantity
 
 | Name                 | Typ      | Description                                                                                |
 | :------------------- | :------- | :----------------------------------------------------------------------------------------- |
-| id                   | String   | The unqique id of the advert                                                               |
+| id                   | String   | The unique id of the advert                                                                |
 | versionId            | String   | The unique id of the current version of the advert                                         |
 | createdBy            | String   | The owner of the advert                                                                    |
 | createdAt            | String   | The creation date of the advert                                                            |
