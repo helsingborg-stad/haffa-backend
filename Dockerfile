@@ -3,7 +3,7 @@ ARG GITHUB_ACCESS_TOKEN
 WORKDIR /work
 COPY . ./
 COPY deploy.npmrc .npmrc
-RUN yarn install && yarn build
+RUN npm ci && npm run build
 
 
 FROM node:22 as git-rev
@@ -16,7 +16,7 @@ ARG GITHUB_ACCESS_TOKEN
 WORKDIR /work
 COPY . ./
 COPY deploy.npmrc .npmrc
-RUN yarn install --production --ignore-optional --platform=linux --arch=x64
+RUN npm ci --omit=dev --ignore-scripts
 
 #FROM gcr.io/distroless/nodejs22-debian11
 FROM node:22-alpine
