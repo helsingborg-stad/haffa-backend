@@ -2,19 +2,19 @@ import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
 import {
-  type AdvertClaim,
   type Advert,
-  type AdvertMutations,
+  type AdvertClaim,
   AdvertClaimType,
+  type AdvertMutations,
 } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
+import { createAdvertClaimsNotifier } from '../notifications'
 import {
   verifyAll,
   verifyReservationLimits,
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
 } from '../verifiers'
-import { createAdvertClaimsNotifier } from '../notifications'
 import { updateAdvertWithClaimDates } from './mappers'
 
 export const createConvertAdvertClaim =

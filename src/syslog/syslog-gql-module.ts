@@ -1,8 +1,8 @@
 import HttpStatusCodes from 'http-status-codes'
-import type { Services } from '../types'
-import { normalizeRoles } from '../login'
-import { syslogGqlSchema } from './syslog.gql.schema'
 import type { GraphQLModule } from '../lib/gdi-api-node'
+import { normalizeRoles } from '../login'
+import type { Services } from '../types'
+import { syslogGqlSchema } from './syslog.gql.schema'
 
 export const createSyslogGqlModule = (services: Services): GraphQLModule => ({
   schema: syslogGqlSchema,

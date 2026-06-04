@@ -1,9 +1,9 @@
 import HttpStatusCodes from 'http-status-codes'
-import type { Services } from '../types'
+import type { GraphQLModule } from '../lib/gdi-api-node'
 import { normalizeRoles } from '../login'
+import type { Services } from '../types'
 import { locationsGqlSchema } from './locations.gql.schema'
 import { locationsAdapter } from './locations-adapter'
-import type { GraphQLModule } from '../lib/gdi-api-node'
 
 export const createLocationsGqlModule = ({
   settings,

@@ -1,5 +1,5 @@
-import request from 'supertest'
 import { StatusCodes } from 'http-status-codes'
+import request from 'supertest'
 import { createTestNotificationServices, end2endTest } from '../../test-utils'
 import { RequestPincodeStatus } from '../types'
 

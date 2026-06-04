@@ -1,17 +1,17 @@
 import ms from 'ms'
-import type { LoginService } from '../types'
-import { RequestPincodeStatus } from '../types'
+import { getEnv } from '../../lib/gdi-api-node'
+import { createMongoConnection } from '../../mongodb-utils'
 import type {
   MongoConnection,
   MongoConnectionOptions,
 } from '../../mongodb-utils/types'
-import type { MongoLogin } from './types'
-import { createMongoConnection } from '../../mongodb-utils'
-import type { UserMapper } from '../../users/types'
 import type { StartupLog } from '../../types'
-import type { IssuePincode } from '../issue-pincode/types'
+import type { UserMapper } from '../../users/types'
 import { createIssuePincode } from '../issue-pincode'
-import { getEnv } from '../../lib/gdi-api-node'
+import type { IssuePincode } from '../issue-pincode/types'
+import type { LoginService } from '../types'
+import { RequestPincodeStatus } from '../types'
+import type { MongoLogin } from './types'
 
 export const tryCreateMongoLoginServiceFromEnv = (
   startupLog: StartupLog,

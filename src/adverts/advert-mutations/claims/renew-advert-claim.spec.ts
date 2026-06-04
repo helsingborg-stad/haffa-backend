@@ -1,8 +1,7 @@
-import { makeUser } from '../../../login'
 import {
-  T,
   createTestNotificationServices,
   end2endTest,
+  T,
 } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
 import type { AdvertMutationResult } from '../../types'
@@ -91,11 +90,12 @@ describe('renewAdvertClaim', () => {
         expect(result.status).toBeNull()
 
         T('claim should have timestamp near current time', () => {
-          const at = adverts['advert-123'].claims.find(
-            claim =>
-              claim.by === 'renew-user' &&
-              claim.type === AdvertClaimType.collected
-          )?.at!
+          const at =
+            adverts['advert-123'].claims.find(
+              claim =>
+                claim.by === 'renew-user' &&
+                claim.type === AdvertClaimType.collected
+            )?.at ?? ''
 
           expect(Date.now() - new Date(at).getTime()).toBeLessThan(10 * 1000)
         })

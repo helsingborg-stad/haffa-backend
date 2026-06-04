@@ -1,7 +1,7 @@
 import { uniqueBy } from '../../../lib'
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
-import { type Advert, type AdvertMutations } from '../../types'
+import type { Advert, AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import {
   verifyAll,

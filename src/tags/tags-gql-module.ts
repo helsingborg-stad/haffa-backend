@@ -1,9 +1,9 @@
 import HttpStatusCodes from 'http-status-codes'
-import type { Services } from '../types'
+import type { GraphQLModule } from '../lib/gdi-api-node'
 import { normalizeRoles } from '../login'
+import type { Services } from '../types'
 import { tagsGqlSchema } from './tags.gql.schema'
 import { tagsAdapter } from './tags-adapter'
-import type { GraphQLModule } from '../lib/gdi-api-node'
 
 export const createTagsGqlModule = ({
   settings,

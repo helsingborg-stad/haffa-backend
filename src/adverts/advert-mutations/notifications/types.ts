@@ -8,7 +8,7 @@ export interface AdvertNotifier {
   wasUnPicked: (advert: Advert) => Promise<any>
 }
 
-export interface AdvertPickingNotifier {}
+export type AdvertPickingNotifier = {}
 
 export interface AdvertWaitlistNotifier {
   wasWaitListAvailble: (advert: Advert) => Promise<any>

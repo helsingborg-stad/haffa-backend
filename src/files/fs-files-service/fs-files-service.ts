@@ -1,12 +1,12 @@
-import { join, relative } from 'path'
-import { mkdirp } from 'mkdirp'
-import { readFile, writeFile, unlink } from 'fs/promises'
+import { readFile, unlink, writeFile } from 'fs/promises'
 import send from 'koa-send'
+import { mkdirp } from 'mkdirp'
 import ms from 'ms'
+import { join, relative } from 'path'
+import type { ApplicationContext } from '../../lib/gdi-api-node'
 import type { FilesService } from '../types'
 import { generateFileId, tryConvertDataUriToImageBuffer } from '../utils'
 import { tryConvertUrlToDataUrlForLocalUrlsHelper } from '../utils/image-utils'
-import type { ApplicationContext } from '../../lib/gdi-api-node'
 
 // max-age in ms header for transmitted files
 const SEND_MAX_AGE = ms('30 days')
@@ -41,26 +41,25 @@ export const createFsFilesService = (
       })
 
   const tryCreateApplicationModule: FilesService['tryCreateApplicationModule'] =
-
-      () =>
-      ({ router }: ApplicationContext) => {
-        router.get(`${baseUrl}/:fileId`, async ctx => {
-          const {
-            params: { fileId },
-          } = ctx
-          const path = join(folder, fileId)
-          try {
-            await send(ctx, relative(process.cwd(), path), {
-              hidden: true,
-              maxAge: SEND_MAX_AGE,
-            })
-          } catch {
-            // unfortunately, send() exposes to much info on errors
-            // so we clear it out
-            ctx.body = ''
-          }
-        })
-      }
+    () =>
+    ({ router }: ApplicationContext) => {
+      router.get(`${baseUrl}/:fileId`, async ctx => {
+        const {
+          params: { fileId },
+        } = ctx
+        const path = join(folder, fileId)
+        try {
+          await send(ctx, relative(process.cwd(), path), {
+            hidden: true,
+            maxAge: SEND_MAX_AGE,
+          })
+        } catch {
+          // unfortunately, send() exposes to much info on errors
+          // so we clear it out
+          ctx.body = ''
+        }
+      })
+    }
 
   const tryCleanupUrl: FilesService['tryCleanupUrl'] = async url => {
     const match = new RegExp(`${baseUrl}/(.*)`).exec(url)

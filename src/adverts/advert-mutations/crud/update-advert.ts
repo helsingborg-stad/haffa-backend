@@ -3,12 +3,12 @@ import type { Services } from '../../../types'
 import { patchAdvertWithAdvertInput } from '../../mappers'
 import type { Advert, AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
-import { processAdvertInput } from './process-advert-input'
 import {
   verifyAll,
   verifyQuantityAtleatOne,
   verifyReservationsDoesNotExceedQuantity,
 } from '../verifiers'
+import { processAdvertInput } from './process-advert-input'
 
 export const createUpdateAdvert =
   ({

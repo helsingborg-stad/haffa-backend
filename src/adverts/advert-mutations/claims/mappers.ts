@@ -2,8 +2,8 @@ import { sortBy } from '../../../lib'
 import { dateBuilder } from '../../../lib/date-builder'
 import type { Func } from '../../../lib/types'
 import type { HaffaUser } from '../../../login/types'
+import type { Advert, AdvertClaim, AdvertReturnInfo } from '../../types'
 import { AdvertClaimType } from '../../types'
-import type { AdvertReturnInfo, AdvertClaim, Advert } from '../../types'
 
 export const updateAdvertWithClaimDates = (
   advert: Advert,
@@ -38,7 +38,7 @@ export const getLastClaimEventDate = (
   new Date(
     claim.events && claim.events.length > 0
       ? [...claim.events].sort(sortBy(ev => ev.at)).reverse()[0].at
-      : defaultDate ?? claim.at
+      : (defaultDate ?? claim.at)
   )
 
 /**

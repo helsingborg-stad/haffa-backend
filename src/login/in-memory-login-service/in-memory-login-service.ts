@@ -1,8 +1,8 @@
 import ms from 'ms'
-import type { LoginService } from '../types'
-import { RequestPincodeStatus } from '../types'
 import type { UserMapper } from '../../users/types'
 import type { IssuePincode } from '../issue-pincode/types'
+import type { LoginService } from '../types'
+import { RequestPincodeStatus } from '../types'
 
 interface Options {
   maxAge: number

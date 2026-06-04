@@ -1,5 +1,5 @@
-import { validateAdvert } from '.'
 import { createEmptyAdvert, createEmptyAdvertContact } from '../../mappers'
+import { validateAdvert } from '.'
 
 describe('validate-advert', () => {
   it('throws on validation error', () => {
@@ -9,9 +9,9 @@ describe('validate-advert', () => {
       { id: 'x', title: ['title should be a string'] },
     ]
 
-    badAdverts.forEach(bad =>
+    badAdverts.forEach(bad => {
       expect(() => validateAdvert(bad)).toThrow('Validation error')
-    )
+    })
   })
 
   it('normalizes away unknown properties', () => {

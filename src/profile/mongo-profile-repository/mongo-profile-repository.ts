@@ -1,7 +1,7 @@
-import type { ProfileRepository } from '../types'
-import { createEmptyProfile } from '../mappers'
-import type { MongoProfile } from './types'
 import type { MongoConnection } from '../../mongodb-utils/types'
+import { createEmptyProfile } from '../mappers'
+import type { ProfileRepository } from '../types'
+import type { MongoProfile } from './types'
 
 export const createMongoProfileRepository = (
   connection: MongoConnection<MongoProfile>

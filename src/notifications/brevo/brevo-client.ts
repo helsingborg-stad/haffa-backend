@@ -1,11 +1,11 @@
 import request from 'superagent'
 import type {
-  BrevoConfig,
   BrevoClient,
-  RelevantGetTemplatesResult,
+  BrevoConfig,
   Identity,
-  TemplateName,
+  RelevantGetTemplatesResult,
   SendMailPostRequestBody,
+  TemplateName,
 } from './types'
 
 export function createClient(config: BrevoConfig): BrevoClient {

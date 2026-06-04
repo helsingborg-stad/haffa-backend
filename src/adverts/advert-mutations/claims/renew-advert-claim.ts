@@ -3,13 +3,13 @@ import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
 import type { Advert, AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
+import { createAdvertClaimsNotifier } from '../notifications/advert-claims-notifier'
 import {
   verifyAll,
   verifyReservationLimits,
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
 } from '../verifiers'
-import { createAdvertClaimsNotifier } from '../notifications/advert-claims-notifier'
 import { updateAdvertWithClaimDates } from './mappers'
 
 export const createRenewAdvertClaim =

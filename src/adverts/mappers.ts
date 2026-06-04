@@ -1,4 +1,7 @@
 import * as uuid from 'uuid'
+import { mapValues } from '../lib'
+import type { HaffaUser } from '../login/types'
+import type { Services } from '../types'
 import type {
   Advert,
   AdvertContact,
@@ -13,9 +16,6 @@ import type {
   AdvertWithMetaMutationResult,
 } from './types'
 import { AdvertType } from './types'
-import type { HaffaUser } from '../login/types'
-import type { Services } from '../types'
-import { mapValues } from '../lib'
 
 const isObject = (o: any) => o === Object(o)
 const isArray = (a: any) => Array.isArray(a)

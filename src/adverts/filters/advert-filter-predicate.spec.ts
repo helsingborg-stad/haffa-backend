@@ -1,8 +1,8 @@
-import { createAdvertFilterPredicate } from './advert-filter-predicate'
-import { createEmptyAdvert } from '../mappers'
-import { AdvertClaimType, type Advert } from '../types'
 import type { HaffaUser } from '../../login/types'
 import { createGetAdvertMeta } from '../advert-meta'
+import { createEmptyAdvert } from '../mappers'
+import { type Advert, AdvertClaimType } from '../types'
+import { createAdvertFilterPredicate } from './advert-filter-predicate'
 
 describe('createAdvertFilterPredicate', () => {
   const getAdvertMeta = createGetAdvertMeta()

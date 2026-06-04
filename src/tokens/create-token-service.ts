@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
-import type { TokenService } from './types'
 import type { HaffaUser } from '../login/types'
 import type { UserMapper } from '../users/types'
+import type { TokenService } from './types'
 
 const jwtOptions = {
   audience: 'urn://haffa',

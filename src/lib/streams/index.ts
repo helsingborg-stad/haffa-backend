@@ -5,9 +5,9 @@ import { streamToArray } from './stream-to-array'
 import { streamToBuffer } from './stream-to-buffer'
 
 export {
-  streamToBuffer,
-  jsonStream,
   convertObjectStream,
+  jsonStream,
   objectStream,
   streamToArray,
+  streamToBuffer,
 }

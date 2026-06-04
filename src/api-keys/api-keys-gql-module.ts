@@ -1,9 +1,9 @@
 import HttpStatusCodes from 'http-status-codes'
-import type { Services } from '../types'
-import { apiKeysGqlSchema } from './api-keys.gql.schema'
-import { normalizeRoles } from '../login'
-import { apiKeysAdapter } from '.'
 import type { GraphQLModule } from '../lib/gdi-api-node'
+import { normalizeRoles } from '../login'
+import type { Services } from '../types'
+import { apiKeysAdapter } from '.'
+import { apiKeysGqlSchema } from './api-keys.gql.schema'
 
 export const createApiKeysGqlModule = ({
   settings,

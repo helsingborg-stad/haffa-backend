@@ -6,8 +6,8 @@ import {
   hasReservations,
   isClaimOverdue,
 } from '../advert-mutations/claims/mappers'
-import { AdvertClaimType, AdvertType } from '../types'
 import type { Advert } from '../types'
+import { AdvertClaimType, AdvertType } from '../types'
 import type { GetAdvertMeta } from './types'
 
 const hasSingleCollectClaim = ({ claims }: Advert) =>

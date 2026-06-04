@@ -1,22 +1,22 @@
 import type { CollationOptions } from 'mongodb'
 import { PassThrough } from 'stream'
-import type { Advert, AdvertList, AdvertsRepository } from '../../types'
-import type { MongoAdvert } from './types'
-import {
-  mapAdvertFilterInputToMongoQuery,
-  mapAdvertFilterInputToMongoSort,
-  mapAdvertToMongoAdvert,
-} from './mappers'
+import { toMap } from '../../../lib'
+import { convertObjectStream } from '../../../lib/streams'
+import type { MongoConnection } from '../../../mongodb-utils/types'
 import {
   createEmptyAdvert,
   createEmptyAdvertLocation,
   normalizeAdvertSummaries,
 } from '../../mappers'
-import type { MongoConnection } from '../../../mongodb-utils/types'
-import { toMap } from '../../../lib'
-import { convertObjectStream } from '../../../lib/streams'
+import type { Advert, AdvertList, AdvertsRepository } from '../../types'
 import { createValidatingAdvertsRepository } from '../validation'
 import { combineAnd, combineOr } from './filters/filter-utils'
+import {
+  mapAdvertFilterInputToMongoQuery,
+  mapAdvertFilterInputToMongoSort,
+  mapAdvertToMongoAdvert,
+} from './mappers'
+import type { MongoAdvert } from './types'
 
 export const createMongoAdvertsRepository = (
   { getCollection }: MongoConnection<MongoAdvert>,
@@ -317,7 +317,8 @@ export const createMongoAdvertsRepository = (
           normalizeAdvertSummaries({
             ...r[0],
             availableAdverts:
-              (r[0].availableLendingAdverts ?? 0) + (r[0].availableRecycleAdverts ?? 0),
+              (r[0].availableLendingAdverts ?? 0) +
+              (r[0].availableRecycleAdverts ?? 0),
           })
         )
 

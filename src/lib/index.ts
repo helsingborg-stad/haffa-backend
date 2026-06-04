@@ -10,16 +10,16 @@ import { uniqueBy } from './unique-by'
 import { waitForAll } from './wait'
 
 export {
+  byCommonTags,
+  exceptValues,
   mapTree,
   mapValues,
+  obfuscate,
+  sortBy,
   toLookup,
   toMap,
-  obfuscate,
-  waitForAll,
   uniqueBy,
-  sortBy,
-  exceptValues,
-  byCommonTags,
+  waitForAll,
 }
 
 export const echo = <T>(value: T): T => {

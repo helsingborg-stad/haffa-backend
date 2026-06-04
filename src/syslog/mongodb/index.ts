@@ -1,10 +1,10 @@
+import { getEnv } from '../../lib/gdi-api-node'
 import type { StartupLog } from '../../types'
+import type { SyslogService } from '../types'
 import {
   createMongoSyslogConnection,
   createMongoSyslogService,
 } from './mongodb-syslog-service'
-import type { SyslogService } from '../types'
-import { getEnv } from '../../lib/gdi-api-node'
 
 export const tryCreateMongoSyslogServiceFromEnv = (
   startupLog: StartupLog

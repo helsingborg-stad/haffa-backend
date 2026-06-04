@@ -4,8 +4,8 @@ export const toLookup = <T>(
 ): Record<string, T[]> =>
   list.reduce<Record<string, T[]>>((lookup, item) => {
     const k = keyFn(item)
-    // eslint-disable-next-line no-param-reassign
-    const l = lookup[k] || (lookup[k] = [])
+    lookup[k] ||= []
+    const l = lookup[k]
     l.push(item)
     return lookup
   }, {})

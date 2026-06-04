@@ -24,9 +24,9 @@ export const createRemoveAdvert =
         actions(a =>
           createAdvertNotifier({ notifications, user }).wasRemoved(a)
         )
-        advert.images.forEach(({ url }) =>
+        advert.images.forEach(({ url }) => {
           actions(() => files.tryCleanupUrl(url))
-        )
+        })
         return advert
       })
       .verify(async update => update)

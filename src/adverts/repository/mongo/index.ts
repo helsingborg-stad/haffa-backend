@@ -1,10 +1,10 @@
-import type { AdvertsRepository } from '../../types'
-import type { MongoAdvert } from './types'
-import { createMongoAdvertsRepository } from './mongo-db-adverts-repository'
+import { getEnv } from '../../../lib/gdi-api-node'
 import { createMongoConnection } from '../../../mongodb-utils'
 import type { MongoConnectionOptions } from '../../../mongodb-utils/types'
 import type { StartupLog } from '../../../types'
-import { getEnv } from '../../../lib/gdi-api-node'
+import type { AdvertsRepository } from '../../types'
+import { createMongoAdvertsRepository } from './mongo-db-adverts-repository'
+import type { MongoAdvert } from './types'
 
 export const createAndConfigureMongoAdvertsRepository = ({
   uri,

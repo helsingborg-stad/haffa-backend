@@ -1,11 +1,11 @@
-import request from 'supertest'
 import { StatusCodes } from 'http-status-codes'
-import type { End2EndTestHandler } from '../../test-utils'
-import { end2endTest } from '../../test-utils'
+import request from 'supertest'
 import { createEmptyAdvert } from '../../adverts/mappers'
+import type { Advert } from '../../adverts/types'
 import { sortBy } from '../../lib'
 import type { LoginPolicy } from '../../login-policies/types'
-import type { Advert } from '../../adverts/types'
+import type { End2EndTestHandler } from '../../test-utils'
+import { end2endTest } from '../../test-utils'
 
 const setupTestLoginPolicyForTestUser =
   (p: Partial<LoginPolicy>): End2EndTestHandler =>

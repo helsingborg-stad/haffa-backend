@@ -1,7 +1,8 @@
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
-import { AdvertClaimType, type Advert, type AdvertMutations } from '../../types'
+import { type Advert, AdvertClaimType, type AdvertMutations } from '../../types'
+import { claimsBy, updateAdvertWithClaimDates } from '../claims/mappers'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import { createAdvertClaimsNotifier } from '../notifications'
 import {
@@ -10,7 +11,6 @@ import {
   verifyReservationsDoesNotExceedQuantity,
   verifyTypeIsReservation,
 } from '../verifiers'
-import { claimsBy, updateAdvertWithClaimDates } from '../claims/mappers'
 
 export const createCollectAdvert =
   ({

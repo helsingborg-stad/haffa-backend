@@ -51,20 +51,19 @@ describe('tryConvertDataUriToImageBuffer scales large images', () => {
     ...makeTestCases('png'),
     ...makeTestCases('webp'),
   ]
-  it.each(scalingTestCases)(
-    '%s (%j) => %j',
-    async (format: TestFormat, initial: Dimensions, expected: Dimensions) => {
-      const buffer = await createTestImage(format, initial)
-      const uri = `data:image;base64,${buffer!.toString('base64')}`
+  it.each(
+    scalingTestCases
+  )('%s (%j) => %j', async (format: TestFormat, initial: Dimensions, expected: Dimensions) => {
+    const buffer = await createTestImage(format, initial)
+    const uri = `data:image;base64,${buffer!.toString('base64')}`
 
-      const converted = await tryConvertDataUriToImageBuffer(uri)
-      expect(converted).not.toBeNull()
-      expect(converted!.buffer).not.toBeNull()
-      expect(converted!.mimeType).toBe('image/webp')
+    const converted = await tryConvertDataUriToImageBuffer(uri)
+    expect(converted).not.toBeNull()
+    expect(converted!.buffer).not.toBeNull()
+    expect(converted!.mimeType).toBe('image/webp')
 
-      const { width, height } = await sharp(converted!.buffer).metadata()
-      expect(width).toBe(expected.width)
-      expect(height).toBe(expected.height)
-    }
-  )
+    const { width, height } = await sharp(converted!.buffer).metadata()
+    expect(width).toBe(expected.width)
+    expect(height).toBe(expected.height)
+  })
 })

@@ -1,11 +1,9 @@
-const isNullOrUndefined = (v: any) => v === null || typeof v === undefined
+const isNullOrUndefined = (v: any) => v === null || v === undefined
 const isString = (v: any) => typeof v === 'string'
 const isObject = (v: any) => typeof v === 'object'
 const isNotNull = <T>(v: T | null): v is T => v !== null
 
-interface Predicate<T> {
-  (value: T): boolean
-}
+type Predicate<T> = (value: T) => boolean
 const operators: Record<
   string,
   (string: any, value: any) => (obj: any) => boolean
@@ -66,7 +64,7 @@ export const createFieldFilterPredicate = <T>(input: any): Predicate<T> => {
     .filter(
       ([field, fieldPredicate]) => isString(field) && isObject(fieldPredicate)
     )
-    .map(
+    .flatMap(
       ([field, fieldPredicate]) =>
         ifSomethingThenStuffItInAnArray(combinators[field]?.(fieldPredicate)) ||
         Object.entries(fieldPredicate)
@@ -76,7 +74,6 @@ export const createFieldFilterPredicate = <T>(input: any): Predicate<T> => {
           )
           .map(([operator, value]) => operators[operator]?.(field, value))
     )
-    .flat()
     .filter(isNotNull)
 
   return subject => predicates.every(p => p(subject))

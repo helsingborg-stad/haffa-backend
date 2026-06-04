@@ -1,9 +1,9 @@
 import HttpStatusCodes from 'http-status-codes'
+import type { GraphQLModule } from '../lib/gdi-api-node'
+import { normalizeRoles } from '../login'
 import type { Services } from '../types'
 import { optionsGqlSchema } from './options.gql.schema'
-import { normalizeRoles } from '../login'
 import { optionsAdapter } from './options-adapter'
-import type { GraphQLModule } from '../lib/gdi-api-node'
 
 const validOptions = new Set([
   'branding-theme',

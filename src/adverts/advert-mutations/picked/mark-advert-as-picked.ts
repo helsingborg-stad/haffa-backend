@@ -1,6 +1,6 @@
 import { TxErrors, txBuilder } from '../../../transactions'
 import type { Services } from '../../../types'
-import { AdvertClaimType, type Advert, type AdvertMutations } from '../../types'
+import { type Advert, AdvertClaimType, type AdvertMutations } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import { createAdvertNotifier } from '../notifications'
 import {

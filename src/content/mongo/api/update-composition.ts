@@ -1,8 +1,8 @@
 import type { MongoConnection } from '../../../mongodb-utils/types'
-import type { MongoViewComposition } from '../types'
-import type { ContentRepository } from '../../types'
-import { applyImages, extractImages, normalizeComposition } from '../../mappers'
 import type { Services } from '../../../types'
+import { applyImages, extractImages, normalizeComposition } from '../../mappers'
+import type { ContentRepository } from '../../types'
+import type { MongoViewComposition } from '../types'
 
 export const createUpdateComposition =
   (

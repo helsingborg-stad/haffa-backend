@@ -3,7 +3,9 @@ import Koa from 'koa'
 import Router from 'koa-router'
 import type { Handler, Request as OpenApiRequest } from 'openapi-backend'
 import OpenAPIBackend from 'openapi-backend'
-
+import { mapValues } from '../util'
+import { apiNotFoundModule } from './api-not-found-module'
+import { apiValidationModule } from './api-validation-module'
 import type {
   Application,
   ApplicationContext,
@@ -11,9 +13,6 @@ import type {
   ApplicationModule,
   ApplicationRunHandler,
 } from './types'
-import { mapValues } from '../util'
-import { apiValidationModule } from './api-validation-module'
-import { apiNotFoundModule } from './api-not-found-module'
 
 const debug = Debug('application')
 
@@ -48,7 +47,7 @@ const mapKoaRequestToApiRequest = ({
     headers,
     query,
     body,
-  } as OpenApiRequest)
+  }) as OpenApiRequest
 
 const compineApplicationExtensions = (
   prev: ApplicationExtension,

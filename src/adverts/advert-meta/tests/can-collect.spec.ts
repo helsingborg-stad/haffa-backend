@@ -60,24 +60,24 @@ describe('getAdvertMeta::canCollect', () => {
   ]
 
   it('allows user with rights', () => {
-    collectableAdverts.forEach(advert =>
+    collectableAdverts.forEach(advert => {
       expect(
         getAdvertMeta(advert, createUserWithRights('test@user')).canCollect
       ).toBe(true)
-    )
+    })
   })
 
   it('denies user without rights', () => {
-    collectableAdverts.forEach(advert =>
+    collectableAdverts.forEach(advert => {
       expect(getAdvertMeta(advert, { id: 'test@user' }).canCollect).toBe(false)
-    )
+    })
   })
 
   it('denies fully collected', () => {
-    uncollctableAdverts.forEach(advert =>
+    uncollctableAdverts.forEach(advert => {
       expect(
         getAdvertMeta(advert, createUserWithRights('test@user')).canCollect
       ).toBe(false)
-    )
+    })
   })
 })

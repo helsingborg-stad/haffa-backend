@@ -1,8 +1,8 @@
-import { createGetAdvertMeta } from '..'
 import type { HaffaUser } from '../../../login/types'
 import { createEmptyAdvert } from '../../mappers'
 import type { AdvertClaim } from '../../types'
 import { AdvertClaimType } from '../../types'
+import { createGetAdvertMeta } from '..'
 
 describe('getAdvertMeta::isOverdue', () => {
   const createUserWithRights = (id: string): HaffaUser => ({

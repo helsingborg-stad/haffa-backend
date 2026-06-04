@@ -1,10 +1,10 @@
-import request from 'supertest'
 import HttpStatusCodes from 'http-status-codes'
-import { end2endTest } from '../../test-utils'
-import { userMapperConfigAdapter } from '../../users'
+import request from 'supertest'
 import { loginPolicyAdapter } from '../../login-policies/login-policy-adapter'
-import { makeUser } from '..'
+import { end2endTest } from '../../test-utils'
 import { createTokenService } from '../../tokens'
+import { userMapperConfigAdapter } from '../../users'
+import { makeUser } from '..'
 
 describe('verify-token', () => {
   it('verify-token denies by default', () =>

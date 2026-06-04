@@ -12,7 +12,7 @@ export const normalizePickupLocation = (
   country: l?.country?.trim() ?? '',
   notifyEmail: l?.notifyEmail?.trim() ?? '',
   trackingName: l?.trackingName?.trim() ?? '',
-  tags: (Array.isArray(l?.tags) ? l?.tags ?? [] : [])
+  tags: (Array.isArray(l?.tags) ? (l?.tags ?? []) : [])
     .filter(v => v)
     .map(s => s.toString().trim()),
 })

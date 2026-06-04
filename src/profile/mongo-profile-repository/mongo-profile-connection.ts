@@ -1,9 +1,9 @@
-import type { MongoProfile } from './types'
+import { createMongoConnection } from '../../mongodb-utils'
 import type {
   MongoConnection,
   MongoConnectionOptions,
 } from '../../mongodb-utils/types'
-import { createMongoConnection } from '../../mongodb-utils'
+import type { MongoProfile } from './types'
 
 export const createMongoProfileConnection = ({
   uri,

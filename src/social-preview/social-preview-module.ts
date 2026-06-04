@@ -1,7 +1,7 @@
-import type { Services } from '../types'
+import type { ApplicationModule } from '../lib/gdi-api-node'
 import { makeGuestUser } from '../login'
 import { optionsAdapter } from '../options'
-import type { ApplicationModule } from '../lib/gdi-api-node'
+import type { Services } from '../types'
 
 export const socialPreviewModule =
   ({ adverts, settings }: Services): ApplicationModule =>

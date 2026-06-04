@@ -1,7 +1,7 @@
 import { PassThrough } from 'stream'
-import type { ImportSnapshotFunction, SnapshotFunction } from '../types'
-import { jsonStream, objectStream } from '../../lib/streams'
 import type { Category } from '../../categories/types'
+import { jsonStream, objectStream } from '../../lib/streams'
+import type { ImportSnapshotFunction, SnapshotFunction } from '../types'
 import { patchCategories } from './patch-categories'
 
 export const categoriesSnapshot: SnapshotFunction = (ctx, { categories }) => {

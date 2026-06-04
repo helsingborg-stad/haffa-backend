@@ -1,6 +1,6 @@
-import { createTestNotificationServices } from '.'
 import { createEmptyAdvert } from '../adverts/mappers'
 import type { HaffaUser } from '../login/types'
+import { createTestNotificationServices } from '.'
 
 describe('createTestNotificationServices()', () => {
   it('fails on every invocation', async () => {

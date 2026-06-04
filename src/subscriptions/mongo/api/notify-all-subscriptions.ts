@@ -52,7 +52,9 @@ export const createNotifyAllSubscriptions =
         },
         restrictions: { canBeReserved: true },
       })
-      ads.adverts.forEach(advert => found.set(advert.id, advert))
+      ads.adverts.forEach(advert => {
+        found.set(advert.id, advert)
+      })
     }
 
     // mark all user subscriptions as notified

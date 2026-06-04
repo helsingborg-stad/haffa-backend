@@ -1,7 +1,7 @@
 import {
-  AdvertClaimType,
   type AdvertClaim,
   AdvertClaimEventType,
+  AdvertClaimType,
 } from '../../types'
 import {
   getLastClaimEventDate,

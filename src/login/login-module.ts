@@ -1,12 +1,12 @@
 import type Koa from 'koa'
-import { RequestPincodeStatus } from './types'
-import type { CookieService, LoginService } from './types'
-import type { TokenService } from '../tokens/types'
+import type { ApplicationContext, ApplicationModule } from '../lib/gdi-api-node'
 import type { NotificationService } from '../notifications/types'
+import type { TokenService } from '../tokens/types'
+import type { UserMapper } from '../users/types'
 import { rolesToRolesArray } from '.'
 import { requireHaffaUserRole } from './require-haffa-user'
-import type { UserMapper } from '../users/types'
-import type { ApplicationContext, ApplicationModule } from '../lib/gdi-api-node'
+import type { CookieService, LoginService } from './types'
+import { RequestPincodeStatus } from './types'
 
 export const loginModule =
   (

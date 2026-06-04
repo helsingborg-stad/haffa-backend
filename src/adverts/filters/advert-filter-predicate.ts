@@ -1,12 +1,12 @@
 import type { HaffaUser } from '../../login/types'
 import type { GetAdvertMeta } from '../advert-meta/types'
-import { AdvertClaimType } from '../types'
 import type {
-  AdvertWorkflowInput,
   Advert,
   AdvertFilterInput,
   AdvertRestrictionsFilterInput,
+  AdvertWorkflowInput,
 } from '../types'
+import { AdvertClaimType } from '../types'
 import { createFieldFilterPredicate } from './field-filter-predicate'
 import type { Predicate } from './types'
 
@@ -16,13 +16,11 @@ const regexpEscape = (s: string): string =>
 const createFreeTextPredicate = (search: string): Predicate<Advert> => {
   // extract individual words from search
 
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Character_classes#looking_for_a_word_from_unicode_characters
-  const matchers = // eslint-disable-next-line no-control-regex
-    ((search || '').match(/([\u0000-\u0019\u0021-\uFFFF]+)/gm) || [])
-      .filter(v => v)
-      .filter(v => v.length >= 3)
-      .map(regexpEscape)
-      .map(re => new RegExp(re, 'ig'))
+  const matchers = (search || '')
+    .split(/\s+/)
+    .filter(v => v.length >= 3)
+    .map(regexpEscape)
+    .map(re => new RegExp(re, 'ig'))
 
   return matchers.length > 0
     ? advert =>
@@ -67,8 +65,8 @@ const createRestrictionsPredicate = (
     test === true
       ? testTrue
       : test === false
-      ? advert => (testFalse ? testFalse(advert) : !testTrue(advert))
-      : null
+        ? advert => (testFalse ? testFalse(advert) : !testTrue(advert))
+        : null
 
   const matchers: Predicate<Advert>[] = [
     makeMatcher(
@@ -124,8 +122,8 @@ const combineAnd = (
   return ml.length === 0
     ? null
     : ml.length === 1
-    ? ml[0]
-    : advert => ml.every(m => m!(advert))
+      ? ml[0]
+      : advert => ml.every(m => m!(advert))
 }
 
 const combineOr = (
@@ -136,8 +134,8 @@ const combineOr = (
   return ml.length === 0
     ? null
     : ml.length === 1
-    ? ml[0]
-    : advert => ml.some(m => m!(advert))
+      ? ml[0]
+      : advert => ml.some(m => m!(advert))
 }
 
 export const createAdvertFilterPredicate = (

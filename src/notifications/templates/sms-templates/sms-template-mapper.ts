@@ -1,11 +1,11 @@
 import { compile } from 'handlebars'
-import type { SettingsService } from '../../../settings/types'
-import type { SmsTemplate, SmsTemplatePreview } from './types'
-import {
-  isValidSmsTemplateName,
-  defaultSmsTemplates,
-} from './default-templates'
 import { uniqueBy } from '../../../lib'
+import type { SettingsService } from '../../../settings/types'
+import {
+  defaultSmsTemplates,
+  isValidSmsTemplateName,
+} from './default-templates'
+import type { SmsTemplate, SmsTemplatePreview } from './types'
 
 const normalizeSmsTemplates = (
   templates: SmsTemplate[] | null

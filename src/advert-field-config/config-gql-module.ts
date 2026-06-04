@@ -1,9 +1,9 @@
 import HttpStatusCodes from 'http-status-codes'
-import { advertFieldConfigGqlSchema } from './config.gql.schema'
-import type { Services } from '../types'
-import { normalizeRoles } from '../login'
-import { advertFieldConfigAdapter } from './mappers'
 import type { GraphQLModule } from '../lib/gdi-api-node'
+import { normalizeRoles } from '../login'
+import type { Services } from '../types'
+import { advertFieldConfigGqlSchema } from './config.gql.schema'
+import { advertFieldConfigAdapter } from './mappers'
 
 export const createAdvertFieldConfigGqlModule = ({
   settings,

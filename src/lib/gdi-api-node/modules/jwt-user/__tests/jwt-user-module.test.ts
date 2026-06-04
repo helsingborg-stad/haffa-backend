@@ -1,10 +1,10 @@
-import request from 'supertest'
 import { StatusCodes } from 'http-status-codes'
+import request from 'supertest'
+import { getOpenApiDefinitionPathForTest } from '../../../__tests/test-utils'
 import { createApplication } from '../../../application'
 import type { AuthorizationService } from '../../../services/authorization-service'
 import { createAuthorizationService } from '../../../services/authorization-service'
 import { jwtUserModule } from '..'
-import { getOpenApiDefinitionPathForTest } from '../../../__tests/test-utils'
 
 const createTestApp = (authorization: AuthorizationService) =>
   createApplication({

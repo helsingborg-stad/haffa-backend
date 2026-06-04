@@ -1,15 +1,15 @@
-import { StatusCodes } from 'http-status-codes'
 import Ajv from 'ajv'
-import type {
-  AdvertLocation,
-  AdvertClaimEvent,
-  Advert,
-  AdvertClaim,
-  AdvertImage,
-  AdvertContact,
-} from '../../types'
+import { StatusCodes } from 'http-status-codes'
 import { toMap } from '../../../lib'
 import { normalizeAdvert } from '../../mappers'
+import type {
+  Advert,
+  AdvertClaim,
+  AdvertClaimEvent,
+  AdvertContact,
+  AdvertImage,
+  AdvertLocation,
+} from '../../types'
 
 const props = <T = Advert>(
   schema: any,

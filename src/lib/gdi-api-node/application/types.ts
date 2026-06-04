@@ -1,8 +1,8 @@
-import type { Handler } from 'openapi-backend'
-import type OpenAPIBackend from 'openapi-backend'
+import type { Server } from 'node:http'
 import type Koa from 'koa'
 import type Router from 'koa-router'
-import type { Server } from 'node:http'
+import type OpenAPIBackend from 'openapi-backend'
+import type { Handler } from 'openapi-backend'
 
 // TODO: Document this
 export interface ApplicationContext {

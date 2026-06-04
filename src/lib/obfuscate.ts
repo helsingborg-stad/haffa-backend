@@ -29,7 +29,9 @@ const tryObfuscateUrl = (s: string): string | null => {
     ([key, value]) => obfuscate(value, key)
   )
 
-  Object.keys(sp).forEach(key => url.searchParams.set(key, sp[key]))
+  Object.keys(sp).forEach(key => {
+    url.searchParams.set(key, sp[key])
+  })
 
   return url.toString()
 }
@@ -46,10 +48,10 @@ export const obfuscate = (value: any, name?: string): any =>
       tryObfuscateUrl(value as string) ||
       value
     : // eslint-disable-next-line no-nested-ternary
-    Array.isArray(value)
-    ? value.map(v => obfuscate(v, name))
-    : value && typeof value === 'object'
-    ? Object.fromEntries(
-        Object.entries(value).map(([k, v]) => [k, obfuscate(v, k)])
-      )
-    : value
+      Array.isArray(value)
+      ? value.map(v => obfuscate(v, name))
+      : value && typeof value === 'object'
+        ? Object.fromEntries(
+            Object.entries(value).map(([k, v]) => [k, obfuscate(v, k)])
+          )
+        : value

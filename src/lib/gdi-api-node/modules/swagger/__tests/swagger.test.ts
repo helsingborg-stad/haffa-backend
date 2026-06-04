@@ -1,9 +1,9 @@
 import { StatusCodes } from 'http-status-codes'
 import request from 'supertest'
+import { getOpenApiDefinitionPathForTest } from '../../../__tests/test-utils'
+import { createApplication } from '../../../application'
 import type { SwaggerModuleProps } from '..'
 import { swaggerModule } from '..'
-import { createApplication } from '../../../application'
-import { getOpenApiDefinitionPathForTest } from '../../../__tests/test-utils'
 
 const createTestApp = (props?: SwaggerModuleProps) =>
   createApplication({

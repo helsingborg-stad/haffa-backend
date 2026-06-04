@@ -1,9 +1,9 @@
 import type { Filter } from 'mongodb'
+import type { HaffaUser } from '../../../../login/types'
 import type { AdvertRestrictionsFilterInput } from '../../../types'
 import { AdvertClaimType } from '../../../types'
 import type { MongoAdvert } from '../types'
 import { combineAnd, combineOr } from './filter-utils'
-import type { HaffaUser } from '../../../../login/types'
 
 export const regularAdvertsFilter: Filter<MongoAdvert> = {
   'meta.archived': { $ne: true },

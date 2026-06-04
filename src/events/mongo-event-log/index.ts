@@ -1,8 +1,8 @@
-import type { StartupLog } from '../../types'
-import { createMongoEventsConnection } from './connection'
-import type { EventLogService } from '../types'
-import { createMongoEventLogService } from './mongo-event-log-service'
 import { getEnv } from '../../lib/gdi-api-node'
+import type { StartupLog } from '../../types'
+import type { EventLogService } from '../types'
+import { createMongoEventsConnection } from './connection'
+import { createMongoEventLogService } from './mongo-event-log-service'
 
 export const tryCreateMongoEventLogFromEnv = (
   startupLog: StartupLog

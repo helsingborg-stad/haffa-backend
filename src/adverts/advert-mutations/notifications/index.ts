@@ -1,4 +1,4 @@
-import { createAdvertNotifier } from './advert-notifier'
 import { createAdvertClaimsNotifier } from './advert-claims-notifier'
+import { createAdvertNotifier } from './advert-notifier'
 
-export { createAdvertNotifier, createAdvertClaimsNotifier }
+export { createAdvertClaimsNotifier, createAdvertNotifier }

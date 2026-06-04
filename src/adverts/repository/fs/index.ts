@@ -1,9 +1,9 @@
 import { join } from 'path'
+import { getEnv } from '../../../lib/gdi-api-node'
+import type { StartupLog } from '../../../types'
+import type { GetAdvertMeta } from '../../advert-meta/types'
 import type { AdvertsRepository } from '../../types'
 import { createFsAdvertsRepository } from './fs-adverts-repository'
-import type { StartupLog } from '../../../types'
-import { getEnv } from '../../../lib/gdi-api-node'
-import type { GetAdvertMeta } from '../../advert-meta/types'
 
 export const tryCreateFsAdvertsRepositoryFromEnv = (
   startupLog: StartupLog,

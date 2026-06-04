@@ -1,16 +1,16 @@
-import { createUserMapper, isValidEmail } from './user-mapper'
+import { getEnv } from '../lib/gdi-api-node'
 import type { SettingsService } from '../settings/types'
 import type { StartupLog } from '../types'
 import type { UserMapper } from './types'
+import { createUserMapper, isValidEmail } from './user-mapper'
 import { userMapperConfigAdapter } from './user-mapper-config-adapter'
 import { createUserMapperGqlModule } from './user-mapper-gql-module'
-import { getEnv } from '../lib/gdi-api-node'
 
 export {
   createUserMapper,
+  createUserMapperGqlModule,
   isValidEmail,
   userMapperConfigAdapter,
-  createUserMapperGqlModule,
 }
 
 export const createUserMapperFromEnv = (

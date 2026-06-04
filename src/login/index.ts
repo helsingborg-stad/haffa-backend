@@ -1,14 +1,13 @@
 import { toMap } from '../lib'
 import type { StartupLog } from '../types'
 import type { UserMapper } from '../users/types'
+import { createCookieService, createCookieServiceFromEnv } from './cookies'
 import { createInMemoryLoginServiceFromEnv } from './in-memory-login-service'
+import { createIssuePincode } from './issue-pincode'
 import { tryCreateMongoLoginServiceFromEnv } from './mongo-login-service'
 import type { HaffaUser, HaffaUserRoles, LoginService } from './types'
-import { createIssuePincode } from './issue-pincode'
-import { createCookieService, createCookieServiceFromEnv } from './cookies'
 
-export { createIssuePincode }
-export { createCookieService, createCookieServiceFromEnv }
+export { createCookieService, createCookieServiceFromEnv, createIssuePincode }
 
 export const GUEST_USER_ID = 'guest'
 

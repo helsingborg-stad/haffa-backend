@@ -3,9 +3,9 @@ import {
   patchAdvertWithPickupLocation,
 } from '../../../pickup/mappers'
 import {
-  T,
   createTestNotificationServices,
   end2endTest,
+  T,
 } from '../../../test-utils'
 import { TxErrors } from '../../../transactions'
 import { createEmptyAdvert, createEmptyAdvertLocation } from '../../mappers'

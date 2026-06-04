@@ -48,24 +48,24 @@ describe('getAdvertMeta::canReserve', () => {
   ]
 
   it('allows reservations if advert.quantity exceeds total reservations', () => {
-    reservableAdverts.forEach(advert =>
+    reservableAdverts.forEach(advert => {
       expect(
         getAdvertMeta(advert, createUserWithRights('test@user')).canReserve
       ).toBe(true)
-    )
+    })
   })
 
   it('denies reservations if rights are missing', () => {
-    reservableAdverts.forEach(advert =>
+    reservableAdverts.forEach(advert => {
       expect(getAdvertMeta(advert, { id: 'test@user' }).canReserve).toBe(false)
-    )
+    })
   })
 
   it('denies reservations if total reservations amounts ot advert.quantity', () => {
-    unreservableAdverts.forEach(advert =>
+    for (const advert of unreservableAdverts) {
       expect(
         getAdvertMeta(advert, createUserWithRights('test@user')).canReserve
       ).toBe(false)
-    )
+    }
   })
 })

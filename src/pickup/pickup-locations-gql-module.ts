@@ -1,10 +1,10 @@
 import HttpStatusCodes from 'http-status-codes'
-import type { Services } from '../types'
-import { normalizeRoles } from '../login'
 import type { GraphQLModule } from '../lib/gdi-api-node'
+import { normalizeRoles } from '../login'
+import type { HaffaUser } from '../login/types'
+import type { Services } from '../types'
 import { pickupLocationsGqlSchema } from './pickup-locations.gql.schema'
 import { pickupLocationsAdapter } from './pickup-locations-adapter'
-import type { HaffaUser } from '../login/types'
 
 const resolveAdminProperty = <T>(
   value: T,

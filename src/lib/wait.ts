@@ -6,7 +6,9 @@ export const waitForAll = async <T>(
   concurrency: number = 1
 ): Promise<void> => {
   const q = fastq.promise(worker, concurrency)
-  tasks.forEach(task => q.push(task))
+  tasks.forEach(task => {
+    q.push(task)
+  })
   await q.drained()
 }
 

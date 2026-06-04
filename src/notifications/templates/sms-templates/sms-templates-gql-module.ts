@@ -1,9 +1,9 @@
 import HttpStatusCodes from 'http-status-codes'
-import { smsTemplatesGqlSchema } from './sms-templates.gql.schema'
-import type { Services } from '../../../types'
-import { normalizeRoles } from '../../../login'
-import { smsTemplateMapper } from './sms-template-mapper'
 import type { GraphQLModule } from '../../../lib/gdi-api-node'
+import { normalizeRoles } from '../../../login'
+import type { Services } from '../../../types'
+import { smsTemplateMapper } from './sms-template-mapper'
+import { smsTemplatesGqlSchema } from './sms-templates.gql.schema'
 
 export const createSmsTemplatesGqlModule = ({
   settings,

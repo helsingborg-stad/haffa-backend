@@ -1,12 +1,12 @@
 import { Exception } from 'handlebars'
+import type { StartupLog } from '../types'
+import { tryCreateFsSettingsServiceFromEnv } from './fs'
 import {
   createInMemorySettingsService,
   createInMemorySettingsServiceFromEnv,
 } from './memory'
-import type { SettingsService } from './types'
-import { tryCreateFsSettingsServiceFromEnv } from './fs'
 import { tryCreateMongoDbSettingsServiceFromEnv } from './mongodb'
-import type { StartupLog } from '../types'
+import type { SettingsService } from './types'
 
 export { createInMemorySettingsService }
 

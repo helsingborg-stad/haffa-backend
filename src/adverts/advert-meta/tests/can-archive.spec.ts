@@ -1,4 +1,3 @@
-import { createGetAdvertMeta } from '..'
 import { makeAdmin } from '../../../login'
 import type { HaffaUser } from '../../../login/types'
 import {
@@ -6,6 +5,7 @@ import {
   makeReservedClaim,
 } from '../../advert-mutations/test-utils/claims'
 import { createEmptyAdvert } from '../../mappers'
+import { createGetAdvertMeta } from '..'
 
 describe('getAdvertMeta::canArchive', () => {
   const getAdvertMeta = createGetAdvertMeta()

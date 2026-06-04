@@ -1,15 +1,9 @@
 import cors from '@koa/cors'
 import bodyparser from 'koa-bodyparser'
-import type { Services } from './types'
-import { graphQLModule } from './haffa/haffa-module'
-import { loginModule } from './login/login-module'
-import { gitRevisionModule } from './git-revision-module'
 import { apiKeyUserModule } from './api-keys'
-import { cookieUserModule } from './login/cookies/cookie-user-module'
-import { optionsUserModule } from './options/options-user-module'
+import { gitRevisionModule } from './git-revision-module'
 import { guestUserModule } from './guest'
-import { snapshotModule } from './snapshot/snapshot-module'
-import { socialPreviewModule } from './social-preview/social-preview-module'
+import { graphQLModule } from './haffa/haffa-module'
 import { advertLabelModule } from './labels/advertLabelModule'
 import type { Application } from './lib/gdi-api-node'
 import {
@@ -18,6 +12,12 @@ import {
   jwtUserModule,
   swaggerModule,
 } from './lib/gdi-api-node'
+import { cookieUserModule } from './login/cookies/cookie-user-module'
+import { loginModule } from './login/login-module'
+import { optionsUserModule } from './options/options-user-module'
+import { snapshotModule } from './snapshot/snapshot-module'
+import { socialPreviewModule } from './social-preview/social-preview-module'
+import type { Services } from './types'
 
 /** Create fully packaged web application, given dependencies */
 export const createApp = ({

@@ -1,11 +1,11 @@
-import type { MongoConnection } from '../../mongodb-utils/types'
-import type { MongoProfile } from './types'
-import { createMongoProfileRepository } from './mongo-profile-repository'
-import { createEmptyProfile, createEmptyProfileInput } from '../mappers'
+import { makeUser } from '../../login'
 import type { HaffaUser } from '../../login/types'
+import type { MongoConnection } from '../../mongodb-utils/types'
+import { createEmptyProfile, createEmptyProfileInput } from '../mappers'
 import type { ProfileInput, ProfileRepository } from '../types'
 import { createMongoProfileConnection } from './mongo-profile-connection'
-import { makeUser } from '../../login'
+import { createMongoProfileRepository } from './mongo-profile-repository'
+import type { MongoProfile } from './types'
 
 const mongoMock = require('mongo-mock')
 

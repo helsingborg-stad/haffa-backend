@@ -1,15 +1,15 @@
 import HttpStatusCodes from 'http-status-codes'
+import type { GraphQLModule } from '../lib/gdi-api-node'
+import { pickupLocationsAdapter } from '../pickup/pickup-locations-adapter'
+import type { Services } from '../types'
+import { createAdvertMutations } from './advert-mutations'
 import { advertsGqlSchema } from './adverts.gql.schema'
 import {
   mapAdvertMutationResultToAdvertWithMetaMutationResult,
-  mapAdvertToAdvertWithMeta,
   mapAdvertsToAdvertsWithMeta,
+  mapAdvertToAdvertWithMeta,
 } from './mappers'
-import { createAdvertMutations } from './advert-mutations'
-import type { Services } from '../types'
-import type { GraphQLModule } from '../lib/gdi-api-node'
 import type { Advert } from './types'
-import { pickupLocationsAdapter } from '../pickup/pickup-locations-adapter'
 
 export const createAdvertsGqlModule = (
   services: Pick<

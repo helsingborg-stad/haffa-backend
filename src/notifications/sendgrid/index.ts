@@ -3,4 +3,4 @@ import {
   tryCreateSendGridNofificationsFromEnv,
 } from './sendgrid-notifications'
 
-export { tryCreateSendGridNofificationsFromEnv, createSendGridNotifications }
+export { createSendGridNotifications, tryCreateSendGridNofificationsFromEnv }
