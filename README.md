@@ -91,22 +91,22 @@ Make sure you have the file `.env` in your project root. For its contents, refer
 
 ```sh
 # install dependencies
-yarn
+npm install
 
 # run tests
-yarn test
+npm test
 
 # run tests and report coverage
-yarn coverage
+npm run coverage
 
 # start web server
-yarn start
+npm start
 
 # start server on port 8080 instead of default 4000
-PORT=8080 yarn start
+PORT=8080 npm start
 
 # start with debugging output
-DEBUG=* yarn start
+DEBUG=* npm start
 
 ```
 
@@ -129,8 +129,7 @@ docker-compose up
 
 ### Prerequisites
 
-- [nodejs](https://nodejs.org/en/)
-- [Yarn](https://classic.yarnpkg.com/lang/en/docs/install)
+- [nodejs](https://nodejs.org/en/) v22+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

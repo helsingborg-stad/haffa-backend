@@ -21,33 +21,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-    
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: cache yarn
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-dev-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-dev-
+          cache: 'npm'
 
       - name: setup npm
         run: |
-          echo "registry=https://registry.yarnpkg.com/" >> ~/.npmrc
           echo "@helsingborg-stad:registry=https://npm.pkg.github.com" >> ~/.npmrc
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
-          echo "unsafe-perm=true" >> ~/.npmrc
-          echo "always-auth=true" >> ~/.npmrc
 
-      - name: yarn install
-        run: yarn install
+      - name: npm install
+        run: npm ci
 
       - name: run tests
-        run: yarn test-ci
+        run: npm run test-ci
 
       - name: Save output
         if: ${{ always() }}
