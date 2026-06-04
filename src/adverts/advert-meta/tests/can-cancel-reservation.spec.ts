@@ -58,19 +58,19 @@ describe('getAdvertMeta::canCancelReservation', () => {
   ]
 
   it('allows', () => {
-    cancellableAdverts.forEach(advert =>
+    cancellableAdverts.forEach(advert => {
       expect(
         getAdvertMeta(advert, createUserWithRights('test@user'))
           .canCancelReservation
       ).toBe(true)
-    )
+    })
   })
   it('denies', () => {
-    uncancellableAdverts.forEach(advert =>
+    uncancellableAdverts.forEach(advert => {
       expect(
         getAdvertMeta(advert, createUserWithRights('test@user'))
           .canCancelReservation
       ).toBe(false)
-    )
+    })
   })
 })

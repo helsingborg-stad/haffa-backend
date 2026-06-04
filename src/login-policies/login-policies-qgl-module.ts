@@ -1,9 +1,9 @@
 import HttpStatusCodes from 'http-status-codes'
+import type { GraphQLModule } from '../lib/gdi-api-node'
+import { normalizeRoles } from '../login'
 import type { Services } from '../types'
 import { loginPoliciesGqlSchema } from './login-policies.gql.schema'
 import { loginPolicyAdapter } from './login-policy-adapter'
-import { normalizeRoles } from '../login'
-import type { GraphQLModule } from '../lib/gdi-api-node'
 
 export const createLoginPoliciesGqlModule = ({
   settings,

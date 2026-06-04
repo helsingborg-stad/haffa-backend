@@ -1,8 +1,10 @@
-import { ApplicationContext } from './types'
+import type { ApplicationContext } from './types'
 
-export const apiNotFoundModule = () => ({ api }: ApplicationContext): void => 
-	// setup reasonable defaults
-	api.register({
-		// https://github.com/anttiviljami/openapi-backend#quick-start
-		notFound: (c, ctx) => ctx.throw(404),
-	})
+export const apiNotFoundModule =
+  () =>
+  ({ api }: ApplicationContext): void =>
+    // setup reasonable defaults
+    api.register({
+      // https://github.com/anttiviljami/openapi-backend#quick-start
+      notFound: (c, ctx) => ctx.throw(404),
+    })

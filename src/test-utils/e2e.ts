@@ -1,24 +1,24 @@
+import HttpStatusCodes from 'http-status-codes'
 import type { Test } from 'supertest'
 import request from 'supertest'
-import HttpStatusCodes from 'http-status-codes'
-import type { Services } from '../types'
+import { createGetAdvertMeta } from '../adverts/advert-meta'
+import { createInMemoryAdvertsRepository } from '../adverts/repository/memory'
 import type { Advert } from '../adverts/types'
+import type { Application, ApplicationRunHandler } from '../lib/gdi-api-node'
+import { createIssuePincode } from '../login'
 import type { LoginRequestEntry } from '../login/in-memory-login-service/in-memory-login-service'
 import { createInMemoryLoginService } from '../login/in-memory-login-service/in-memory-login-service'
-import { createTestApp, createTestServices } from './test-app'
-import { createInMemoryAdvertsRepository } from '../adverts/repository/memory'
-import type { TokenService } from '../tokens/types'
+import type { HaffaUser } from '../login/types'
+import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
 import { createInMemoryProfileRepository } from '../profile'
 import type { Profile } from '../profile/types'
-import type { HaffaUser } from '../login/types'
-import { type UserMapper } from '../users/types'
-import type { SettingsService } from '../settings/types'
-import { createUserMapper } from '../users'
 import { createInMemorySettingsService } from '../settings'
-import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
-import { createIssuePincode } from '../login'
-import type { Application, ApplicationRunHandler } from '../lib/gdi-api-node'
-import { createGetAdvertMeta } from '../adverts/advert-meta'
+import type { SettingsService } from '../settings/types'
+import type { TokenService } from '../tokens/types'
+import type { Services } from '../types'
+import { createUserMapper } from '../users'
+import type { UserMapper } from '../users/types'
+import { createTestApp, createTestServices } from './test-app'
 
 const createGqlRequest =
   (
@@ -67,9 +67,7 @@ export interface End2EndTestConfig {
   setupApplication?: (app: Application, services: Services) => Application
 }
 
-export interface End2EndTestHandler {
-  (context: End2EndTestContext): Promise<any>
-}
+export type End2EndTestHandler = (context: End2EndTestContext) => Promise<any>
 
 export const end2endTest = (
   config: End2EndTestConfig | null,

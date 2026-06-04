@@ -1,10 +1,10 @@
-import request from 'supertest'
 import HttpStatusCodes from 'http-status-codes'
+import request from 'supertest'
+import { GUEST_USER_ID } from '../../login'
+import { requireHaffaUser } from '../../login/require-haffa-user'
 import type { End2EndTestConfig } from '../../test-utils'
 import { end2endTest } from '../../test-utils'
-import { requireHaffaUser } from '../../login/require-haffa-user'
 import { userMapperConfigAdapter } from '..'
-import { GUEST_USER_ID } from '../../login'
 
 describe('guest access', () => {
   // e2e test configuration with a guarded endpoint /echo-user

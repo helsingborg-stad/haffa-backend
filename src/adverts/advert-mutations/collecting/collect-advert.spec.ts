@@ -1,12 +1,12 @@
 import {
-  T,
   createTestNotificationServices,
   end2endTest,
+  T,
 } from '../../../test-utils'
 import { TxErrors } from '../../../transactions'
 import { createEmptyAdvert } from '../../mappers'
-import { AdvertClaimType } from '../../types'
 import type { AdvertMutationResult } from '../../types'
+import { AdvertClaimType } from '../../types'
 import { mutationProps } from '../test-utils/gql-test-definitions'
 
 const collectAdvertMutation = /* GraphQL */ `

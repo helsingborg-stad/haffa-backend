@@ -1,13 +1,13 @@
 import HttpStatusCodes from 'http-status-codes'
 import PDFDocument from 'pdfkit'
 import QRCode from 'qrcode'
-import type { Services } from '../types'
-import { makeGuestUser, normalizeRoles } from '../login'
 import type { Advert } from '../adverts/types'
-import { optionsAdapter } from '../options'
-import { createLabelFooter, transformLabelOptions } from './mappers'
-import { requireHaffaUser } from '../login/require-haffa-user'
 import type { ApplicationModule } from '../lib/gdi-api-node'
+import { makeGuestUser, normalizeRoles } from '../login'
+import { requireHaffaUser } from '../login/require-haffa-user'
+import { optionsAdapter } from '../options'
+import type { Services } from '../types'
+import { createLabelFooter, transformLabelOptions } from './mappers'
 
 export const advertLabelModule =
   ({ adverts, settings, userMapper }: Services): ApplicationModule =>

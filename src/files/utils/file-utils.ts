@@ -1,5 +1,5 @@
-import * as uuid from 'uuid'
 import { extension } from 'mime-types'
+import * as uuid from 'uuid'
 
 export function splitBase64DataUri(dataUri: string): {
   mimeType: string

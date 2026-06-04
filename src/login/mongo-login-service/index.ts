@@ -3,4 +3,4 @@ import {
   tryCreateMongoLoginServiceFromEnv,
 } from './mongo-login-service'
 
-export { tryCreateMongoLoginServiceFromEnv, createMongoLoginService }
+export { createMongoLoginService, tryCreateMongoLoginServiceFromEnv }

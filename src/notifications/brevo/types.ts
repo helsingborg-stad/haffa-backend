@@ -59,7 +59,7 @@ export interface SendMailPostRequestBody {
     {
       name: string
       email: string
-    }
+    },
   ]
 
   templateId: number

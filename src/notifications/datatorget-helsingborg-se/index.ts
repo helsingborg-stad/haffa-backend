@@ -1,10 +1,10 @@
 import request from 'superagent'
-import type { StartupLog } from '../../types'
-import type { NotificationService } from '../types'
+import { getEnv } from '../../lib/gdi-api-node'
 import type { SettingsService } from '../../settings/types'
+import type { StartupLog } from '../../types'
 import { userMapperConfigAdapter } from '../../users'
 import { smsTemplateMapper } from '../templates/sms-templates/sms-template-mapper'
-import { getEnv } from '../../lib/gdi-api-node'
+import type { NotificationService } from '../types'
 
 const createDatatorgetSmsNotifications = ({
   apiKey,
@@ -28,9 +28,8 @@ const createDatatorgetSmsNotifications = ({
       return
     }
     const url = new URL('/api/v1/hpb/send/sms', endpoint).toString()
-    const { phone } = await userMapperConfigAdapter(
-      settings
-    ).getUserMapperConfig()
+    const { phone } =
+      await userMapperConfigAdapter(settings).getUserMapperConfig()
     await request
       .post(url)
       .set('x-api-key', apiKey)

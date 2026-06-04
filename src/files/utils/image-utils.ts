@@ -1,9 +1,9 @@
-import sharp from 'sharp'
 import mime from 'mime-types'
+import sharp from 'sharp'
 import type { Readable } from 'stream'
-import { splitBase64DataUri } from './file-utils'
-import type { Func } from '../../lib/types'
 import { streamToBuffer } from '../../lib/streams'
+import type { Func } from '../../lib/types'
+import { splitBase64DataUri } from './file-utils'
 
 export async function tryConvertStreamToDataUri(
   stream: Readable

@@ -1,6 +1,6 @@
+import { normalizeAdvert } from '../../mappers'
 import type { AdvertsRepository } from '../../types'
 import { validateAdvert } from './validate-advert'
-import { normalizeAdvert } from '../../mappers'
 
 export const createValidatingAdvertsRepository = (
   inner: AdvertsRepository

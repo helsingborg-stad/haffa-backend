@@ -1,8 +1,8 @@
 import { StatusCodes } from 'http-status-codes'
-import { end2endTest } from '../../test-utils'
-import { createEmptyProfile } from '../mappers'
 import { createEmptyAdvert } from '../../adverts/mappers'
 import type { Advert } from '../../adverts/types'
+import { end2endTest } from '../../test-utils'
+import { createEmptyProfile } from '../mappers'
 
 const range = (n: number): any[] => Object.keys([...new Array(n)])
 
@@ -34,11 +34,11 @@ describe('removeProfile', () => {
         // setup some adverts
         addAdvert(createEmptyAdvert({ id: 'keep.1', createdBy: 'keep.me' }))
         addAdvert(createEmptyAdvert({ id: 'keep.2', createdBy: 'keep.me.too' }))
-        range(1000).forEach(i =>
+        range(1000).forEach(i => {
           addAdvert(
             createEmptyAdvert({ id: `remove.${i}`, createdBy: user.id })
           )
-        )
+        })
         addAdvert(
           createEmptyAdvert({ id: 'keep.last', createdBy: 'keep.me.too' })
         )

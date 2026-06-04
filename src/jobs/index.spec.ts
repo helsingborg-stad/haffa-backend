@@ -1,9 +1,9 @@
 import { setTimeout } from 'timers/promises'
-import { createJobExecutorService } from '.'
-import type { JobParameters, TaskRunnerSignature } from './types'
-import { createTestServices } from '../test-utils'
 import type { HaffaUser } from '../login/types'
 import { Severity } from '../syslog/types'
+import { createTestServices } from '../test-utils'
+import { createJobExecutorService } from '.'
+import type { JobParameters, TaskRunnerSignature } from './types'
 
 const parameters: JobParameters = {
   maxReservationDays: 10,

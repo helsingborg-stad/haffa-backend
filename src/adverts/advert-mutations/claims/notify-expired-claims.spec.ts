@@ -1,10 +1,10 @@
-import { createExpiredClaimsNotifier } from '.'
 import {
   createTestNotificationServices,
   end2endTest,
 } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
 import { AdvertClaimType } from '../../types'
+import { createExpiredClaimsNotifier } from '.'
 
 describe('notifyExpiredClaims', () => {
   it('should delete claims older than threshold)', () =>

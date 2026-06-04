@@ -1,12 +1,12 @@
 import type { FilesService } from '../../../files/types'
 import {
-  T,
   createTestNotificationServices,
   end2endTest,
+  T,
 } from '../../../test-utils'
 import { TxErrors } from '../../../transactions'
 import { createEmptyAdvert } from '../../mappers'
-import type { AdvertMutationResult, Advert } from '../../types'
+import type { Advert, AdvertMutationResult } from '../../types'
 import { mutationProps } from '../test-utils/gql-test-definitions'
 
 const removeAdvertMutation = /* GraphQL */ `

@@ -1,10 +1,6 @@
 import EmailValidator from 'email-validator'
 import type { CountryCode } from 'libphonenumber-js'
 import parsePhoneNumber from 'libphonenumber-js'
-import type { HaffaUser } from '../login/types'
-import type { SettingsService } from '../settings/types'
-import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
-import type { LoginPolicy } from '../login-policies/types'
 import {
   GUEST_USER_ID,
   makeAdmin,
@@ -12,6 +8,10 @@ import {
   normalizeRoles,
   rolesArrayToRoles,
 } from '../login'
+import type { HaffaUser } from '../login/types'
+import { loginPolicyAdapter } from '../login-policies/login-policy-adapter'
+import type { LoginPolicy } from '../login-policies/types'
+import type { SettingsService } from '../settings/types'
 import type { UserMapper } from './types'
 import { userMapperConfigAdapter } from './user-mapper-config-adapter'
 
@@ -89,13 +89,11 @@ export const createUserMapper = (
       if (effectiveUsers.length === 0) {
         return []
       }
-      const loginPolicies = await loginPolicyAdapter(
-        settings
-      ).getLoginPolicies()
+      const loginPolicies =
+        await loginPolicyAdapter(settings).getLoginPolicies()
 
-      const { allowGuestUsers, phone } = await userMapperConfigAdapter(
-        settings
-      ).getUserMapperConfig()
+      const { allowGuestUsers, phone } =
+        await userMapperConfigAdapter(settings).getUserMapperConfig()
       return effectiveUsers
         .map(u => {
           const user = validateHaffaUser(u)

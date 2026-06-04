@@ -44,7 +44,7 @@ describe('createPagedAdvertList', () => {
     (_, index) =>
       ({
         id: (index * 10).toString(),
-      } as Advert)
+      }) as Advert
   )
 
   it('returns upper bound if no CURSOR or limit', () => {

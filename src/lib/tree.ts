@@ -23,7 +23,9 @@ export const mapTree = <T>(
 
   const collectTreeNodes = (node: TreeNode<T>, s: Set<TreeNode<T>>) => {
     s.add(node)
-    node.children.forEach(n => collectTreeNodes(n, s))
+    node.children.forEach(n => {
+      collectTreeNodes(n, s)
+    })
   }
 
   const allNodes = new Set<TreeNode<T>>()
@@ -38,7 +40,9 @@ export const mapTree = <T>(
       ids
         .map(nid => treeNodeById[nid])
         .filter(n => n)
-        .forEach(n => collectTreeNodes(n, s))
+        .forEach(n => {
+          collectTreeNodes(n, s)
+        })
       return s
     },
   }

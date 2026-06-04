@@ -1,13 +1,13 @@
+import { getEnv } from '../lib/gdi-api-node'
+import type { SyslogEntry, SyslogUserData } from '../syslog/types'
+import { Severity } from '../syslog/types'
+import { tasks } from './tasks'
 import type {
   JobExcecutorService,
   JobParameters,
   JobServices,
   TaskList,
 } from './types'
-import { tasks } from './tasks'
-import type { SyslogEntry, SyslogUserData } from '../syslog/types'
-import { Severity } from '../syslog/types'
-import { getEnv } from '../lib/gdi-api-node'
 
 export const createJobExecutorService = (
   taskRepository: TaskList,

@@ -1,12 +1,8 @@
 import * as uuid from 'uuid'
 
-export interface TxCommitAction<T> {
-  (value: T, originalValue: T): Promise<any>
-}
+export type TxCommitAction<T> = (value: T, originalValue: T) => Promise<any>
 
-export interface TxCommitActions<T> {
-  (action: TxCommitAction<T>): void
-}
+export type TxCommitActions<T> = (action: TxCommitAction<T>) => void
 
 export interface TxVerifyContext<T> {
   update: T

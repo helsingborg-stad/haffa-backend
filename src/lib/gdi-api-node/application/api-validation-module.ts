@@ -1,6 +1,6 @@
+import Debug from 'debug'
 import type Koa from 'koa'
 import type { Context } from 'openapi-backend'
-import Debug from 'debug'
 import type { ApplicationContext } from './types'
 
 const debug = Debug('application')

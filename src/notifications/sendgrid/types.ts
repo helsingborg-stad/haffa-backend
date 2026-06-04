@@ -3,9 +3,11 @@ export interface SendGridConfig {
   from: string
 }
 
-export interface MapTemplateToTemplateId {
-  (template: string): Promise<string | null | undefined>
-}
-export interface MailSender {
-  (to: string, template: string, data: any): Promise<void>
-}
+export type MapTemplateToTemplateId = (
+  template: string
+) => Promise<string | null | undefined>
+export type MailSender = (
+  to: string,
+  template: string,
+  data: any
+) => Promise<void>

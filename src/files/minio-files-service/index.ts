@@ -1,7 +1,7 @@
+import { getEnv } from '../../lib/gdi-api-node'
+import type { StartupLog } from '../../types'
 import type { FilesService } from '../types'
 import { createMinioFilesService } from './minio-files-service'
-import type { StartupLog } from '../../types'
-import { getEnv } from '../../lib/gdi-api-node'
 
 export const tryCreateMinioFilesServiceFromEnv = (
   startupLog: StartupLog

@@ -1,6 +1,6 @@
-import type { LabelOptions } from './types'
-import type { Option } from '../options/types'
 import type { Advert } from '../adverts/types'
+import type { Option } from '../options/types'
+import type { LabelOptions } from './types'
 
 export const getDefaultLabelOptions = (): LabelOptions => ({
   headline: 'HAFFA',

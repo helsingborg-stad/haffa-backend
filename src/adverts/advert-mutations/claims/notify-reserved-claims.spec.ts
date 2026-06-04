@@ -1,7 +1,7 @@
-import { createReservedClaimsNotifier } from '.'
 import { end2endTest } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
 import { AdvertClaimEventType, AdvertClaimType } from '../../types'
+import { createReservedClaimsNotifier } from '.'
 
 const defaultClaim = {
   at: '2023-06-01',

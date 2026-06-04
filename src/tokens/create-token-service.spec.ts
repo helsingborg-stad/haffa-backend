@@ -1,7 +1,7 @@
-import { createTokenService } from '.'
 import type { HaffaUser } from '../login/types'
 import { createInMemorySettingsService } from '../settings'
 import { createUserMapper } from '../users'
+import { createTokenService } from '.'
 
 const createTokenServiceForTest = (secret: string, expiresIn?: string) =>
   createTokenService(createUserMapper(null, createInMemorySettingsService()), {
@@ -39,23 +39,21 @@ describe('createTokenService', () => {
     expect(verifiedUser).toMatchObject(user)
   })
 
-  it.each(unverifiableTokens)(
-    'TokenService:verify(%s) => false',
-    async token => {
-      expect(
-        await createTokenServiceForTest('a secret').verify(token as string)
-      ).toBe(false)
-    }
-  )
+  it.each(
+    unverifiableTokens
+  )('TokenService:verify(%s) => false', async token => {
+    expect(
+      await createTokenServiceForTest('a secret').verify(token as string)
+    ).toBe(false)
+  })
 
-  it.each(unverifiableTokens)(
-    'TokenService:decode(%s) => false',
-    async token => {
-      expect(
-        await createTokenServiceForTest('a secret').decode(token as string)
-      ).toBeNull()
-    }
-  )
+  it.each(
+    unverifiableTokens
+  )('TokenService:decode(%s) => false', async token => {
+    expect(
+      await createTokenServiceForTest('a secret').decode(token as string)
+    ).toBeNull()
+  })
 
   it('TokenService respects EXPIRES_IN', async () => {
     const service = createTokenServiceForTest('a secret', '1ms')

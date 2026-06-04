@@ -1,3 +1,1 @@
-export interface IssuePincode {
-  (): string
-}
+export type IssuePincode = () => string

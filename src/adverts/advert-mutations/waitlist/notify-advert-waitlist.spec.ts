@@ -3,7 +3,7 @@ import { createTestNotificationServices } from '../../../test-utils'
 import { createGetAdvertMeta } from '../../advert-meta'
 import { createEmptyAdvert } from '../../mappers'
 import { createInMemoryAdvertsRepository } from '../../repository/memory'
-import { AdvertClaimType, type AdvertClaim } from '../../types'
+import { type AdvertClaim, AdvertClaimType } from '../../types'
 import { createNotifyAdvertWaitlist } from './notify-advert-waitlist'
 
 const makeClaim = (c: Partial<AdvertClaim>): AdvertClaim => ({

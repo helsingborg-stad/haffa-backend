@@ -1,11 +1,11 @@
 import type { MongoConnection } from '../../mongodb-utils/types'
-import type { MongoAdvertSubscription } from './types'
-import type { SubscriptionsRepository } from '../types'
-import { createGetAdvertSubscriptions } from './api/get-advert-subscriptions'
-import { createAddAdvertSubscription } from './api/add-advert-subscription'
-import { createRemoveAdvertSubscription } from './api/remove-advert-subscription'
-import { createNotifyAllSubscriptions } from './api/notify-all-subscriptions'
 import type { Services } from '../../types'
+import type { SubscriptionsRepository } from '../types'
+import { createAddAdvertSubscription } from './api/add-advert-subscription'
+import { createGetAdvertSubscriptions } from './api/get-advert-subscriptions'
+import { createNotifyAllSubscriptions } from './api/notify-all-subscriptions'
+import { createRemoveAdvertSubscription } from './api/remove-advert-subscription'
+import type { MongoAdvertSubscription } from './types'
 
 export const createMongoSubscriptionsRepository = (
   connection: MongoConnection<MongoAdvertSubscription>,

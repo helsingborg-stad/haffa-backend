@@ -4,9 +4,9 @@ import type { Services } from '../../../types'
 import { normalizeAdvertClaims } from '../../advert-claims'
 import {
   type Advert,
-  type AdvertMutations,
-  AdvertClaimType,
   AdvertClaimEventType,
+  AdvertClaimType,
+  type AdvertMutations,
 } from '../../types'
 import { mapTxResultToAdvertMutationResult } from '../mappers'
 import { getNextClaimEventDate, isClaimOverdue } from './mappers'

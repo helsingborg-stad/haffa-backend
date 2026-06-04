@@ -16,9 +16,8 @@ describe('tryMatchEmail', () => {
     ['john.doe@company.com', 'john.doe@*', true],
   ]
 
-  it.each(TestCases)(
-    'tryMatchEmail(%s, %s) => %s',
-    (email: string, pattern: string, expectedResult: boolean) =>
-      expect(tryMatchEmail(email, pattern)).toBe(expectedResult)
-  )
+  it.each(
+    TestCases
+  )('tryMatchEmail(%s, %s) => %s', (email: string, pattern: string, expectedResult: boolean) =>
+    expect(tryMatchEmail(email, pattern)).toBe(expectedResult))
 })

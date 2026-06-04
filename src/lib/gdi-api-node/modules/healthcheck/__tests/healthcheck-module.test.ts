@@ -1,10 +1,10 @@
 import { StatusCodes } from 'http-status-codes'
 import request from 'supertest'
-import { healthCheckModule } from '..'
+import { getOpenApiDefinitionPathForTest } from '../../../__tests/test-utils'
 import { createApplication } from '../../../application'
 import { swaggerModule } from '../../swagger'
 import { webFrameworkModule } from '../../web-framework'
-import { getOpenApiDefinitionPathForTest } from '../../../__tests/test-utils'
+import { healthCheckModule } from '..'
 
 const createTestApp = () =>
   createApplication({

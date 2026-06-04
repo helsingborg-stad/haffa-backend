@@ -1,16 +1,16 @@
-import request from 'supertest'
 import HttpStatusCodes from 'http-status-codes'
+import request from 'supertest'
+import type { ApplicationModule } from '../../lib/gdi-api-node'
+import { makeRoles, makeUser } from '../../login'
+import { requireHaffaUser } from '../../login/require-haffa-user'
+import type { HaffaUser } from '../../login/types'
+import type { LoginPolicy } from '../../login-policies/types'
 import type { End2EndTestConfig, End2EndTestContext } from '../../test-utils'
 import { end2endTest } from '../../test-utils'
-import { requireHaffaUser } from '../../login/require-haffa-user'
-import type { Services } from '../../types'
 import type { TokenService } from '../../tokens/types'
-import type { HaffaUser } from '../../login/types'
-import { makeRoles, makeUser } from '../../login'
-import type { LoginPolicy } from '../../login-policies/types'
-import type { UserMapperConfig } from '../types'
+import type { Services } from '../../types'
 import { userMapperConfigAdapter } from '..'
-import type { ApplicationModule } from '../../lib/gdi-api-node'
+import type { UserMapperConfig } from '../types'
 
 describe('user access validation', () => {
   interface TestCase {
@@ -153,24 +153,18 @@ describe('user access validation', () => {
     ],
   ]
 
-  it.each(TestCases)(
-    `%s`,
-    async (
-      description: string,
-      {
-        givenUser,
-        givenLoginPolicies,
-        givenUserMapperConfig,
-        expectResponse,
-      }: TestCase
-    ) =>
-      echoTest(
-        givenUser,
-        givenLoginPolicies || [],
-        givenUserMapperConfig || {},
-        response => expect(response).toMatchObject(expectResponse)
-      )
-  )
+  it.each(TestCases)(`%s`, async (description: string, {
+    givenUser,
+    givenLoginPolicies,
+    givenUserMapperConfig,
+    expectResponse,
+  }: TestCase) =>
+    echoTest(
+      givenUser,
+      givenLoginPolicies || [],
+      givenUserMapperConfig || {},
+      response => expect(response).toMatchObject(expectResponse)
+    ))
 
   it('validates per request', () =>
     end2endTest(

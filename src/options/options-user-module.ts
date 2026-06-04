@@ -1,8 +1,8 @@
-import type { SettingsService } from '../settings/types'
-import { optionsAdapter } from './options-adapter'
-import { type Option } from './types'
-import { userMapperConfigAdapter } from '../users'
 import type { ApplicationModule } from '../lib/gdi-api-node'
+import type { SettingsService } from '../settings/types'
+import { userMapperConfigAdapter } from '../users'
+import { optionsAdapter } from './options-adapter'
+import type { Option } from './types'
 
 const getSystemSettings = async (
   settings: SettingsService
@@ -39,8 +39,7 @@ export const optionsUserModule =
         const {
           params: { collection },
         } = ctx
-        ctx.response.body = await optionsAdapter(settings).getOptions(
-          collection
-        )
+        ctx.response.body =
+          await optionsAdapter(settings).getOptions(collection)
       },
     })

@@ -1,9 +1,9 @@
 import type { Filter } from 'mongodb'
+import { makeAdmin } from '../../../../login'
 import type { HaffaUser } from '../../../../login/types'
 import type { MongoAdvert } from '../types'
 import { combineAnd } from './filter-utils'
 import { mapRestrictions, regularAdvertsFilter } from './map-restrictions'
-import { makeAdmin } from '../../../../login'
 
 describe('mapRestrictions', () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

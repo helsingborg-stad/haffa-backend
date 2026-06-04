@@ -1,13 +1,13 @@
-import request from 'supertest'
 import HttpStatusCodes from 'http-status-codes'
-import type { ApiKey } from './types'
-import { apiKeysAdapter } from './api-keys-adapter'
-import type { LoginPolicy } from '../login-policies/types'
-import type { Services } from '../types'
+import request from 'supertest'
+import type { ApplicationModule } from '../lib/gdi-api-node'
 import { requireHaffaUser } from '../login/require-haffa-user'
+import type { LoginPolicy } from '../login-policies/types'
 import type { End2EndTestConfig, End2EndTestContext } from '../test-utils'
 import { end2endTest } from '../test-utils'
-import type { ApplicationModule } from '../lib/gdi-api-node'
+import type { Services } from '../types'
+import { apiKeysAdapter } from './api-keys-adapter'
+import type { ApiKey } from './types'
 
 describe('user access validation', () => {
   interface TestCase {
@@ -108,21 +108,15 @@ describe('user access validation', () => {
     ],
   ]
 
-  it.each(TestCases)(
-    `%s`,
-    async (
-      description: string,
-      {
-        givenApiKey,
-        givenApiKeys,
-        givenLoginPolicies,
-        expectResponse,
-      }: TestCase
-    ) =>
-      echoTest(givenApiKey, givenApiKeys, givenLoginPolicies, response =>
-        expect(response).toMatchObject(expectResponse)
-      )
-  )
+  it.each(TestCases)(`%s`, async (description: string, {
+    givenApiKey,
+    givenApiKeys,
+    givenLoginPolicies,
+    expectResponse,
+  }: TestCase) =>
+    echoTest(givenApiKey, givenApiKeys, givenLoginPolicies, response =>
+      expect(response).toMatchObject(expectResponse)
+    ))
 
   const createUserEchoModule =
     (services: Services): ApplicationModule =>

@@ -6,11 +6,11 @@
     "activityBar.inactiveForeground": "#ffffff88"
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "quickfix.biome": "explicit",
+    "source.organizeImports.biome": "explicit"
   },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.insertSpaces": false,
-  "eslint.validate": ["typescript"],
-  "cmake.configureOnOpen": false,
-  "editor.formatOnSave": true
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.insertSpaces": true,
+  "editor.formatOnSave": true,
+  "cmake.configureOnOpen": false
 }

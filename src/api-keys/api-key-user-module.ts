@@ -1,8 +1,8 @@
 import type { IncomingHttpHeaders } from 'http'
-import { apiKeysAdapter } from './api-keys-adapter'
-import type { SettingsService } from '../settings/types'
-import { makeUser } from '../login'
 import type { ApplicationModule } from '../lib/gdi-api-node'
+import { makeUser } from '../login'
+import type { SettingsService } from '../settings/types'
+import { apiKeysAdapter } from './api-keys-adapter'
 
 /** Given (Koa) headers, extract bearer token */
 const getApiKeySecretFromAuthorizationHeader = (

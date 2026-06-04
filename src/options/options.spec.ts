@@ -1,5 +1,5 @@
-import { optionsAdapter } from '.'
 import { createInMemorySettingsService } from '../settings'
+import { optionsAdapter } from '.'
 
 const createOptionServiceForTest = () =>
   optionsAdapter(

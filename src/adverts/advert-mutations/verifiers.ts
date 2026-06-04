@@ -5,15 +5,15 @@ import { AdvertType } from '../types'
 const getClaimCount = (advert: Advert): number =>
   advert.claims.reduce((s, { quantity }) => s + quantity, 0)
 
-export interface Verifier {
-  (ctx: TxVerifyContext<Advert>): void
-}
+export type Verifier = (ctx: TxVerifyContext<Advert>) => void
 
 export const verifyAll = (
   ctx: TxVerifyContext<Advert>,
   ...verifiers: Verifier[]
 ) => {
-  verifiers.forEach(v => v(ctx))
+  verifiers.forEach(v => {
+    v(ctx)
+  })
   return ctx.update
 }
 

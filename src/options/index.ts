@@ -1,4 +1,4 @@
-import { optionsUserModule } from './options-user-module'
 import { optionsAdapter } from './options-adapter'
+import { optionsUserModule } from './options-user-module'
 
-export { optionsUserModule, optionsAdapter }
+export { optionsAdapter, optionsUserModule }

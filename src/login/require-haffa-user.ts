@@ -1,5 +1,5 @@
-import type Koa from 'koa'
 import { StatusCodes } from 'http-status-codes'
+import type Koa from 'koa'
 import type { UserMapper } from '../users/types'
 import type { HaffaUser } from './types'
 

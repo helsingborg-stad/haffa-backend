@@ -13,7 +13,7 @@ export const patchCategories = (
   )
 
 const fixParentLinks = (cats: Category[]): Category[] => {
-  const ids = new Set<String>(cats.map(({ id }) => id))
+  const ids = new Set<string>(cats.map(({ id }) => id))
   return cats.map(c => ({
     ...c,
     parentId: ids.has(c.parentId) ? c.parentId : '',

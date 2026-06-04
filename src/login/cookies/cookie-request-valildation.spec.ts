@@ -1,14 +1,14 @@
-import request from 'supertest'
 import HttpStatusCodes from 'http-status-codes'
-import type { Services } from '../../types'
-import { requireHaffaUser } from '../require-haffa-user'
+import request from 'supertest'
+import type { ApplicationModule } from '../../lib/gdi-api-node'
+import type { LoginPolicy } from '../../login-policies/types'
 import {
-  end2endTest,
   type End2EndTestConfig,
   type End2EndTestContext,
+  end2endTest,
 } from '../../test-utils'
-import type { LoginPolicy } from '../../login-policies/types'
-import type { ApplicationModule } from '../../lib/gdi-api-node'
+import type { Services } from '../../types'
+import { requireHaffaUser } from '../require-haffa-user'
 
 describe('user access validation', () => {
   interface TestCase {
@@ -67,26 +67,24 @@ describe('user access validation', () => {
     ],
   ]
 
-  it.each(TestCases)(
-    `%s`,
-    async (
-      description: string,
-      { givenCookieUser, givenLoginPolicies, expectResponse }: TestCase
-    ) =>
-      end2endTest(
-        createTestConfig(),
-        async ({ server, services: { tokens }, loginPolicies }) => {
-          await loginPolicies.updateLoginPolicies(givenLoginPolicies)
+  it.each(TestCases)(`%s`, async (description: string, {
+    givenCookieUser,
+    givenLoginPolicies,
+    expectResponse,
+  }: TestCase) =>
+    end2endTest(
+      createTestConfig(),
+      async ({ server, services: { tokens }, loginPolicies }) => {
+        await loginPolicies.updateLoginPolicies(givenLoginPolicies)
 
-          const token = givenCookieUser
-            ? tokens.sign({ id: givenCookieUser })
-            : ''
+        const token = givenCookieUser
+          ? tokens.sign({ id: givenCookieUser })
+          : ''
 
-          const response = await makeEchoUserRequest(token, server)
-          expect(response).toMatchObject(expectResponse)
-        }
-      )
-  )
+        const response = await makeEchoUserRequest(token, server)
+        expect(response).toMatchObject(expectResponse)
+      }
+    ))
 
   const createUserEchoModule =
     (services: Services): ApplicationModule =>

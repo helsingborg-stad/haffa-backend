@@ -1,9 +1,9 @@
 import type Koa from 'koa'
-import type { AuthorizationService } from '../../services/authorization-service'
 import type {
   ApplicationContext,
   ApplicationModule,
 } from '../../application/types'
+import type { AuthorizationService } from '../../services/authorization-service'
 import { getTokenFromAuthorizationHeader } from './get-token-from-authorization-header'
 
 /** Module that updates __ctx.user__ with payload extracted from JWT bearer token, if present in request headers */

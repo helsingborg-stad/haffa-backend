@@ -1,13 +1,13 @@
+import type { HaffaUser } from '../../login/types'
+import type { LoginPolicy } from '../../login-policies/types'
 import { end2endTest } from '../../test-utils'
-import { createEmptyAdvert } from '../mappers'
 import {
   advertProps,
   advertWithMetaProps,
 } from '../advert-mutations/test-utils/gql-test-definitions'
-import { AdvertClaimType } from '../types'
+import { createEmptyAdvert } from '../mappers'
 import type { Advert, AdvertClaim } from '../types'
-import type { HaffaUser } from '../../login/types'
-import type { LoginPolicy } from '../../login-policies/types'
+import { AdvertClaimType } from '../types'
 
 describe('adverts GQL emits/masks values based on permissions', () => {
   interface TestCase {
@@ -88,30 +88,31 @@ describe('adverts GQL emits/masks values based on permissions', () => {
     ],
   ]
 
-  it.each(FieldValuesShouldBeMasked)(
-    'value masking: %s',
-    (_, { sourceAdvert, expectedResult, createLoginPolicies }) =>
-      end2endTest(
-        null,
-        async ({ user, adverts, mappedGqlRequest, loginPolicies }) => {
-          await loginPolicies.updateLoginPolicies(
-            createLoginPolicies?.(user) || []
-          )
+  it.each(FieldValuesShouldBeMasked)('value masking: %s', (_, {
+    sourceAdvert,
+    expectedResult,
+    createLoginPolicies,
+  }) =>
+    end2endTest(
+      null,
+      async ({ user, adverts, mappedGqlRequest, loginPolicies }) => {
+        await loginPolicies.updateLoginPolicies(
+          createLoginPolicies?.(user) || []
+        )
 
-          // eslint-disable-next-line no-param-reassign
-          adverts.a1 = createEmptyAdvert(sourceAdvert)
+        // eslint-disable-next-line no-param-reassign
+        adverts.a1 = createEmptyAdvert(sourceAdvert)
 
-          const result = await mappedGqlRequest<any>(
-            'getAdvert',
-            `query Query($id: ID!) { 
+        const result = await mappedGqlRequest<any>(
+          'getAdvert',
+          `query Query($id: ID!) { 
 				getAdvert(id: $id) {
 					${advertWithMetaProps}
 		  		}
 	  		}`,
-            { id: 'a1' }
-          )
-          expect(result).toMatchObject(expectedResult)
-        }
-      )
-  )
+          { id: 'a1' }
+        )
+        expect(result).toMatchObject(expectedResult)
+      }
+    ))
 })

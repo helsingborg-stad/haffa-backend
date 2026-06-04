@@ -1,11 +1,11 @@
 import { randomUUID } from 'crypto'
+import type { MongoConnection } from '../../../mongodb-utils/types'
+import type { SubscriptionsRepository } from '../../types'
+import type { MongoAdvertSubscription } from '../types'
 import {
   sanitizeAdvertSubscriptionFilter,
   tryCreateSubscriptionHash,
 } from './mappers'
-import type { MongoConnection } from '../../../mongodb-utils/types'
-import type { MongoAdvertSubscription } from '../types'
-import type { SubscriptionsRepository } from '../../types'
 
 export const createAddAdvertSubscription =
   ({

@@ -1,8 +1,8 @@
 import type stream from 'stream'
 import type { Only } from '../lib/types'
 import type { HaffaUser } from '../login/types'
-import type { ProfileInput } from '../profile/types'
 import type { PickupLocation } from '../pickup/types'
+import type { ProfileInput } from '../profile/types'
 
 export enum AdvertType {
   recycle = 'recycle',

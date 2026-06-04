@@ -16,8 +16,7 @@ describe('mapFieldsFilter', () => {
   ])
 
   it.each(operators)('mapFieldsFilter(%j) => %j', (ourFilter, expectedFilter) =>
-    expect(mapFields(ourFilter)).toMatchObject(expectedFilter)
-  )
+    expect(mapFields(ourFilter)).toMatchObject(expectedFilter))
 
   it('can map multiple fields', () => {
     expect(

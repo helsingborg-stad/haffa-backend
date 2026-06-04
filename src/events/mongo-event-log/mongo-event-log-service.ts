@@ -1,9 +1,9 @@
 import { randomUUID } from 'crypto'
 import type { Filter } from 'mongodb'
 import type { MongoConnection } from '../../mongodb-utils/types'
+import { normalizeEventSummaries } from '../mappers'
 import type { EventLogService } from '../types'
 import type { MongoEvent } from './types'
-import { normalizeEventSummaries } from '../mappers'
 
 export const createMongoEventLogService = ({
   getCollection,

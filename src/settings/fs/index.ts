@@ -1,8 +1,8 @@
 import { join } from 'path'
+import { getEnv } from '../../lib/gdi-api-node'
+import type { StartupLog } from '../../types'
 import type { SettingsService } from '../types'
 import { createFsSettingsService } from './fs-settings-service'
-import type { StartupLog } from '../../types'
-import { getEnv } from '../../lib/gdi-api-node'
 
 export const tryCreateFsSettingsServiceFromEnv = (
   startupLog: StartupLog

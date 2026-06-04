@@ -1,13 +1,13 @@
-import * as path from 'path'
 import type * as Koa from 'koa'
+import * as path from 'path'
 import { createApplication } from '../application'
-import { swaggerModule } from '../modules/swagger'
-import { webFrameworkModule } from '../modules/web-framework'
 import type {
   Application,
   ApplicationContext,
   ApplicationModule,
 } from '../application/types'
+import { swaggerModule } from '../modules/swagger'
+import { webFrameworkModule } from '../modules/web-framework'
 
 const noop = () => undefined
 

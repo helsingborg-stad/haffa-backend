@@ -1,6 +1,6 @@
-import { type Context } from 'koa'
-import type { Services } from '../types'
+import type { Context } from 'koa'
 import type { HaffaUser } from '../login/types'
+import type { Services } from '../types'
 
 export type SnapshotFunction = (ctx: Context, services: Services) => any
 

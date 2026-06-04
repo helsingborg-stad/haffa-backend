@@ -1,6 +1,6 @@
 import { makeRoles } from '../../login'
-import { loginPolicyAdapter } from '../../login-policies/login-policy-adapter'
 import type { HaffaUser } from '../../login/types'
+import { loginPolicyAdapter } from '../../login-policies/login-policy-adapter'
 import { createInMemorySettingsService } from '../../settings'
 import { createUserMapper } from '../user-mapper'
 
@@ -13,13 +13,12 @@ describe('inMemoryUserMapper::mapAndValidate*', () => {
     { id: 'not an email', hint: 'id not an email' },
   ]
 
-  it.each(ExpectToMapToNull)(
-    'mapAndValidateUser(%j) should give null',
-    async user => {
-      const mapper = createUserMapper(null, createInMemorySettingsService())
-      expect(await mapper.mapAndValidateUser(user as HaffaUser)).toBeNull()
-    }
-  )
+  it.each(
+    ExpectToMapToNull
+  )('mapAndValidateUser(%j) should give null', async user => {
+    const mapper = createUserMapper(null, createInMemorySettingsService())
+    expect(await mapper.mapAndValidateUser(user as HaffaUser)).toBeNull()
+  })
 
   it('mapAndValidateEmail(superUser) => {id, roles: <admin roles>}', async () => {
     const mapper = createUserMapper(
