@@ -1,4 +1,4 @@
-FROM node:18 as compiler
+FROM node:22 as compiler
 ARG GITHUB_ACCESS_TOKEN
 WORKDIR /work
 COPY . ./
@@ -6,20 +6,20 @@ COPY deploy.npmrc .npmrc
 RUN yarn install && yarn build
 
 
-FROM node:18 as git-rev
+FROM node:22 as git-rev
 WORKDIR /work
 COPY .git .git
 RUN git rev-parse --short HEAD >  git_revision.txt
 
-FROM node:18-alpine	as optimizer
+FROM node:22-alpine	as optimizer
 ARG GITHUB_ACCESS_TOKEN
 WORKDIR /work
 COPY . ./
 COPY deploy.npmrc .npmrc
 RUN yarn install --production --ignore-optional --platform=linux --arch=x64
 
-#FROM gcr.io/distroless/nodejs18-debian11
-FROM node:18-alpine
+#FROM gcr.io/distroless/nodejs22-debian11
+FROM node:22-alpine
 EXPOSE 3000
 ENV NODE_ENV=production
 ENV PORT=3000
@@ -34,4 +34,3 @@ COPY --from=git-rev /work/git_revision.txt ./
 COPY --from=optimizer /work/docker-cmd-with-crond.sh ./
 
 CMD ["sh", "docker-cmd-with-crond.sh"]
-

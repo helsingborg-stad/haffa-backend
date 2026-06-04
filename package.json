@@ -54,7 +54,7 @@
     "xlsx": "^0.18.5"
   },
   "engines": {
-    "node": "18"
+    "node": "22"
   },
   "devDependencies": {
     "@types/debug": "^4.1.12",
@@ -67,7 +67,7 @@
     "@types/koa__cors": "^4.0.0",
     "@types/mime-types": "^2.1.1",
     "@types/ms": "^0.7.31",
-    "@types/node": "^18.0.0",
+    "@types/node": "^22.0.0",
     "@types/supertest": "^2.0.12",
     "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
