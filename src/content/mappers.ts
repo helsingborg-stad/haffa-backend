@@ -44,15 +44,26 @@ export const applyImages = (
   })),
 })
 
+// GraphQL scalars are nullable, so a client can explicitly send `null` for
+// any field. `null` overwrites the default when merged with the empty
+// module, so it must be coalesced back to the default afterwards.
+const sanitizeModule = (module: ContentModule): ContentModule =>
+  Object.fromEntries(
+    Object.entries(createEmptyModule()).map(([key, defaultValue]) => [
+      key,
+      (module as Record<string, unknown>)[key] ?? defaultValue,
+    ])
+  ) as ContentModule
+
 export const normalizeComposition = (
   composition?: ViewComposition
 ): ViewComposition => ({
   rows: (composition?.rows ?? []).map(row => ({
     columns: (row.columns ?? []).map(column => ({
-      module: {
+      module: sanitizeModule({
         ...createEmptyModule(),
         ...column.module,
-      },
+      }),
     })),
   })),
 })
