@@ -18,7 +18,9 @@ export type ContentModule = {
   align: 'left' | 'right' | 'center'
   border: 'true' | 'false'
   color: string
+  darkColor: string
   background: string
+  darkBackground: string
   image: string
   alt: string
   position: 'top' | 'bottom' | 'left' | 'right'
