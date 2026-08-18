@@ -37,6 +37,18 @@ describe('mapCreateAdvertInputToAdvert', () => {
 
     expect(advert.id.length).toBeGreaterThan(32)
   })
+
+  it('defaults co2kg and valueByUnit to 0', () => {
+    const advert = mapCreateAdvertInputToAdvert(
+      createEmptyAdvertInput(),
+      { id: 'the@user' },
+      '2023-06-26'
+    )
+    expect(advert).toMatchObject({
+      co2kg: 0,
+      valueByUnit: 0,
+    })
+  })
 })
 
 describe('createPagedAdvertList', () => {
