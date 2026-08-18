@@ -28,6 +28,8 @@ export interface AdvertUserFields {
   description: string
   quantity: number
   lendingPeriod: number
+  co2kg: number
+  valueByUnit: number
   images: AdvertImage[]
   unit: string
   width: string

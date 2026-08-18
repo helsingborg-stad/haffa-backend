@@ -1,3 +1,4 @@
+import type { Advert } from '../adverts/types'
 import type { GetCategories } from '../categories/types'
 import type { HaffaUser } from '../login/types'
 import type { GetProfile, ProfileInput } from '../profile/types'
@@ -13,6 +14,8 @@ export const createLogEvent = async (
     advert: {
       id,
       category,
+      co2kg,
+      valueByUnit,
       contact: { organization },
     },
   }: LogEventContext,
@@ -23,7 +26,7 @@ export const createLogEvent = async (
   quantity,
   organization,
   advertId: id,
-  ...(await createCategoryEvent(category, categories)),
+  ...(await createCategoryEvent({ category, co2kg, valueByUnit }, categories)),
   ...(await createByEvent(by, profiles, impersonate)),
 })
 
@@ -37,20 +40,22 @@ const createByEvent = async (
     byOrganization: impersonate?.organization || profile?.organization,
   }))
 
-const createCategoryEvent = async (
-  category: string,
+export const createCategoryEvent = async (
+  {
+    category,
+    co2kg: advertCo2kg,
+    valueByUnit: advertValueByUnit,
+  }: Pick<Advert, 'category' | 'co2kg' | 'valueByUnit'>,
   { getCategories }: GetCategories
 ): Promise<Pick<LogEvent, 'category' | 'co2kg' | 'valueByUnit'>> => {
-  if (!category) {
-    return {}
+  const found = category
+    ? (await getCategories()).find(c => c.id === category)
+    : undefined
+  const co2kg = advertCo2kg || found?.co2kg || 0
+  const valueByUnit = advertValueByUnit || found?.valueByUnit || 0
+  return {
+    ...(found ? { category: found.label } : {}),
+    ...(co2kg ? { co2kg } : {}),
+    ...(valueByUnit ? { valueByUnit } : {}),
   }
-  const categories = await getCategories()
-  const found = categories.find(c => c.id === category)
-  return found
-    ? {
-        category: found.label,
-        co2kg: found.co2kg,
-        valueByUnit: found.valueByUnit,
-      }
-    : {}
 }

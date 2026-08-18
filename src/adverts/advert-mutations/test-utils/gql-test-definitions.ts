@@ -7,6 +7,8 @@ export const advertProps = `
 	}
 	quantity
 	lendingPeriod
+	co2kg
+	valueByUnit
 	unit
 	width
 	height
@@ -45,6 +47,8 @@ export const advertWithMetaProps = `
 	}
 	quantity
 	lendingPeriod
+	co2kg
+	valueByUnit
 	unit
 	width
 	height

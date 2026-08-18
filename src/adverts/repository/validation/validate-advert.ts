@@ -84,7 +84,7 @@ const advertSchemaValidator = new Ajv().compile<Advert>({
         'notes',
         'place'
       ),
-      ...numberProps('quantity', 'lendingPeriod'),
+      ...numberProps('quantity', 'lendingPeriod', 'co2kg', 'valueByUnit'),
       images: describeObjectArray<AdvertImage>({
         required: ['url'],
         properties: {
