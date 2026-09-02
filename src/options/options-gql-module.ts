@@ -5,13 +5,14 @@ import type { Services } from '../types'
 import { optionsGqlSchema } from './options.gql.schema'
 import { optionsAdapter } from './options-adapter'
 
-const validOptions = new Set([
+export const validOptions = new Set([
   'branding-theme',
   'branding-phrases',
   'analytics-tagmanager',
   'branding-html',
   'tag-descriptions',
   'label',
+  'app-settings',
 ])
 
 export const createOptionsGqlModule = ({
