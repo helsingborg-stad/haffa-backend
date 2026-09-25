@@ -18,7 +18,7 @@
   "dependencies": {
     "@graphql-tools/schema": "^10.0.4",
     "@koa/cors": "^3.4.1",
-    "@sendgrid/mail": "^7.7.0",
+    "@sendgrid/mail": "^8.1.6",
     "@types/pdfkit": "^0.13.4",
     "@types/qrcode": "^1.5.5",
     "@types/xlsx": "^0.0.36",
@@ -57,7 +57,7 @@
     "xlsx": "^0.18.5"
   },
   "engines": {
-    "node": "22"
+    "node": "24"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
