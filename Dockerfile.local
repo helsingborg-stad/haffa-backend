@@ -1,18 +1,18 @@
-FROM node:22 as compiler
+FROM node:24 as compiler
 ARG GITHUB_ACCESS_TOKEN
 WORKDIR /work
 COPY . ./
 COPY deploy.npmrc .npmrc
 RUN npm ci && npm run build
 
-FROM node:22 as optimizer
+FROM node:24 as optimizer
 ARG GITHUB_ACCESS_TOKEN
 WORKDIR /work
 COPY . ./
 COPY deploy.npmrc .npmrc
 RUN npm ci --omit=dev --ignore-scripts
 
-FROM gcr.io/distroless/nodejs:22
+FROM mcr.microsoft.com/devcontainers/javascript-node:5-24-bookworm
 WORKDIR /usr/src/app
 COPY --from=optimizer /work/node_modules ./node_modules
 COPY --from=optimizer /work/package.json ./
