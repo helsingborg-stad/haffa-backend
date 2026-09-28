@@ -78,9 +78,15 @@ class MinioFilesService implements FilesService {
 
     const fileId = generateFileId(mimeType)
 
-    await client.putObject(this.config.bucket, fileId, buffer, {
-      'Content-Type': mimeType,
-    })
+    await client.putObject(
+      this.config.bucket,
+      fileId,
+      buffer,
+      buffer.length,
+      {
+        'Content-Type': mimeType,
+      }
+    )
 
     return `${this.config.baseUrl}/${fileId}`
   }
