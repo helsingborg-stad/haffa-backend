@@ -17,7 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "@graphql-tools/schema": "^10.0.4",
-    "@koa/cors": "^3.4.1",
+    "@koa/cors": "^5.0.0",
     "@sendgrid/mail": "^8.1.6",
     "@types/pdfkit": "^0.13.4",
     "@types/qrcode": "^1.5.5",
@@ -50,7 +50,7 @@
     "openapi-backend": "^5.5.0",
     "pdfkit": "^0.15.0",
     "qrcode": "^1.5.3",
-    "sharp": "^0.35.3",
+    "sharp": "^0.35.4",
     "superagent": "^8.0.0",
     "supertest": "^6.3.3",
     "uuid": "^9.0.0",

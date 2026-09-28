@@ -23,11 +23,6 @@ jobs:
           node-version: '24'
           cache: 'npm'
 
-      - name: setup npm
-        run: |
-          echo "@helsingborg-stad:registry=https://npm.pkg.github.com" >> ~/.npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
-          echo "min-release-age=30" >> ~/.npmrc
       - name: npm install
         run: npm ci
 

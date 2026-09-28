@@ -2,9 +2,7 @@ FROM node:24 as compiler
 ARG GITHUB_ACCESS_TOKEN
 WORKDIR /work
 COPY . ./
-COPY deploy.npmrc .npmrc
 RUN npm ci && npm run build
-
 
 FROM node:24 as git-rev
 WORKDIR /work
@@ -15,7 +13,6 @@ FROM node:24-alpine	as optimizer
 ARG GITHUB_ACCESS_TOKEN
 WORKDIR /work
 COPY . ./
-COPY deploy.npmrc .npmrc
 RUN npm ci --omit=dev --ignore-scripts
 
 FROM mcr.microsoft.com/devcontainers/javascript-node:5-24-bookworm
