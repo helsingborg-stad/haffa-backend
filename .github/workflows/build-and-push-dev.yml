@@ -25,19 +25,10 @@ jobs:
             - uses: helsingborg-stad/gdi-deploy/v2@main
               with:
                   release-tag-name: sha-${{github.sha}}
-
-                  update-openapi-version: true
-                  openapi-spec-file: openapi.yml
-
                   gdi-gitops-config-repo: ${{ secrets.GDI_GITOPS_CONFIG_REPO }}
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   docker-no-cache: true
                   git-checkout-branch: dev
-
-                  gdi-gitops-token: ${{ secrets.GDI_GITOPS_TOKEN }}
-                  gdi-gitops-app: ${{ secrets.GDI_GITOPS_APP }}
-                  gdi-gitops-env: dev
-
                   docker-username: ${{ github.repository_owner }}
                   docker-password: ${{ secrets.GITHUB_TOKEN }}
                   extra-image-tags: |
