@@ -28,7 +28,7 @@
     "email-validator": "^2.0.4",
     "fastq": "^1.15.0",
     "graphql": "^17.0.2",
-    "graphql-tools": "^8.3.6",
+    "graphql-tools": "9.0.34",
     "handlebars": "^4.7.8",
     "http-errors": "^2.0.0",
     "http-status-codes": "^2.3.0",
