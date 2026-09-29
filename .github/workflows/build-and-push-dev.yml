@@ -22,7 +22,7 @@ jobs:
               with:
                   node-version: 24
 
-            - uses: helsingborg-stad/gdi-deploy/v1@main
+            - uses: helsingborg-stad/gdi-deploy/v2@main
               with:
                   release-tag-name: sha-${{github.sha}}
 
