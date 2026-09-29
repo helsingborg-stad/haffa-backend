@@ -9,7 +9,7 @@ RUN npm ci
 COPY . ./
 RUN npm run build
 
-FROM node:24-bookworm as git-rev
+FROM node:24-bookworm AS git-rev
 
 WORKDIR /work
 COPY .git .git
