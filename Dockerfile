@@ -19,7 +19,7 @@ FROM node:24-bookworm AS production-dependencies
 
 WORKDIR /work
 # Install only dependencies required at runtime.
-COPY package.json package-lock.json .npmrc ./
+COPY package.json package-lock.json .npmrc docker-cmd-with-crond.sh ./
 RUN npm ci --omit=dev --omit=optional --ignore-scripts \
     && npm cache clean --force
 
