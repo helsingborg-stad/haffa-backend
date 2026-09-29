@@ -25,7 +25,6 @@ jobs:
             - uses: helsingborg-stad/gdi-deploy/v2@main
               with:
                   release-tag-name: sha-${{github.sha}}
-                  gdi-gitops-config-repo: ${{ secrets.GDI_GITOPS_CONFIG_REPO }}
                   github-token: ${{ secrets.GITHUB_TOKEN }}
                   docker-no-cache: true
                   git-checkout-branch: dev
