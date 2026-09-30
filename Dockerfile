@@ -18,9 +18,9 @@ RUN git rev-parse --short HEAD >  git_revision.txt
 FROM node:24-bookworm AS production-dependencies
 
 WORKDIR /work
-# Install only dependencies required at runtime.
+# Install only dependencies required at runtime. (Optional dependency needed for sharp)
 COPY package.json package-lock.json .npmrc docker-cmd-with-crond.sh ./
-RUN npm ci --omit=dev --omit=optional --ignore-scripts \
+RUN npm ci --omit=dev --ignore-scripts \
     && npm cache clean --force
 
 FROM node:24-bookworm-slim AS runtime
