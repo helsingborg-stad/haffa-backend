@@ -13,5 +13,6 @@ jobs:
         uses: ./.github/workflows/docker-build.yml
         with:
             update-package-version: true
+            git-checkout-branch: ${{ github.event.release.target_commitish }}
             extra-image-tags: |
                 type=raw,value=${{ github.event.release.tag_name }}
