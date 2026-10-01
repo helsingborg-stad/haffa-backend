@@ -2,7 +2,7 @@ import type { Category } from '../categories/types'
 import { createCategoryEvent } from './log-event'
 
 const createGetCategories = (categories: Category[]) => ({
-  getCategories: jest.fn().mockResolvedValue(categories),
+  getCategories: vi.fn().mockResolvedValue(categories),
 })
 
 describe('createCategoryEvent', () => {

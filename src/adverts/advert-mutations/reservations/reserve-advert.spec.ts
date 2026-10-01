@@ -27,8 +27,8 @@ const reserveAdvertMutation = /* GraphQL */ `
 
 describe('reserveAdvert', () => {
   it('updates an advert in the database', () => {
-    const advertWasReserved = jest.fn(async () => undefined)
-    const advertWasReservedOwner = jest.fn(async () => undefined)
+    const advertWasReserved = vi.fn(async () => undefined)
+    const advertWasReservedOwner = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasReserved,
       advertWasReservedOwner,
@@ -97,8 +97,8 @@ describe('reserveAdvert', () => {
   })
 
   it('denies overresevations', () => {
-    const advertWasReserved = jest.fn(async () => void 0)
-    const advertWasReservedOwner = jest.fn(async () => void 0)
+    const advertWasReserved = vi.fn(async () => void 0)
+    const advertWasReservedOwner = vi.fn(async () => void 0)
     const notifications = createTestNotificationServices({
       advertWasReserved,
       advertWasReservedOwner,
@@ -138,8 +138,8 @@ describe('reserveAdvert', () => {
   })
 
   it('handles pickup locations', () => {
-    const advertWasReserved = jest.fn(async () => undefined)
-    const advertWasReservedOwner = jest.fn(async () => undefined)
+    const advertWasReserved = vi.fn(async () => undefined)
+    const advertWasReservedOwner = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasReserved,
       advertWasReservedOwner,
@@ -229,8 +229,8 @@ describe('reserveAdvert', () => {
   })
 
   it('updates reservedAt', () => {
-    const advertWasReserved = jest.fn(async () => void 0)
-    const advertWasReservedOwner = jest.fn(async () => void 0)
+    const advertWasReserved = vi.fn(async () => void 0)
+    const advertWasReservedOwner = vi.fn(async () => void 0)
     const notifications = createTestNotificationServices({
       advertWasReserved,
       advertWasReservedOwner,

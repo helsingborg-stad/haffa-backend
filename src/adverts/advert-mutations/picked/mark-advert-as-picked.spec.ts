@@ -20,8 +20,8 @@ const markAdvertAsPickedMutation = /* GraphQL */ `
 
 describe('markAdvertAsPicked', () => {
   it('updates pickedAt at notifies', () => {
-    const advertWasPicked = jest.fn(async () => undefined)
-    const advertWasPickedOwner = jest.fn(async () => undefined)
+    const advertWasPicked = vi.fn(async () => undefined)
+    const advertWasPickedOwner = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasPicked,
       advertWasPickedOwner,

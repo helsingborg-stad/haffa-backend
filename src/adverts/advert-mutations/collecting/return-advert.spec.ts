@@ -21,8 +21,8 @@ mutation Mutation(
 
 describe('returnAdvert', () => {
   it('removes collect claim and notifies', () => {
-    const advertWasReturned = jest.fn(async () => undefined)
-    const advertWasReturnedOwner = jest.fn(async () => undefined)
+    const advertWasReturned = vi.fn(async () => undefined)
+    const advertWasReturnedOwner = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasReturned,
       advertWasReturnedOwner,
@@ -172,8 +172,8 @@ describe('returnAdvert', () => {
       }
     ))
   it('should set unpicked on return', () => {
-    const advertWasReturned = jest.fn(async () => undefined)
-    const advertWasReturnedOwner = jest.fn(async () => undefined)
+    const advertWasReturned = vi.fn(async () => undefined)
+    const advertWasReturnedOwner = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasReturned,
       advertWasReturnedOwner,
@@ -186,7 +186,7 @@ describe('returnAdvert', () => {
         return true
       },
     }
-    const spy = jest.spyOn(workflow, 'unpickOnReturn', 'get')
+    const spy = vi.spyOn(workflow, 'unpickOnReturn', 'get')
 
     return end2endTest(
       { services: { notifications, workflow } },

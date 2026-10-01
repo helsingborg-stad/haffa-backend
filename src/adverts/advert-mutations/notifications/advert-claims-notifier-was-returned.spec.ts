@@ -32,8 +32,8 @@ describe('createAdvertClaimsNotifier().wasReturned() delegates to NotificationSe
   }
 
   it('wasReturned -> advertWasReturned', async () => {
-    const advertWasReturned = jest.fn()
-    const advertWasReturnedOwner = jest.fn()
+    const advertWasReturned = vi.fn()
+    const advertWasReturnedOwner = vi.fn()
     const { advert, user, notifier } = createCase({
       advertWasReturned,
       advertWasReturnedOwner,
@@ -52,8 +52,8 @@ describe('createAdvertClaimsNotifier().wasReturned() delegates to NotificationSe
     expect(advertWasReturned).toHaveBeenCalledWith('some@user', user, 5, advert)
   })
   it('wasReturned -> patches location and notifies pickuplocation email', async () => {
-    const advertWasReturned = jest.fn()
-    const advertWasReturnedOwner = jest.fn()
+    const advertWasReturned = vi.fn()
+    const advertWasReturnedOwner = vi.fn()
     const { advert, user, notifier } = createCase(
       {
         advertWasReturned,

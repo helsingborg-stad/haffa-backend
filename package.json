@@ -9,26 +9,20 @@
     "lint": "biome lint src",
     "format": "biome format --write src",
     "check": "biome check src",
-    "test": "jest --runInBand --watch",
-    "watch": "jest --runInBand --watchAll",
-    "coverage": "jest --runInBand --coverage",
-    "test-ci": "jest --runInBand --ci --coverage --forceExit"
+    "test": "vitest run --coverage --no-file-parallelism",
+    "watch": "vitest --watch"
   },
   "license": "MIT",
   "dependencies": {
     "@graphql-tools/schema": "^10.0.4",
     "@koa/cors": "^5.0.0",
     "@sendgrid/mail": "^8.1.6",
-    "@types/pdfkit": "^0.13.4",
-    "@types/qrcode": "^1.5.5",
-    "@types/xlsx": "^0.0.36",
     "ajv": "^8.12.0",
     "debug": "^4.3.5",
     "dotenv": "^16.0.2",
     "email-validator": "^2.0.4",
     "fastq": "^1.15.0",
     "graphql": "^17.0.2",
-    "graphql-tools": "9.0.34",
     "handlebars": "^4.7.8",
     "http-errors": "^2.0.0",
     "http-status-codes": "^2.3.0",
@@ -54,6 +48,7 @@
     "superagent": "^8.0.0",
     "supertest": "^6.3.3",
     "uuid": "11.1.1",
+    "vitest": "^4.1.11",
     "xlsx": "^0.18.5"
   },
   "engines": {
@@ -62,7 +57,6 @@
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
     "@types/debug": "^4.1.12",
-    "@types/jest": "^29.0.3",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/koa__cors": "^4.0.0",
     "@types/koa-bodyparser": "^4.3.13",
@@ -71,11 +65,13 @@
     "@types/mime-types": "^3.0.1",
     "@types/ms": "^0.7.31",
     "@types/node": "^22.0.0",
+    "@types/pdfkit": "^0.13.4",
+    "@types/qrcode": "^1.5.5",
     "@types/supertest": "^2.0.12",
     "@types/uuid": "^9.0.2",
-    "jest": "^29.0.3",
+    "@types/xlsx": "^0.0.36",
+    "@vitest/coverage-v8": "^4.1.11",
     "mongo-mock": "^4.2.0",
-    "ts-jest": "^29.4.12",
     "typescript": "^5.1.5"
   }
 }

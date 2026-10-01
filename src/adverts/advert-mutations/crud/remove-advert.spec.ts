@@ -21,7 +21,7 @@ mutation Mutation(
 
 describe('removeAdvert', () => {
   it('removes advert and notifies', () => {
-    const advertWasRemoved = jest.fn(async () => void 0)
+    const advertWasRemoved = vi.fn(async () => void 0)
     const notifications = createTestNotificationServices({
       advertWasRemoved,
     })
@@ -97,7 +97,7 @@ describe('removeAdvert', () => {
     }))
 
   it('removes associated images', () => {
-    const mockCleanupFunc = jest.fn()
+    const mockCleanupFunc = vi.fn()
     const files: FilesService = {
       tryCleanupUrl: mockCleanupFunc,
       tryConvertUrlToDataUrl: async url => url,

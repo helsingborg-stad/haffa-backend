@@ -19,7 +19,7 @@ mutation Mutation(
 `
 describe('createAdvert', () => {
   it('creates an advert in the database and notifies', () => {
-    const advertWasCreated = jest.fn(async () => undefined)
+    const advertWasCreated = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasCreated,
     })
