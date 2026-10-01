@@ -9,7 +9,7 @@
     "lint": "biome lint src",
     "format": "biome format --write src",
     "check": "biome check src",
-    "test": "vitest run --coverage",
+    "test": "vitest run --coverage --no-file-parallelism",
     "watch": "vitest --watch"
   },
   "license": "MIT",
