@@ -7,6 +7,11 @@ inputs:
     required: false
     type: boolean
 
+  extra-image-tags:
+    description: 'Extra tags to put on the docker image'
+    required: false
+    default: ''
+
 runs:
   using: composite
   steps:
