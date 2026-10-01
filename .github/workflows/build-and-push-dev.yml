@@ -4,6 +4,7 @@ on:
     push:
         branches:
             - dev
+            - petter-a-patch-1
 
 permissions:
     contents: read
