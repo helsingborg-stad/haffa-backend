@@ -4,8 +4,6 @@ on:
     push:
         branches:
             - dev
-            - copilot/petter-a-patch-1
-
 permissions:
     contents: read
     packages: write
