@@ -7,47 +7,6 @@ inputs:
     required: false
     type: boolean
 
-  release-tag-name:
-    description: The tag that was just released
-    required: true
-    type: string
-
-  github-token:
-    description: GitHub Token  
-    required: true
-    type: string
-
-  docker-username:
-    description: Username to use when logging in to the docker registry
-    required: true
-    type: string
-  
-  docker-password:
-    description: Password to use when logging in to the docker registry
-    required: true
-    type: string
-
-  docker-no-cache:
-    description: If we should not use cache when building.
-    required: false
-    default: false
-    type: boolean
-
-  extra-build-args:
-    description: 'Extra build arguments to pass to Docker'
-    required: false
-    default: ''
-
-  extra-image-tags:
-    description: 'Extra tags to put on the docker image'
-    required: false
-    default: ''
-
-  git-checkout-branch:
-    description: The branch to checkout for building
-    required: false
-    default: main
-
 runs:
   using: composite
   steps:
@@ -55,7 +14,6 @@ runs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          ref: ${{ inputs.git-checkout-branch }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -67,15 +25,15 @@ runs:
         if: inputs.update-package-version == 'true'
         shell: bash
         env:
-          RELEASE_TAG_NAME: ${{ inputs.release-tag-name }}
+          RELEASE_TAG_NAME: ${{ sha-${{github.sha}} }}
         run: npm version --allow-same-version --no-git-tag-version "$RELEASE_TAG_NAME"
 
       - name: Commit and push
         if: inputs.update-package-version == 'true'
         shell: bash
         env:
-          GIT_CHECKOUT_BRANCH: ${{ inputs.git-checkout-branch }}
-          RELEASE_TAG_NAME: ${{ inputs.release-tag-name }}
+          GIT_CHECKOUT_BRANCH: ${{ github.event.release.target_commitish }}
+          RELEASE_TAG_NAME: ${{github.event.release.tag_name}}
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
@@ -94,14 +52,14 @@ runs:
         uses: docker/login-action@v4
         with:
           registry: ghcr.io
-          username: ${{ inputs.docker-username }}
-          password: ${{ inputs.docker-password }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v6
         with:
-          github-token: ${{ inputs.github-token }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           images: ghcr.io/${{ steps.string.outputs.lowercase }}
           tags: |
             # set latest tag for default branch
