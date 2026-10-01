@@ -27,14 +27,14 @@ runs:
           package-manager-cache: false
 
       - name: Set package.json version
-        if: inputs.update-package-version == 'true'
+        if: inputs.update-package-version == true
         shell: bash
         env:
-          RELEASE_TAG_NAME: ${{ sha-${{github.sha}} }}
+          RELEASE_TAG_NAME: sha-${{github.sha}}
         run: npm version --allow-same-version --no-git-tag-version "$RELEASE_TAG_NAME"
 
       - name: Commit and push
-        if: inputs.update-package-version == 'true'
+        if: inputs.update-package-version == true
         shell: bash
         env:
           GIT_CHECKOUT_BRANCH: ${{ github.event.release.target_commitish }}
