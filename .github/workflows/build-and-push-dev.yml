@@ -11,12 +11,8 @@ permissions:
     packages: write
 
 jobs:
-    deploy:
+    build:
         runs-on: ubuntu-latest
-
         steps: 
             - uses: './.github/workflows/docker-build.yml'
-              with:
-                  extra-image-tags: |
-                      type=raw,value=${{github.event.release.tag_name}}
                     
