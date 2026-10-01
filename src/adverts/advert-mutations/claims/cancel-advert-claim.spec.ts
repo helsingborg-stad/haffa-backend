@@ -21,8 +21,8 @@ mutation Mutation(
 `
 describe('cancelAdvertClaim - reserved', () => {
   it('removes all reservations (by user) from database', () => {
-    const advertReservationWasCancelled = jest.fn(async () => undefined)
-    const advertReservationWasCancelledOwner = jest.fn(async () => undefined)
+    const advertReservationWasCancelled = vi.fn(async () => undefined)
+    const advertReservationWasCancelledOwner = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertReservationWasCancelled,
       advertReservationWasCancelledOwner,
@@ -127,8 +127,8 @@ describe('cancelAdvertClaim - reserved', () => {
 
 describe('cancelAdvertClaim - collected', () => {
   it('removes all reservations (by user) from database', () => {
-    const advertCollectWasCancelled = jest.fn(async () => undefined)
-    const advertCollectWasCancelledOwner = jest.fn(async () => undefined)
+    const advertCollectWasCancelled = vi.fn(async () => undefined)
+    const advertCollectWasCancelledOwner = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertCollectWasCancelled,
       advertCollectWasCancelledOwner,

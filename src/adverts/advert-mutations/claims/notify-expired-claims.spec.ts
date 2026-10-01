@@ -92,8 +92,8 @@ describe('notifyExpiredClaims', () => {
       expect(result.advert).toBeNull()
     }))
   it('should call notification actions when a claim expired)', () => {
-    const advertReservationWasCancelled = jest.fn(async () => undefined)
-    const advertReservationWasCancelledOwner = jest.fn(async () => undefined)
+    const advertReservationWasCancelled = vi.fn(async () => undefined)
+    const advertReservationWasCancelledOwner = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertReservationWasCancelled,
       advertReservationWasCancelledOwner,

@@ -19,7 +19,7 @@ mutation Mutation(
 
 describe('archiveAdvert', () => {
   it('updates an advert in the database', () => {
-    const advertWasUnarchived = jest.fn(async () => void 0)
+    const advertWasUnarchived = vi.fn(async () => void 0)
     const notifications = createTestNotificationServices({
       advertWasUnarchived,
     })

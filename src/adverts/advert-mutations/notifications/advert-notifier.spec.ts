@@ -31,7 +31,7 @@ describe('advert-notifier delegates to NotificationService', () => {
     }
   }
   it('wasArchived(advert) -> advertWasArchived(advert.createBy, user, advert)', async () => {
-    const advertWasArchived = jest.fn()
+    const advertWasArchived = vi.fn()
     const { user, advert, notifier } = createCase({ advertWasArchived })
     await notifier.wasArchived(advert)
     expect(advertWasArchived).toHaveBeenCalledWith(
@@ -41,7 +41,7 @@ describe('advert-notifier delegates to NotificationService', () => {
     )
   })
   it('wasUnarchived(advert) -> advertWasUnarchived(advert.createBy, user, advert)', async () => {
-    const advertWasUnarchived = jest.fn()
+    const advertWasUnarchived = vi.fn()
     const { user, advert, notifier } = createCase({ advertWasUnarchived })
     await notifier.wasUnArchived(advert)
     expect(advertWasUnarchived).toHaveBeenCalledWith(
@@ -51,7 +51,7 @@ describe('advert-notifier delegates to NotificationService', () => {
     )
   })
   it('wasRemoved(advert) -> advertWasRemoved(advert.createBy, user, advert)', async () => {
-    const advertWasRemoved = jest.fn()
+    const advertWasRemoved = vi.fn()
     const { user, advert, notifier } = createCase({ advertWasRemoved })
     await notifier.wasRemoved(advert)
     expect(advertWasRemoved).toHaveBeenCalledWith(
@@ -61,7 +61,7 @@ describe('advert-notifier delegates to NotificationService', () => {
     )
   })
   it('wasPicked(advert) -> advertWasPickedOwner(advert.createBy, user, advert)', async () => {
-    const advertWasPickedOwner = jest.fn()
+    const advertWasPickedOwner = vi.fn()
     const { user, advert, notifier } = createCase({ advertWasPickedOwner })
     await notifier.wasPicked(advert, [])
     expect(advertWasPickedOwner).toHaveBeenCalledWith(
@@ -71,8 +71,8 @@ describe('advert-notifier delegates to NotificationService', () => {
     )
   })
   it('wasPicked(advert) -> advertWasPicked(<reservation claims>)', async () => {
-    const advertWasPicked = jest.fn()
-    const advertWasPickedOwner = jest.fn()
+    const advertWasPicked = vi.fn()
+    const advertWasPickedOwner = vi.fn()
     const { user, advert, notifier } = createCase({
       advertWasPicked,
       advertWasPickedOwner,
@@ -99,8 +99,8 @@ describe('advert-notifier delegates to NotificationService', () => {
     expect(advertWasPicked).toHaveBeenCalledWith('second@user', user, advert)
   })
   it('wasPicked(advert without reservations) -> advertWasPicked([])', async () => {
-    const advertWasPicked = jest.fn()
-    const advertWasPickedOwner = jest.fn()
+    const advertWasPicked = vi.fn()
+    const advertWasPickedOwner = vi.fn()
     const { user, advert, notifier } = createCase({
       advertWasPicked,
       advertWasPickedOwner,
@@ -114,7 +114,7 @@ describe('advert-notifier delegates to NotificationService', () => {
     expect(advertWasPicked).toHaveBeenCalledTimes(0)
   })
   it('wasUnpicked(advert) -> advertWasUnpickedOwner(advert.createBy, user, advert)', async () => {
-    const advertWasUnpickedOwner = jest.fn()
+    const advertWasUnpickedOwner = vi.fn()
     const { user, advert, notifier } = createCase({ advertWasUnpickedOwner })
     await notifier.wasUnPicked(advert)
     expect(advertWasUnpickedOwner).toHaveBeenCalledWith(

@@ -55,7 +55,7 @@ describe('transact', () => {
 
   it('will run actions on success', async () => {
     const db = versionedDatase<TestData>()
-    const action = jest.fn(() => Promise.resolve())
+    const action = vi.fn(() => Promise.resolve())
     const newEntry: any = createTestData({})
     const { data, error } =
       (await txBuilder<TestData>()
@@ -82,7 +82,7 @@ describe('transact', () => {
     const db = versionedDatase<TestData>()
 
     let retries = 5
-    const action = jest.fn(() => Promise.resolve())
+    const action = vi.fn(() => Promise.resolve())
     const newEntry: any = createTestData({})
     const { data, error, attempts } =
       (await txBuilder<TestData>()
@@ -110,7 +110,7 @@ describe('transact', () => {
 
   it('will fail after n', async () => {
     const retries = 5
-    const saveVersion = jest.fn(() => Promise.resolve(null))
+    const saveVersion = vi.fn(() => Promise.resolve(null))
     const newEntry: any = createTestData({})
     const { error, attempts } =
       (await txBuilder<TestData>()

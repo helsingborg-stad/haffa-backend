@@ -22,8 +22,8 @@ mutation Mutation(
 
 describe('collectAdvert', () => {
   it('creates reservation claim', () => {
-    const advertWasCollected = jest.fn(async () => undefined)
-    const advertWasCollectedOwner = jest.fn(async () => undefined)
+    const advertWasCollected = vi.fn(async () => undefined)
+    const advertWasCollectedOwner = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasCollected,
       advertWasCollectedOwner,
@@ -93,7 +93,7 @@ describe('collectAdvert', () => {
   })
 
   it('denies overcollects', () => {
-    const advertWasCollected = jest.fn(async () => undefined)
+    const advertWasCollected = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasCollected,
     })
@@ -138,8 +138,8 @@ describe('collectAdvert', () => {
   })
 
   it('should set picked at collect', () => {
-    const advertWasCollected = jest.fn(async () => undefined)
-    const advertWasCollectedOwner = jest.fn(async () => undefined)
+    const advertWasCollected = vi.fn(async () => undefined)
+    const advertWasCollectedOwner = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasCollected,
       advertWasCollectedOwner,
@@ -152,7 +152,7 @@ describe('collectAdvert', () => {
         return false
       },
     }
-    const spy = jest.spyOn(workflow, 'pickOnCollect', 'get')
+    const spy = vi.spyOn(workflow, 'pickOnCollect', 'get')
 
     return end2endTest(
       { services: { notifications, workflow } },

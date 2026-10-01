@@ -22,8 +22,8 @@ mutation Mutation(
 `
 describe('convertAdvertClaim', () => {
   it('can convert reservation to collect', () => {
-    const advertWasCollected = jest.fn(async () => undefined)
-    const advertWasCollectedOwner = jest.fn(async () => undefined)
+    const advertWasCollected = vi.fn(async () => undefined)
+    const advertWasCollectedOwner = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasCollected,
       advertWasCollectedOwner,
@@ -143,8 +143,8 @@ describe('convertAdvertClaim', () => {
 })
 describe('convertAdvertClaim - picking', () => {
   it('should set picked at collect', () => {
-    const advertWasCollected = jest.fn(async () => undefined)
-    const advertWasCollectedOwner = jest.fn(async () => undefined)
+    const advertWasCollected = vi.fn(async () => undefined)
+    const advertWasCollectedOwner = vi.fn(async () => undefined)
     const notifications = createTestNotificationServices({
       advertWasCollected,
       advertWasCollectedOwner,
@@ -157,7 +157,7 @@ describe('convertAdvertClaim - picking', () => {
         return false
       },
     }
-    const spy = jest.spyOn(workflow, 'pickOnCollect', 'get')
+    const spy = vi.spyOn(workflow, 'pickOnCollect', 'get')
 
     return end2endTest(
       {

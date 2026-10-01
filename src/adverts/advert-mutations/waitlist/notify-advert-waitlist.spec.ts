@@ -35,7 +35,7 @@ describe('notifyAdvertWaitlist', () => {
     const user = makeAdmin({ id: 'test@user.com' })
 
     // Setup notifications
-    const advertWaitlistAvailable = jest.fn()
+    const advertWaitlistAvailable = vi.fn()
     const notifications = createTestNotificationServices({
       advertWaitlistAvailable,
     })
@@ -83,7 +83,7 @@ describe('notifyAdvertWaitlist', () => {
       }),
     })
 
-    const advertWaitlistAvailable = jest.fn()
+    const advertWaitlistAvailable = vi.fn()
     const notifications = createTestNotificationServices({
       advertWaitlistAvailable,
     })

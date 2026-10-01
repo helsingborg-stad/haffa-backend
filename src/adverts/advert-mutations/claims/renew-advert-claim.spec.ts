@@ -22,8 +22,8 @@ mutation Mutation(
 
 describe('renewAdvertClaim', () => {
   it('updates created date, clears events and doesnt notify', () => {
-    const advertCollectWasRenewed = jest.fn()
-    const advertCollectWasRenewedOwner = jest.fn()
+    const advertCollectWasRenewed = vi.fn()
+    const advertCollectWasRenewedOwner = vi.fn()
     const renewNotifications = createTestNotificationServices({
       advertCollectWasRenewed,
       advertCollectWasRenewedOwner,

@@ -32,8 +32,8 @@ describe('createAdvertClaimsNotifier().wasReserved() delegates to NotificationSe
   }
 
   it('wasReserved -> advertWasReserved', async () => {
-    const advertWasReserved = jest.fn()
-    const advertWasReservedOwner = jest.fn()
+    const advertWasReserved = vi.fn()
+    const advertWasReservedOwner = vi.fn()
     const { advert, user, notifier } = createCase({
       advertWasReserved,
       advertWasReservedOwner,
@@ -59,8 +59,8 @@ describe('createAdvertClaimsNotifier().wasReserved() delegates to NotificationSe
     )
   })
   it('wasReserved -> patches location and notifies pickuplocation email', async () => {
-    const advertWasReserved = jest.fn()
-    const advertWasReservedOwner = jest.fn()
+    const advertWasReserved = vi.fn()
+    const advertWasReservedOwner = vi.fn()
     const { advert, user, notifier } = createCase(
       {
         advertWasReserved,

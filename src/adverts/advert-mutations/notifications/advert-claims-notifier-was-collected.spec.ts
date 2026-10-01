@@ -32,8 +32,8 @@ describe('createAdvertClaimsNotifier().wasCollected() delegates to NotificationS
   }
 
   it('wasCollected -> advertWasCollected', async () => {
-    const advertWasCollected = jest.fn()
-    const advertWasCollectedOwner = jest.fn()
+    const advertWasCollected = vi.fn()
+    const advertWasCollectedOwner = vi.fn()
     const { advert, user, notifier } = createCase({
       advertWasCollected,
       advertWasCollectedOwner,
@@ -60,8 +60,8 @@ describe('createAdvertClaimsNotifier().wasCollected() delegates to NotificationS
   })
 
   it('wasCollected -> patches location and notifies pickuplocation email', async () => {
-    const advertWasCollected = jest.fn()
-    const advertWasCollectedOwner = jest.fn()
+    const advertWasCollected = vi.fn()
+    const advertWasCollectedOwner = vi.fn()
     const { advert, user, notifier } = createCase(
       {
         advertWasCollected,

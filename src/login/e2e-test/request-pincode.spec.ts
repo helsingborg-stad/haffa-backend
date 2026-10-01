@@ -5,7 +5,7 @@ import { RequestPincodeStatus } from '../types'
 
 describe('request', () => {
   it('POST /api/v1/haffa/auth/request-pincode should save an entry in the login database and notify', () => {
-    const pincodeRequested = jest.fn()
+    const pincodeRequested = vi.fn()
     return end2endTest(
       {
         services: {
