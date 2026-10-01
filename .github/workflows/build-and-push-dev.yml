@@ -3,33 +3,16 @@ name: Build and push docker image to github registry and deploy on dev environme
 on:
     push:
         branches:
-            - dev
+            - 'dev'
+            - 'petter-a-patch-1'
 
 permissions:
     contents: read
     packages: write
 
 jobs:
-    deploy:
+    build:
         runs-on: ubuntu-latest
-
-        steps:
-            - uses: actions/checkout@v7
-              with:
-                  ref: dev
-
-            - uses: actions/setup-node@v7
-              with:
-                  node-version: 24
-
-            - uses: helsingborg-stad/gdi-deploy/v2@main
-              with:
-                  release-tag-name: sha-${{github.sha}}
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
-                  docker-no-cache: true
-                  git-checkout-branch: dev
-                  docker-username: ${{ github.repository_owner }}
-                  docker-password: ${{ secrets.GITHUB_TOKEN }}
-                  extra-image-tags: |
-                    type=raw,value=${{github.event.release.tag_name}}
+        steps: 
+            - uses: './.github/workflows/docker-build.yml'
                     

@@ -1,0 +1,93 @@
+name: GDI Deploy 2.0
+description: Set version, build and push docker image to github registry for a gdi service.
+
+inputs:
+  update-package-version:
+    description: If the version of package.json should be updated.
+    required: false
+    type: boolean
+
+  extra-image-tags:
+    description: 'Extra tags to put on the docker image'
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Set package.json version
+        if: inputs.update-package-version == true
+        shell: bash
+        env:
+          RELEASE_TAG_NAME: sha-${{github.sha}}
+        run: npm version --allow-same-version --no-git-tag-version "$RELEASE_TAG_NAME"
+
+      - name: Commit and push
+        if: inputs.update-package-version == true
+        shell: bash
+        env:
+          GIT_CHECKOUT_BRANCH: ${{ github.event.release.target_commitish }}
+          RELEASE_TAG_NAME: ${{github.event.release.tag_name}}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add --all
+          git diff --cached --quiet || git commit -m "🔖 Set versions to release tag ${RELEASE_TAG_NAME}"
+          git push --force-with-lease origin "HEAD:refs/heads/${GIT_CHECKOUT_BRANCH}"
+
+      - name: Repository Variable to Lowercase
+        id: string
+        shell: bash
+        env:
+          REPOSITORY: ${{ github.repository }}
+        run: echo "lowercase=${REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          images: ghcr.io/${{ steps.string.outputs.lowercase }}
+          tags: |
+            # set latest tag for default branch
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=semver,pattern=v{{major}}
+            type=sha
+            type=sha,format=long
+            ${{ inputs.extra-image-tags }}
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          no-cache: true
+          build-args: |
+            GITHUB_ACCESS_TOKEN=${{ secrets.GITHUB_TOKEN }}
