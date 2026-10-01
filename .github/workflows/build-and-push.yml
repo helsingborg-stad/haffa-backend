@@ -10,11 +10,8 @@ permissions:
 
 jobs:
     deploy:
-        runs-on: ubuntu-latest
-
-        steps:
-            - uses: ./.github/workflows/docker-build.yml
-              with:
-                  update-package-version: true
-                  extra-image-tags: |
-                      type=raw,value=${{github.event.release.tag_name}}
+        uses: ./.github/workflows/docker-build.yml
+        with:
+            update-package-version: true
+            extra-image-tags: |
+                type=raw,value=${{ github.event.release.tag_name }}

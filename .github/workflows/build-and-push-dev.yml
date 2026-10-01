@@ -3,8 +3,8 @@ name: Build and push docker image to github registry and deploy on dev environme
 on:
     push:
         branches:
-            - 'dev'
-            - 'petter-a-patch-1'
+            - dev
+            - petter-a-patch-1
 
 permissions:
     contents: read
@@ -12,7 +12,6 @@ permissions:
 
 jobs:
     build:
-        runs-on: ubuntu-latest
-        steps: 
-            - uses: './.github/workflows/docker-build.yml'
-                    
+        uses: ./.github/workflows/docker-build.yml
+        with:
+            update-package-version: false
