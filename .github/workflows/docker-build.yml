@@ -1,0 +1,94 @@
+name: Build and push Docker image
+
+on:
+  workflow_call:
+    inputs:
+      update-package-version:
+        description: If the version of package.json should be updated.
+        type: boolean
+        default: false
+      extra-image-tags:
+        description: Extra tags to put on the docker image.
+        type: string
+        default: ''
+      git-checkout-branch:
+        description: Branch to update when publishing a release.
+        type: string
+        default: ''
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.git-checkout-branch }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Set package.json version
+        if: ${{ inputs.update-package-version }}
+        env:
+          RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+        run: npm version --allow-same-version --no-git-tag-version "$RELEASE_TAG_NAME"
+
+      - name: Commit and push
+        if: ${{ inputs.update-package-version }}
+        env:
+          GIT_CHECKOUT_BRANCH: ${{ inputs.git-checkout-branch || github.event.release.target_commitish }}
+          RELEASE_TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add -- package.json package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(release): set version to ${RELEASE_TAG_NAME}"
+            git push origin "HEAD:refs/heads/${GIT_CHECKOUT_BRANCH}"
+          fi
+
+      - name: Repository variable to lowercase
+        id: string
+        env:
+          REPOSITORY: ${{ github.repository }}
+        run: echo "lowercase=${REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          images: ghcr.io/${{ steps.string.outputs.lowercase }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=semver,pattern=v{{major}}
+            type=sha
+            type=sha,format=long
+            ${{ inputs.extra-image-tags }}
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          no-cache: true
