@@ -46,9 +46,7 @@
     "qrcode": "^1.5.3",
     "sharp": "^0.35.4",
     "superagent": "^8.0.0",
-    "supertest": "^6.3.3",
     "uuid": "11.1.1",
-    "vitest": "^4.1.11",
     "xlsx": "^0.18.5"
   },
   "engines": {
@@ -71,6 +69,8 @@
     "@types/uuid": "^9.0.2",
     "@types/xlsx": "^0.0.36",
     "@vitest/coverage-v8": "^4.1.11",
+    "supertest": "^6.3.3",
+    "vitest": "^4.1.11",
     "mongo-mock": "^4.2.0",
     "typescript": "^7.0.2"
   }
