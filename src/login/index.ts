@@ -11,10 +11,12 @@ export { createCookieService, createCookieServiceFromEnv, createIssuePincode }
 
 export const GUEST_USER_ID = 'guest'
 
-export const rolesToRolesArray = (roles?: HaffaUserRoles) =>
+export const rolesToRolesArray = (
+  roles?: HaffaUserRoles
+): (keyof HaffaUserRoles)[] =>
   Object.entries(normalizeRoles(roles))
     .filter(([, enabled]) => enabled)
-    .map(([roleName]) => roleName)
+    .map(([roleName]) => roleName as keyof HaffaUserRoles)
 
 export const rolesArrayToRoles = (roles: string[]): HaffaUserRoles =>
   Array.isArray(roles)

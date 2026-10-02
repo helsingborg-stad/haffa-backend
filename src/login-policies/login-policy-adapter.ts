@@ -1,4 +1,4 @@
-import { normalizeRoles, rolesToRolesArray } from '../login'
+import { rolesArrayToRoles, rolesToRolesArray } from '../login'
 import type { SettingsService } from '../settings/types'
 import type { LoginPolicy } from './types'
 
@@ -21,8 +21,10 @@ const normalizeLoginPolicy = (p?: Partial<LoginPolicy>): LoginPolicy => ({
   ...p,
 })
 
-const normalizeStringArray = (a: any) =>
-  Array.isArray(a) ? a.filter(v => typeof v === 'string').filter(v => v) : []
+const normalizeStringArray = (a: unknown): string[] =>
+  Array.isArray(a)
+    ? a.filter((v): v is string => typeof v === 'string' && !!v)
+    : []
 
 const normalizeLoginPolicies = (
   policies: Partial<LoginPolicy>[] | null | undefined
@@ -31,7 +33,7 @@ const normalizeLoginPolicies = (
     .map(normalizeLoginPolicy)
     .map(({ emailPattern, roles, deny }) => ({
       emailPattern: (emailPattern || '').trim().toLowerCase(),
-      roles: normalizeStringArray(roles),
+      roles: rolesToRolesArray(rolesArrayToRoles(normalizeStringArray(roles))),
       deny,
     }))
     .filter(({ emailPattern }) => emailPattern)
