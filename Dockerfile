@@ -38,6 +38,13 @@ COPY --from=builder --chown=node:node /work/openapi.yml ./
 COPY --from=git-rev /work/git_revision.txt ./
 COPY --from=production-dependencies --chown=node:node /work/docker-cmd-with-crond.sh ./
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends cron \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN echo "node" > /etc/cron.allow \
+    && rm -f /etc/cron.deny
+
 USER node
 
 CMD ["sh", "docker-cmd-with-crond.sh"]
