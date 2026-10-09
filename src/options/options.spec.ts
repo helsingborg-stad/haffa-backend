@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { createInMemorySettingsService } from '../settings'
 import { optionsAdapter } from '.'
 

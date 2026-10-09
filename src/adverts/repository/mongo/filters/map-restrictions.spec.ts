@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import type { Filter } from 'mongodb'
 import { makeAdmin } from '../../../../login'
 import type { HaffaUser } from '../../../../login/types'

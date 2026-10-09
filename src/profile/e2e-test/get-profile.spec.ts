@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { StatusCodes } from 'http-status-codes'
 import { end2endTest } from '../../test-utils'
 import { createEmptyProfile } from '../mappers'

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { makeRoles } from '../../login'
 import type { HaffaUser } from '../../login/types'
 import { loginPolicyAdapter } from '../../login-policies/login-policy-adapter'

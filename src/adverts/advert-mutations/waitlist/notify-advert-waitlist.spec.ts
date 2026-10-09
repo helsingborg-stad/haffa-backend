@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import { makeAdmin } from '../../../login'
 import { createTestNotificationServices } from '../../../test-utils'
 import { createGetAdvertMeta } from '../../advert-meta'

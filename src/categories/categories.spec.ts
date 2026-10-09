@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest'
 import { normalizeCategories } from './category-adapter'
 import type { Category } from './types'
 

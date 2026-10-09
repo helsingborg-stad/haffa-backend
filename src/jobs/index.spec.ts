@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { setTimeout } from 'timers/promises'
 import type { HaffaUser } from '../login/types'
 import { Severity } from '../syslog/types'

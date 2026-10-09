@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { convertFilterToCategoryMatchingFilter } from './convert-filter-to-category-matching-filter'
 
 describe('convertFilterToCategoryMatchingFilter', () => {

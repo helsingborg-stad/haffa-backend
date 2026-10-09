@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import type { HaffaUser } from '../../../login/types'
 import { createEmptyAdvert } from '../../mappers'
 import { createGetAdvertMeta } from '../advert-meta'

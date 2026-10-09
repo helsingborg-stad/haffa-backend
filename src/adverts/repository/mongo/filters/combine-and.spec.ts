@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { combineAnd } from './filter-utils'
 
 const range = (n: number): any[] => [...new Array(n)]

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { toLookup } from '..'
 
 describe('toLookup', () => {

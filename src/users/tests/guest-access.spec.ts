@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import HttpStatusCodes from 'http-status-codes'
 import request from 'supertest'
 import { GUEST_USER_ID } from '../../login'

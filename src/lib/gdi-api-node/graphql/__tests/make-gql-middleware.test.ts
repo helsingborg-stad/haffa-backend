@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { makeGqlMiddleware } from '../make-gql-middleware'
 
 describe('makeGqlMiddleware', () => {

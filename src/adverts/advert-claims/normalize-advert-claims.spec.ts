@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import type { AdvertClaim } from '../types'
 import { AdvertClaimType } from '../types'
 import { normalizeAdvertClaims } from './normalize-advert-claims'

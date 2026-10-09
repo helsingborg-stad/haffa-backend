@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest'
 import { getFieldConfig, normalizeFieldConfig } from './mappers'
 
 it('should override default values with input', () => {

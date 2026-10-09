@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { makeUser } from '../../../../login'
 import { createInMemorySettingsService } from '../../../../settings'
 import { smsTemplateMapper } from '../sms-template-mapper'
