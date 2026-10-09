@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { end2endTest } from '../../../test-utils'
 import { createEmptyAdvert } from '../../mappers'
 import { AdvertClaimEventType, AdvertClaimType } from '../../types'

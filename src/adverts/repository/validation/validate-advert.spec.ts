@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { createEmptyAdvert, createEmptyAdvertContact } from '../../mappers'
 import { validateAdvert } from '.'
 

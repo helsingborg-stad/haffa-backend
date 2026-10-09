@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import { normalizeLocation } from '../../../locations/mappers'
 import { makeUser } from '../../../login'
 import type { HaffaUser } from '../../../login/types'

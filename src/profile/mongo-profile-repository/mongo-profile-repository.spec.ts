@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { makeUser } from '../../login'
 import type { HaffaUser } from '../../login/types'
 import type { MongoConnection } from '../../mongodb-utils/types'

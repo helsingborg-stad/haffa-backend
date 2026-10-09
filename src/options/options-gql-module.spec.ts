@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import type { HaffaUser } from '../login/types'
 import type { LoginPolicy } from '../login-policies/types'
 import { end2endTest } from '../test-utils'

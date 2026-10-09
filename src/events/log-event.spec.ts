@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import type { Category } from '../categories/types'
 import { createCategoryEvent } from './log-event'
 

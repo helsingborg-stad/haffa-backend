@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { sanitizeSyslogEntry, sanitizeSyslogFilter } from './mappers'
 import { Severity } from './types'
 

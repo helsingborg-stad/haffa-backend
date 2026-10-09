@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest'
 import type { AdvertLocation } from '../adverts/types'
 import { normalizeLocations } from './mappers'
 

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { mapSearch } from './map-search'
 
 describe('mapSearch', () => {

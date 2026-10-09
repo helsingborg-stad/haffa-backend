@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { generateFileId, splitBase64DataUri } from './file-utils'
 
 describe('splitBase64DataUri', () => {

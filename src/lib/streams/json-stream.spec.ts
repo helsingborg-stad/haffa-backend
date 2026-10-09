@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { jsonStream, objectStream, streamToBuffer } from '.'
 
 describe('jsonStream', () => {

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import HttpStatusCodes from 'http-status-codes'
 import request from 'supertest'
 import type { ApplicationModule } from '../../lib/gdi-api-node'

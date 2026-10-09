@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { objectStream } from '.'
 import { streamToArray } from './stream-to-array'
 

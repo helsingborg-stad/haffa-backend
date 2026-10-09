@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { makeAdmin, makeUser } from '../../../login'
 import type { HaffaUser } from '../../../login/types'
 import { createEmptyAdvert } from '../../mappers'

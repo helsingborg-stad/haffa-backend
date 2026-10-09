@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import type { Category } from '../../categories/types'
 import { patchCategories } from './patch-categories'
 

@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest'
 import { normalizeComposition } from './mappers'
 import type { ViewComposition } from './types'
 

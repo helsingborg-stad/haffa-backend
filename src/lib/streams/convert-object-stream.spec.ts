@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { convertObjectStream, objectStream, streamToArray } from '.'
 
 describe('convertObjectStream', () => {

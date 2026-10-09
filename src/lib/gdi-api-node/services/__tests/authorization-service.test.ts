@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { StatusCodes } from 'http-status-codes'
 import jwt from 'jsonwebtoken'
 import { createAuthorizationService } from '../authorization-service'

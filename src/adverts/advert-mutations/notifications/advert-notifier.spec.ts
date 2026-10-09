@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest'
 import { makeUser } from '../../../login'
 import type { HaffaUser } from '../../../login/types'
 import type { NotificationService } from '../../../notifications/types'

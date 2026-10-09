@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { makeGqlEndpoint } from '../make-gql-endpoint'
 import type { GraphQLModule } from '../types'
 
