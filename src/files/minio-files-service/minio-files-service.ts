@@ -27,7 +27,7 @@ class MinioFilesService implements FilesService {
   constructor(config: MinioConfig) {
     this.config = {
       ...config,
-      baseUrl: config.baseUrl ?? '/api/v1/minio/images',
+      baseUrl: config.baseUrl ?? '/api/v1/fs/images',
     }
   }
 
