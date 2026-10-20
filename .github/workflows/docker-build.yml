@@ -23,7 +23,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # 7.0.1
         with:
-          ref: ${{ inputs.git-checkout-branch }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
 
       - name: Set up Node.js
