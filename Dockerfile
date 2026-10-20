@@ -36,7 +36,6 @@ COPY --from=builder --chown=node:node /work/openapi.yml ./
 COPY --from=git-rev /work/git_revision.txt ./
 COPY --from=production-dependencies --chown=node:node /work/node_modules ./node_modules
 COPY --from=production-dependencies --chown=node:node /work/package.json ./
-COPY --from=production-dependencies --chown=node:node /work/scheduled-jobs-runner.sh ./
 
 USER node
 
