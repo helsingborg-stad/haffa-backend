@@ -19,7 +19,7 @@ FROM node:24-bookworm AS production-dependencies
 
 WORKDIR /work
 # Install only dependencies required at runtime. (Optional dependency needed for sharp)
-COPY package.json package-lock.json .npmrc scheduled-jobs-runner.sh ./
+COPY package.json package-lock.json .npmrc ./
 RUN npm ci --omit=dev --ignore-scripts \
     && npm cache clean --force
 
