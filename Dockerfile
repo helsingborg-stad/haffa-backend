@@ -38,12 +38,6 @@ COPY --from=production-dependencies --chown=node:node /work/node_modules ./node_
 COPY --from=production-dependencies --chown=node:node /work/package.json ./
 COPY --from=production-dependencies --chown=node:node /work/scheduled-jobs-runner.sh ./
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends cron \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN crontab -l 2>/dev/null | { cat; echo "0 6 * * * su -s /bin/sh node -c '/bin/sh /usr/src/app/scheduled-jobs-runner.sh' >> /tmp/runner.log 2>&1"; } | crontab -
-
 USER node
 
 CMD ["node", "./index.js"]
