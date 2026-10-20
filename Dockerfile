@@ -40,14 +40,11 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends cron \
     && rm -rf /var/lib/apt/lists/*
 
-RUN echo "node" > /etc/cron.allow \
-    && rm -f /etc/cron.deny
-
-RUN echo "0 06 * * *  /usr/src/app/scheduled-jobs-runner.sh 1>/tmp/runner.log 2>&1" \
+RUN echo "0 6 * * * node /usr/src/app/scheduled-jobs-runner.sh >> /tmp/runner.log 2>&1" \
     > /etc/cron.d/node \
     && chmod 0644 /etc/cron.d/node
 
-USER node
+USER root
 
-CMD ["sh", "-c", "crond -b && exec node ./index.js"]
+CMD ["sh", "-c", "cron && exec su -s /bin/sh node -c 'exec node ./index.js'"]
 
