@@ -30,8 +30,6 @@ ENV NODE_ENV=production \
     PORT=3000
 
 WORKDIR /usr/src/app
-COPY --from=production-dependencies --chown=node:node /work/node_modules ./node_modules
-COPY --from=production-dependencies --chown=node:node /work/package.json ./
 COPY --from=builder --chown=node:node /work/dist ./dist
 COPY --from=builder --chown=node:node /work/index.js ./
 COPY --from=builder --chown=node:node /work/openapi.yml ./
