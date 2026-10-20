@@ -46,5 +46,5 @@ RUN echo "0 6 * * * node /usr/src/app/scheduled-jobs-runner.sh >> /tmp/runner.lo
 
 USER root
 
-CMD ["sh", "-c", "cron && exec su -s /bin/sh node -c 'exec node ./index.js'"]
+CMD ["sh", "-c", "cron -f & exec su -s /bin/sh node -c 'exec node ./index.js'"]
 
