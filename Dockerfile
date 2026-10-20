@@ -44,7 +44,6 @@ RUN apt-get update \
 
 RUN crontab -l 2>/dev/null | { cat; echo "0 6 * * * su -s /bin/sh node -c '/bin/sh /usr/src/app/scheduled-jobs-runner.sh' >> /tmp/runner.log 2>&1"; } | crontab -
 
-USER root
+USER node
 
-CMD ["sh", "-c", "exec su -s /bin/sh node -c 'exec node ./index.js'"]
-
+CMD ["node", "./index.js"]
