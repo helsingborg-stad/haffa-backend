@@ -36,7 +36,7 @@ COPY --from=builder --chown=node:node /work/dist ./dist
 COPY --from=builder --chown=node:node /work/index.js ./
 COPY --from=builder --chown=node:node /work/openapi.yml ./
 COPY --from=git-rev /work/git_revision.txt ./
-COPY --from=production-dependencies --chown=node:node /work/docker-cmd-with-crond.sh ./
+COPY --from=production-dependencies --chown=node:node /work/scheduled-jobs-runner.sh ./
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends cron \
@@ -45,6 +45,11 @@ RUN apt-get update \
 RUN echo "node" > /etc/cron.allow \
     && rm -f /etc/cron.deny
 
+RUN echo "0 06 * * *  /usr/src/app/scheduled-jobs-runner.sh 1>/tmp/runner.log 2>&1" \
+    > /etc/cron.d/node \
+    && chmod 0644 /etc/cron.d/node
+
 USER node
 
-CMD ["sh", "docker-cmd-with-crond.sh"]
+CMD ["sh", "-c", "crond -b && exec node ./index.js"]
+
