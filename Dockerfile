@@ -40,7 +40,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends cron \
     && rm -rf /var/lib/apt/lists/*
 
-RUN echo "0 6 * * * node /usr/src/app/scheduled-jobs-runner.sh >> /tmp/runner.log 2>&1" \
+RUN echo "0 6 * * * node /bin/sh /usr/src/app/scheduled-jobs-runner.sh >> /tmp/runner.log 2>&1" \
     > /etc/cron.d/node \
     && chmod 0644 /etc/cron.d/node
 
