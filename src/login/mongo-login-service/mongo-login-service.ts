@@ -21,7 +21,7 @@ export const tryCreateMongoLoginServiceFromEnv = (
   const collectionName = getEnv('MONGODB_LOGIN_COLLECTION', {
     fallback: 'login',
   })
-  const ttl = ms(getEnv('LOGIN_ATTEMPT_TTL', { fallback: '10m' }))
+  const ttl = ms(getEnv('LOGIN_ATTEMPT_TTL', { fallback: '10m' }) as ms.StringValue)
   const maxAttempts = Math.max(
     1,
     parseInt(getEnv('LOGIN_ATTEMPT_MAX_COUNT', { fallback: '16' }), 10)
@@ -33,24 +33,24 @@ export const tryCreateMongoLoginServiceFromEnv = (
 
   return uri
     ? startupLog.echo(
-        createMongoLoginService(
-          userMapper,
-          createMongoLoginConnection({ uri, collectionName }),
-          issuePincode,
+      createMongoLoginService(
+        userMapper,
+        createMongoLoginConnection({ uri, collectionName }),
+        issuePincode,
+        ttl,
+        maxAttempts
+      ),
+      {
+        name: 'login',
+        config: {
+          on: 'mongodb',
+          uri,
+          collectionName,
           ttl,
-          maxAttempts
-        ),
-        {
-          name: 'login',
-          config: {
-            on: 'mongodb',
-            uri,
-            collectionName,
-            ttl,
-            maxAttempts,
-          },
-        }
-      )
+          maxAttempts,
+        },
+      }
+    )
     : null
 }
 

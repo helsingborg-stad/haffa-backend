@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken'
 import type { HaffaUser } from '../login/types'
 import type { UserMapper } from '../users/types'
 import type { TokenService } from './types'
+import ms from 'ms'
 
 const jwtOptions = {
   audience: 'urn://haffa',
@@ -17,7 +18,7 @@ export const createTokenService = (
   { secret, expiresIn }: TokenServiceConfig,
   defaultUser?: any
 ): TokenService => {
-  const ttl = expiresIn || '30d'
+  const ttl = (expiresIn || '30d') as ms.StringValue
 
   const sign: TokenService['sign'] = user =>
     jwt.sign(user, secret, {
