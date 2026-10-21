@@ -60,7 +60,7 @@
     "@types/koa-router": "^7.4.4",
     "@types/koa-send": "^4.1.6",
     "@types/mime-types": "^3.0.1",
-    "@types/ms": "^0.7.31",
+    "@types/ms": "^2.1.0",
     "@types/node": "^22.0.0",
     "@types/pdfkit": "^0.13.4",
     "@types/qrcode": "^1.5.5",
