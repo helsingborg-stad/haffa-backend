@@ -29,7 +29,7 @@ WORKDIR /usr/src/app
 COPY --from=builder --chown=node:node /work/dist ./dist
 COPY --from=builder --chown=node:node /work/index.js ./
 COPY --from=builder --chown=node:node /work/openapi.yml ./
-COPY --from=git-rev /work/git_revision.txt ./
+COPY --from=production-dependencies --chown=node:node /work/git_revision.txt ./
 COPY --from=production-dependencies --chown=node:node /work/node_modules ./node_modules
 COPY --from=production-dependencies --chown=node:node /work/package.json ./
 
