@@ -129,7 +129,7 @@ docker-compose up
 
 ### Prerequisites
 
-- [nodejs](https://nodejs.org/en/) v22+
+- [nodejs](https://nodejs.org/en/) v24+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
