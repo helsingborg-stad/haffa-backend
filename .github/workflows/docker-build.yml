@@ -51,6 +51,10 @@ jobs:
             git push origin "HEAD:refs/heads/${GIT_CHECKOUT_BRANCH}"
           fi
 
+      - name: Resolve effective commit SHA
+        id: effective_sha
+        run: echo "value=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+        
       - name: Repository variable to lowercase
         id: string
         env:
@@ -93,4 +97,4 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           no-cache: true
           build-args: |
-            GIT_SHA=${{ github.sha }}
+            GIT_SHA=${{ steps.effective_sha.outputs.value }}
