@@ -9,12 +9,6 @@ RUN npm ci
 COPY . ./
 RUN npm run build
 
-FROM node:24-bookworm AS git-rev
-
-WORKDIR /work
-COPY .git .git
-RUN git rev-parse --short HEAD >  git_revision.txt
-
 FROM node:24-bookworm AS production-dependencies
 
 WORKDIR /work
@@ -22,6 +16,8 @@ WORKDIR /work
 COPY package.json package-lock.json .npmrc ./
 RUN npm ci --omit=dev --ignore-scripts \
     && npm cache clean --force
+ARG GIT_SHA=unknown
+RUN printf '%s\n' "${GIT_SHA}" | cut -c1-7 > git_revision.txt
 
 FROM node:24-bookworm-slim AS runtime
 
