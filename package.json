@@ -68,7 +68,7 @@
     "@types/uuid": "^9.0.2",
     "@vitest/coverage-v8": "^5.0.0",
     "supertest": "^7.3.1",
-    "vitest": "^5.0.0",
+    "vitest": "^5.0.5",
     "mongo-mock": "^4.2.0",
     "typescript": "^7.0.2"
   }
