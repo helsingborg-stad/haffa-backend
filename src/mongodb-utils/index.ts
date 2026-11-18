@@ -1,12 +1,12 @@
 import { MongoClient } from 'mongodb'
 import type { MongoConnection, MongoConnectionOptions } from './types'
 
-const once = <T>(fn: () => T): (() => T) => {
+const once = <T, P>(fn: (p: P) => T): ((p: P) => T) => {
   let state: { result: T } | null = null
 
-  return () => {
+  return (p: P) => {
     if (state === null) {
-      state = { result: fn() }
+      state = { result: fn(p) }
     }
     return state.result
   }
@@ -20,20 +20,19 @@ export const createMongoConnection = <T extends { id: string }>({
   setupDatabase,
   setupCollection,
 }: MongoConnectionOptions<T>): MongoConnection<T> => {
-  const connect = once(async () => {
-    const client = await (clientFactory?.(uri) || MongoClient.connect(uri))
+  const setupOnce = once(async (client: MongoClient) => {
     const db = client.db()
     const collection = db.collection<T>(collectionName)
-    await collection.createIndex(
-      { id: 1 },
-      { name: 'unique_index__id', unique: true }
-    )
-
     await setupClient?.(client)
     await setupDatabase?.(db)
     await setupCollection?.(collection)
-    return { client, db }
   })
+  const connect = async () => {
+    const client = await (clientFactory?.(uri) || MongoClient.connect(uri))
+    const db = client.db()
+    await setupOnce(client)
+    return { client, db }
+  }
 
   return {
     getCollection: () =>
