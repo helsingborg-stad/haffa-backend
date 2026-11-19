@@ -38,6 +38,5 @@ export const createMongoConnection = <T extends { id: string }>({
   return {
     getCollection: () =>
       connect().then(({ db }) => db.collection<T>(collectionName)),
-    close: () => connect().then(({ client }) => client.close()),
   }
 }
