@@ -28,7 +28,8 @@ export const createMongoConnection = <T extends { id: string }>({
     await setupCollection?.(collection)
   })
   const connect = async () => {
-    const client = await (clientFactory?.(uri) || MongoClient.connect(uri))
+    // const client = await (clientFactory?.(uri) || MongoClient.connect(uri))
+    const client = await (clientFactory?.(uri) || new MongoClient(uri))
     const db = client.db()
     await setupOnce(client)
     return { client, db }
