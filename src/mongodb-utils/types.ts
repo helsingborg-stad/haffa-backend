@@ -11,5 +11,4 @@ export interface MongoConnectionOptions<T extends { id: string }> {
 
 export interface MongoConnection<T extends { id: string }> {
   getCollection: () => Promise<Collection<T>>
-  close: () => Promise<void>
 }
