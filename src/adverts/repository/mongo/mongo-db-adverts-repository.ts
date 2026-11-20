@@ -1,5 +1,5 @@
+import { PassThrough } from 'node:stream'
 import type { CollationOptions } from 'mongodb'
-import { PassThrough } from 'stream'
 import { toMap } from '../../../lib'
 import { convertObjectStream } from '../../../lib/streams'
 import type { MongoConnection } from '../../../mongodb-utils/types'
@@ -22,6 +22,8 @@ export const createMongoAdvertsRepository = (
   { getCollection }: MongoConnection<MongoAdvert>,
   collation: CollationOptions
 ): AdvertsRepository => {
+  const checkHealth: AdvertsRepository['checkHealth'] = async () =>
+    (await getCollection()).findOne({ apa: 123 }).then(() => true)
   const getAdvert: AdvertsRepository['getAdvert'] = async (_user, id) =>
     getCollection()
       .then(collection => collection.findOne({ id }))
@@ -94,7 +96,7 @@ export const createMongoAdvertsRepository = (
     }
   }
 
-  const create: AdvertsRepository['create'] = async (user, advert) =>
+  const create: AdvertsRepository['create'] = async (_user, advert) =>
     getCollection()
       .then(collection => ({
         collection,
@@ -114,7 +116,7 @@ export const createMongoAdvertsRepository = (
   }
 
   const saveAdvertVersion: AdvertsRepository['saveAdvertVersion'] = async (
-    user,
+    _user,
     versionId,
     advert
   ) => {
@@ -131,7 +133,7 @@ export const createMongoAdvertsRepository = (
   }
 
   const countBy: AdvertsRepository['countBy'] = async (
-    user,
+    _user,
     by,
     excludeArchived
   ) => {
@@ -323,6 +325,7 @@ export const createMongoAdvertsRepository = (
         )
 
   return createValidatingAdvertsRepository({
+    checkHealth,
     getAdvert,
     list,
     create,

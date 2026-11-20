@@ -1,6 +1,6 @@
-import { readdir, readFile, stat, unlink, writeFile } from 'fs/promises'
+import { readdir, readFile, stat, unlink, writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import { mkdirp } from 'mkdirp'
-import { join } from 'path'
 import { mapValues, toLookup } from '../../../lib'
 import { objectStream } from '../../../lib/streams'
 import type { HaffaUser } from '../../../login/types'
@@ -45,7 +45,7 @@ const findPaths = async (folder: string): Promise<string[]> =>
       )
     )
     .then(l =>
-      Promise.all(l.filter(({ s }) => s && s.isFile()).map(({ path }) => path))
+      Promise.all(l.filter(({ s }) => s?.isFile()).map(({ path }) => path))
     )
     .catch(notFundHandler([]))
 
@@ -81,7 +81,7 @@ export const createFsAdvertsRepository = (
         })
       )
 
-  const getAdvert: AdvertsRepository['getAdvert'] = async (user, id) =>
+  const getAdvert: AdvertsRepository['getAdvert'] = async (_user, id) =>
     readFile(join(dataFolder, `${id}.json`), { encoding: 'utf8' })
       .then(text => JSON.parse(text))
       .then(json => ({
@@ -282,6 +282,7 @@ export const createFsAdvertsRepository = (
   }
 
   return createValidatingAdvertsRepository({
+    checkHealth: async () => scan().then(() => true),
     getAdvert,
     saveAdvertVersion,
     list,

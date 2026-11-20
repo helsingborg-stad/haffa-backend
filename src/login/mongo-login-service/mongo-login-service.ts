@@ -78,6 +78,7 @@ export const createMongoLoginService = (
   ttl: number = ms('10m'),
   maxAttempts: number = 16
 ): LoginService => ({
+  checkHealth: async () => connection.getCollection().then(() => true),
   requestPincode: async (email, origin) => {
     const user = await userMapper.mapAndValidateEmail(email)
     if (!user) {

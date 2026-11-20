@@ -4,6 +4,7 @@ import { apiKeyUserModule } from './api-keys'
 import { gitRevisionModule } from './git-revision-module'
 import { guestUserModule } from './guest'
 import { graphQLModule } from './haffa/haffa-module'
+import { k8sProbesModule } from './k8s-probes/k8s-probes-module'
 import { advertLabelModule } from './labels/advertLabelModule'
 import type { Application } from './lib/gdi-api-node'
 import {
@@ -43,6 +44,7 @@ export const createApp = ({
     .use(guestUserModule(services.userMapper))
     .use(advertLabelModule(services))
     .use(healthCheckModule())
+    .use(k8sProbesModule(services))
     /* .use(({ app }) =>
       app.use((ctx, next) => {
         console.log({ id: ctx?.user?.id, path: ctx.request.path })

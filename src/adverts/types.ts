@@ -1,4 +1,4 @@
-import type stream from 'stream'
+import type stream from 'node:stream'
 import type { Only } from '../lib/types'
 import type { HaffaUser } from '../login/types'
 import type { PickupLocation } from '../pickup/types'
@@ -254,6 +254,7 @@ export interface AdvertSummaries {
   collectedAdverts: number
 }
 export interface AdvertsRepository {
+  checkHealth: () => Promise<boolean>
   getAdvert: (user: HaffaUser, id: string) => Promise<Advert | null>
   saveAdvertVersion: (
     user: HaffaUser,
