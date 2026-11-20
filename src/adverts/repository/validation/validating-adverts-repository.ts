@@ -5,6 +5,7 @@ import { validateAdvert } from './validate-advert'
 export const createValidatingAdvertsRepository = (
   inner: AdvertsRepository
 ): AdvertsRepository => ({
+  checkHealth: (...args) => inner.checkHealth(...args),
   getAdvert: (...args) =>
     inner.getAdvert(...args).then(a => (a ? normalizeAdvert(a) : null)),
   saveAdvertVersion: async (user, versionId, advert) =>
