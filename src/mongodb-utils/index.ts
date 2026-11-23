@@ -1,17 +1,6 @@
 import { MongoClient } from 'mongodb'
 import type { MongoConnection, MongoConnectionOptions } from './types'
 
-const once = <T, P>(fn: (p: P) => T): ((p: P) => T) => {
-  let state: { result: T } | null = null
-
-  return (p: P) => {
-    if (state === null) {
-      state = { result: fn(p) }
-    }
-    return state.result
-  }
-}
-
 export const createMongoConnection = <T extends { id: string }>({
   uri,
   collectionName,
@@ -20,18 +9,25 @@ export const createMongoConnection = <T extends { id: string }>({
   setupDatabase,
   setupCollection,
 }: MongoConnectionOptions<T>): MongoConnection<T> => {
-  const setupOnce = once(async (client: MongoClient) => {
+  let isSetup = false
+  const setup = async (client: MongoClient) => {
+    if (isSetup) {
+      return
+    }
+    console.log('Setting up MongoDB client')
     const db = client.db()
     const collection = db.collection<T>(collectionName)
     await setupClient?.(client)
     await setupDatabase?.(db)
     await setupCollection?.(collection)
-  })
+    isSetup = true
+    console.log('MongoDB client setup complete')
+  }
   const connect = async () => {
     // const client = await (clientFactory?.(uri) || MongoClient.connect(uri))
     const client = await (clientFactory?.(uri) || new MongoClient(uri))
     const db = client.db()
-    await setupOnce(client)
+    await setup(client)
     return { client, db }
   }
 
