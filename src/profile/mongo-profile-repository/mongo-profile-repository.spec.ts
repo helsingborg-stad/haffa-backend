@@ -14,11 +14,7 @@ const mongoTest = async <T extends { id: string }>(
   connection: MongoConnection<T>,
   testfn: (connection: MongoConnection<T>) => Promise<any>
 ): Promise<any> => {
-  try {
-    return await testfn(connection)
-  } finally {
-    await connection.close()
-  }
+  return await testfn(connection)
 }
 
 const profilesTest = (

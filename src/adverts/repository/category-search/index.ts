@@ -7,6 +7,7 @@ export const createAdvertsRepositoryWithCategorySearch = (
   settings: SettingsService,
   inner: AdvertsRepository
 ): AdvertsRepository => ({
+  checkHealth: async () => inner.checkHealth(),
   getAdvert: (...args) => inner.getAdvert(...args),
   saveAdvertVersion: (...args) => inner.saveAdvertVersion(...args),
   list: async (user, filter) => {

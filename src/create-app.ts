@@ -4,6 +4,7 @@ import { apiKeyUserModule } from './api-keys'
 import { gitRevisionModule } from './git-revision-module'
 import { guestUserModule } from './guest'
 import { graphQLModule } from './haffa/haffa-module'
+import { k8sProbesModule } from './k8s-probes/k8s-probes-module'
 import { advertLabelModule } from './labels/advertLabelModule'
 import type { Application } from './lib/gdi-api-node'
 import {
@@ -36,6 +37,7 @@ export const createApp = ({
     .use(({ app }) => app.use(cors()))
     .use(({ app }) => app.use(bodyparser({ jsonLimit: '50mb' })))
     .use(swaggerModule({ routePrefix: '/api/v1/haffa/swagger' }))
+    .use(k8sProbesModule(services))
     .use(optionsUserModule(services.settings))
     .use(apiKeyUserModule(services.settings))
     .use(jwtUserModule(services.tokens))

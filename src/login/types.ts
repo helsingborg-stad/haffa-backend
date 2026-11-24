@@ -44,6 +44,7 @@ export enum RequestPincodeStatus {
 }
 
 export interface LoginService {
+  checkHealth: () => Promise<boolean>
   requestPincode: (
     email: string,
     origin: string

@@ -24,6 +24,7 @@ export const createInMemoryLoginService = (
     ...options,
   }
   return {
+    checkHealth: async () => true,
     requestPincode: async email => {
       const user = await userMapper.mapAndValidateEmail(email)
       if (!user) {

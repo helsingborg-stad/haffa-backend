@@ -1,4 +1,4 @@
-import { Readable } from 'stream'
+import { Readable } from 'node:stream'
 import type { HaffaUser } from '../../../login/types'
 import type { StartupLog } from '../../../types'
 import type { GetAdvertMeta } from '../../advert-meta/types'
@@ -30,7 +30,8 @@ export const createInMemoryAdvertsRepository = (
 ): AdvertsRepository & { getDb: () => Record<string, Advert> } => ({
   getDb: () => db,
   ...createValidatingAdvertsRepository({
-    getAdvert: async (user, id) => db[id] || null,
+    checkHealth: async () => true,
+    getAdvert: async (_user, id) => db[id] || null,
     list: async (user, filter) => {
       const allAdverts = Object.values(db)
         .filter(createAdvertFilterPredicate(user, getAdvertMeta, filter))
@@ -38,18 +39,18 @@ export const createInMemoryAdvertsRepository = (
 
       return createPagedAdvertList(allAdverts, filter)
     },
-    create: async (user, advert) => {
+    create: async (_user, advert) => {
       // eslint-disable-next-line no-param-reassign
       db[advert.id] = advert
       return advert
     },
-    remove: async (user, id) => {
+    remove: async (_user, id) => {
       const existing = db[id]
       // eslint-disable-next-line no-param-reassign
       delete db[id]
       return existing
     },
-    saveAdvertVersion: async (user, versionId, advert) => {
+    saveAdvertVersion: async (_user, versionId, advert) => {
       const { id } = advert
       if (db[id]?.versionId === versionId) {
         // eslint-disable-next-line no-param-reassign
@@ -58,7 +59,7 @@ export const createInMemoryAdvertsRepository = (
       }
       return null
     },
-    countBy: async (user, by, excludeArchived) =>
+    countBy: async (_user, by, excludeArchived) =>
       Object.values(db).reduce<Record<string, number>>((s, advert) => {
         const v = (advert[by] || '').toString()
         if (excludeArchived && advert.archivedAt) {
