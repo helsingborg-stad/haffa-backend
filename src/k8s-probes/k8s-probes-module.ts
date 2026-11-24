@@ -9,9 +9,12 @@ export const k8sProbesModule =
   }: Pick<Services, 'adverts' | 'login'>): ApplicationModule =>
   ({ router }) => {
     const check: Router.IMiddleware = async ctx => {
-      await Promise.all([adverts.checkHealth(), login.checkHealth()])
-      ctx.status = 200
-      ctx.body = 'OK'
+      const healthResults = await Promise.all([
+        adverts.checkHealth(),
+        login.checkHealth(),
+      ])
+      ctx.status = healthResults.every(Boolean) ? 200 : 503
+      ctx.body = ctx.status === 200 ? 'OK' : 'Service Unavailable'
     }
     router.get('/healthz', check)
     router.get('/readyz', check)
