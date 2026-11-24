@@ -12,7 +12,7 @@ export const k8sProbesModule =
       const healthResults = await Promise.all([
         adverts.checkHealth(),
         login.checkHealth(),
-      ])
+      ]).catch(() => [false])
       ctx.status = healthResults.every(check => check) ? 200 : 503
       ctx.body = ctx.status === 200 ? 'OK' : 'Service Unavailable'
     }
