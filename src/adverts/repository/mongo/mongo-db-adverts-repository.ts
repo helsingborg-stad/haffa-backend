@@ -23,7 +23,9 @@ export const createMongoAdvertsRepository = (
   collation: CollationOptions
 ): AdvertsRepository => {
   const checkHealth: AdvertsRepository['checkHealth'] = async () =>
-    (await getCollection()).findOne({ apa: 123 }).then(() => true)
+    (await getCollection())
+      .findOne({}, { projection: { _id: 1 } })
+      .then(() => true)
   const getAdvert: AdvertsRepository['getAdvert'] = async (_user, id) =>
     getCollection()
       .then(collection => collection.findOne({ id }))
