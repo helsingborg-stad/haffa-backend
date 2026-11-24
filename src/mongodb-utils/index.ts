@@ -11,7 +11,6 @@ export const createMongoConnection = <T extends { id: string }>({
 
   const connect = async () => {
     sharedDbPromise ??= (async () => {
-      console.log('Connecting to MongoDB...')
       const client = await (clientFactory?.(uri) || new MongoClient(uri))
       try {
         const db = client.db()
