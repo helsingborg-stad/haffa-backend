@@ -282,7 +282,10 @@ export const createFsAdvertsRepository = (
   }
 
   return createValidatingAdvertsRepository({
-    checkHealth: async () => scan().then(() => true),
+    checkHealth: async () =>
+      mkdirp(dataFolder)
+        .then(() => readdir(dataFolder))
+        .then(() => true),
     getAdvert,
     saveAdvertVersion,
     list,
