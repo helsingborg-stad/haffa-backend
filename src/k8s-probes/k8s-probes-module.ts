@@ -1,4 +1,4 @@
-import type Router from 'koa-router'
+import Router from 'koa-router'
 import type { ApplicationModule } from '../lib/gdi-api-node'
 import type { Services } from '../types'
 
@@ -7,7 +7,9 @@ export const k8sProbesModule =
     adverts,
     login,
   }: Pick<Services, 'adverts' | 'login'>): ApplicationModule =>
-  ({ router }) => {
+  ({ app }) => {
+    const router = new Router()
+    app.use(router.routes())
     const check: Router.IMiddleware = async ctx => {
       const healthResults = await Promise.all([
         adverts.checkHealth(),
