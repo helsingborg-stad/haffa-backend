@@ -13,10 +13,13 @@ export const k8sProbesModule =
         adverts.checkHealth(),
         login.checkHealth(),
       ])
-      ctx.status = healthResults.every(Boolean) ? 200 : 503
+      ctx.status = healthResults.every(check => check) ? 200 : 503
       ctx.body = ctx.status === 200 ? 'OK' : 'Service Unavailable'
     }
     router.get('/healthz', check)
     router.get('/readyz', check)
-    router.get('/livez', check)
+    router.get('/livez', ctx => {
+      ctx.status = 200
+      ctx.body = 'OK'
+    })
   }
