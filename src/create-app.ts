@@ -37,6 +37,7 @@ export const createApp = ({
     .use(({ app }) => app.use(cors()))
     .use(({ app }) => app.use(bodyparser({ jsonLimit: '50mb' })))
     .use(swaggerModule({ routePrefix: '/api/v1/haffa/swagger' }))
+    .use(k8sProbesModule(services))
     .use(optionsUserModule(services.settings))
     .use(apiKeyUserModule(services.settings))
     .use(jwtUserModule(services.tokens))
@@ -44,7 +45,6 @@ export const createApp = ({
     .use(guestUserModule(services.userMapper))
     .use(advertLabelModule(services))
     .use(healthCheckModule())
-    .use(k8sProbesModule(services))
     /* .use(({ app }) =>
       app.use((ctx, next) => {
         console.log({ id: ctx?.user?.id, path: ctx.request.path })
