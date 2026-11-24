@@ -13,16 +13,21 @@ export const createMongoConnection = <T extends { id: string }>({
     sharedDbPromise ??= (async () => {
       console.log('Connecting to MongoDB...')
       const client = await (clientFactory?.(uri) || new MongoClient(uri))
-      const db = client.db()
-      const collection = db.collection<T>(collectionName)
-      // enforce best practice by ensuring a unique index on the 'id' field
-      await collection.createIndex(
-        { id: 1 },
-        { name: 'unique_index__id', unique: true }
-      )
-      // allow custom one time setup
-      await setupCollection?.(collection)
-      return db
+      try {
+        const db = client.db()
+        const collection = db.collection<T>(collectionName)
+        // enforce best practice by ensuring a unique index on the 'id' field
+        await collection.createIndex(
+          { id: 1 },
+          { name: 'unique_index__id', unique: true }
+        )
+        // allow custom one time setup
+        await setupCollection?.(collection)
+        return db
+      } catch (err) {
+        await client.close().catch(() => undefined)
+        throw err
+      }
     })().catch(err => {
       sharedDbPromise = null
       throw err
